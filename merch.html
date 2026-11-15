@@ -78,9 +78,9 @@
     <div><b>2 · Send on WhatsApp</b>One tap sends the order to the crew. We confirm stock and payment.</div>
     <div><b>3 · Pick up on court</b>Collect at the check-in table on open play night. Stay glazed.</div>
   </section>
-  <p class="note" style="margin-top:20px">Pre-order items are made in batches; we’ll message you when yours is ready. Prices in Qatari riyals.</p>
+  <p class="note" style="margin-top:20px">Questions about sizes or stock? WhatsApp <a href="https://wa.me/97430763431" target="_blank" rel="noopener">+974 3076 3431</a> or <a href="https://wa.me/97430723503" target="_blank" rel="noopener">+974 3072 3503</a>, or DM <a href="https://www.instagram.com/dinkindonutqa/" target="_blank" rel="noopener">@dinkindonutqa</a>. Pre-order items are made in batches; we’ll message you when yours is ready. Prices in Qatari riyals.</p>
 </main>
-<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dinkin’ Donut Pickleball Club · Stay glazed.</span><span><a href="/">Home</a> · <a href="/queue">Live queue</a> · <a href="/dupr">DUPR games</a></span></div></footer>
+<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dinkin’ Donut Pickleball Club · Stay glazed.<br><a href="https://www.instagram.com/dinkindonutqa/" target="_blank" rel="noopener">Instagram @dinkindonutqa</a> · WhatsApp <a href="https://wa.me/97430763431" target="_blank" rel="noopener">+974 3076 3431</a> / <a href="https://wa.me/97430723503" target="_blank" rel="noopener">+974 3072 3503</a></span><span><a href="/">Home</a> · <a href="/queue">Live queue</a> · <a href="/dupr">DUPR games</a></span></div></footer>
 
 <button class="btn pink bagbtn" id="bagBtn" aria-haspopup="dialog">🍩 Bag <span class="cnt" id="cnt">0</span></button>
 <div class="drawer" id="drawer" hidden><aside class="panel" role="dialog" aria-modal="true" aria-labelledby="bagTitle">
@@ -91,6 +91,7 @@
     <label for="buyer" class="note">Your name (for pick-up)</label>
     <input id="buyer" required maxlength="40" placeholder="e.g. Aisha K.">
     <button class="btn pink" id="send">Send order on WhatsApp</button>
+    <p class="note" style="margin:0">Goes to +974 3076 3431. No reply? Try <a id="alt" href="https://wa.me/97430723503" target="_blank" rel="noopener">+974 3072 3503</a>.</p>
   </form>
   <div id="fallback" hidden><p class="note">WhatsApp ordering isn’t switched on yet. Copy your order and show it at the check-in table.</p><div class="summary" id="summary"></div><button class="btn sm" id="copy" style="margin-top:8px">Copy order</button></div>
 </aside></div>
@@ -169,6 +170,7 @@ $("order").onsubmit = e => {
   if (C.whatsappNumber) { const a = document.createElement("a"); a.href = `https://wa.me/${C.whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(orderText())}`; a.target = "_blank"; a.rel = "noopener"; a.click(); }
   else { $("summary").textContent = orderText(); $("fallback").hidden = false; }
 };
+$("alt").onclick = e => { if (bag.length) e.currentTarget.href = "https://wa.me/97430723503?text=" + encodeURIComponent(orderText()); };
 $("copy").onclick = () => navigator.clipboard?.writeText($("summary").textContent).then(() => $("copy").textContent = "Copied ✓").catch(() => {});
 renderGrid(); renderBag();
 </script>

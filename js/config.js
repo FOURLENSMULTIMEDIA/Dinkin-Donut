@@ -6,10 +6,11 @@ window.CLUB = {
   mapUrl: "",                          // Google Maps link once the venue is locked
   nightDay: "Open play nights",        // e.g. "Every Thursday"
   hours: "8:00 PM – 12:00 AM",
-  instagram: "",                       // e.g. "https://instagram.com/dinkindonut.qa"
+  instagram: "https://www.instagram.com/dinkindonutqa/",
   whatsapp: "",                        // e.g. "https://chat.whatsapp.com/xxxx"
   email: "",                           // e.g. "hello@dinkindonut.qa"
-  whatsappNumber: "",                  // merch orders, international format, digits only, e.g. "97455551234"
+  whatsappNumber: "97430763431",       // main number for merch orders (digits only)
+  whatsappNumbers: ["+974 3076 3431", "+974 3072 3503"], // shown on the site, first one is the main contact
   currency: "QAR",
 
   // DUPR-rated games are booked on Reclub

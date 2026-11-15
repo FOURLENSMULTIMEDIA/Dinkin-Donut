@@ -234,6 +234,7 @@ section.block{padding-block:80px 0}
       <details><summary>What should I bring?</summary><p>Court shoes, water and a paddle if you have one. Doha nights stay warm, so hydrate between games.</p></details>
       <details><summary>Do I need to sign up in advance?</summary><p>No. Just turn up, scan the QR code and type your name.</p></details>
       <details><summary>Do you have rated (DUPR) games?</summary><p>Yes. DUPR sessions are booked on Reclub. See <a href="/dupr">DUPR games</a> for how it works.</p></details>
+      <details><summary>How do I contact the club?</summary><p>Message us on WhatsApp at <a href="https://wa.me/97430763431" target="_blank" rel="noopener">+974 3076 3431</a> or <a href="https://wa.me/97430723503" target="_blank" rel="noopener">+974 3072 3503</a>, or DM <a href="https://www.instagram.com/dinkindonutqa/" target="_blank" rel="noopener">@dinkindonutqa</a> on Instagram.</p></details>
       <details><summary>Where do you play?</summary><p data-venue>Venue: TBA — stay tuned.</p></details>
     </div>
   </section>
@@ -257,8 +258,9 @@ document.querySelectorAll("[data-day]").forEach(el => el.textContent = C.nightDa
 document.querySelectorAll("[data-hours]").forEach(el => el.textContent = C.hours);
 document.querySelectorAll("[data-city]").forEach(el => el.textContent = C.city);
 document.getElementById("yr").textContent = new Date().getFullYear();
-const links = [["Instagram", C.instagram], ["WhatsApp group", C.whatsapp], ["Email", C.email && "mailto:" + C.email]].filter(l => l[1]);
-if (links.length) document.getElementById("socials").innerHTML = links.map(([n, u]) => `<a href="${DD.esc(u)}" target="_blank" rel="noopener">${n}</a>`).join("<br>");
+const wa = n => "https://wa.me/" + n.replace(/\D/g, "");
+const links = [["Instagram · @dinkindonutqa", C.instagram], ["WhatsApp group", C.whatsapp], ...(C.whatsappNumbers || []).map(n => ["WhatsApp " + n, wa(n)]), ["Email", C.email && "mailto:" + C.email]].filter(l => l[1]);
+if (links.length) document.getElementById("socials").innerHTML = links.map(([n, u]) => `<a href="${DD.esc(u)}" target="_blank" rel="noopener">${DD.esc(n)}</a>`).join("<br>");
 DD.qr(document.getElementById("qr"), DD.queueUrl());
 document.getElementById("qrUrl").textContent = location.host + "/queue";
 
