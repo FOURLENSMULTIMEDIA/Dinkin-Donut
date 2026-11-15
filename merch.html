@@ -58,11 +58,12 @@
 .empty{color:var(--muted);text-align:center;padding:40px 0}
 .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:60px}
 .how div{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px}
+.footer{padding-bottom:110px}
 .how b{font:700 20px var(--display);display:block;margin-bottom:6px}
 </style>
 </head>
 <body>
-<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a><a class="btn pink sm" href="/queue"><span class="live-dot"></span>Join the queue</a></div></nav>
+<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a><a class="btn pink sm btn-join" href="/queue"><span class="jb" aria-hidden="true"><svg viewBox="0 0 24 24"><g transform="rotate(-35 12 12)"><rect x="7" y="2.5" width="10" height="12" rx="5" fill="#FF5FA2" stroke="#3B2416" stroke-width="1.6"/><rect x="10.6" y="14" width="2.8" height="7" rx="1.2" fill="#3B2416"/></g><g class="ball"><circle cx="19.5" cy="5" r="3.2" fill="#D7F03C" stroke="#3B2416" stroke-width="1.2"/><circle cx="18.8" cy="4.4" r=".6" fill="#3B2416"/><circle cx="20.4" cy="5.8" r=".6" fill="#3B2416"/></g></svg></span>Join the queue</a></div></nav>
 <main class="wrap">
   <header class="mhero">
     <div><div class="eyebrow">The Dinkin’ Donut shop</div><h1>Fresh out <span>the oven.</span></h1>
@@ -80,7 +81,7 @@
   </section>
   <p class="note" style="margin-top:20px">Questions about sizes or stock? WhatsApp <a href="https://wa.me/97430763431" target="_blank" rel="noopener">+974 3076 3431</a> or <a href="https://wa.me/97430723503" target="_blank" rel="noopener">+974 3072 3503</a>, or DM <a href="https://www.instagram.com/dinkindonutqa/" target="_blank" rel="noopener">@dinkindonutqa</a>. Pre-order items are made in batches; we’ll message you when yours is ready. Prices in Qatari riyals.</p>
 </main>
-<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dinkin’ Donut Pickleball Club · Stay glazed.<br><a href="https://www.instagram.com/dinkindonutqa/" target="_blank" rel="noopener">Instagram @dinkindonutqa</a> · WhatsApp <a href="https://wa.me/97430763431" target="_blank" rel="noopener">+974 3076 3431</a> / <a href="https://wa.me/97430723503" target="_blank" rel="noopener">+974 3072 3503</a></span><span><a href="/">Home</a> · <a href="/queue">Live queue</a> · <a href="/dupr">DUPR games</a></span></div></footer>
+<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dinkin’ Donut Pickleball Club · Stay glazed.</span><div data-contact style="flex-direction:row;flex-wrap:wrap"></div><span><a href="/">Home</a> · <a href="/queue">Live queue</a> · <a href="/dupr">DUPR games</a></span></div></footer>
 
 <button class="btn pink bagbtn" id="bagBtn" aria-haspopup="dialog">🍩 Bag <span class="cnt" id="cnt">0</span></button>
 <div class="drawer" id="drawer" hidden><aside class="panel" role="dialog" aria-modal="true" aria-labelledby="bagTitle">
@@ -97,6 +98,7 @@
 </aside></div>
 
 <script src="/js/config.js"></script>
+<script src="/js/contact.js"></script>
 <script src="/js/merch.js"></script>
 <script>
 const $ = id => document.getElementById(id), C = window.CLUB, M = window.MERCH;
