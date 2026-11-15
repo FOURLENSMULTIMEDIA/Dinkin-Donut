@@ -5,7 +5,7 @@ function fresh() {
   return {
     v: 0, updatedAt: Date.now(), nightTitle: "Open Play Night",
     format: 2, rotation: "winstay", maxWins: 2,
-    players: {}, queue: [], bench: [], games: 0, nextId: 1,
+    players: {}, queue: [], bench: [], games: 0, nextId: 1, durSum: 0, durN: 0,
     courts: [1, 2, 3].map(id => ({ id, teams: null, start: null, stayers: null, streak: 0 })),
     log: [{ t: Date.now(), txt: "Night created. Paddles up!" }],
   };
@@ -20,7 +20,8 @@ function findByName(S, name) {
   return Object.values(S.players).find(p => p.name.toLowerCase() === name.toLowerCase());
 }
 
-function addPlayer(S, rawName) {
+const LEVELS = ["new", "social", "competitive"];
+function addPlayer(S, rawName, level) {
   const name = clean(rawName);
   if (name.length < 2) throw new Error("Please enter a name with at least 2 letters.");
   let p = findByName(S, name);
@@ -32,6 +33,7 @@ function addPlayer(S, rawName) {
     const id = "p" + S.nextId++;
     p = S.players[id] = { id, name, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now() };
   }
+  if (LEVELS.includes(level)) p.level = level;
   S.queue.push(p.id);
   log(S, `${p.name} checked in`);
   return p;
@@ -56,7 +58,7 @@ function court(S, id) {
 
 const actions = {
   // public
-  join: (S, a) => ({ player: addPlayer(S, a.name) }),
+  join: (S, a) => ({ player: addPlayer(S, a.name, a.level) }),
   leave: (S, a) => {
     const p = S.players[a.id]; if (!p) return;
     S.queue = S.queue.filter(id => id !== p.id);
@@ -64,7 +66,7 @@ const actions = {
     log(S, `${p.name} is taking a break`);
   },
   // host
-  add: (S, a) => ({ player: addPlayer(S, a.name) }),
+  add: (S, a) => ({ player: addPlayer(S, a.name, a.level) }),
   win: (S, a) => {
     const c = court(S, a.court); if (!c.teams) throw new Error("No game on that court.");
     const wi = Number(a.team) ? 1 : 0, W = c.teams[wi], L = c.teams[1 - wi];
@@ -73,6 +75,7 @@ const actions = {
     L.forEach(id => { const p = S.players[id]; p.l++; p.streak = p.streak < 0 ? p.streak - 1 : -1; p.pf += ls; p.pa += ws; });
     S.games++;
     const mins = Math.max(1, Math.round((Date.now() - c.start) / 60000));
+    if (mins <= 45) { S.durSum = (S.durSum || 0) + mins; S.durN = (S.durN || 0) + 1; }
     log(S, `Court ${c.id}: ${names(S, W)} beat ${names(S, L)}${ws ? ` ${ws}–${ls}` : ""} (${mins} min)`);
     const teamStreak = c.lastWinners && c.lastWinners.join() === [...W].sort().join() ? c.streak + 1 : 1;
     if (S.rotation === "winstay" && teamStreak < S.maxWins) {

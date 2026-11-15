@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Merch · Dinkin' Donut</title>
+<meta name="description" content="Dinkin' Donut club merch: tees, hoodies, caps, paddle covers and more. Order on WhatsApp, pick up at open play.">
+<meta name="theme-color" content="#FFF6EA">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script src="/js/theme.js"></script>
+<style>
+/* Merch: a donut-shop display case. Products sit on glazed "trays"; the bag is a pink box. */
+.mhero{padding-block:56px 30px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:30px;align-items:end}
+.mhero h1{font-size:clamp(46px,8vw,96px)}
+.mhero h1 span{color:var(--glaze)}
+.mhero p{max-width:46ch;color:var(--muted);font-size:18px;margin:16px 0 0}
+.drop{background:var(--ball);color:#3B2416;border-radius:50%;width:150px;height:150px;display:grid;place-items:center;text-align:center;font:700 18px/1.1 var(--display);transform:rotate(10deg);flex:none}
+.drop b{display:block;font-size:42px}
+@media (max-width:640px){.mhero{grid-template-columns:1fr}.drop{width:110px;height:110px;font-size:14px}.drop b{font-size:30px}}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.filters button{border:2px solid var(--line);background:var(--surface);color:var(--fg);font:700 14px var(--body);padding:9px 16px;border-radius:999px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:26px;overflow:hidden;display:flex;flex-direction:column}
+.tray{aspect-ratio:1/0.9;max-width:100%;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 120%,var(--sunk) 55%,transparent 56%),var(--bg);transition:background .3s}
+.tray svg{width:78%;height:78%;transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
+.item:hover .tray svg{transform:translateY(-6px) rotate(-3deg)}
+.badge{position:absolute;top:14px;left:14px;font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;border-radius:999px;background:var(--ink);color:var(--on-ink)}
+.badge.preorder{background:var(--glaze);color:#fff}.badge.available{background:var(--court);color:#FFF6EA}
+.body{padding:18px 20px 20px;display:grid;gap:10px;flex:1}
+.body h2{font-size:22px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.price{font:700 18px var(--display);color:var(--glaze-deep);white-space:nowrap}
+.body p{margin:0;color:var(--muted);font-size:14px}
+.opts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sw{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
+.sw[aria-pressed="true"]{outline:3px solid var(--glaze);outline-offset:2px}
+.sz{min-width:40px;padding:6px 8px;border:2px solid var(--line);border-radius:10px;background:transparent;color:var(--fg);font:700 13px var(--body);cursor:pointer}
+.sz[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.add{margin-top:auto}
+.bagbtn{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:30;box-shadow:0 10px 30px rgba(255,95,162,.45)}
+.bagbtn .cnt{background:#fff;color:var(--glaze-deep);border-radius:999px;min-width:24px;height:24px;display:grid;place-items:center;font-size:13px}
+.bagbtn.pop{animation:pop .4s}
+@keyframes pop{50%{transform:scale(1.15)}}
+.drawer{position:fixed;inset:0;z-index:40;display:grid;justify-items:end;background:rgba(26,17,11,.45)}
+.panel{width:min(440px,100%);height:100%;background:var(--bg);padding:24px max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 20px;display:flex;flex-direction:column;gap:14px;overflow:auto}
+.panel h2{font-size:30px;display:flex;justify-content:space-between;align-items:center}
+.line{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px}
+.line svg{width:56px;height:56px}
+.line small{color:var(--muted)}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:28px;height:28px;border-radius:50%;border:0;background:var(--sunk);color:var(--fg);font-weight:700;cursor:pointer}
+.total{display:flex;justify-content:space-between;font:700 22px var(--display);border-top:2px dashed var(--line);padding-top:14px;margin-top:auto}
+.note{font-size:13px;color:var(--muted)}
+.summary{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13px}
+.empty{color:var(--muted);text-align:center;padding:40px 0}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:60px}
+.how div{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px}
+.how b{font:700 20px var(--display);display:block;margin-bottom:6px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a><a class="btn pink sm" href="/queue"><span class="live-dot"></span>Join the queue</a></div></nav>
+<main class="wrap">
+  <header class="mhero">
+    <div><div class="eyebrow">The Dinkin’ Donut shop</div><h1>Fresh out <span>the oven.</span></h1>
+      <p>Club gear for Dinkers. Fill your bag, send the order on WhatsApp, and pick it up at the check-in table on open play night.</p></div>
+    <div class="drop"><div><b>01</b>First drop</div></div>
+  </header>
+  <div class="filters" role="group" aria-label="Filter products">
+    <button data-f="all" aria-pressed="true">Everything</button><button data-f="wear" aria-pressed="false">Wear</button><button data-f="gear" aria-pressed="false">Court gear</button><button data-f="available" aria-pressed="false">Ready now</button>
+  </div>
+  <div class="grid" id="grid"></div>
+  <section class="how">
+    <div><b>1 · Fill your bag</b>Pick colours and sizes. Your bag is saved on this phone.</div>
+    <div><b>2 · Send on WhatsApp</b>One tap sends the order to the crew. We confirm stock and payment.</div>
+    <div><b>3 · Pick up on court</b>Collect at the check-in table on open play night. Stay glazed.</div>
+  </section>
+  <p class="note" style="margin-top:20px">Pre-order items are made in batches; we’ll message you when yours is ready. Prices in Qatari riyals.</p>
+</main>
+<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dinkin’ Donut Pickleball Club · Stay glazed.</span><span><a href="/">Home</a> · <a href="/queue">Live queue</a> · <a href="/dupr">DUPR games</a></span></div></footer>
+
+<button class="btn pink bagbtn" id="bagBtn" aria-haspopup="dialog">🍩 Bag <span class="cnt" id="cnt">0</span></button>
+<div class="drawer" id="drawer" hidden><aside class="panel" role="dialog" aria-modal="true" aria-labelledby="bagTitle">
+  <h2 id="bagTitle">Your box <button class="btn ghost sm" id="close">Close</button></h2>
+  <div id="lines"></div>
+  <div class="total"><span>Total</span><span id="total" class="tabnum">0</span></div>
+  <form id="order" autocomplete="on" style="display:grid;gap:10px">
+    <label for="buyer" class="note">Your name (for pick-up)</label>
+    <input id="buyer" required maxlength="40" placeholder="e.g. Aisha K.">
+    <button class="btn pink" id="send">Send order on WhatsApp</button>
+  </form>
+  <div id="fallback" hidden><p class="note">WhatsApp ordering isn’t switched on yet. Copy your order and show it at the check-in table.</p><div class="summary" id="summary"></div><button class="btn sm" id="copy" style="margin-top:8px">Copy order</button></div>
+</aside></div>
+
+<script src="/js/config.js"></script>
+<script src="/js/merch.js"></script>
+<script>
+const $ = id => document.getElementById(id), C = window.CLUB, M = window.MERCH;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const money = n => `${n.toLocaleString("en")} ${C.currency || "QAR"}`;
+const dark = c => ["#3B2416", "#2F7A4F"].includes(c);
+const logo = (x, y, s) => `<image href="/assets/logo.svg" x="${x}" y="${y}" width="${s}" height="${s}"/>`;
+const ART = {
+  tee: c => `<svg viewBox="0 0 200 200"><path d="M70 30l-46 22 14 36 20-8v92h84V80l20 8 14-36-46-22c-4 14-16 22-30 22s-26-8-30-22z" fill="${c}" stroke="#3B2416" stroke-width="4" stroke-linejoin="round"/><path d="M70 30c4 14 16 22 30 22s26-8 30-22" fill="none" stroke="#3B2416" stroke-width="4"/>${logo(82, 74, 36)}</svg>`,
+  hoodie: c => `<svg viewBox="0 0 200 200"><path d="M68 40l-40 24 8 100h22l4-80v96h76V84l4 80h22l8-100-40-24c-6-22-58-22-64 0z" fill="${c}" stroke="#3B2416" stroke-width="4" stroke-linejoin="round"/><path d="M78 40c4 22 40 22 44 0M92 60v26M108 60v26" stroke="#3B2416" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M72 140h56v26H72z" fill="none" stroke="#3B2416" stroke-width="3" opacity=".5"/>${logo(80, 92, 40)}</svg>`,
+  cap: c => `<svg viewBox="0 0 200 200"><path d="M36 120c0-50 30-76 64-76s64 26 64 76z" fill="${c}" stroke="#3B2416" stroke-width="4"/><path d="M100 44v76M66 56c-6 20-8 44-6 64M134 56c6 20 8 44 6 64" stroke="#3B2416" stroke-width="2" opacity=".35" fill="none"/><path d="M30 120h120c28 0 40 10 40 18H30z" fill="#D7F03C" stroke="#3B2416" stroke-width="4" stroke-linejoin="round"/><circle cx="100" cy="46" r="5" fill="#3B2416"/>${logo(80, 72, 40)}</svg>`,
+  cover: c => `<svg viewBox="0 0 200 200"><g transform="rotate(-14 100 100)"><path d="M58 20h84a20 20 0 0 1 20 20v76c0 20-12 34-26 40v26h-72v-26c-14-6-26-20-26-40V40a20 20 0 0 1 20-20z" fill="${c}" stroke="#3B2416" stroke-width="4"/><circle cx="160" cy="24" r="16" fill="var(--bg)"/><circle cx="168" cy="48" r="12" fill="var(--bg)"/>${logo(68, 56, 64)}<rect x="64" y="160" width="72" height="10" rx="5" fill="#3B2416" opacity=".25"/></g></svg>`,
+  towel: c => `<svg viewBox="0 0 200 200"><rect x="40" y="36" width="120" height="144" rx="14" fill="${c}" stroke="#3B2416" stroke-width="4"/><path d="M40 156h120" stroke="#3B2416" stroke-width="3" opacity=".3"/><rect x="88" y="20" width="24" height="26" rx="12" fill="none" stroke="#3B2416" stroke-width="5"/>${[[60,60,"#2F7A4F",30],[118,58,"#E8A95B",-40],[136,96,"#D7F03C",20],[58,120,"#E8A95B",60],[100,136,"#2F7A4F",-20],[132,140,"#FF5FA2",45],[80,92,"#D7F03C",-60]].map(([x,y,f,r]) => `<rect x="${x}" y="${y}" width="18" height="6" rx="3" fill="${f === c ? "#3B2416" : f}" transform="rotate(${r} ${x+9} ${y+3})"/>`).join("")}</svg>`,
+  balls: c => `<svg viewBox="0 0 200 200">${[[66,120],[134,120],[100,66]].map(([x,y]) => `<circle cx="${x}" cy="${y}" r="40" fill="${c}" stroke="#3B2416" stroke-width="4"/>${[[-14,-12],[12,-16],[-20,10],[4,4],[18,14],[-6,24],[-2,-28]].map(([a,b]) => `<circle cx="${x+a}" cy="${y+b}" r="4.5" fill="#1F4D16" opacity=".85"/>`).join("")}`).join("")}</svg>`,
+  stickers: () => `<svg viewBox="0 0 200 200"><rect x="30" y="40" width="84" height="84" rx="20" fill="#FF5FA2" transform="rotate(-10 72 82)" stroke="#fff" stroke-width="6"/><text x="72" y="92" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="20" fill="#fff" transform="rotate(-10 72 82)">DINK</text><circle cx="140" cy="70" r="40" fill="#fff"/>${logo(104, 34, 72)}<rect x="70" y="118" width="110" height="50" rx="25" fill="#D7F03C" stroke="#fff" stroke-width="6" transform="rotate(6 125 143)"/><text x="125" y="150" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="17" fill="#3B2416" transform="rotate(6 125 143)">Stay glazed</text></svg>`,
+  bottle: c => `<svg viewBox="0 0 200 200"><rect x="80" y="18" width="40" height="24" rx="8" fill="#3B2416"/><path d="M76 42h48c8 10 14 20 14 34v96a14 14 0 0 1-14 14H76a14 14 0 0 1-14-14V76c0-14 6-24 14-34z" fill="${c}" stroke="#3B2416" stroke-width="4"/><rect x="62" y="96" width="76" height="6" fill="#D7F03C"/>${logo(78, 112, 44)}</svg>`,
+};
+const GROUP = { tee: "wear", hoodie: "wear", cap: "wear", cover: "gear", towel: "gear", balls: "gear", stickers: "gear", bottle: "gear" };
+const pick = {}; M.forEach(p => pick[p.id] = { color: p.colors[0]?.[0] || "", size: p.sizes.includes("M") ? "M" : p.sizes[0] || "" });
+let bag = []; try { bag = JSON.parse(localStorage.getItem("dd-bag")) || []; } catch {}
+const saveBag = () => { try { localStorage.setItem("dd-bag", JSON.stringify(bag)); } catch {} };
+const colorHex = (p, name) => (p.colors.find(c => c[0] === name) || [, "#FFF6EA"])[1];
+let filter = "all";
+
+function card(p) {
+  const s = pick[p.id], label = { available: "Ready now", preorder: "Pre-order", soon: "Coming soon" }[p.status];
+  return `<article class="item" data-id="${p.id}">
+    <div class="tray"><span class="badge ${p.status}">${label}</span>${ART[p.art](colorHex(p, s.color))}</div>
+    <div class="body"><h2>${esc(p.name)}<span class="price">${money(p.price)}</span></h2><p>${esc(p.blurb)}</p>
+      ${p.colors.length ? `<div class="opts" role="group" aria-label="Colour">${p.colors.map(([n, h]) => `<button class="sw" style="background:${h}" title="${n}" aria-label="${n}" aria-pressed="${s.color === n}" data-color="${n}"></button>`).join("")}<span class="note">${esc(s.color)}</span></div>` : ""}
+      ${p.sizes.length ? `<div class="opts" role="group" aria-label="Size">${p.sizes.map(z => `<button class="sz" aria-pressed="${s.size === z}" data-size="${z}">${z}</button>`).join("")}</div>` : ""}
+      <button class="btn ${p.status === "soon" ? "ghost" : ""} add" data-add ${p.status === "soon" ? "disabled" : ""}>${p.status === "soon" ? "Coming soon" : p.status === "preorder" ? "Pre-order" : "Add to bag"}</button>
+    </div></article>`;
+}
+function renderGrid() {
+  $("grid").innerHTML = M.filter(p => filter === "all" || (filter === "available" ? p.status === "available" : GROUP[p.art] === filter)).map(card).join("");
+}
+function renderBag() {
+  const n = bag.reduce((a, l) => a + l.qty, 0); $("cnt").textContent = n;
+  $("lines").innerHTML = bag.length ? bag.map((l, i) => { const p = M.find(x => x.id === l.id); if (!p) return "";
+    return `<div class="line">${ART[p.art](colorHex(p, l.color))}<div><b>${esc(p.name)}</b><br><small>${[l.color, l.size].filter(Boolean).join(" · ")} · ${money(p.price)}</small></div>
+      <div class="qty"><button data-q="${i}" data-d="-1" aria-label="One less">–</button><b class="tabnum">${l.qty}</b><button data-q="${i}" data-d="1" aria-label="One more">+</button></div></div>`; }).join("")
+    : '<p class="empty">Your box is empty.<br>Every Dinker needs a cap.</p>';
+  $("total").textContent = money(bag.reduce((a, l) => a + l.qty * (M.find(p => p.id === l.id)?.price || 0), 0));
+  $("order").hidden = !bag.length;
+}
+function orderText() {
+  const lines = bag.map(l => { const p = M.find(x => x.id === l.id); return `• ${l.qty} × ${p.name}${l.color ? " (" + l.color + (l.size ? ", " + l.size : "") + ")" : l.size ? " (" + l.size + ")" : ""} = ${money(l.qty * p.price)}`; });
+  return `🍩 Dinkin' Donut merch order\nName: ${$("buyer").value.trim()}\n\n${lines.join("\n")}\n\nTotal: ${$("total").textContent}\nPick up at open play. Stay glazed!`;
+}
+document.addEventListener("click", e => {
+  const art = e.target.closest(".item"), p = art && M.find(x => x.id === art.dataset.id);
+  if (p && e.target.dataset.color) { pick[p.id].color = e.target.dataset.color; art.outerHTML = card(p); return; }
+  if (p && e.target.dataset.size) { pick[p.id].size = e.target.dataset.size; art.outerHTML = card(p); return; }
+  if (p && e.target.closest("[data-add]")) {
+    const s = pick[p.id], ex = bag.find(l => l.id === p.id && l.color === s.color && l.size === s.size);
+    ex ? ex.qty++ : bag.push({ id: p.id, color: s.color, size: s.size, qty: 1 }); saveBag(); renderBag();
+    const b = $("bagBtn"); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop");
+    const btn = e.target.closest("[data-add]"); btn.textContent = "Added ✓"; setTimeout(() => renderGrid(), 900); return;
+  }
+  if (e.target.dataset.q !== undefined) { const l = bag[+e.target.dataset.q]; l.qty += +e.target.dataset.d; if (l.qty < 1) bag.splice(+e.target.dataset.q, 1); saveBag(); renderBag(); return; }
+  if (e.target.dataset.f) { filter = e.target.dataset.f; document.querySelectorAll("[data-f]").forEach(b => b.setAttribute("aria-pressed", b === e.target)); renderGrid(); }
+});
+$("bagBtn").onclick = () => { $("drawer").hidden = false; $("close").focus(); };
+$("close").onclick = () => $("drawer").hidden = true;
+$("drawer").onclick = e => { if (e.target.id === "drawer") $("drawer").hidden = true; };
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("drawer").hidden = true; });
+try { $("buyer").value = localStorage.getItem("dd-name") || ""; } catch {}
+$("order").onsubmit = e => {
+  e.preventDefault();
+  if (C.whatsappNumber) { const a = document.createElement("a"); a.href = `https://wa.me/${C.whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(orderText())}`; a.target = "_blank"; a.rel = "noopener"; a.click(); }
+  else { $("summary").textContent = orderText(); $("fallback").hidden = false; }
+};
+$("copy").onclick = () => navigator.clipboard?.writeText($("summary").textContent).then(() => $("copy").textContent = "Copied ✓").catch(() => {});
+renderGrid(); renderBag();
+</script>
+</body>
+</html>

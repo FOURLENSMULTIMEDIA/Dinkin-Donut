@@ -9,4 +9,10 @@ window.CLUB = {
   instagram: "",                       // e.g. "https://instagram.com/dinkindonut.qa"
   whatsapp: "",                        // e.g. "https://chat.whatsapp.com/xxxx"
   email: "",                           // e.g. "hello@dinkindonut.qa"
+  whatsappNumber: "",                  // merch orders, international format, digits only, e.g. "97455551234"
+  currency: "QAR",
+
+  // DUPR-rated games are booked on Reclub
+  reclubUrl: "",                       // your club page, e.g. "https://reclub.co/clubs/dinkin-donut"
+  duprClubUrl: "",                     // optional: your DUPR club page
 };

@@ -1,0 +1,28 @@
+// ✏️ Merch catalogue. Edit names, prices (in QAR), colours and sizes here.
+// "status": "available" | "preorder" | "soon"
+window.MERCH = [
+  { id: "tee", name: "Glazed Classic Tee", price: 89, status: "preorder", art: "tee",
+    blurb: "Heavyweight cotton, full-colour bitten-ball mark on the chest. Cut for court and café.",
+    colors: [["Cream", "#FFF6EA"], ["Glaze", "#FF5FA2"], ["Choco", "#3B2416"]], sizes: ["XS", "S", "M", "L", "XL", "XXL"] },
+  { id: "hoodie", name: "Night Session Hoodie", price: 159, status: "preorder", art: "hoodie",
+    blurb: "For January nights in Doha when the breeze picks up. Brushed fleece, puff-print logo.",
+    colors: [["Choco", "#3B2416"], ["Court", "#2F7A4F"], ["Cream", "#FFF6EA"]], sizes: ["S", "M", "L", "XL", "XXL"] },
+  { id: "cap", name: "Stay Glazed Cap", price: 69, status: "available", art: "cap",
+    blurb: "Six-panel dad cap with an embroidered donut and a lime under-brim. One size.",
+    colors: [["Glaze", "#FF5FA2"], ["Ball", "#D7F03C"], ["Choco", "#3B2416"]], sizes: [] },
+  { id: "cover", name: "Bite Club Paddle Cover", price: 79, status: "available", art: "cover",
+    blurb: "Padded neoprene sleeve with a bite cut out of the corner. Fits standard paddles.",
+    colors: [["Glaze", "#FF5FA2"], ["Court", "#2F7A4F"]], sizes: [] },
+  { id: "towel", name: "Sprinkle Court Towel", price: 45, status: "available", art: "towel",
+    blurb: "Quick-dry microfibre covered in sprinkles. Clips to your bag.",
+    colors: [["Cream", "#FFF6EA"], ["Glaze", "#FF5FA2"]], sizes: [] },
+  { id: "balls", name: "Glaze Balls · 3 pack", price: 35, status: "available", art: "balls",
+    blurb: "Outdoor balls stamped with the Dinkin' Donut mark. Sweet, then beaten.",
+    colors: [["Ball", "#D7F03C"], ["Glaze", "#FF5FA2"]], sizes: [] },
+  { id: "stickers", name: "Dinker Sticker Pack", price: 15, status: "available", art: "stickers",
+    blurb: "Six waterproof stickers for paddles, bottles and laptops.",
+    colors: [], sizes: [] },
+  { id: "bottle", name: "Kitchen Line Bottle", price: 65, status: "soon", art: "bottle",
+    blurb: "Insulated steel, keeps water cold through four hours of open play.",
+    colors: [["Court", "#2F7A4F"], ["Cream", "#FFF6EA"]], sizes: [] },
+];

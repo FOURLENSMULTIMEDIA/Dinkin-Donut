@@ -8,13 +8,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
+<script src="/js/theme.js"></script>
 <style>
 .page{padding-block:24px 60px;display:grid;gap:20px}
-.me{background:var(--choco);color:var(--cream);border-radius:28px;padding:26px;display:grid;gap:14px}
+.me{background:var(--deep);color:var(--cream);border-radius:28px;padding:26px;display:grid;gap:14px}
 .me h1{font-size:clamp(30px,6vw,46px)}
 .me h1 span{color:var(--ball)}
 .me form{display:flex;gap:10px;flex-wrap:wrap}
 .me input{flex:1 1 200px;font-size:18px}
+.levels{border:0;padding:0;margin:4px 0 0;display:flex;gap:8px;flex-wrap:wrap;width:100%}
+.levels legend{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--dough)}.levels legend span{font-weight:500;opacity:.8}
+.levels input{position:absolute;opacity:0}
+.levels span{display:inline-block;padding:9px 14px;border-radius:999px;border:2px solid rgba(255,246,234,.35);font-weight:700;font-size:14px;cursor:pointer}
+.levels input:checked+span{background:var(--cream);color:#3B2416;border-color:var(--cream)}
+.levels input:focus-visible+span{outline:3px solid var(--glaze);outline-offset:2px}
+.eta{display:inline-flex;gap:6px;align-items:center;background:rgba(255,246,234,.12);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px}
+.lv{font-size:12px;margin-left:4px}
 .me .err{color:#FFB3CF;font-weight:600;margin:0}
 .ticket{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .ticket .big{font:700 clamp(64px,16vw,110px)/1 var(--display);color:var(--ball);font-variant-numeric:tabular-nums}
@@ -37,7 +46,7 @@ ol.q{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 ol.q li{display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
 ol.q li.next{border-color:var(--glaze)}
 ol.q li.you{background:var(--ball);border-color:var(--ball);color:var(--choco)}
-ol.q .n{font:700 14px var(--display);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--dough);color:var(--choco);flex:none}
+ol.q .n{font:700 14px var(--display);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--dough);color:#3B2416;flex:none}
 ol.q li.next .n{background:var(--glaze);color:#fff}
 ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .muted{color:var(--muted)}
@@ -66,6 +75,12 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
       <label for="name" class="sr" hidden>Your name</label>
       <input id="name" placeholder="Your name (e.g. Aisha K.)" maxlength="24" required>
       <button class="btn lime" type="submit">Join the queue</button>
+      <fieldset class="levels">
+        <legend>How do you play? <span>(helps captains mix games)</span></legend>
+        <label><input type="radio" name="level" value="new"><span>🌱 New</span></label>
+        <label><input type="radio" name="level" value="social" checked><span>🍩 Social</span></label>
+        <label><input type="radio" name="level" value="competitive"><span>🔥 Competitive</span></label>
+      </fieldset>
     </form>
     <p class="err" id="err" hidden></p>
   </section>
@@ -78,6 +93,7 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
   <section class="panel" id="standings"><h2>Live standings <span class="muted" style="font:500 13px var(--body)">Wins, then win %</span></h2>
     <div class="tablewrap"><table><thead><tr><th>#</th><th>Dinker</th><th class="r">W</th><th class="r">L</th><th class="r">Win %</th><th class="r">+/-</th><th class="r">Streak</th></tr></thead><tbody id="table"></tbody></table></div>
   </section>
+  <a class="panel" href="/dupr" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--court);color:#FFF6EA;border:0"><span><b style="font:700 22px var(--display)">Want rated games?</b><br>DUPR sessions are booked on Reclub.</span><span class="btn lime sm">DUPR games →</span></a>
   <section class="panel"><h2>Game log</h2><ul class="log" id="log"></ul></section>
 </main>
 
@@ -88,6 +104,7 @@ let meId = null; try { meId = localStorage.getItem(ME_KEY); } catch {}
 let S = null, lastPhase = null;
 const $ = id => document.getElementById(id);
 const JOIN_HTML = $("me").innerHTML;
+try { const n = localStorage.getItem("dd-name"); if (n) $("name").value = n; } catch {}
 
 function sprinkles() {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -98,12 +115,29 @@ function sprinkles() {
     s.style.animationDelay = Math.random() * .5 + "s"; document.body.appendChild(s); setTimeout(() => s.remove(), 2400);
   }
 }
-function buzz() { try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {} }
+function buzz() {
+  try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {}
+  // Two-note "ding-dong" so players hear their call over the court noise
+  try {
+    const A = window.__ac || (window.__ac = new (window.AudioContext || window.webkitAudioContext)());
+    [[880, 0], [660, .18]].forEach(([f, t]) => { const o = A.createOscillator(), g = A.createGain(); o.frequency.value = f; o.type = "sine";
+      g.gain.setValueAtTime(.0001, A.currentTime + t); g.gain.exponentialRampToValueAtTime(.4, A.currentTime + t + .02); g.gain.exponentialRampToValueAtTime(.0001, A.currentTime + t + .5);
+      o.connect(g).connect(A.destination); o.start(A.currentTime + t); o.stop(A.currentTime + t + .55); });
+  } catch {}
+}
+const LV = { new: "🌱", social: "🍩", competitive: "🔥" };
+function eta(pos) {
+  const need = S.format * 2, courts = Math.max(1, S.courts.length);
+  const avg = S.durN ? S.durSum / S.durN : 12; // assume 12 min until real games are timed
+  const rounds = Math.floor(pos / (need * courts)) + (pos < need ? 0 : 1);
+  const mins = Math.round(rounds * avg);
+  return mins < 2 ? "Any minute now" : `About ${mins} min`;
+}
 
 function renderMe() {
   const me = S.players[meId], box = $("me");
   box.className = "me";
-  if (!me) { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} box.innerHTML = JOIN_HTML; return; }
+  if (!me) { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} box.innerHTML = JOIN_HTML; try { const n = localStorage.getItem("dd-name"); if (n) $("name").value = n; } catch {} return; }
   const court = S.courts.find(c => c.teams && c.teams.flat().includes(meId));
   const staying = S.courts.find(c => c.stayers && c.stayers.includes(meId));
   const pos = S.queue.indexOf(meId), need = S.format * 2;
@@ -120,7 +154,7 @@ function renderMe() {
   } else if (pos >= 0) {
     phase = pos < need ? "next" : "wait"; if (pos < need) box.classList.add("upnext");
     html = `<div class="eyebrow" style="color:var(--ball)">${pos < need ? "Get your paddle ready" : "You’re in the queue"}</div>
-      <div class="ticket"><span class="big">#${pos + 1}</span><div><b>${DD.esc(me.name)}</b><br>${pos < need ? "You’re on the next open court." : `${pos} ahead of you`}</div></div>
+      <div class="ticket"><span class="big">#${pos + 1}</span><div><b>${DD.esc(me.name)}</b> ${LV[me.level] || ""}<br>${pos < need ? "You’re on the next open court." : `${pos} ahead of you`}<br><span class="eta">⏱ ${eta(pos)}</span></div></div>
       ${rec}<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost sm" id="leave">Take a break</button><button class="btn ghost sm" id="notme">Not ${DD.esc(me.name)}?</button></div>`;
   } else {
     phase = "out";
@@ -142,7 +176,7 @@ function render() {
   $("courts").innerHTML = S.courts.map(c => c.teams
     ? `<div class="ct"><h3>Court ${c.id}<span class="tabnum" data-start="${c.start}">${DD.clock(c.start)}</span></h3><div>${c.teams[0].map(nm).join(" &amp; ")}</div><div class="vs">VS</div><div>${c.teams[1].map(nm).join(" &amp; ")}</div></div>`
     : `<div class="ct open"><h3>Court ${c.id}<span>Open</span></h3>${c.stayers ? `<div>Winners staying: ${c.stayers.map(nm).join(" &amp; ")}</div>` : '<div class="muted">Next up goes here</div>'}</div>`).join("");
-  $("queue").innerHTML = S.queue.length ? S.queue.map((id, i) => `<li class="${i < need ? "next" : ""} ${id === meId ? "you" : ""}"><span class="n">${i + 1}</span><span class="nm">${DD.esc(S.players[id]?.name)}${id === meId ? " (you)" : ""}</span><span class="muted tabnum" style="font-size:13px">${S.players[id].w}–${S.players[id].l}</span></li>`).join("")
+  $("queue").innerHTML = S.queue.length ? S.queue.map((id, i) => `<li class="${i < need ? "next" : ""} ${id === meId ? "you" : ""}"><span class="n">${i + 1}</span><span class="nm">${DD.esc(S.players[id]?.name)}<span class="lv">${LV[S.players[id]?.level] || ""}</span>${id === meId ? " (you)" : ""}</span><span class="muted tabnum" style="font-size:13px">${S.players[id].w}–${S.players[id].l}</span></li>`).join("")
     : '<li><span class="muted">Nobody waiting. Join and you’re straight on.</span></li>';
   const rows = DD.ranked(S);
   $("table").innerHTML = rows.length ? rows.map((p, i) => { const d = p.pf - p.pa;
@@ -158,7 +192,10 @@ document.addEventListener("submit", async e => {
   e.preventDefault();
   const err = $("err"); err.hidden = true;
   try {
-    const st = await DD.send({ type: "join", name: $("name").value });
+    const lvl = (document.querySelector("input[name=level]:checked") || {}).value;
+    const st = await DD.send({ type: "join", name: $("name").value, level: lvl });
+    try { localStorage.setItem("dd-name", $("name").value); } catch {}
+    buzz.prime = true; try { (window.__ac || (window.__ac = new (window.AudioContext || window.webkitAudioContext)())).resume(); } catch {}
     meId = st.result.player.id; try { localStorage.setItem(ME_KEY, meId); } catch {}
     S = st; lastPhase = null; render(); sprinkles();
   } catch (x) { err.textContent = x.message; err.hidden = false; }

@@ -9,16 +9,26 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
+<script src="/js/theme.js"></script>
 <style>
 .page{padding-block:20px 60px;display:grid;gap:18px}
 .lock{max-width:420px;margin:10vh auto;background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:30px;display:grid;gap:14px;text-align:center}
-.lock img{width:90px;margin:0 auto}
+.lock-mark{width:96px;height:96px;margin:0 auto;border-radius:50%;background:var(--ball);display:grid;place-items:center}
+.lock-mark img{width:76px;animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pinwrap{position:relative}
+.pinwrap input{width:100%;font-size:20px;letter-spacing:.12em;text-align:center;padding:14px 70px}
+.peek{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:var(--sunk);color:var(--fg);font:700 12px var(--body);padding:8px 10px;border-radius:10px;cursor:pointer}
+.remember{display:flex;gap:8px;align-items:center;justify-content:center;font-size:14px;color:var(--muted)}
+.lockerr{margin:0;color:var(--loss);font-weight:700}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 .lock h1{font-size:32px}
 .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
 .bar label{font-size:13px;font-weight:700;color:var(--muted)}
 .bar .sp{flex:1}
 .stats{display:flex;gap:10px;flex-wrap:wrap}
-.stat{background:var(--choco);color:var(--cream);border-radius:16px;padding:10px 16px;min-width:96px}
+.stat{background:var(--deep);color:var(--cream);border-radius:16px;padding:10px 16px;min-width:96px}
 .stat b{display:block;font:700 26px var(--display);color:var(--ball);font-variant-numeric:tabular-nums}
 .stat span{font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 .cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px}
@@ -38,28 +48,44 @@
 ol.q{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 ol.q li{display:flex;gap:6px;align-items:center;padding:7px 8px 7px 10px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
 ol.q li.next{border-color:var(--glaze)}
-ol.q .n{font:700 13px var(--display);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--dough);flex:none}
+ol.q .n{font:700 13px var(--display);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--dough);color:#3B2416;flex:none}
 ol.q li.next .n{background:var(--glaze);color:#fff}
 ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .ib{border:0;background:transparent;color:var(--muted);font-size:15px;padding:6px 7px;border-radius:8px;cursor:pointer}
 .ib:hover{background:var(--sunk);color:var(--fg)}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--choco);color:var(--cream);padding:12px 18px;border-radius:14px;font-weight:600;z-index:50;max-width:90vw}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#3B2416;color:var(--cream);padding:12px 18px;border-radius:14px;font-weight:600;z-index:50;max-width:90vw}
 .toast.bad{background:var(--loss)}
 .warn{background:#FFE7A8;color:var(--choco);border-radius:14px;padding:12px 14px;font-weight:600}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .muted{color:var(--muted);font-size:14px}
+.recap{position:fixed;inset:0;z-index:60;background:rgba(26,17,11,.55);display:grid;place-items:center;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px));overflow:auto}
+.rbox{background:var(--bg);border-radius:28px;padding:28px;max-width:560px;width:100%;display:grid;gap:14px;box-shadow:0 30px 80px rgba(0,0,0,.35)}
+.rbox h2{font-size:40px}
+.rstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rstats div{background:var(--ball);color:#3B2416;border-radius:18px;padding:12px;text-align:center;font-weight:700;font-size:13px}
+.rstats b{display:block;font:700 32px var(--display)}
+.awards{display:grid;gap:8px}
+.awards div{display:grid;grid-template-columns:1fr auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+.awards span{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.awards b{font:700 22px var(--display)}.awards small{align-self:center;font-weight:700;color:var(--muted)}
 </style>
 </head>
 <body>
 <nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Host console</a><span class="chip" style="margin-left:auto" data-conn="on"><span class="live-dot"></span>Live</span></div></nav>
 
 <form class="lock" id="lock" autocomplete="off">
-  <img src="/assets/logo.svg" alt="">
+  <div class="lock-mark"><img src="/assets/logo.svg" alt=""></div>
+  <div class="eyebrow">Crew only</div>
   <h1>Host sign-in</h1>
-  <p class="muted" style="margin:0">Enter the host PIN set in Vercel (HOST_PIN).</p>
-  <input id="pin" type="password" inputmode="numeric" placeholder="PIN" aria-label="Host PIN" required>
-  <button class="btn pink">Open console</button>
-  <p class="muted" id="lockErr" hidden style="color:var(--loss)"></p>
+  <p class="muted" style="margin:0">Enter the host PIN to run tonight’s courts.</p>
+  <div class="pinwrap">
+    <label for="pin" class="sr">Host PIN</label>
+    <input id="pin" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" placeholder="Host PIN" required>
+    <button type="button" class="peek" id="peek" aria-label="Show PIN" aria-pressed="false">Show</button>
+  </div>
+  <label class="remember"><input type="checkbox" id="remember"> Keep me signed in on this device</label>
+  <button class="btn pink" id="go">Open console</button>
+  <p class="lockerr" id="lockErr" role="alert" hidden></p>
 </form>
 
 <main class="wrap page" id="app" hidden>
@@ -84,12 +110,12 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
     </section>
   </div>
   <section class="panel">
-    <h2>Night controls</h2>
+    <h2>Session controls</h2>
     <div class="row">
       <a class="btn ghost sm" href="/tv" target="_blank">Open TV mode</a>
       <a class="btn ghost sm" href="/poster" target="_blank">Print QR poster</a>
       <button class="btn ghost sm" id="csv" type="button">Download results (CSV)</button>
-      <span id="resetZone"><button class="btn ghost sm" id="reset" type="button" style="color:var(--loss)">End night and reset</button></span>
+      <span id="resetZone"></span>
       <button class="btn ghost sm" id="logout" type="button">Sign out</button>
     </div>
   </section>
@@ -98,7 +124,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 <script src="/js/common.js"></script>
 <script>
 const $ = id => document.getElementById(id);
-let PIN = ""; try { PIN = sessionStorage.getItem("dd-pin") || ""; } catch {}
+let PIN = ""; try { PIN = sessionStorage.getItem("dd-pin") || localStorage.getItem("dd-pin") || ""; } catch {}
 let S = null, feed = null;
 
 function toast(msg, bad) { const t = document.createElement("div"); t.className = "toast" + (bad ? " bad" : ""); t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
@@ -107,15 +133,24 @@ async function act(a, okMsg) {
   catch (e) { toast(e.message, true); if (/PIN/.test(e.message)) logout(); }
 }
 async function unlock(pin) {
-  const r = await fetch("/api/queue?check", { headers: { "x-host-pin": pin } }).then(r => r.json());
-  if (!r.ok) throw new Error("That PIN didn’t work.");
-  PIN = pin; try { sessionStorage.setItem("dd-pin", pin); } catch {}
+  const res = await fetch("/api/queue?check", { headers: { "x-host-pin": pin } });
+  const r = await res.json().catch(() => ({}));
+  if (r.error) throw new Error(r.error);
+  if (!r.ok) throw new Error("That PIN didn’t work. PINs are case-sensitive.");
+  PIN = pin;
+  try { ($("remember").checked || localStorage.getItem("dd-pin") ? localStorage : sessionStorage).setItem("dd-pin", pin); } catch {}
   $("lock").hidden = true; $("app").hidden = false;
   feed = feed || DD.live(st => { S = st; render(); }, 2500);
 }
-function logout() { try { sessionStorage.removeItem("dd-pin"); } catch {} location.reload(); }
-$("lock").onsubmit = async e => { e.preventDefault(); try { await unlock($("pin").value); } catch (x) { $("lockErr").textContent = x.message; $("lockErr").hidden = false; } };
-if (PIN) unlock(PIN).catch(() => {});
+function logout() { try { sessionStorage.removeItem("dd-pin"); localStorage.removeItem("dd-pin"); } catch {} location.reload(); }
+$("lock").onsubmit = async e => {
+  e.preventDefault(); const f = $("lock"), go = $("go"); go.disabled = true; go.textContent = "Checking…";
+  try { await unlock($("pin").value); }
+  catch (x) { $("lockErr").textContent = x.message; $("lockErr").hidden = false; f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake"); $("pin").select(); }
+  finally { go.disabled = false; go.textContent = "Open console"; }
+};
+$("peek").onclick = () => { const i = $("pin"), show = i.type === "password"; i.type = show ? "text" : "password"; $("peek").textContent = show ? "Hide" : "Show"; $("peek").setAttribute("aria-pressed", show); i.focus(); };
+if (PIN) unlock(PIN).catch(() => { try { sessionStorage.removeItem("dd-pin"); localStorage.removeItem("dd-pin"); } catch {} });
 
 function render() {
   if (!S) return;
@@ -167,12 +202,45 @@ $("csv").onclick = () => {
   const blob = new Blob([rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dinkin-donut-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
 };
+const RESET_BTN = '<button class="btn pink sm" id="reset" type="button">End session</button>';
+$("resetZone").innerHTML = RESET_BTN;
 $("resetZone").addEventListener("click", e => {
-  const z = $("resetZone");
-  if (e.target.id === "reset") z.innerHTML = '<span class="confirm"><b>Clear all players and scores?</b><button class="btn pink sm" id="yes">Yes, reset</button><button class="btn ghost sm" id="no">Keep</button></span>';
-  if (e.target.id === "yes") { act({ type: "reset" }, "New night started"); z.innerHTML = '<button class="btn ghost sm" id="reset" style="color:var(--loss)">End night and reset</button>'; }
-  if (e.target.id === "no") z.innerHTML = '<button class="btn ghost sm" id="reset" style="color:var(--loss)">End night and reset</button>';
+  if (e.target.id === "reset") { showRecap(); }
 });
+function showRecap() {
+  const all = Object.values(S.players), played = DD.ranked(S).filter(p => p.w + p.l);
+  const mvp = played[0], diff = [...played].sort((a, b) => (b.pf - b.pa) - (a.pf - a.pa))[0];
+  const most = [...played].sort((a, b) => (b.w + b.l) - (a.w + a.l))[0];
+  const live = S.courts.filter(c => c.teams).length;
+  const d = document.createElement("div"); d.className = "recap"; d.id = "recap";
+  d.innerHTML = `<div class="rbox" role="dialog" aria-modal="true" aria-labelledby="rt">
+    <div class="eyebrow">${DD.esc(S.nightTitle)} · ${new Date().toLocaleDateString([], { weekday: "long", day: "numeric", month: "short" })}</div>
+    <h2 id="rt">That’s a wrap! 🍩</h2>
+    <div class="rstats"><div><b>${S.games}</b>game${S.games === 1 ? "" : "s"}</div><div><b>${all.length}</b>Dinkers</div><div><b>${S.durN ? Math.round(S.durSum / S.durN) : "—"}</b>avg min</div></div>
+    ${mvp ? `<div class="awards">
+      <div><span>🏆 Dinker of the night</span><b>${DD.esc(mvp.name)}</b><small>${mvp.w}W · ${mvp.l}L</small></div>
+      ${diff && diff.pf ? `<div><span>🎯 Best point difference</span><b>${DD.esc(diff.name)}</b><small>${diff.pf - diff.pa > 0 ? "+" : ""}${diff.pf - diff.pa}</small></div>` : ""}
+      ${most ? `<div><span>🔋 Most games</span><b>${DD.esc(most.name)}</b><small>${most.w + most.l} game${most.w + most.l === 1 ? "" : "s"}</small></div>` : ""}</div>` : '<p class="muted">No games recorded tonight.</p>'}
+    ${live ? `<p class="warn">${live} game${live > 1 ? "s are" : " is"} still in progress and won’t be counted.</p>` : ""}
+    <p class="muted">Download the results before you reset. Resetting clears players, the queue, scores and the log for everyone.</p>
+    <div class="row"><button class="btn sm" id="rCsv">Download results (CSV)</button><button class="btn sm ghost" id="rCopy">Copy recap for Instagram</button></div>
+    <div class="row" style="justify-content:space-between;border-top:1px dashed var(--line);padding-top:14px">
+      <button class="btn ghost sm" id="rKeep">Keep playing</button><button class="btn pink" id="rReset">Reset for next session</button></div></div>`;
+  document.body.appendChild(d); $("rKeep").focus();
+  d.addEventListener("click", ev => {
+    const id = ev.target.id;
+    if (id === "recap" || id === "rKeep") d.remove();
+    if (id === "rCsv") $("csv").click();
+    if (id === "rCopy") {
+      const txt = `🍩 ${S.nightTitle} recap\n${S.games} games · ${all.length} Dinkers\n${mvp ? `🏆 Dinker of the night: ${mvp.name} (${mvp.w}W)\n` : ""}Thank you Dinkers! See you on court. Stay glazed. 🍩`;
+      navigator.clipboard?.writeText(txt).then(() => ev.target.textContent = "Copied ✓").catch(() => ev.target.textContent = "Copy didn’t work");
+    }
+    if (id === "rReset") {
+      if (ev.target.dataset.sure) { act({ type: "reset" }, "Session reset. Ready for the next night!"); d.remove(); }
+      else { ev.target.dataset.sure = 1; ev.target.textContent = "Tap again to confirm reset"; }
+    }
+  });
+}
 </script>
 </body>
 </html>
