@@ -1,0 +1,42 @@
+/* Dinkin' Donut — 60% cream, 25% one hero colour, 15% choco. Never pink text on lime. */
+:root{
+  --glaze:#FF5FA2; --glaze-deep:#E2407F; --ball:#D7F03C; --dough:#E8A95B; --court:#2F7A4F; --choco:#3B2416; --cream:#FFF6EA;
+  --bg:#FFF6EA; --surface:#FFFFFF; --sunk:#FBEBD6; --fg:#3B2416; --muted:#7A5A46; --line:#EFDCC6;
+  --win:#2F7A4F; --loss:#C23B5E;
+  --display:"Fredoka",ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif;
+  --body:"DM Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:22px; --gut:max(16px,env(safe-area-inset-left,0px)); --gutr:max(16px,env(safe-area-inset-right,0px));
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+h1,h2,h3,h4{font-family:var(--display);font-weight:700;line-height:1.05;margin:0;text-wrap:balance}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gutr)}
+.eyebrow{font-weight:700;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--glaze)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 15px/1 var(--body);border:0;border-radius:999px;padding:14px 22px;cursor:pointer;text-decoration:none;background:var(--choco);color:var(--cream);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.pink{background:var(--glaze);color:#fff}
+.btn.lime{background:var(--ball);color:var(--choco)}
+.btn.ghost{background:transparent;color:inherit;box-shadow:inset 0 0 0 2px currentColor}
+.btn.sm{padding:9px 14px;font-size:13px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+:focus-visible{outline:3px solid var(--glaze);outline-offset:3px;border-radius:8px}
+input,select{font:inherit;color:var(--fg);background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
+input:focus,select:focus{border-color:var(--glaze);outline:none}
+.tabnum{font-variant-numeric:tabular-nums}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:16px;height:68px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:700;font-size:22px}
+.brand img{width:44px;height:44px}
+.nav ul{display:flex;gap:22px;list-style:none;margin:0 0 0 auto;padding:0;font-weight:600;font-size:15px}
+.nav ul a{text-decoration:none}.nav ul a:hover{color:var(--glaze-deep)}
+.live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--glaze);margin-right:6px;box-shadow:0 0 0 0 var(--glaze);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 10px transparent}}
+@media (max-width:760px){.nav ul{display:none}.nav .btn{margin-left:auto}}
+.footer{background:var(--choco);color:var(--cream);padding-block:48px 36px;margin-top:80px}
+.footer a{color:var(--ball)}

@@ -1,0 +1,8 @@
+{
+  "name": "dinkin-donut",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dinkin' Donut Pickleball Club website with live court queue",
+  "scripts": { "dev": "node dev-server.js" },
+  "engines": { "node": ">=18" }
+}

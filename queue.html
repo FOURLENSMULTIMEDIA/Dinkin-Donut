@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Live Queue · Dinkin' Donut</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<style>
+.page{padding-block:24px 60px;display:grid;gap:20px}
+.me{background:var(--choco);color:var(--cream);border-radius:28px;padding:26px;display:grid;gap:14px}
+.me h1{font-size:clamp(30px,6vw,46px)}
+.me h1 span{color:var(--ball)}
+.me form{display:flex;gap:10px;flex-wrap:wrap}
+.me input{flex:1 1 200px;font-size:18px}
+.me .err{color:#FFB3CF;font-weight:600;margin:0}
+.ticket{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.ticket .big{font:700 clamp(64px,16vw,110px)/1 var(--display);color:var(--ball);font-variant-numeric:tabular-nums}
+.ticket.call{animation:glow 1.2s ease-in-out infinite alternate}
+.me.oncourt{background:var(--glaze)}
+.me.oncourt .big{color:var(--cream)}
+.me.upnext{background:var(--court)}
+@keyframes glow{to{transform:scale(1.02)}}
+.cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
+.panel h2{font-size:24px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.courts{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.ct{background:var(--court);color:var(--cream);border-radius:18px;padding:14px;display:grid;gap:4px}
+.ct.open{background:var(--sunk);color:var(--fg)}
+.ct h3{font-size:17px;display:flex;justify-content:space-between}.ct h3 span{font:500 13px var(--body);opacity:.85}
+.ct .vs{font:700 11px var(--display);letter-spacing:.3em;color:var(--ball)}.ct.open .vs{color:var(--muted)}
+.ct .mine{background:var(--ball);color:var(--choco);border-radius:8px;padding:0 6px}
+ol.q{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+ol.q li{display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
+ol.q li.next{border-color:var(--glaze)}
+ol.q li.you{background:var(--ball);border-color:var(--ball);color:var(--choco)}
+ol.q .n{font:700 14px var(--display);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--dough);color:var(--choco);flex:none}
+ol.q li.next .n{background:var(--glaze);color:#fff}
+ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.muted{color:var(--muted)}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:15px}
+th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px;border-bottom:2px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid var(--line)}
+.r{text-align:right}.w{color:var(--win);font-weight:700}.l{color:var(--loss);font-weight:700}
+tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
+.streak{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--sunk)}
+.streak.hot{background:var(--glaze);color:#fff}
+[data-conn="off"]::after{content:" · reconnecting…";color:var(--loss)}
+.log{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px;color:var(--muted);max-height:300px;overflow:auto}
+.sprinkle{position:fixed;top:-20px;width:6px;height:16px;border-radius:4px;pointer-events:none;z-index:99;animation:fall 1.6s ease-in forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg)}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a><span class="chip" style="margin-left:auto" data-conn="on"><span class="live-dot"></span>Live</span></div></nav>
+<main class="wrap page">
+  <section class="me" id="me">
+    <div class="eyebrow" style="color:var(--dough)" id="nightName">Open Play Night</div>
+    <h1>Paddles <span>up.</span></h1>
+    <p style="margin:0">Type your name to join the queue. Keep this page open and it will tell you when you’re next.</p>
+    <form id="joinForm" autocomplete="off">
+      <label for="name" class="sr" hidden>Your name</label>
+      <input id="name" placeholder="Your name (e.g. Aisha K.)" maxlength="24" required>
+      <button class="btn lime" type="submit">Join the queue</button>
+    </form>
+    <p class="err" id="err" hidden></p>
+  </section>
+
+  <div class="cols">
+    <section class="panel"><h2>Courts <span class="chip tabnum" id="games">0 games</span></h2><div class="courts" id="courts"></div></section>
+    <section class="panel"><h2>Queue <span class="chip tabnum" id="qlen">0 waiting</span></h2><ol class="q" id="queue"></ol></section>
+  </div>
+
+  <section class="panel" id="standings"><h2>Live standings <span class="muted" style="font:500 13px var(--body)">Wins, then win %</span></h2>
+    <div class="tablewrap"><table><thead><tr><th>#</th><th>Dinker</th><th class="r">W</th><th class="r">L</th><th class="r">Win %</th><th class="r">+/-</th><th class="r">Streak</th></tr></thead><tbody id="table"></tbody></table></div>
+  </section>
+  <section class="panel"><h2>Game log</h2><ul class="log" id="log"></ul></section>
+</main>
+
+<script src="/js/common.js"></script>
+<script>
+const ME_KEY = "dd-player";
+let meId = null; try { meId = localStorage.getItem(ME_KEY); } catch {}
+let S = null, lastPhase = null;
+const $ = id => document.getElementById(id);
+const JOIN_HTML = $("me").innerHTML;
+
+function sprinkles() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cols = ["#FF5FA2", "#D7F03C", "#E8A95B", "#2F7A4F", "#FFF6EA"];
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement("i"); s.className = "sprinkle";
+    s.style.left = Math.random() * 100 + "vw"; s.style.background = cols[i % 5];
+    s.style.animationDelay = Math.random() * .5 + "s"; document.body.appendChild(s); setTimeout(() => s.remove(), 2400);
+  }
+}
+function buzz() { try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {} }
+
+function renderMe() {
+  const me = S.players[meId], box = $("me");
+  box.className = "me";
+  if (!me) { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} box.innerHTML = JOIN_HTML; return; }
+  const court = S.courts.find(c => c.teams && c.teams.flat().includes(meId));
+  const staying = S.courts.find(c => c.stayers && c.stayers.includes(meId));
+  const pos = S.queue.indexOf(meId), need = S.format * 2;
+  let phase, html;
+  const rec = `<p style="margin:0">Tonight: <b>${me.w}W · ${me.l}L</b>${me.streak > 1 ? ` · on a ${me.streak}-game streak` : ""}</p>`;
+  if (court) {
+    phase = "court" + court.id; box.classList.add("oncourt");
+    const mine = court.teams.findIndex(t => t.includes(meId));
+    html = `<div class="eyebrow" style="color:var(--cream)">You’re playing</div><div class="ticket call"><span class="big">Court ${court.id}</span></div>
+      <p style="margin:0">With <b>${DD.team(S, court.teams[mine].filter(x => x !== meId)) || "solo"}</b> vs <b>${DD.team(S, court.teams[1 - mine])}</b></p>${rec}`;
+  } else if (staying) {
+    phase = "stay"; box.classList.add("upnext");
+    html = `<div class="eyebrow" style="color:var(--ball)">Winners stay</div><h1>Stay on Court ${staying.id}</h1><p style="margin:0">Your next opponents are on their way.</p>${rec}`;
+  } else if (pos >= 0) {
+    phase = pos < need ? "next" : "wait"; if (pos < need) box.classList.add("upnext");
+    html = `<div class="eyebrow" style="color:var(--ball)">${pos < need ? "Get your paddle ready" : "You’re in the queue"}</div>
+      <div class="ticket"><span class="big">#${pos + 1}</span><div><b>${DD.esc(me.name)}</b><br>${pos < need ? "You’re on the next open court." : `${pos} ahead of you`}</div></div>
+      ${rec}<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost sm" id="leave">Take a break</button><button class="btn ghost sm" id="notme">Not ${DD.esc(me.name)}?</button></div>`;
+  } else {
+    phase = "out";
+    html = `<div class="eyebrow" style="color:var(--dough)">On a break</div><h1>Hi ${DD.esc(me.name)}</h1>${rec}
+      <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn lime" id="rejoin">Back in the queue</button><button class="btn ghost sm" id="notme">Not ${DD.esc(me.name)}?</button></div>`;
+  }
+  if (lastPhase && phase !== lastPhase && (phase.startsWith("court") || phase === "next")) { sprinkles(); buzz(); }
+  lastPhase = phase;
+  box.innerHTML = html;
+}
+
+function render() {
+  $("nightName").textContent = S.nightTitle;
+  if (meId) renderMe();
+  const need = S.format * 2;
+  $("games").textContent = `${S.games} game${S.games === 1 ? "" : "s"}`;
+  $("qlen").textContent = `${S.queue.length} waiting`;
+  const nm = id => `<span class="${id === meId ? "mine" : ""}">${DD.esc(S.players[id]?.name)}</span>`;
+  $("courts").innerHTML = S.courts.map(c => c.teams
+    ? `<div class="ct"><h3>Court ${c.id}<span class="tabnum" data-start="${c.start}">${DD.clock(c.start)}</span></h3><div>${c.teams[0].map(nm).join(" &amp; ")}</div><div class="vs">VS</div><div>${c.teams[1].map(nm).join(" &amp; ")}</div></div>`
+    : `<div class="ct open"><h3>Court ${c.id}<span>Open</span></h3>${c.stayers ? `<div>Winners staying: ${c.stayers.map(nm).join(" &amp; ")}</div>` : '<div class="muted">Next up goes here</div>'}</div>`).join("");
+  $("queue").innerHTML = S.queue.length ? S.queue.map((id, i) => `<li class="${i < need ? "next" : ""} ${id === meId ? "you" : ""}"><span class="n">${i + 1}</span><span class="nm">${DD.esc(S.players[id]?.name)}${id === meId ? " (you)" : ""}</span><span class="muted tabnum" style="font-size:13px">${S.players[id].w}–${S.players[id].l}</span></li>`).join("")
+    : '<li><span class="muted">Nobody waiting. Join and you’re straight on.</span></li>';
+  const rows = DD.ranked(S);
+  $("table").innerHTML = rows.length ? rows.map((p, i) => { const d = p.pf - p.pa;
+    return `<tr class="${p.id === meId ? "you" : ""}"><td>${i + 1}</td><td>${DD.esc(p.name)}</td><td class="r w">${p.w}</td><td class="r l">${p.l}</td><td class="r">${p.w + p.l ? Math.round(DD.pct(p) * 100) + "%" : "—"}</td><td class="r">${d > 0 ? "+" + d : d || "—"}</td><td class="r">${p.streak ? `<span class="streak ${p.streak >= 3 ? "hot" : ""}">${p.streak > 0 ? "W" + p.streak : "L" + -p.streak}</span>` : "—"}</td></tr>`; }).join("")
+    : '<tr><td colspan="7" class="muted">No players yet tonight.</td></tr>';
+  $("log").innerHTML = S.log.slice(0, 40).map(l => `<li>${new Date(l.t).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })} · ${DD.esc(l.txt)}</li>`).join("");
+}
+
+const feed = DD.live(st => { S = st; render(); }, 3000);
+
+document.addEventListener("submit", async e => {
+  if (e.target.id !== "joinForm") return;
+  e.preventDefault();
+  const err = $("err"); err.hidden = true;
+  try {
+    const st = await DD.send({ type: "join", name: $("name").value });
+    meId = st.result.player.id; try { localStorage.setItem(ME_KEY, meId); } catch {}
+    S = st; lastPhase = null; render(); sprinkles();
+  } catch (x) { err.textContent = x.message; err.hidden = false; }
+});
+document.addEventListener("click", async e => {
+  const id = e.target.id;
+  if (id === "leave") { S = await DD.send({ type: "leave", id: meId }); render(); }
+  if (id === "rejoin") { S = await DD.send({ type: "join", name: S.players[meId].name }); render(); }
+  if (id === "notme") { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} location.reload(); }
+});
+</script>
+</body>
+</html>

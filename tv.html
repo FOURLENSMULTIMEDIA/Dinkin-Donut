@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>TV Board · Dinkin' Donut</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<style>
+/* Big-screen board for a TV at the venue. Choco ground so it glows at night. */
+body{background:var(--choco);color:var(--cream);height:100vh;overflow:hidden}
+.tv{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:2vw;height:100%;padding:2.4vw max(2.4vw,env(safe-area-inset-right,0px)) 2.4vw max(2.4vw,env(safe-area-inset-left,0px))}
+.top{grid-column:1/-1;display:flex;align-items:center;gap:1.4vw}
+.top img{width:5vw;min-width:48px}
+.top h1{font-size:3.2vw}.top .eyebrow{font-size:1vw}
+.clock{margin-left:auto;font:700 3vw var(--display);color:var(--ball);font-variant-numeric:tabular-nums}
+.courts{display:grid;grid-template-columns:repeat(auto-fit,minmax(24vw,1fr));gap:1.4vw;align-content:start}
+.ct{background:var(--court);border-radius:1.6vw;padding:1.4vw 1.6vw;display:grid;gap:.4vw}
+.ct.open{background:#4a3020}
+.ct h2{font-size:2vw;display:flex;justify-content:space-between}.ct h2 span{font:700 1.6vw var(--body);color:var(--ball)}
+.ct .tm{font:600 1.9vw/1.2 var(--display)}
+.ct .vs{font:700 1vw var(--display);letter-spacing:.4em;color:var(--ball)}
+.side{display:grid;grid-template-rows:auto 1fr auto;gap:1.4vw;min-height:0}
+.box{background:#4a3020;border-radius:1.6vw;padding:1.4vw;min-height:0;overflow:hidden}
+.box h3{font-size:1.6vw;color:var(--ball);margin-bottom:.8vw}
+ol{list-style:none;margin:0;padding:0;display:grid;gap:.5vw;font:600 1.5vw var(--display)}
+ol li{display:flex;gap:.8vw;align-items:center}
+ol .n{width:2.2vw;height:2.2vw;border-radius:50%;display:grid;place-items:center;background:var(--dough);color:var(--choco);font-size:1.1vw;flex:none}
+ol li.next .n{background:var(--glaze);color:#fff}
+ol .rec{margin-left:auto;font:500 1.1vw var(--body);opacity:.8}
+.qr{display:flex;gap:1.2vw;align-items:center;background:var(--cream);color:var(--choco);border-radius:1.6vw;padding:1.2vw}
+.qr div{width:9vw;height:9vw;flex:none}.qr svg{width:100%;height:100%}
+.qr b{font:700 1.8vw/1.1 var(--display);display:block}.qr span{font-size:1vw}
+</style>
+</head>
+<body>
+<div class="tv">
+  <div class="top"><img src="/assets/logo.svg" alt=""><div><h1 id="title">Dinkin’ Donut</h1><div class="eyebrow">Live courts · Stay glazed</div></div><div class="clock" id="clock"></div></div>
+  <div class="courts" id="courts"></div>
+  <div class="side">
+    <div class="box"><h3>Up next</h3><ol id="queue"></ol></div>
+    <div class="box"><h3>Top Dinkers tonight</h3><ol id="top"></ol></div>
+    <div class="qr"><div id="qr"></div><p style="margin:0"><b>Scan to join the queue</b><span id="url"></span></p></div>
+  </div>
+</div>
+<script src="/js/qrcode.js"></script>
+<script src="/js/common.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+DD.qr($("qr"), DD.queueUrl()); $("url").textContent = location.host + "/queue";
+setInterval(() => $("clock").textContent = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }), 1000);
+try { navigator.wakeLock && navigator.wakeLock.request("screen").catch(() => {}); } catch {}
+DD.live(S => {
+  const need = S.format * 2;
+  $("title").textContent = S.nightTitle;
+  $("courts").innerHTML = S.courts.map(c => c.teams
+    ? `<div class="ct"><h2>Court ${c.id}<span data-start="${c.start}">${DD.clock(c.start)}</span></h2><div class="tm">${DD.team(S, c.teams[0])}</div><div class="vs">VS</div><div class="tm">${DD.team(S, c.teams[1])}</div></div>`
+    : `<div class="ct open"><h2>Court ${c.id}<span>OPEN</span></h2><div class="tm" style="opacity:.6">${c.stayers ? "Winners staying: " + DD.team(S, c.stayers) : "Next up, head over"}</div></div>`).join("");
+  $("queue").innerHTML = S.queue.slice(0, 10).map((id, i) => `<li class="${i < need ? "next" : ""}"><span class="n">${i + 1}</span>${DD.esc(S.players[id].name)}</li>`).join("") || "<li>Nobody waiting. Scan and play!</li>";
+  $("top").innerHTML = DD.ranked(S).filter(p => p.w + p.l).slice(0, 5).map((p, i) => `<li><span class="n">${i + 1}</span>${DD.esc(p.name)}<span class="rec">${p.w}W ${p.l}L</span></li>`).join("") || "<li>First result coming soon</li>";
+}, 3000);
+</script>
+</body>
+</html>

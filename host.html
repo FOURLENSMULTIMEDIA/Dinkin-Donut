@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Host Console · Dinkin' Donut</title>
+<meta name="robots" content="noindex">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<style>
+.page{padding-block:20px 60px;display:grid;gap:18px}
+.lock{max-width:420px;margin:10vh auto;background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:30px;display:grid;gap:14px;text-align:center}
+.lock img{width:90px;margin:0 auto}
+.lock h1{font-size:32px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.bar label{font-size:13px;font-weight:700;color:var(--muted)}
+.bar .sp{flex:1}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+.stat{background:var(--choco);color:var(--cream);border-radius:16px;padding:10px 16px;min-width:96px}
+.stat b{display:block;font:700 26px var(--display);color:var(--ball);font-variant-numeric:tabular-nums}
+.stat span{font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px}
+@media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:12px;align-content:start;min-width:0}
+.panel h2{font-size:22px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.courts{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.ct{background:var(--court);color:var(--cream);border-radius:18px;padding:14px;display:grid;gap:8px}
+.ct.open{background:var(--sunk);color:var(--fg)}
+.ct h3{font-size:18px;display:flex;justify-content:space-between;align-items:center}.ct h3 span{font:500 13px var(--body)}
+.team{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:2px solid rgba(255,246,234,.3);border-radius:14px;padding:8px 10px}
+.team .nm{font-weight:700;overflow-wrap:anywhere;min-width:0}
+.score{width:56px;padding:6px 8px;text-align:center;border-radius:10px;font-weight:700}
+.vs{font:700 11px var(--display);letter-spacing:.3em;color:var(--ball);text-align:center}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ct .btn.ghost{color:inherit}
+ol.q{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+ol.q li{display:flex;gap:6px;align-items:center;padding:7px 8px 7px 10px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+ol.q li.next{border-color:var(--glaze)}
+ol.q .n{font:700 13px var(--display);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--dough);flex:none}
+ol.q li.next .n{background:var(--glaze);color:#fff}
+ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.ib{border:0;background:transparent;color:var(--muted);font-size:15px;padding:6px 7px;border-radius:8px;cursor:pointer}
+.ib:hover{background:var(--sunk);color:var(--fg)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--choco);color:var(--cream);padding:12px 18px;border-radius:14px;font-weight:600;z-index:50;max-width:90vw}
+.toast.bad{background:var(--loss)}
+.warn{background:#FFE7A8;color:var(--choco);border-radius:14px;padding:12px 14px;font-weight:600}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.muted{color:var(--muted);font-size:14px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Host console</a><span class="chip" style="margin-left:auto" data-conn="on"><span class="live-dot"></span>Live</span></div></nav>
+
+<form class="lock" id="lock" autocomplete="off">
+  <img src="/assets/logo.svg" alt="">
+  <h1>Host sign-in</h1>
+  <p class="muted" style="margin:0">Enter the host PIN set in Vercel (HOST_PIN).</p>
+  <input id="pin" type="password" inputmode="numeric" placeholder="PIN" aria-label="Host PIN" required>
+  <button class="btn pink">Open console</button>
+  <p class="muted" id="lockErr" hidden style="color:var(--loss)"></p>
+</form>
+
+<main class="wrap page" id="app" hidden>
+  <div class="warn" id="noDb" hidden>No database connected. The queue resets whenever Vercel restarts. Add Upstash Redis in Vercel (see README) before your first real night.</div>
+  <div class="stats"><div class="stat"><b id="sP">0</b><span>Dinkers</span></div><div class="stat"><b id="sQ">0</b><span>In queue</span></div><div class="stat"><b id="sC">0</b><span>Courts live</span></div><div class="stat"><b id="sG">0</b><span>Games</span></div></div>
+  <div class="bar">
+    <label for="title">Night</label><input id="title" style="width:200px">
+    <label for="format">Format</label><select id="format"><option value="2">Doubles</option><option value="1">Singles</option></select>
+    <label for="rotation">After a game</label><select id="rotation"><option value="winstay">Winners stay</option><option value="all">Everyone rotates</option></select>
+    <label for="maxWins">Max wins</label><select id="maxWins"><option>1</option><option>2</option><option>3</option></select>
+    <span class="sp"></span>
+    <button class="btn sm" id="addCourt" type="button">+ Court</button>
+    <button class="btn pink sm" id="fillAll" type="button">Fill open courts</button>
+  </div>
+  <div class="cols">
+    <section class="panel"><h2>Courts <span class="muted">Optional score, then tap Won</span></h2><div class="courts" id="courts"></div></section>
+    <section class="panel">
+      <h2>Queue <span class="muted" id="qinfo"></span></h2>
+      <form class="row" id="addForm" autocomplete="off"><input id="newName" placeholder="Add a walk-in" style="flex:1" aria-label="Player name" maxlength="24"><button class="btn sm">Add</button></form>
+      <ol class="q" id="queue"></ol>
+      <div id="bench"></div>
+    </section>
+  </div>
+  <section class="panel">
+    <h2>Night controls</h2>
+    <div class="row">
+      <a class="btn ghost sm" href="/tv" target="_blank">Open TV mode</a>
+      <a class="btn ghost sm" href="/poster" target="_blank">Print QR poster</a>
+      <button class="btn ghost sm" id="csv" type="button">Download results (CSV)</button>
+      <span id="resetZone"><button class="btn ghost sm" id="reset" type="button" style="color:var(--loss)">End night and reset</button></span>
+      <button class="btn ghost sm" id="logout" type="button">Sign out</button>
+    </div>
+  </section>
+</main>
+
+<script src="/js/common.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+let PIN = ""; try { PIN = sessionStorage.getItem("dd-pin") || ""; } catch {}
+let S = null, feed = null;
+
+function toast(msg, bad) { const t = document.createElement("div"); t.className = "toast" + (bad ? " bad" : ""); t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
+async function act(a, okMsg) {
+  try { S = await DD.send(a, PIN); render(); if (okMsg) toast(okMsg); }
+  catch (e) { toast(e.message, true); if (/PIN/.test(e.message)) logout(); }
+}
+async function unlock(pin) {
+  const r = await fetch("/api/queue?check", { headers: { "x-host-pin": pin } }).then(r => r.json());
+  if (!r.ok) throw new Error("That PIN didn’t work.");
+  PIN = pin; try { sessionStorage.setItem("dd-pin", pin); } catch {}
+  $("lock").hidden = true; $("app").hidden = false;
+  feed = feed || DD.live(st => { S = st; render(); }, 2500);
+}
+function logout() { try { sessionStorage.removeItem("dd-pin"); } catch {} location.reload(); }
+$("lock").onsubmit = async e => { e.preventDefault(); try { await unlock($("pin").value); } catch (x) { $("lockErr").textContent = x.message; $("lockErr").hidden = false; } };
+if (PIN) unlock(PIN).catch(() => {});
+
+function render() {
+  if (!S) return;
+  const need = S.format * 2, n = id => DD.esc(S.players[id]?.name);
+  $("noDb").hidden = S.persistent;
+  $("sP").textContent = Object.keys(S.players).length; $("sQ").textContent = S.queue.length;
+  $("sC").textContent = S.courts.filter(c => c.teams).length; $("sG").textContent = S.games;
+  for (const k of ["format", "rotation", "maxWins"]) if (document.activeElement !== $(k)) $(k).value = S[k];
+  if (document.activeElement !== $("title")) $("title").value = S.nightTitle;
+  $("format").disabled = S.courts.some(c => c.teams);
+  $("maxWins").disabled = S.rotation !== "winstay";
+  $("qinfo").textContent = S.queue.length ? `next ${Math.min(need, S.queue.length)} highlighted` : "";
+
+  // Keep typed scores across refreshes
+  const scores = {}; document.querySelectorAll(".score").forEach(i => scores[i.id] = i.value);
+  $("courts").innerHTML = S.courts.map(c => {
+    if (!c.teams) {
+      const short = need - (c.stayers ? c.stayers.length : 0) - S.queue.length;
+      return `<div class="ct open"><h3>Court ${c.id}<span>Open</span></h3>${c.stayers ? `<div class="muted">Winners staying: <b>${DD.team(S, c.stayers)}</b> (${c.streak} win${c.streak > 1 ? "s" : ""})</div>` : ""}
+        <div class="row"><button class="btn pink sm" data-a="fill" data-c="${c.id}" ${short > 0 ? "disabled" : ""}>Start game</button>${short > 0 ? `<span class="muted">Need ${short} more</span>` : ""}
+        <button class="btn ghost sm" data-a="removeCourt" data-c="${c.id}" style="margin-left:auto">Remove court</button></div></div>`;
+    }
+    const t = k => `<div class="team"><span class="nm">${c.teams[k].map(n).join(" &amp; ")}</span><span class="row"><input class="score tabnum" id="s${c.id}-${k}" inputmode="numeric" placeholder="pts" aria-label="Points" value="${scores["s" + c.id + "-" + k] || ""}"><button class="btn lime sm" data-a="win" data-c="${c.id}" data-t="${k}">Won</button></span></div>`;
+    return `<div class="ct"><h3>Court ${c.id}<span class="tabnum" data-start="${c.start}">${DD.clock(c.start)}</span></h3>${t(0)}<div class="vs">VS</div>${t(1)}
+      <div class="row"><button class="btn ghost sm" data-a="cancel" data-c="${c.id}">Cancel game</button>${c.streak ? `<span class="muted" style="color:inherit;opacity:.8">Winners on ${c.streak} win${c.streak > 1 ? "s" : ""}</span>` : ""}</div></div>`;
+  }).join("");
+
+  $("queue").innerHTML = S.queue.length ? S.queue.map((id, i) => `<li class="${i < need ? "next" : ""}"><span class="n">${i + 1}</span><span class="nm">${n(id)} <span class="muted">${S.players[id].w}–${S.players[id].l}</span></span>
+    <button class="ib" title="Move up" aria-label="Move up" data-a="move" data-id="${id}" data-d="-1">▲</button><button class="ib" title="Move down" aria-label="Move down" data-a="move" data-id="${id}" data-d="1">▼</button>
+    <button class="ib" title="Send to front" aria-label="Send to front" data-a="toFront" data-id="${id}">⇡</button><button class="ib" title="Take a break" aria-label="Take a break" data-a="bench" data-id="${id}">⏸</button></li>`).join("")
+    : '<li class="muted">Queue is empty. Players join by scanning the QR code.</li>';
+  $("bench").innerHTML = S.bench.length ? `<p class="muted" style="margin:6px 0">On a break (tap to bring back, × to remove)</p><div class="row">${S.bench.map(id => `<span class="chip"><button class="ib" data-a="unbench" data-id="${id}">↩ ${n(id)}</button><button class="ib" title="Remove player" aria-label="Remove ${n(id)}" data-a="removePlayer" data-id="${id}">×</button></span>`).join("")}</div>` : "";
+}
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-a]"); if (!b) return;
+  const a = { type: b.dataset.a, court: b.dataset.c, id: b.dataset.id, dir: b.dataset.d, team: b.dataset.t };
+  if (a.type === "win") { a.ws = $(`s${a.court}-${a.team}`).value; a.ls = $(`s${a.court}-${1 - a.team}`).value; }
+  act(a);
+});
+$("addCourt").onclick = () => act({ type: "addCourt" }, "Court added");
+$("fillAll").onclick = () => act({ type: "fillAll" });
+for (const k of ["format", "rotation", "maxWins"]) $(k).onchange = e => act({ type: "settings", [k]: e.target.value }, "Saved");
+$("title").onchange = e => act({ type: "settings", nightTitle: e.target.value }, "Saved");
+$("addForm").onsubmit = e => { e.preventDefault(); const v = $("newName").value; $("newName").value = ""; act({ type: "add", name: v }, "Added to queue"); };
+$("logout").onclick = logout;
+$("csv").onclick = () => {
+  const rows = [["Rank", "Player", "Wins", "Losses", "Win %", "Points for", "Points against"], ...DD.ranked(S).map((p, i) => [i + 1, p.name, p.w, p.l, Math.round(DD.pct(p) * 100), p.pf, p.pa])];
+  const blob = new Blob([rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dinkin-donut-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+};
+$("resetZone").addEventListener("click", e => {
+  const z = $("resetZone");
+  if (e.target.id === "reset") z.innerHTML = '<span class="confirm"><b>Clear all players and scores?</b><button class="btn pink sm" id="yes">Yes, reset</button><button class="btn ghost sm" id="no">Keep</button></span>';
+  if (e.target.id === "yes") { act({ type: "reset" }, "New night started"); z.innerHTML = '<button class="btn ghost sm" id="reset" style="color:var(--loss)">End night and reset</button>'; }
+  if (e.target.id === "no") z.innerHTML = '<button class="btn ghost sm" id="reset" style="color:var(--loss)">End night and reset</button>';
+});
+</script>
+</body>
+</html>
