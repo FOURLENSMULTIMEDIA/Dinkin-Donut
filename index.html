@@ -15,6 +15,7 @@
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/theme.js"></script>
 <script src="/js/motion.js" defer></script>
+<script src="/js/menu.js" defer></script>
 <script src="/js/intro.js"></script>
 <script src="/js/sound.js" defer></script>
 <style>
@@ -365,9 +366,28 @@ section.block{padding-block:80px 0}
 <body>
 <nav class="nav"><div class="wrap">
   <a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a>
-  <ul><li><a href="#live">Live courts</a></li><li><a href="#nights">Nights</a></li><li><a href="#rules">Rules</a></li><li><a href="/dupr">DUPR</a></li><li><a href="#hall">Hall of Glaze</a></li><li><a href="/loyalty">Glaze Card</a></li><li><a href="#cup">Glaze Cup</a></li><li><a href="/merch">Shop</a></li><li><a href="#contact">Contact</a></li></ul>
+  <ul class="navlinks"><li><a href="#live">Live courts</a></li><li><a href="/loyalty">Glaze Card</a></li><li><a href="#cup">Glaze Cup</a></li><li><a href="/merch">Shop</a></li><li><a href="/dupr">DUPR</a></li></ul>
+  <button class="menubtn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu"><span class="bars" aria-hidden="true"><i></i><i></i></span><span class="lbl">Menu</span></button>
   <a class="btn pink sm btn-join" href="/queue"><span class="jb" aria-hidden="true"><svg viewBox="0 0 24 24"><g transform="rotate(-35 12 12)"><rect x="7" y="2.5" width="10" height="12" rx="5" fill="#FF5FA2" stroke="#3B2416" stroke-width="1.6"/><rect x="10.6" y="14" width="2.8" height="7" rx="1.2" fill="#3B2416"/></g><g class="ball"><circle cx="19.5" cy="5" r="3.2" fill="#D7F03C" stroke="#3B2416" stroke-width="1.2"/><circle cx="18.8" cy="4.4" r=".6" fill="#3B2416"/><circle cx="20.4" cy="5.8" r=".6" fill="#3B2416"/></g></svg></span>Join the queue</a>
 </div></nav>
+<div class="menu" id="menu" hidden>
+  <div class="menu-in wrap">
+    <div class="menu-top"><span class="eyebrow">Dinkin’ Donut · Doha</span><button class="menuclose" id="menuClose" type="button" aria-label="Close menu">Close</button></div>
+    <nav class="menu-links" aria-label="Site">
+      <a href="/queue"><small>01</small>Join the queue</a>
+      <a href="#live"><small>02</small>Live courts</a>
+      <a href="#nights"><small>03</small>How a night runs</a>
+      <a href="#rules"><small>04</small>Kitchen rules</a>
+      <a href="#hall"><small>05</small>Hall of Glaze</a>
+      <a href="#cup"><small>06</small>The Glaze Cup</a>
+      <a href="/loyalty"><small>07</small>Glaze Card</a>
+      <a href="/merch"><small>08</small>Shop</a>
+      <a href="/dupr"><small>09</small>DUPR games</a>
+      <a href="#contact"><small>10</small>Contact</a>
+    </nav>
+    <div class="menu-foot"><span class="menu-theme"><small>Appearance</small><span data-theme-slot></span></span><a href="https://www.instagram.com/dinkindonutqa/" target="_blank" rel="noopener">Instagram @dinkindonutqa</a><a href="https://wa.me/97430763431" target="_blank" rel="noopener">WhatsApp +974 3076 3431</a></div>
+  </div>
+</div>
 
 <header class="hero">
   <div class="wrap">

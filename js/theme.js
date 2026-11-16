@@ -16,10 +16,10 @@
   };
   var labels = { light: "Light mode", auto: "Match my device", dark: "Dark mode" };
   document.addEventListener("DOMContentLoaded", function () {
-    var nav = document.querySelector(".nav .wrap"); if (!nav) return;
+    var slot = document.querySelector("[data-theme-slot]"), nav = slot || document.querySelector(".nav .wrap"); if (!nav) return;
     var box = document.createElement("div"); box.className = "theme"; box.setAttribute("role", "group"); box.setAttribute("aria-label", "Colour theme");
     box.innerHTML = ["light", "auto", "dark"].map(function (m) { return '<button type="button" data-mode="' + m + '" title="' + labels[m] + '" aria-label="' + labels[m] + '">' + icons[m] + "</button>"; }).join("");
-    var anchor = nav.querySelector(".btn, .chip"); nav.insertBefore(box, anchor || null);
+    var anchor = slot ? null : nav.querySelector(".btn, .chip"); nav.insertBefore(box, anchor || null);
     if (anchor && getComputedStyle(anchor).marginLeft === "0px") box.style.marginLeft = "auto";
     box.addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; try { localStorage.setItem(KEY, b.dataset.mode); } catch (x) {} apply(b.dataset.mode); });
     apply(get());
