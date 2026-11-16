@@ -76,7 +76,7 @@ body{transition:background .25s,color .25s}
 .contacts.big .ct-tx{font-size:18px}
 .contacts.big .ct-pill:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(59,36,22,.12)}
 
-/* Join-the-queue button: a little paddle badge that "dinks" the ball */
+/* Join button with animated paddle badge */
 .btn-join{padding:6px 18px 6px 6px;gap:10px}
 .btn-join .jb{width:30px;height:30px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none;position:relative}
 .btn-join .jb svg{width:22px;height:22px;overflow:visible}
@@ -88,3 +88,12 @@ body{transition:background .25s,color .25s}
 @keyframes pulse2{50%{transform:scale(.6)}}
 .footer .ct-pill{color:var(--cream)}
 .footer .ct-tx small{color:var(--ball);opacity:1}
+.ic{display:inline-block;vertical-align:-3px;flex:none}
+/* Sound toggle */
+.soundbtn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 11px;border-radius:999px;border:1px solid var(--line);background:var(--sunk);color:var(--fg);cursor:pointer;flex:none}
+.soundbtn .eq{display:inline-flex;gap:2px;align-items:flex-end;height:12px;width:0;overflow:hidden;transition:width .25s}
+.soundbtn.playing .eq{width:12px}
+.soundbtn .eq i{width:2.5px;background:var(--glaze);border-radius:2px;height:4px;animation:eq 1s ease-in-out infinite}
+.soundbtn .eq i:nth-child(2){animation-delay:.2s}.soundbtn .eq i:nth-child(3){animation-delay:.4s}
+@keyframes eq{50%{height:12px}}
+@media (max-width:480px){.soundbtn{height:32px;padding:0 9px}}

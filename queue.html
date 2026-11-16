@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/theme.js"></script>
+<script src="/js/sound.js" defer></script>
 <style>
 .page{padding-block:24px 60px;display:grid;gap:20px}
 .me{background:var(--deep);color:var(--cream);border-radius:28px;padding:26px;display:grid;gap:14px}
@@ -70,16 +71,16 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
   <section class="me" id="me">
     <div class="eyebrow" style="color:var(--dough)" id="nightName">Open Play Night</div>
     <h1>Paddles <span>up.</span></h1>
-    <p style="margin:0">Type your name to join the queue. Keep this page open and it will tell you when you’re next.</p>
+    <p style="margin:0">Type your name the way you gave it at check-in. Keep this page open and it will tell you when you’re next.</p>
     <form id="joinForm" autocomplete="off">
       <label for="name" class="sr" hidden>Your name</label>
       <input id="name" placeholder="Your name (e.g. Aisha K.)" maxlength="24" required>
       <button class="btn lime" type="submit">Join the queue</button>
       <fieldset class="levels">
         <legend>How do you play? <span>(helps captains mix games)</span></legend>
-        <label><input type="radio" name="level" value="new"><span>🌱 New</span></label>
-        <label><input type="radio" name="level" value="social" checked><span>🍩 Social</span></label>
-        <label><input type="radio" name="level" value="competitive"><span>🔥 Competitive</span></label>
+        <label><input type="radio" name="level" value="new"><span data-ic="sprout">New</span></label>
+        <label><input type="radio" name="level" value="social" checked><span data-ic="ring">Social</span></label>
+        <label><input type="radio" name="level" value="competitive"><span data-ic="flame">Competitive</span></label>
       </fieldset>
     </form>
     <p class="err" id="err" hidden></p>
@@ -117,7 +118,7 @@ function sprinkles() {
 }
 function buzz() {
   try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {}
-  // Two-note "ding-dong" so players hear their call over the court noise
+  // Two-tone chime, audible over court noise
   try {
     const A = window.__ac || (window.__ac = new (window.AudioContext || window.webkitAudioContext)());
     [[880, 0], [660, .18]].forEach(([f, t]) => { const o = A.createOscillator(), g = A.createGain(); o.frequency.value = f; o.type = "sine";
@@ -125,7 +126,9 @@ function buzz() {
       o.connect(g).connect(A.destination); o.start(A.currentTime + t); o.stop(A.currentTime + t + .55); });
   } catch {}
 }
-const LV = { new: "🌱", social: "🍩", competitive: "🔥" };
+const LV = { new: DD.icon("sprout", 14), social: DD.icon("ring", 14), competitive: DD.icon("flame", 14) };
+const decorate = () => document.querySelectorAll("[data-ic]:not([data-done])").forEach(el => { el.dataset.done = 1; el.insertAdjacentHTML("afterbegin", DD.icon(el.dataset.ic, 15) + " "); });
+decorate();
 function eta(pos) {
   const need = S.format * 2, courts = Math.max(1, S.courts.length);
   const avg = S.durN ? S.durSum / S.durN : 12; // assume 12 min until real games are timed
@@ -137,7 +140,7 @@ function eta(pos) {
 function renderMe() {
   const me = S.players[meId], box = $("me");
   box.className = "me";
-  if (!me) { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} box.innerHTML = JOIN_HTML; try { const n = localStorage.getItem("dd-name"); if (n) $("name").value = n; } catch {} return; }
+  if (!me) { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} box.innerHTML = JOIN_HTML; decorate(); try { const n = localStorage.getItem("dd-name"); if (n) $("name").value = n; } catch {} return; }
   const court = S.courts.find(c => c.teams && c.teams.flat().includes(meId));
   const staying = S.courts.find(c => c.stayers && c.stayers.includes(meId));
   const pos = S.queue.indexOf(meId), need = S.format * 2;
@@ -154,7 +157,7 @@ function renderMe() {
   } else if (pos >= 0) {
     phase = pos < need ? "next" : "wait"; if (pos < need) box.classList.add("upnext");
     html = `<div class="eyebrow" style="color:var(--ball)">${pos < need ? "Get your paddle ready" : "You’re in the queue"}</div>
-      <div class="ticket"><span class="big">#${pos + 1}</span><div><b>${DD.esc(me.name)}</b> ${LV[me.level] || ""}<br>${pos < need ? "You’re on the next open court." : `${pos} ahead of you`}<br><span class="eta">⏱ ${eta(pos)}</span></div></div>
+      <div class="ticket"><span class="big">#${pos + 1}</span><div><b>${DD.esc(me.name)}</b> ${LV[me.level] || ""}<br>${pos < need ? "You’re on the next open court." : `${pos} ahead of you`}<br><span class="eta">${DD.icon("clock", 15)} ${eta(pos)}</span></div></div>
       ${rec}<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost sm" id="leave">Take a break</button><button class="btn ghost sm" id="notme">Not ${DD.esc(me.name)}?</button></div>`;
   } else {
     phase = "out";

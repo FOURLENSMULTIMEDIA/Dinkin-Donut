@@ -58,6 +58,37 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .warn{background:#FFE7A8;color:var(--choco);border-radius:14px;padding:12px 14px;font-weight:600}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .muted{color:var(--muted);font-size:14px}
+.roster{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:420px;overflow:auto}
+.roster li{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg);flex-wrap:wrap}
+.roster .nm{flex:1;font-weight:700;min-width:120px;overflow-wrap:anywhere}
+.pill{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.pill.court{background:var(--court);color:#FFF6EA}.pill.queue{background:var(--glaze);color:#fff}.pill.break{background:var(--dough);color:#3B2416}
+.pill.paid{background:var(--court);color:#FFF6EA}.pill.part{background:#FFD66B;color:#3B2416}.pill.unpaid{background:var(--loss);color:#fff}.pill.free{background:var(--ball);color:#3B2416}
+.paystats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.paystats div{border-radius:16px;padding:10px 12px;background:var(--sunk)}
+.paystats b{display:block;font:700 20px var(--display);font-variant-numeric:tabular-nums}
+.paystats span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.paystats .due{background:var(--loss);color:#fff}.paystats .due span{color:#fff;opacity:.85}
+.paystats .got{background:var(--court);color:#FFF6EA}.paystats .got span{color:#FFF6EA;opacity:.85}
+.payform{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--sunk);border-radius:16px;padding:10px}
+.methods{display:flex;gap:4px}
+.methods input{position:absolute;opacity:0}
+.methods span{display:inline-block;padding:8px 10px;border-radius:10px;border:2px solid var(--line);font-weight:700;font-size:13px;cursor:pointer;background:var(--surface)}
+.methods input:checked+span{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.methods input:focus-visible+span{outline:3px solid var(--glaze)}
+.paytable{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.paytable th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px;border-bottom:2px solid var(--line)}
+.paytable td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.paytable .r{text-align:right}
+.paytable .fee{width:64px;padding:4px 6px;text-align:right;border-radius:8px}
+.items{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.items button{border:0;background:var(--sunk);color:var(--fg);border-radius:8px;padding:2px 6px;font:600 11px var(--body);cursor:pointer}
+.items button:hover{text-decoration:line-through}
+.tablewrap{overflow-x:auto}
+.cols-money{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}
+@media (max-width:1000px){.cols-money{grid-template-columns:minmax(0,1fr)}}
+.paytable td.r{white-space:nowrap}
+.items button{white-space:nowrap}
 .recap{position:fixed;inset:0;z-index:60;background:rgba(26,17,11,.55);display:grid;place-items:center;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px));overflow:auto}
 .rbox{background:var(--bg);border-radius:28px;padding:28px;max-width:560px;width:100%;display:grid;gap:14px;box-shadow:0 30px 80px rgba(0,0,0,.35)}
 .rbox h2{font-size:40px}
@@ -109,6 +140,42 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
       <div id="bench"></div>
     </section>
   </div>
+  <div class="cols cols-money">
+  <section class="panel" id="rosterPanel">
+    <h2>Tonight’s list <span class="muted" id="rosterInfo"></span></h2>
+    <p class="muted" style="margin:0">Only names on this list can join the queue from their phone. Paste one name per line.</p>
+    <form id="rosterForm" class="row" autocomplete="off" style="align-items:stretch">
+      <textarea id="rosterNames" rows="3" placeholder="Aisha K.&#10;Omar&#10;Priya S." aria-label="Names to add" style="flex:1;min-width:200px;font:inherit;border:2px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--surface);color:var(--fg);resize:vertical"></textarea>
+      <button class="btn sm" style="align-self:flex-end">Add to list</button>
+    </form>
+    <div class="row"><input id="rosterFind" placeholder="Search names" aria-label="Search names" style="flex:1">
+      <select id="rosterFilter" aria-label="Filter"><option value="all">Everyone</option><option value="out">Not checked in</option><option value="in">Checked in</option><option value="unpaid">Owes money</option></select></div>
+    <ul class="roster" id="roster"></ul>
+  </section>
+
+  <section class="panel" id="payPanel">
+    <h2>Payments <span class="muted">Only visible in this console</span></h2>
+    <div class="paystats" id="payStats"></div>
+    <div class="row">
+      <label class="muted" for="feeAll">Session fee</label><input id="feeAll" inputmode="decimal" style="width:90px" aria-label="Session fee in QAR"><span class="muted">QAR</span>
+      <label class="muted" for="fawranTo" style="margin-left:auto">Fawran to</label><input id="fawranTo" placeholder="Mobile or alias" style="width:170px">
+    </div>
+    <form id="payForm" class="payform" autocomplete="off">
+      <select id="payWho" aria-label="Player" required></select>
+      <input id="payAmt" inputmode="decimal" placeholder="Amount" aria-label="Amount" required style="width:100px">
+      <div class="methods" role="radiogroup" aria-label="Method">
+        <label><input type="radio" name="pm" value="cash" checked><span data-ic="cash">Cash</span></label>
+        <label><input type="radio" name="pm" value="fawran"><span data-ic="fawran">Fawran</span></label>
+        <label><input type="radio" name="pm" value="card"><span data-ic="card">Card</span></label>
+      </div>
+      <input id="payRef" placeholder="Fawran ref (optional)" aria-label="Reference" style="flex:1;min-width:140px">
+      <button class="btn pink sm">Record payment</button>
+    </form>
+    <div class="tablewrap"><table class="paytable"><thead><tr><th>Player</th><th class="r">Fee</th><th class="r">Paid</th><th class="r">Balance</th><th>Status</th><th>Quick pay</th></tr></thead><tbody id="payRows"></tbody></table></div>
+    <button class="btn ghost sm" id="payCsv" type="button" style="justify-self:start">Download payments (CSV)</button>
+  </section>
+  </div>
+
   <section class="panel">
     <h2>Session controls</h2>
     <div class="row">
@@ -140,7 +207,7 @@ async function unlock(pin) {
   PIN = pin;
   try { ($("remember").checked || localStorage.getItem("dd-pin") ? localStorage : sessionStorage).setItem("dd-pin", pin); } catch {}
   $("lock").hidden = true; $("app").hidden = false;
-  feed = feed || DD.live(st => { S = st; render(); }, 2500);
+  feed = feed || DD.live(st => { S = st; render(); }, 2500, () => PIN);
 }
 function logout() { try { sessionStorage.removeItem("dd-pin"); localStorage.removeItem("dd-pin"); } catch {} location.reload(); }
 $("lock").onsubmit = async e => {
@@ -164,7 +231,7 @@ function render() {
   $("maxWins").disabled = S.rotation !== "winstay";
   $("qinfo").textContent = S.queue.length ? `next ${Math.min(need, S.queue.length)} highlighted` : "";
 
-  // Keep typed scores across refreshes
+  // Preserve typed scores across re-renders
   const scores = {}; document.querySelectorAll(".score").forEach(i => scores[i.id] = i.value);
   $("courts").innerHTML = S.courts.map(c => {
     if (!c.teams) {
@@ -182,6 +249,7 @@ function render() {
     <button class="ib" title="Move up" aria-label="Move up" data-a="move" data-id="${id}" data-d="-1">▲</button><button class="ib" title="Move down" aria-label="Move down" data-a="move" data-id="${id}" data-d="1">▼</button>
     <button class="ib" title="Send to front" aria-label="Send to front" data-a="toFront" data-id="${id}">⇡</button><button class="ib" title="Take a break" aria-label="Take a break" data-a="bench" data-id="${id}">⏸</button></li>`).join("")
     : '<li class="muted">Queue is empty. Players join by scanning the QR code.</li>';
+  renderRoster(); renderPay();
   $("bench").innerHTML = S.bench.length ? `<p class="muted" style="margin:6px 0">On a break (tap to bring back, × to remove)</p><div class="row">${S.bench.map(id => `<span class="chip"><button class="ib" data-a="unbench" data-id="${id}">↩ ${n(id)}</button><button class="ib" title="Remove player" aria-label="Remove ${n(id)}" data-a="removePlayer" data-id="${id}">×</button></span>`).join("")}</div>` : "";
 }
 
@@ -202,6 +270,92 @@ $("csv").onclick = () => {
   const blob = new Blob([rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dinkin-donut-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
 };
+
+// Roster and payments
+const money = DD.qar;
+function payOf(id) {
+  const r = (S.pay || {})[id] || { items: [] }, fee = r.fee ?? (S.fee || 0);
+  const paid = r.items.reduce((a, i) => a + i.amt, 0);
+  const by = m => r.items.filter(i => i.method === m).reduce((a, i) => a + i.amt, 0);
+  const bal = Math.round((fee - paid) * 100) / 100;
+  const status = fee === 0 && !paid ? "free" : bal <= 0 ? "paid" : paid > 0 ? "part" : "unpaid";
+  return { r, fee, paid, bal, status, cash: by("cash"), fawran: by("fawran"), card: by("card") };
+}
+const STATUS = { free: "Free", paid: "Paid", part: "Partial", unpaid: "Unpaid" };
+function where(id) {
+  if (S.courts.some(c => c.teams && c.teams.flat().includes(id))) return ["court", "On court"];
+  if (S.courts.some(c => c.stayers && c.stayers.includes(id))) return ["court", "Staying on"];
+  const q = S.queue.indexOf(id); if (q >= 0) return ["queue", "Queue #" + (q + 1)];
+  if (S.bench.includes(id)) return ["break", "Break"];
+  return ["", S.players[id].in ? "Left" : "Not here"];
+}
+function renderRoster() {
+  const all = Object.values(S.players).sort((a, b) => a.name.localeCompare(b.name));
+  const f = $("rosterFilter").value, q = $("rosterFind").value.trim().toLowerCase();
+  const inCount = all.filter(p => p.in).length;
+  $("rosterInfo").textContent = `${inCount} of ${all.length} checked in`;
+  const rows = all.filter(p => (!q || p.name.toLowerCase().includes(q)) &&
+    (f === "all" || (f === "in" && p.in) || (f === "out" && !p.in) || (f === "unpaid" && payOf(p.id).bal > 0)));
+  $("roster").innerHTML = rows.length ? rows.map(p => {
+    const [cls, label] = where(p.id), pay = payOf(p.id), active = cls === "court" || cls === "queue";
+    return `<li><span class="nm">${DD.esc(p.name)}</span><span class="pill ${cls}">${label}</span><span class="pill ${pay.status}">${STATUS[pay.status]}${pay.bal > 0 && pay.paid ? " · " + money(pay.bal) + " left" : ""}</span>
+      ${active ? "" : `<button class="btn lime sm" data-x="checkin" data-id="${p.id}">Check in</button>`}
+      ${active ? "" : `<button class="ib" title="Remove from list" aria-label="Remove ${DD.esc(p.name)} from list" data-x="remove" data-id="${p.id}">×</button>`}</li>`;
+  }).join("") : `<li class="muted">${all.length ? "No names match." : "No names yet. Paste tonight’s players above."}</li>`;
+}
+function renderPay() {
+  const ids = Object.keys(S.players), rows = ids.map(id => [id, payOf(id)]);
+  const sum = k => rows.reduce((a, [, p]) => a + p[k], 0);
+  const due = rows.reduce((a, [, p]) => a + Math.max(0, p.bal), 0);
+  const paidN = rows.filter(([, p]) => p.status === "paid" || p.status === "free").length;
+  $("payStats").innerHTML = `<div><span>Expected</span><b>${money(sum("fee"))}</b></div><div class="got"><span>Collected</span><b>${money(sum("paid"))}</b></div>
+    <div><span>${DD.icon("cash",13)} Cash</span><b>${money(sum("cash"))}</b></div><div><span>${DD.icon("fawran",13)} Fawran</span><b>${money(sum("fawran"))}</b></div>
+    ${sum("card") ? `<div><span>${DD.icon("card",13)} Card</span><b>${money(sum("card"))}</b></div>` : ""}
+    <div class="${due > 0 ? "due" : ""}"><span>Remaining</span><b>${money(due)}</b></div><div><span>Paid up</span><b>${paidN}/${ids.length}</b></div>`;
+  if (document.activeElement !== $("feeAll")) $("feeAll").value = S.fee || 0;
+  if (document.activeElement !== $("fawranTo")) $("fawranTo").value = S.fawran || "";
+  const who = $("payWho"), keep = who.value;
+  who.innerHTML = '<option value="">Choose player…</option>' + rows.sort((a, b) => b[1].bal - a[1].bal || S.players[a[0]].name.localeCompare(S.players[b[0]].name))
+    .map(([id, p]) => `<option value="${id}">${DD.esc(S.players[id].name)}${p.bal > 0 ? " · owes " + money(p.bal) : " · paid"}</option>`).join("");
+  who.value = keep;
+  if ($("payRows").contains(document.activeElement)) return;
+  $("payRows").innerHTML = rows.length ? rows.map(([id, p]) => `<tr>
+      <td><b>${DD.esc(S.players[id].name)}</b>${p.r.items.length ? `<div class="items">${p.r.items.map((it, i) => `<button title="Remove this payment" data-x="unpay" data-id="${id}" data-i="${i}">${DD.icon(it.method === "fawran" ? "fawran" : it.method === "card" ? "card" : "cash", 12)} ${money(it.amt)}${it.ref ? " · " + DD.esc(it.ref) : ""} ×</button>`).join("")}</div>` : ""}</td>
+      <td class="r"><input class="fee tabnum" data-fee="${id}" value="${p.fee}" inputmode="decimal" aria-label="Fee for ${DD.esc(S.players[id].name)}"></td>
+      <td class="r">${money(p.paid)}</td><td class="r" style="font-weight:700;color:${p.bal > 0 ? "var(--loss)" : p.bal < 0 ? "var(--win)" : "inherit"}">${p.bal < 0 ? "+" + money(-p.bal) + " credit" : money(p.bal)}</td>
+      <td><span class="pill ${p.status}">${STATUS[p.status]}</span></td>
+      <td>${p.bal > 0 ? `<div class="row" style="gap:4px;flex-wrap:nowrap"><button class="btn sm" data-x="quick" data-m="cash" data-id="${id}" data-amt="${p.bal}" title="Paid the rest in cash">${DD.icon("cash",14)} Cash</button><button class="btn sm pink" data-x="quick" data-m="fawran" data-id="${id}" data-amt="${p.bal}" title="Paid the rest by Fawran">${DD.icon("fawran",14)} Fawran</button></div>` : DD.icon("check",16)}</td></tr>`).join("")
+    : '<tr><td colspan="6" class="muted">Add names to tonight’s list to track payments.</td></tr>';
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-x]"); if (!b) return;
+  const id = b.dataset.id, nm = S.players[id]?.name;
+  if (b.dataset.x === "checkin") act({ type: "add", name: nm }, `${nm} checked in`);
+  if (b.dataset.x === "remove") act({ type: "removePlayer", id }, `${nm} removed`);
+  if (b.dataset.x === "unpay") act({ type: "unpay", id, i: b.dataset.i }, "Payment removed");
+  if (b.dataset.x === "quick") act({ type: "pay", id, amt: b.dataset.amt, method: b.dataset.m }, `${nm} paid ${money(+b.dataset.amt)} by ${b.dataset.m === "fawran" ? "Fawran" : "cash"}`);
+});
+document.addEventListener("change", e => {
+  if (e.target.dataset.fee) act({ type: "fee", id: e.target.dataset.fee, fee: e.target.value }, "Fee updated");
+});
+$("rosterForm").onsubmit = async e => { e.preventDefault(); const v = $("rosterNames").value; if (!v.trim()) return;
+  try { const st = await DD.send({ type: "roster", names: v }, PIN); S = st; render(); $("rosterNames").value = "";
+    toast(`${st.result.added} added${st.result.skipped ? `, ${st.result.skipped} already on the list` : ""}`); } catch (x) { toast(x.message, true); } };
+document.querySelectorAll("[data-ic]").forEach(el => el.insertAdjacentHTML("afterbegin", DD.icon(el.dataset.ic, 14) + " "));
+$("rosterFind").oninput = renderRoster; $("rosterFilter").onchange = renderRoster;
+$("feeAll").onchange = e => act({ type: "fee", fee: e.target.value }, "Session fee saved");
+$("fawranTo").onchange = e => act({ type: "fawranInfo", fawran: e.target.value }, "Fawran details saved");
+$("payWho").onchange = () => { const p = $("payWho").value && payOf($("payWho").value); if (p && p.bal > 0) $("payAmt").value = p.bal; };
+$("payForm").onsubmit = e => { e.preventDefault(); const id = $("payWho").value; if (!id) return toast("Choose a player first.", true);
+  act({ type: "pay", id, amt: $("payAmt").value, method: document.querySelector("input[name=pm]:checked").value, ref: $("payRef").value }, "Payment recorded");
+  $("payAmt").value = ""; $("payRef").value = ""; };
+$("payCsv").onclick = () => {
+  const rows = [["Player", "Checked in", "Fee", "Paid", "Cash", "Fawran", "Card", "Balance", "Status", "References"],
+    ...Object.keys(S.players).map(id => { const p = payOf(id); return [S.players[id].name, S.players[id].in ? "yes" : "no", p.fee, p.paid, p.cash, p.fawran, p.card, p.bal, STATUS[p.status], p.r.items.map(i => i.ref).filter(Boolean).join(" ")]; })];
+  const blob = new Blob([rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dinkin-payments-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+};
+
 const RESET_BTN = '<button class="btn pink sm" id="reset" type="button">End session</button>';
 $("resetZone").innerHTML = RESET_BTN;
 $("resetZone").addEventListener("click", e => {
@@ -215,15 +369,19 @@ function showRecap() {
   const d = document.createElement("div"); d.className = "recap"; d.id = "recap";
   d.innerHTML = `<div class="rbox" role="dialog" aria-modal="true" aria-labelledby="rt">
     <div class="eyebrow">${DD.esc(S.nightTitle)} · ${new Date().toLocaleDateString([], { weekday: "long", day: "numeric", month: "short" })}</div>
-    <h2 id="rt">That’s a wrap! 🍩</h2>
+    <h2 id="rt">That’s a wrap.</h2>
     <div class="rstats"><div><b>${S.games}</b>game${S.games === 1 ? "" : "s"}</div><div><b>${all.length}</b>Dinkers</div><div><b>${S.durN ? Math.round(S.durSum / S.durN) : "—"}</b>avg min</div></div>
     ${mvp ? `<div class="awards">
-      <div><span>🏆 Dinker of the night</span><b>${DD.esc(mvp.name)}</b><small>${mvp.w}W · ${mvp.l}L</small></div>
-      ${diff && diff.pf ? `<div><span>🎯 Best point difference</span><b>${DD.esc(diff.name)}</b><small>${diff.pf - diff.pa > 0 ? "+" : ""}${diff.pf - diff.pa}</small></div>` : ""}
-      ${most ? `<div><span>🔋 Most games</span><b>${DD.esc(most.name)}</b><small>${most.w + most.l} game${most.w + most.l === 1 ? "" : "s"}</small></div>` : ""}</div>` : '<p class="muted">No games recorded tonight.</p>'}
+      <div><span>${DD.icon("trophy",13)} Dinker of the night</span><b>${DD.esc(mvp.name)}</b><small>${mvp.w}W · ${mvp.l}L</small></div>
+      ${diff && diff.pf ? `<div><span>${DD.icon("target",13)} Best point difference</span><b>${DD.esc(diff.name)}</b><small>${diff.pf - diff.pa > 0 ? "+" : ""}${diff.pf - diff.pa}</small></div>` : ""}
+      ${most ? `<div><span>${DD.icon("repeat",13)} Most games</span><b>${DD.esc(most.name)}</b><small>${most.w + most.l} game${most.w + most.l === 1 ? "" : "s"}</small></div>` : ""}</div>` : '<p class="muted">No games recorded tonight.</p>'}
     ${live ? `<p class="warn">${live} game${live > 1 ? "s are" : " is"} still in progress and won’t be counted.</p>` : ""}
+    ${(() => { const ids = Object.keys(S.players), due = ids.reduce((a, id) => a + Math.max(0, payOf(id).bal), 0), got = ids.reduce((a, id) => a + payOf(id).paid, 0);
+      return `<div class="paystats"><div class="got"><span>Collected</span><b>${money(got)}</b></div><div class="${due > 0 ? "due" : ""}"><span>Still owed</span><b>${money(due)}</b></div></div>`; })()}
+    <label class="row muted"><input type="checkbox" id="rPub" checked> Put the top 3 in the Hall of Glaze on the website</label>
+    <label class="row muted"><input type="checkbox" id="rClr"> Also clear tonight’s list (otherwise names stay for next session)</label>
     <p class="muted">Download the results before you reset. Resetting clears players, the queue, scores and the log for everyone.</p>
-    <div class="row"><button class="btn sm" id="rCsv">Download results (CSV)</button><button class="btn sm ghost" id="rCopy">Copy recap for Instagram</button></div>
+    <div class="row"><button class="btn sm" id="rCsv">Download results (CSV)</button><button class="btn sm" id="rPay">Download payments (CSV)</button><button class="btn sm ghost" id="rCopy">Copy recap for Instagram</button></div>
     <div class="row" style="justify-content:space-between;border-top:1px dashed var(--line);padding-top:14px">
       <button class="btn ghost sm" id="rKeep">Keep playing</button><button class="btn pink" id="rReset">Reset for next session</button></div></div>`;
   document.body.appendChild(d); $("rKeep").focus();
@@ -231,12 +389,13 @@ function showRecap() {
     const id = ev.target.id;
     if (id === "recap" || id === "rKeep") d.remove();
     if (id === "rCsv") $("csv").click();
+    if (id === "rPay") $("payCsv").click();
     if (id === "rCopy") {
-      const txt = `🍩 ${S.nightTitle} recap\n${S.games} games · ${all.length} Dinkers\n${mvp ? `🏆 Dinker of the night: ${mvp.name} (${mvp.w}W)\n` : ""}Thank you Dinkers! See you on court. Stay glazed. 🍩`;
+      const txt = `${S.nightTitle} recap\n${S.games} games · ${all.length} Dinkers\n${mvp ? `Dinker of the night: ${mvp.name} (${mvp.w}W)\n` : ""}Thank you, Dinkers. See you on court.\nStay glazed. 🍩`;
       navigator.clipboard?.writeText(txt).then(() => ev.target.textContent = "Copied ✓").catch(() => ev.target.textContent = "Copy didn’t work");
     }
     if (id === "rReset") {
-      if (ev.target.dataset.sure) { act({ type: "reset" }, "Session reset. Ready for the next night!"); d.remove(); }
+      if (ev.target.dataset.sure) { act({ type: "reset", publish: $("rPub").checked, clearRoster: $("rClr").checked }, $("rPub").checked ? "Winners published! Ready for the next session." : "Session reset. Ready for the next session."); d.remove(); }
       else { ev.target.dataset.sure = 1; ev.target.textContent = "Tap again to confirm reset"; }
     }
   });

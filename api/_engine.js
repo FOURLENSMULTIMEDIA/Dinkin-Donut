@@ -6,6 +6,7 @@ function fresh() {
     v: 0, updatedAt: Date.now(), nightTitle: "Open Play Night",
     format: 2, rotation: "winstay", maxWins: 2,
     players: {}, queue: [], bench: [], games: 0, nextId: 1, durSum: 0, durN: 0,
+    fee: 0, pay: {}, fawran: "",
     courts: [1, 2, 3].map(id => ({ id, teams: null, start: null, stayers: null, streak: 0 })),
     log: [{ t: Date.now(), txt: "Night created. Paddles up!" }],
   };
@@ -16,23 +17,28 @@ const log = (S, txt) => { S.log.unshift({ t: Date.now(), txt }); S.log.length = 
 const names = (S, ids) => ids.map(id => S.players[id]?.name || "?").join(" & ");
 const busy = S => new Set(S.courts.flatMap(c => [...(c.teams ? c.teams.flat() : []), ...(c.stayers || [])]));
 
+const norm = s => clean(s).toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^\p{L}\p{N}]/gu, "");
 function findByName(S, name) {
-  return Object.values(S.players).find(p => p.name.toLowerCase() === name.toLowerCase());
+  const k = norm(name);
+  return Object.values(S.players).find(p => norm(p.name) === k);
+}
+function newPlayer(S, name) {
+  if (Object.keys(S.players).length >= 300) throw new Error("Tonight's list is full.");
+  const id = "p" + S.nextId++;
+  return (S.players[id] = { id, name, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false });
 }
 
 const LEVELS = ["new", "social", "competitive"];
-function addPlayer(S, rawName, level) {
+// Public check-in only works for names the host has put on tonight's list.
+function addPlayer(S, rawName, level, fromHost) {
   const name = clean(rawName);
   if (name.length < 2) throw new Error("Please enter a name with at least 2 letters.");
   let p = findByName(S, name);
-  if (p) {
-    if (S.queue.includes(p.id) || busy(S).has(p.id)) return p; // already in, just return them
-    S.bench = S.bench.filter(id => id !== p.id);
-  } else {
-    if (Object.keys(S.players).length >= 300) throw new Error("Tonight's list is full.");
-    const id = "p" + S.nextId++;
-    p = S.players[id] = { id, name, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now() };
-  }
+  if (!p && !fromHost) throw new Error("Your name isn’t on tonight’s list yet. Please see the host at the check-in table.");
+  if (!p) p = newPlayer(S, name);
+  if (S.queue.includes(p.id) || busy(S).has(p.id)) return p; // already in, just return them
+  S.bench = S.bench.filter(id => id !== p.id);
+  p.in = true;
   if (LEVELS.includes(level)) p.level = level;
   S.queue.push(p.id);
   log(S, `${p.name} checked in`);
@@ -58,7 +64,7 @@ function court(S, id) {
 
 const actions = {
   // public
-  join: (S, a) => ({ player: addPlayer(S, a.name, a.level) }),
+  join: (S, a) => ({ player: addPlayer(S, a.name, a.level, false) }),
   leave: (S, a) => {
     const p = S.players[a.id]; if (!p) return;
     S.queue = S.queue.filter(id => id !== p.id);
@@ -66,7 +72,43 @@ const actions = {
     log(S, `${p.name} is taking a break`);
   },
   // host
-  add: (S, a) => ({ player: addPlayer(S, a.name, a.level) }),
+  add: (S, a) => ({ player: addPlayer(S, a.name, a.level, true) }),
+  // Roster: names allowed to check in. One per line or comma separated.
+  roster: (S, a) => {
+    const list = String(a.names || "").split(/[\n,;]+/).map(clean).filter(n => n.length >= 2);
+    if (!list.length) throw new Error("Type at least one name.");
+    let added = 0;
+    list.forEach(n => { if (!findByName(S, n)) { newPlayer(S, n); added++; } });
+    log(S, `${added} name${added === 1 ? "" : "s"} added to tonight’s list`);
+    return { added, skipped: list.length - added };
+  },
+  rename: (S, a) => {
+    const p = S.players[a.id]; if (!p) throw new Error("Player not found.");
+    const n = clean(a.name); if (n.length < 2) throw new Error("Name is too short.");
+    const other = findByName(S, n); if (other && other.id !== p.id) throw new Error("That name is already on the list.");
+    p.name = n;
+  },
+  // Payments (host only, never sent to public pages)
+  fee: (S, a) => {
+    const v = Math.max(0, Math.round(Number(a.fee) || 0));
+    if (a.id) { const r = S.pay[a.id] || (S.pay[a.id] = { items: [] }); r.fee = a.fee === "" || a.fee === null ? null : v; }
+    else S.fee = v;
+  },
+  pay: (S, a) => {
+    const p = S.players[a.id]; if (!p) throw new Error("Player not found.");
+    const amt = Math.round(Number(a.amt) * 100) / 100;
+    if (!(amt > 0)) throw new Error("Enter an amount above 0.");
+    const method = ["cash", "fawran", "card", "other"].includes(a.method) ? a.method : "cash";
+    const r = S.pay[a.id] || (S.pay[a.id] = { items: [] });
+    r.items.push({ amt, method, ref: clean(a.ref), t: Date.now() });
+  },
+  unpay: (S, a) => { const r = S.pay[a.id]; if (r && r.items[a.i]) r.items.splice(Number(a.i), 1); },
+  fawranInfo: (S, a) => { S.fawran = String(a.fawran || "").replace(/[<>]/g, "").slice(0, 60); },
+  clearRoster: S => {
+    const keep = busy(S); S.queue.forEach(id => keep.add(id));
+    Object.keys(S.players).forEach(id => { if (!keep.has(id)) { delete S.players[id]; delete S.pay[id]; } });
+    S.bench = [];
+  },
   win: (S, a) => {
     const c = court(S, a.court); if (!c.teams) throw new Error("No game on that court.");
     const wi = Number(a.team) ? 1 : 0, W = c.teams[wi], L = c.teams[1 - wi];
@@ -111,7 +153,7 @@ const actions = {
   removePlayer: (S, a) => {
     if (busy(S).has(a.id)) throw new Error("Finish or cancel their game first.");
     S.queue = S.queue.filter(id => id !== a.id); S.bench = S.bench.filter(id => id !== a.id);
-    delete S.players[a.id];
+    delete S.players[a.id]; delete S.pay[a.id];
   },
   settings: (S, a) => {
     if (a.format && !S.courts.some(c => c.teams)) S.format = Number(a.format) === 1 ? 1 : 2;
@@ -119,7 +161,14 @@ const actions = {
     if (a.maxWins) S.maxWins = Math.min(5, Math.max(1, Number(a.maxWins)));
     if (typeof a.nightTitle === "string") S.nightTitle = clean(a.nightTitle) || S.nightTitle;
   },
-  reset: () => fresh(),
+  // End session: keep the roster names (regulars), clear everything else.
+  reset: (S, a) => {
+    const n = fresh();
+    if (!a.clearRoster) Object.values(S.players).forEach(p => { n.players[p.id] = { id: p.id, name: p.name, level: p.level, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false }; });
+    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins;
+    n.courts = S.courts.map(c => ({ id: c.id, teams: null, start: null, stayers: null, streak: 0 }));
+    return n;
+  },
 };
 
 const PUBLIC = new Set(["join", "leave"]);

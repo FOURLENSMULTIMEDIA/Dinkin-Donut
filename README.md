@@ -1,6 +1,6 @@
 # Dinkin' Donut · Pickleball Club
 
-Club website + live court queue for open-play nights in Doha. Sweet game, soft hands. 🍩
+Club website + live court queue for open-play nights in Doha. Sweet game, soft hands.
 
 | Page | Who it's for |
 |---|---|
@@ -9,7 +9,8 @@ Club website + live court queue for open-play nights in Doha. Sweet game, soft h
 | `/host` | Hosts (PIN): run courts, record wins + scores, reorder queue, CSV export |
 | `/tv` | A TV/laptop at the venue: big live board with QR |
 | `/poster` | Printable A4 QR poster for the check-in table |
-| `/merch` | Club shop: tees, hoodies, caps… players fill a bag and order on WhatsApp |
+| `/merch` | Club shop: Glaze Jersey and Clubhouse Polo builder (name, number, colourway, size), shop film, WhatsApp ordering |
+| `/loyalty` | Glaze Card loyalty programme: play 6, get the 7th free |
 | `/dupr` | DUPR rated games, sends players to your Reclub page |
 
 Every page has a Light / Auto / Dark switch in the top bar (Auto follows the phone's setting).
@@ -48,3 +49,14 @@ HOST_PIN=yourpin npm run dev   # http://localhost:3000 , in-memory queue
 
 ## Auto-deploy
 Once Vercel is connected to this GitHub repo, every change pushed (or uploaded) to the `main` branch goes live on the website automatically in about a minute. No extra setup needed.
+
+## Host console extras
+- **Tonight's list**: only names on the list can join the queue from their phone. Paste names one per line.
+- **Payments**: session fee, per-player fee overrides, cash / Fawran / card, balance and remaining. Payment data is only returned to a signed-in host; public pages never receive it.
+- **End session**: publishes the top 3 to the **Hall of Glaze** on the homepage and keeps the list of names for next time.
+
+## Merch
+Jersey and polo artwork is generated in code (`js/jersey.js`). Prices, sizes and specs live in `js/merch.js`.
+
+## Loyalty card
+See `google-form/SETUP.md`. Print files are in `assets/loyalty/`.

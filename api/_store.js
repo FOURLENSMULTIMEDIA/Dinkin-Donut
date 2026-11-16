@@ -2,8 +2,8 @@
 // Falls back to memory for local testing, which does NOT persist on Vercel.
 const URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const KEY = "dinkin:state", LOCK = "dinkin:lock";
-const mem = globalThis.__dinkin || (globalThis.__dinkin = { state: null });
+const KEY = "dinkin:state", LOCK = "dinkin:lock", HALL = "dinkin:hall";
+const mem = globalThis.__dinkin || (globalThis.__dinkin = { state: null, hall: [] });
 
 async function redis(cmd) {
   const r = await fetch(URL, { method: "POST", headers: { Authorization: `Bearer ${TOKEN}` }, body: JSON.stringify(cmd) });
@@ -39,4 +39,16 @@ async function withLock(fn) {
   throw new Error("The queue is busy. Try again.");
 }
 
-module.exports = { load, save, withLock, hasDb };
+// Hall of Glaze: winners of past sessions, newest first, last 30 kept.
+async function loadHall() {
+  if (!hasDb()) return mem.hall;
+  const raw = await redis(["GET", HALL]);
+  return raw ? JSON.parse(raw) : [];
+}
+async function addHall(entry) {
+  const h = [entry, ...(await loadHall())].slice(0, 30);
+  if (!hasDb()) { mem.hall = h; return; }
+  await redis(["SET", HALL, JSON.stringify(h)]);
+}
+
+module.exports = { load, save, withLock, hasDb, loadHall, addHall };

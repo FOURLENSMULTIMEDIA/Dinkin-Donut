@@ -1,4 +1,4 @@
-// ✏️ Edit this file to update club details across the whole site.
+// Club settings. Edit this file to update club details across the whole site.
 window.CLUB = {
   name: "Dinkin' Donut",
   city: "Doha, Qatar",
@@ -12,6 +12,9 @@ window.CLUB = {
   whatsappNumber: "97430763431",       // main number for merch orders (digits only)
   whatsappNumbers: ["+974 3076 3431", "+974 3072 3503"], // shown on the site, first one is the main contact
   currency: "QAR",
+
+  // Glaze Card loyalty sign-up (Google Form short link, see google-form/SETUP.md)
+  loyaltyFormUrl: "",
 
   // DUPR-rated games are booked on Reclub
   reclubUrl: "",                       // your club page, e.g. "https://reclub.co/clubs/dinkin-donut"

@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Merch · Dinkin' Donut</title>
-<meta name="description" content="Dinkin' Donut club merch: tees, hoodies, caps, paddle covers and more. Order on WhatsApp, pick up at open play.">
+<title>Club Shop · Dinkin' Donut</title>
+<meta name="description" content="The Glaze Jersey and the Clubhouse Polo by Dinkin' Donut Pickleball Club, Doha. Personalise your name and jersey number. Pre-order now.">
 <meta name="theme-color" content="#FFF6EA">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -11,81 +11,198 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/theme.js"></script>
+<script src="/js/sound.js" defer></script>
 <style>
-/* Merch: a donut-shop display case. Products sit on glazed "trays"; the bag is a pink box. */
-.mhero{padding-block:56px 30px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:30px;align-items:end}
-.mhero h1{font-size:clamp(46px,8vw,96px)}
-.mhero h1 span{color:var(--glaze)}
-.mhero p{max-width:46ch;color:var(--muted);font-size:18px;margin:16px 0 0}
-.drop{background:var(--ball);color:#3B2416;border-radius:50%;width:150px;height:150px;display:grid;place-items:center;text-align:center;font:700 18px/1.1 var(--display);transform:rotate(10deg);flex:none}
-.drop b{display:block;font-size:42px}
-@media (max-width:640px){.mhero{grid-template-columns:1fr}.drop{width:110px;height:110px;font-size:14px}.drop b{font-size:30px}}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
-.filters button{border:2px solid var(--line);background:var(--surface);color:var(--fg);font:700 14px var(--body);padding:9px 16px;border-radius:999px;cursor:pointer}
-.filters button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
-.item{background:var(--surface);border:1px solid var(--line);border-radius:26px;overflow:hidden;display:flex;flex-direction:column}
-.tray{aspect-ratio:1/0.9;max-width:100%;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 120%,var(--sunk) 55%,transparent 56%),var(--bg);transition:background .3s}
-.tray svg{width:78%;height:78%;transition:transform .35s cubic-bezier(.3,1.6,.5,1)}
-.item:hover .tray svg{transform:translateY(-6px) rotate(-3deg)}
-.badge{position:absolute;top:14px;left:14px;font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;border-radius:999px;background:var(--ink);color:var(--on-ink)}
-.badge.preorder{background:var(--glaze);color:#fff}.badge.available{background:var(--court);color:#FFF6EA}
-.body{padding:18px 20px 20px;display:grid;gap:10px;flex:1}
-.body h2{font-size:22px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.price{font:700 18px var(--display);color:var(--glaze-deep);white-space:nowrap}
-.body p{margin:0;color:var(--muted);font-size:14px}
-.opts{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.sw{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
-.sw[aria-pressed="true"]{outline:3px solid var(--glaze);outline-offset:2px}
-.sz{min-width:40px;padding:6px 8px;border:2px solid var(--line);border-radius:10px;background:transparent;color:var(--fg);font:700 13px var(--body);cursor:pointer}
-.sz[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
-.add{margin-top:auto}
+/* ---------- Film ---------- */
+.film{margin-top:28px;position:relative;aspect-ratio:16/9;max-width:100%;border-radius:28px;overflow:hidden;background:#1A110B;color:#FFF6EA;isolation:isolate}
+.film .sc{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:opacity .6s}
+.film .sc.on{opacity:1}
+.film .cap{font:700 clamp(26px,5.4vw,64px)/1 var(--display);text-align:center;letter-spacing:-.01em;text-wrap:balance;padding:0 6%}
+.film .cap small{display:block;font:700 clamp(10px,1.2vw,14px) var(--body);letter-spacing:.4em;text-transform:uppercase;color:var(--ball);margin-bottom:14px}
+.film .lights{position:absolute;inset:0;background:radial-gradient(ellipse at 20% -10%,rgba(255,246,234,.18),transparent 45%),radial-gradient(ellipse at 80% -10%,rgba(255,246,234,.18),transparent 45%)}
+.film .court{position:absolute;left:-10%;right:-10%;bottom:-30%;height:70%;background:#2F7A4F;transform:perspective(500px) rotateX(58deg);box-shadow:inset 0 0 0 6px #FFF6EA}
+.film .court::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:6px;background:#FFF6EA}
+.film .dripwall{position:absolute;inset:0;background:#FF5FA2;transform:translateY(-105%);transition:transform 1.4s cubic-bezier(.6,0,.3,1)}
+.film .sc.on .dripwall{transform:translateY(0)}
+.film .dripwall svg{position:absolute;top:100%;left:0;width:100%;height:70px}
+.film .stage{display:flex;align-items:center;justify-content:center;gap:4%;width:100%;height:100%}
+.film .stage .jersey{height:78%;width:auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
+.film .flip{transition:transform .8s cubic-bezier(.5,0,.2,1)}
+.film .tag{position:absolute;left:6%;bottom:9%;font:700 clamp(18px,2.6vw,32px)/1.1 var(--display)}
+.film .tag span{display:block;font:600 clamp(10px,1.1vw,13px) var(--body);letter-spacing:.3em;text-transform:uppercase;color:var(--ball);margin-bottom:6px}
+.film .row3{display:flex;gap:2%;align-items:flex-end;height:74%}
+.film .row3 > div{height:100%;display:flex;flex-direction:column;align-items:center;gap:8px;transform:translateY(40px);opacity:0;transition:all .7s cubic-bezier(.2,.9,.3,1.2)}
+.film .sc.on .row3 > div{transform:none;opacity:1}
+.film .row3 > div:nth-child(2){transition-delay:.25s}.film .row3 > div:nth-child(3){transition-delay:.5s}
+.film .row3 .jersey{height:84%;width:auto;filter:drop-shadow(0 24px 30px rgba(0,0,0,.4))}
+.film .row3 b{font:700 clamp(12px,1.6vw,18px) var(--display)}
+.film .row3 small{font:600 clamp(9px,.9vw,11px) var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--ball)}
+.film .end{background:#FF5FA2}
+.film .end .cap{color:#3B2416}
+.film .end img{width:clamp(70px,11vw,130px);margin:0 auto 14px;display:block;animation:spinin 1s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes spinin{from{transform:rotate(-180deg) scale(.4)}}
+.film .end .cap small{color:#3B2416}
+.film .price{display:inline-block;margin-top:18px;background:#3B2416;color:#FFF6EA;border-radius:999px;padding:10px 20px;font:700 clamp(13px,1.5vw,18px) var(--body)}
+.film .ui{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:12px;padding:14px 18px;background:linear-gradient(transparent,rgba(0,0,0,.45));z-index:5}
+.film .ui button{border:0;border-radius:999px;background:rgba(255,246,234,.18);backdrop-filter:blur(8px);color:#FFF6EA;font:700 13px var(--body);padding:9px 14px;cursor:pointer;display:inline-flex;gap:8px;align-items:center}
+.film .bar{flex:1;height:3px;border-radius:3px;background:rgba(255,246,234,.25);overflow:hidden}
+.film .bar i{display:block;height:100%;width:0;background:#D7F03C}
+.film .play{position:absolute;inset:0;z-index:6;display:grid;place-items:center;background:rgba(26,17,11,.35);border:0;cursor:pointer;color:#FFF6EA}
+.film .play span{width:84px;height:84px;border-radius:50%;background:#FF5FA2;display:grid;place-items:center;box-shadow:0 0 0 12px rgba(255,95,162,.25);transition:transform .2s}
+.film .play:hover span{transform:scale(1.08)}
+.typed::after{content:"";display:inline-block;width:.08em;height:.9em;background:currentColor;margin-left:.06em;animation:blink 1s steps(1) infinite;vertical-align:-.08em}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- Builder ---------- */
+.shop-h{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap;margin:70px 0 22px}
+.shop-h h2{font-size:clamp(34px,5vw,56px)}
+.tabs{display:inline-flex;background:var(--sunk);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px}
+.tabs button{border:0;background:transparent;color:var(--muted);font:700 15px var(--body);padding:10px 18px;border-radius:999px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:0 2px 8px rgba(59,36,22,.12)}
+.builder{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:900px){.builder{grid-template-columns:minmax(0,1fr)}}
+.studio{position:sticky;top:calc(84px + env(safe-area-inset-top,0px));border-radius:30px;background:radial-gradient(circle at 50% 38%,#FFFFFF 0,#F6EAD8 55%,#EAD8BF 100%);aspect-ratio:1/1.02;max-width:100%;display:grid;place-items:center;overflow:hidden}
+:root[data-theme="dark"] .studio{background:radial-gradient(circle at 50% 38%,#4A3222 0,#2B1C12 60%,#1E130C 100%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .studio{background:radial-gradient(circle at 50% 38%,#4A3222 0,#2B1C12 60%,#1E130C 100%)}}
+@media (max-width:900px){.studio{position:relative;top:0}}
+.studio .spin{width:84%;transition:transform .7s cubic-bezier(.5,0,.2,1)}
+.studio .spin.out{transform:perspective(900px) rotateY(90deg)}
+.studio .jersey{width:100%;height:auto;display:block}
+.studio .side{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:4px;background:rgba(255,255,255,.75);backdrop-filter:blur(8px);border-radius:999px;padding:4px}
+.studio .side button{border:0;background:transparent;font:700 13px var(--body);color:#3B2416;padding:8px 16px;border-radius:999px;cursor:pointer}
+.studio .side button[aria-pressed="true"]{background:#3B2416;color:#FFF6EA}
+.studio .flag{position:absolute;top:18px;left:18px;font:700 11px var(--body);letter-spacing:.16em;text-transform:uppercase;background:#FF5FA2;color:#fff;padding:7px 12px;border-radius:999px}
+.panel2{display:grid;gap:22px}
+.panel2 h3{font-size:clamp(30px,4vw,44px)}
+.panel2 .price{font:700 26px var(--display);color:var(--glaze-deep)}
+.panel2 .lead{color:var(--muted);margin:-10px 0 0}
+.opt{display:grid;gap:10px}
+.opt > label,.opt > .lbl{font:700 12px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between}
+.ways{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.way{border:2px solid var(--line);background:var(--surface);border-radius:18px;padding:8px 8px 10px;cursor:pointer;display:grid;justify-items:center;gap:2px;color:var(--fg);font:inherit}
+.way .jersey{width:70%;height:auto}
+.way b{font:700 15px var(--display)}.way small{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.way[aria-pressed="true"]{border-color:var(--glaze);box-shadow:0 0 0 3px color-mix(in srgb,var(--glaze) 25%,transparent)}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:2px solid var(--line);background:var(--surface);color:var(--fg);font:700 14px var(--body);padding:10px 14px;border-radius:12px;cursor:pointer;min-width:48px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.fields{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:10px}
+.fields input{width:100%;font:700 18px var(--body);letter-spacing:.06em}
+.fields .num input{font-family:var(--display);font-size:22px;text-align:center}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.buy{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.qty{display:inline-flex;align-items:center;border:2px solid var(--line);border-radius:999px;overflow:hidden}
+.qty button{border:0;background:transparent;color:var(--fg);width:40px;height:44px;font:700 18px var(--body);cursor:pointer}
+.qty b{min-width:28px;text-align:center;font-variant-numeric:tabular-nums}
+.specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:40px}
+.specs div{border-top:3px solid var(--glaze);padding-top:14px}
+.specs b{display:block;font:700 19px var(--display);margin-bottom:4px}
+.specs p{margin:0;color:var(--muted);font-size:15px}
+.chart{margin-top:24px;overflow-x:auto}
+.chart table{border-collapse:collapse;font-variant-numeric:tabular-nums;min-width:100%}
+.chart th,.chart td{padding:9px 14px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+.chart th{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.chart caption{text-align:left;font-size:13px;color:var(--muted);caption-side:bottom;padding-top:8px}
+.team{margin-top:60px;background:var(--deep);color:var(--cream);border-radius:32px;padding:clamp(24px,5vw,44px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center}
+.team h2{font-size:clamp(28px,4.4vw,46px)}.team h2 span{color:var(--ball)}
+.team p{opacity:.85;margin:10px 0 0;max-width:52ch}
+@media (max-width:700px){.team{grid-template-columns:1fr}}
+
+/* ---------- Coming soon ---------- */
+.soon-h{margin:70px 0 18px;display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
+.soon-h h2{font-size:clamp(28px,4vw,40px)}
+.shelf{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.shelf .it{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:14px;display:grid;gap:6px;position:relative}
+.shelf .it svg{width:100%;height:auto;aspect-ratio:1;filter:grayscale(.35);opacity:.85}
+.shelf .it b{font:700 16px var(--display)}
+.shelf .it small{color:var(--muted)}
+.shelf .it .soonpill{position:absolute;top:12px;left:12px;font:700 10px var(--body);letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:var(--on-ink);padding:5px 9px;border-radius:999px}
+.shelf .it a{font-weight:700;font-size:13px;color:var(--glaze-deep)}
+
+/* ---------- Bag ---------- */
 .bagbtn{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:30;box-shadow:0 10px 30px rgba(255,95,162,.45)}
 .bagbtn .cnt{background:#fff;color:var(--glaze-deep);border-radius:999px;min-width:24px;height:24px;display:grid;place-items:center;font-size:13px}
-.bagbtn.pop{animation:pop .4s}
-@keyframes pop{50%{transform:scale(1.15)}}
+.bagbtn.pop{animation:pop .4s}@keyframes pop{50%{transform:scale(1.15)}}
 .drawer{position:fixed;inset:0;z-index:40;display:grid;justify-items:end;background:rgba(26,17,11,.45)}
-.panel{width:min(440px,100%);height:100%;background:var(--bg);padding:24px max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 20px;display:flex;flex-direction:column;gap:14px;overflow:auto}
-.panel h2{font-size:30px;display:flex;justify-content:space-between;align-items:center}
-.line{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px}
-.line svg{width:56px;height:56px}
+.dpanel{width:min(460px,100%);height:100%;background:var(--bg);padding:24px max(20px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 20px;display:flex;flex-direction:column;gap:14px;overflow:auto}
+.dpanel h2{font-size:30px;display:flex;justify-content:space-between;align-items:center}
+.line{display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px}
+.line .jersey{width:64px;height:auto}
 .line small{color:var(--muted)}
-.qty{display:flex;align-items:center;gap:6px}
-.qty button{width:28px;height:28px;border-radius:50%;border:0;background:var(--sunk);color:var(--fg);font-weight:700;cursor:pointer}
+.lq{display:flex;align-items:center;gap:6px}.lq button{width:28px;height:28px;border-radius:50%;border:0;background:var(--sunk);color:var(--fg);font-weight:700;cursor:pointer}
 .total{display:flex;justify-content:space-between;font:700 22px var(--display);border-top:2px dashed var(--line);padding-top:14px;margin-top:auto}
 .note{font-size:13px;color:var(--muted)}
 .summary{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13px}
 .empty{color:var(--muted);text-align:center;padding:40px 0}
-.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:60px}
-.how div{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px}
 .footer{padding-bottom:110px}
-.how b{font:700 20px var(--display);display:block;margin-bottom:6px}
 </style>
 </head>
 <body>
-<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a><a class="btn pink sm btn-join" href="/queue"><span class="jb" aria-hidden="true"><svg viewBox="0 0 24 24"><g transform="rotate(-35 12 12)"><rect x="7" y="2.5" width="10" height="12" rx="5" fill="#FF5FA2" stroke="#3B2416" stroke-width="1.6"/><rect x="10.6" y="14" width="2.8" height="7" rx="1.2" fill="#3B2416"/></g><g class="ball"><circle cx="19.5" cy="5" r="3.2" fill="#D7F03C" stroke="#3B2416" stroke-width="1.2"/><circle cx="18.8" cy="4.4" r=".6" fill="#3B2416"/><circle cx="20.4" cy="5.8" r=".6" fill="#3B2416"/></g></svg></span>Join the queue</a></div></nav>
-<main class="wrap">
-  <header class="mhero">
-    <div><div class="eyebrow">The Dinkin’ Donut shop</div><h1>Fresh out <span>the oven.</span></h1>
-      <p>Club gear for Dinkers. Fill your bag, send the order on WhatsApp, and pick it up at the check-in table on open play night.</p></div>
-    <div class="drop"><div><b>01</b>First drop</div></div>
-  </header>
-  <div class="filters" role="group" aria-label="Filter products">
-    <button data-f="all" aria-pressed="true">Everything</button><button data-f="wear" aria-pressed="false">Wear</button><button data-f="gear" aria-pressed="false">Court gear</button><button data-f="available" aria-pressed="false">Ready now</button>
-  </div>
-  <div class="grid" id="grid"></div>
-  <section class="how">
-    <div><b>1 · Fill your bag</b>Pick colours and sizes. Your bag is saved on this phone.</div>
-    <div><b>2 · Send on WhatsApp</b>One tap sends the order to the crew. We confirm stock and payment.</div>
-    <div><b>3 · Pick up on court</b>Collect at the check-in table on open play night. Stay glazed.</div>
-  </section>
-  <p class="note" style="margin-top:20px">Questions about sizes or stock? WhatsApp <a href="https://wa.me/97430763431" target="_blank" rel="noopener">+974 3076 3431</a> or <a href="https://wa.me/97430723503" target="_blank" rel="noopener">+974 3072 3503</a>, or DM <a href="https://www.instagram.com/dinkindonutqa/" target="_blank" rel="noopener">@dinkindonutqa</a>. Pre-order items are made in batches; we’ll message you when yours is ready. Prices in Qatari riyals.</p>
-</main>
-<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dinkin’ Donut Pickleball Club · Stay glazed.</span><div data-contact style="flex-direction:row;flex-wrap:wrap"></div><span><a href="/">Home</a> · <a href="/queue">Live queue</a> · <a href="/dupr">DUPR games</a></span></div></footer>
+<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a><a class="btn pink sm" href="#build">Build yours</a></div></nav>
 
-<button class="btn pink bagbtn" id="bagBtn" aria-haspopup="dialog">🍩 Bag <span class="cnt" id="cnt">0</span></button>
-<div class="drawer" id="drawer" hidden><aside class="panel" role="dialog" aria-modal="true" aria-labelledby="bagTitle">
-  <h2 id="bagTitle">Your box <button class="btn ghost sm" id="close">Close</button></h2>
+<main class="wrap">
+  <!-- Film -->
+  <section class="film" id="film" aria-label="The Glaze Jersey film">
+    <div class="sc" data-s="0"><div class="lights"></div><div class="court"></div><div class="cap"><small>Doha · 8 PM</small><span class="typed" id="t0"></span></div></div>
+    <div class="sc" data-s="1"><div class="dripwall"><svg viewBox="0 0 1200 70" preserveAspectRatio="none"><path fill="#FF5FA2" d="M0 0h1200v20c-30 0-40 40-70 40s-30-30-60-30-40 50-80 50-30-40-60-40-50 30-90 30-40-40-80-40-30 30-60 30-40-20-70-20-40 44-80 44-30-34-60-34-40 20-80 20-30-30-60-30-50 40-90 40-30-30-60-30-40 24-60 24V0z"/></svg></div><div class="cap" style="color:#3B2416;position:relative"><small style="color:#3B2416">Introducing</small>Dipped in glaze.</div></div>
+    <div class="sc" data-s="2"><div class="stage"><div class="flip" id="fJ"></div></div><div class="tag"><span>Your name · your number</span><b id="fName">Made for you.</b></div></div>
+    <div class="sc" data-s="3"><div class="row3" id="fRow"></div></div>
+    <div class="sc" data-s="4"><div class="stage" id="fPolo"></div><div class="tag"><span>Also new</span>The Clubhouse Polo.</div></div>
+    <div class="sc end" data-s="5"><div class="cap"><img src="/assets/logo.svg" alt=""><small>Dinkin’ Donut · Pickleball Club</small>The Glaze Jersey<br><span class="price">Pre-order · <span id="fPrice"></span></span></div></div>
+    <button class="play" id="play" aria-label="Play the film"><span><svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg></span></button>
+    <div class="ui"><button id="fToggle" type="button" aria-label="Pause"></button><div class="bar"><i id="fBar"></i></div><button id="fSound" type="button"></button></div>
+  </section>
+
+  <!-- Builder -->
+  <div class="shop-h" id="build">
+    <div><div class="eyebrow">Club shop · Drop 01</div><h2>Make it yours.</h2></div>
+    <div class="tabs" role="tablist" aria-label="Product"><button role="tab" aria-selected="true" data-p="jersey">Glaze Jersey</button><button role="tab" aria-selected="false" data-p="polo">Clubhouse Polo</button></div>
+  </div>
+
+  <section class="builder">
+    <div class="studio" id="studio">
+      <span class="flag" id="flag">Pre-order</span>
+      <div class="spin" id="spin"></div>
+      <div class="side" role="group" aria-label="View"><button data-side="front" aria-pressed="true">Front</button><button data-side="back" aria-pressed="false">Back</button></div>
+    </div>
+    <div class="panel2">
+      <div><h3 id="pName"></h3><div class="price tabnum" id="pPrice"></div></div>
+      <p class="lead" id="pLead"></p>
+      <div class="opt"><span class="lbl">Colourway <span id="wayName"></span></span><div class="ways" id="ways"></div></div>
+      <div class="opt"><span class="lbl" id="printLbl">Back print</span><div class="seg" id="prints" role="group" aria-labelledby="printLbl"></div></div>
+      <div class="fields" id="fields">
+        <div class="opt"><label for="nm">Name</label><input id="nm" maxlength="12" placeholder="e.g. AISHA" autocomplete="nickname"></div>
+        <div class="opt num" id="numWrap"><label for="no">Jersey number</label><input id="no" inputmode="numeric" maxlength="2" placeholder="00"></div>
+      </div>
+      <p class="hint" id="hint">Printed on the back for free. Up to 12 letters, numbers 0 to 99.</p>
+      <div class="opt"><span class="lbl">Fit</span><div class="seg" id="fits"></div></div>
+      <div class="opt"><span class="lbl">Size <a href="#chart" class="note" style="letter-spacing:0;text-transform:none">Size guide</a></span><div class="seg" id="sizes"></div></div>
+      <div class="buy">
+        <div class="qty"><button type="button" id="qm" aria-label="One less">–</button><b id="qv">1</b><button type="button" id="qp" aria-label="One more">+</button></div>
+        <button class="btn pink" id="add" type="button">Add to bag</button>
+        <button class="btn ghost" id="waNow" type="button">Order on WhatsApp</button>
+      </div>
+      <p class="note" id="leadTime"></p>
+    </div>
+  </section>
+
+  <section class="specs" id="specs"></section>
+  <div class="chart" id="chart"></div>
+
+  <section class="team">
+    <div><div class="eyebrow" style="color:var(--ball)">Teams and tournaments</div><h2>Kitting out a squad? <span>Let’s talk.</span></h2><p>Matching jerseys for your tournament team, with every player’s name and number. Message us with your team name and sizes and we’ll send a quote.</p></div>
+    <a class="btn lime" id="teamBtn" href="https://wa.me/97430763431" target="_blank" rel="noopener">Get a team quote</a>
+  </section>
+
+  <div class="soon-h"><div><div class="eyebrow">On the way</div><h2>Coming soon</h2></div><p class="note" style="max-width:40ch;margin:0">Caps, towels, paddle covers and more are in the works. Tap “Notify me” and we’ll message you when they land.</p></div>
+  <div class="shelf" id="shelf"></div>
+</main>
+
+<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dinkin’ Donut Pickleball Club · Stay glazed.</span><div data-contact style="flex-direction:row;flex-wrap:wrap"></div><span><a href="/">Home</a> · <a href="/queue">Live queue</a> · <a href="/loyalty">Glaze Card</a> · <a href="/dupr">DUPR games</a></span></div></footer>
+
+<button class="btn pink bagbtn" id="bagBtn" aria-haspopup="dialog"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12.5H6.2z"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/></svg> Bag <span class="cnt" id="cnt">0</span></button>
+<div class="drawer" id="drawer" hidden><aside class="dpanel" role="dialog" aria-modal="true" aria-labelledby="bagTitle">
+  <h2 id="bagTitle">Your bag <button class="btn ghost sm" id="close">Close</button></h2>
   <div id="lines"></div>
   <div class="total"><span>Total</span><span id="total" class="tabnum">0</span></div>
   <form id="order" autocomplete="on" style="display:grid;gap:10px">
@@ -94,17 +211,108 @@
     <button class="btn pink" id="send">Send order on WhatsApp</button>
     <p class="note" style="margin:0">Goes to +974 3076 3431. No reply? Try <a id="alt" href="https://wa.me/97430723503" target="_blank" rel="noopener">+974 3072 3503</a>.</p>
   </form>
-  <div id="fallback" hidden><p class="note">WhatsApp ordering isn’t switched on yet. Copy your order and show it at the check-in table.</p><div class="summary" id="summary"></div><button class="btn sm" id="copy" style="margin-top:8px">Copy order</button></div>
+  <div id="fallback" hidden><p class="note">Copy your order and show it at the check-in table.</p><div class="summary" id="summary"></div><button class="btn sm" id="copy" style="margin-top:8px">Copy order</button></div>
 </aside></div>
 
 <script src="/js/config.js"></script>
 <script src="/js/contact.js"></script>
 <script src="/js/merch.js"></script>
+<script src="/js/jersey.js"></script>
 <script>
-const $ = id => document.getElementById(id), C = window.CLUB, M = window.MERCH;
+const $ = id => document.getElementById(id), C = window.CLUB, J = window.Jersey;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const money = n => `${n.toLocaleString("en")} ${C.currency || "QAR"}`;
-const dark = c => ["#3B2416", "#2F7A4F"].includes(c);
+const WA = (C.whatsappNumber || "97430763431").replace(/\D/g, "");
+const PRODUCTS = {
+  jersey: { ...window.JERSEY, ways: J.WAYS, draw: o => J.render(o), defWay: "glaze" },
+  polo: { ...window.POLO, ways: J.POLO_WAYS, draw: o => J.renderPolo(o), defWay: "cream" },
+};
+const st = { p: "jersey", side: "front", qty: 1, jersey: { way: "glaze", print: "full", name: "", num: "", fit: 0, size: "M" }, polo: { way: "cream", print: "name", name: "", num: "", fit: 0, size: "M" } };
+const cur = () => st[st.p], P = () => PRODUCTS[st.p];
+
+function draw(animate) {
+  const o = cur(), spin = $("spin");
+  const paint = () => { spin.innerHTML = P().draw({ way: o.way, side: st.side, name: o.name, num: o.num, print: o.print }); };
+  if (animate) { spin.classList.add("out"); setTimeout(() => { paint(); spin.classList.remove("out"); }, 330); } else paint();
+  document.querySelectorAll("[data-side]").forEach(b => b.setAttribute("aria-pressed", b.dataset.side === st.side));
+}
+function renderPanel() {
+  const p = P(), o = cur();
+  $("pName").textContent = p.name; $("pPrice").textContent = money(p.price); $("leadTime").textContent = p.leadTime;
+  $("pLead").textContent = st.p === "jersey" ? "Our match-day kit. Glaze-dipped yoke, pickleball-hole print and your name across the back." : "The smart one. Piqué knit, embroidered crest and glaze-tipped collar for the clubhouse and beyond.";
+  $("ways").innerHTML = Object.entries(p.ways).map(([k, w]) => `<button class="way" type="button" data-way="${k}" aria-pressed="${o.way === k}">${p.draw({ way: k, side: "front" })}<b>${w.label}</b><small>${w.note}</small></button>`).join("");
+  $("wayName").textContent = p.ways[o.way].label;
+  $("prints").innerHTML = p.prints.map(([k, l]) => `<button type="button" data-print="${k}" aria-pressed="${o.print === k}">${l}</button>`).join("");
+  $("printLbl").textContent = st.p === "jersey" ? "Back print" : "Embroidery";
+  $("fits").innerHTML = p.fits.map((f, i) => `<button type="button" data-fit="${i}" aria-pressed="${o.fit === i}">${f}</button>`).join("");
+  $("sizes").innerHTML = p.sizes.map(z => `<button type="button" data-size="${z}" aria-pressed="${o.size === z}">${z}</button>`).join("");
+  $("nm").value = o.name; $("no").value = o.num;
+  const showName = o.print !== "plain", showNum = st.p === "jersey" && o.print === "full";
+  $("fields").hidden = !showName; $("numWrap").hidden = !showNum;
+  $("fields").style.gridTemplateColumns = showNum ? "" : "1fr";
+  $("hint").textContent = !showName ? (st.p === "jersey" ? "Plain back with the oversized Dinkin’ Donut crest." : "Crest and club name only.") : st.p === "jersey" ? (showNum ? "Name and number printed on the back for free. Up to 12 letters, numbers 0 to 99." : "Your name, large across the back. Up to 12 letters.") : "Embroidered under the club name on the back. Up to 12 letters.";
+  $("qv").textContent = st.qty;
+  $("specs").innerHTML = p.specs.map(([t, d]) => `<div><b>${t}</b><p>${d}</p></div>`).join("");
+  $("chart").innerHTML = `<table><caption>Approximate chest width laid flat, in cm. Between sizes? Go one up for a relaxed fit.</caption><tr><th>Size</th>${Object.keys(p.sizeChart).map(k => `<th>${k}</th>`).join("")}</tr><tr><td><b>Chest</b></td>${Object.values(p.sizeChart).map(v => `<td>${v}</td>`).join("")}</tr></table>`;
+}
+function all(animate) { renderPanel(); draw(animate); }
+
+document.addEventListener("click", e => {
+  const t = e.target.closest("button"); if (!t) return;
+  const d = t.dataset, o = cur();
+  if (d.p) { st.p = d.p; st.side = "front"; document.querySelectorAll("[data-p]").forEach(b => b.setAttribute("aria-selected", b === t)); all(true); }
+  else if (d.side) { if (st.side !== d.side) { st.side = d.side; draw(true); } }
+  else if (d.way) { o.way = d.way; all(false); }
+  else if (d.print) { o.print = d.print; if (st.side !== "back") { st.side = "back"; renderPanel(); draw(true); } else all(false); }
+  else if (d.fit !== undefined) { o.fit = +d.fit; renderPanel(); }
+  else if (d.size) { o.size = d.size; renderPanel(); }
+});
+$("nm").addEventListener("input", e => { cur().name = e.target.value.replace(/[^\p{L} .'-]/gu, "").slice(0, 12); e.target.value = cur().name; if (st.side !== "back") { st.side = "back"; draw(true); } else draw(false); });
+$("no").addEventListener("input", e => { cur().num = e.target.value.replace(/\D/g, "").slice(0, 2); e.target.value = cur().num; if (st.side !== "back") { st.side = "back"; draw(true); } else draw(false); });
+$("qm").onclick = () => { st.qty = Math.max(1, st.qty - 1); $("qv").textContent = st.qty; };
+$("qp").onclick = () => { st.qty = Math.min(20, st.qty + 1); $("qv").textContent = st.qty; };
+
+// Bag
+let bag = []; try { bag = JSON.parse(localStorage.getItem("dd-bag2")) || []; } catch {}
+const saveBag = () => { try { localStorage.setItem("dd-bag2", JSON.stringify(bag)); } catch {} };
+function describe(l) {
+  const p = PRODUCTS[l.p], w = p.ways[l.way], bits = [w.label, p.fits[l.fit], "Size " + l.size];
+  if (l.print === "plain") bits.push(l.p === "jersey" ? "Plain back" : "No name");
+  else bits.push(l.p === "jersey" && l.print === "full" ? `Name: ${l.name || "-"} · Number: ${l.num || "-"}` : `Name: ${l.name || "-"}`);
+  return bits.join(" · ");
+}
+function addLine() {
+  const o = cur();
+  if (o.print !== "plain" && !o.name.trim()) { $("nm").focus(); $("hint").textContent = "Add a name, or choose " + (st.p === "jersey" ? "“Plain back”." : "“No name”."); return null; }
+  if (st.p === "jersey" && o.print === "full" && o.num === "") { $("no").focus(); $("hint").textContent = "Add your jersey number, or choose “Name only”."; return null; }
+  const line = { p: st.p, way: o.way, print: o.print, name: o.print === "plain" ? "" : o.name.trim().toUpperCase(), num: st.p === "jersey" && o.print === "full" ? o.num : "", fit: o.fit, size: o.size, qty: st.qty };
+  const key = l => JSON.stringify({ ...l, qty: 0 }), ex = bag.find(l => key(l) === key(line));
+  ex ? ex.qty += line.qty : bag.push(line); saveBag(); renderBag(); return line;
+}
+function renderBag() {
+  $("cnt").textContent = bag.reduce((a, l) => a + l.qty, 0);
+  $("lines").innerHTML = bag.length ? bag.map((l, i) => `<div class="line">${PRODUCTS[l.p].draw({ way: l.way, side: "back", name: l.name, num: l.num, print: l.print })}<div><b>${esc(PRODUCTS[l.p].name)}</b><br><small>${esc(describe(l))}</small><br><small>${money(PRODUCTS[l.p].price)}</small></div><div class="lq"><button data-q="${i}" data-d="-1" aria-label="One less">–</button><b class="tabnum">${l.qty}</b><button data-q="${i}" data-d="1" aria-label="One more">+</button></div></div>`).join("") : '<p class="empty">Your bag is empty.</p>';
+  $("total").textContent = money(bag.reduce((a, l) => a + l.qty * PRODUCTS[l.p].price, 0));
+  $("order").hidden = !bag.length;
+}
+const orderText = (lines, who) => `Dinkin' Donut shop order\nName: ${who}\n\n${lines.map(l => `• ${l.qty} × ${PRODUCTS[l.p].name} (${describe(l)}) = ${money(l.qty * PRODUCTS[l.p].price)}`).join("\n")}\n\nTotal: ${money(lines.reduce((a, l) => a + l.qty * PRODUCTS[l.p].price, 0))}\nPick-up at open play. 🍩`;
+const openWA = (text, num = WA) => { const a = document.createElement("a"); a.href = `https://wa.me/${num}?text=${encodeURIComponent(text)}`; a.target = "_blank"; a.rel = "noopener"; a.click(); };
+$("add").onclick = () => { if (addLine()) { const b = $("bagBtn"); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); $("add").textContent = "Added"; setTimeout(() => $("add").textContent = "Add to bag", 1200); } };
+$("waNow").onclick = () => { const o = cur(); if (o.print !== "plain" && !o.name.trim()) return addLine();
+  const line = { p: st.p, way: o.way, print: o.print, name: o.print === "plain" ? "" : o.name.trim().toUpperCase(), num: st.p === "jersey" && o.print === "full" ? o.num : "", fit: o.fit, size: o.size, qty: st.qty };
+  openWA(orderText([line], "")); };
+document.addEventListener("click", e => { const d = e.target.dataset; if (d.q !== undefined) { const l = bag[+d.q]; l.qty += +d.d; if (l.qty < 1) bag.splice(+d.q, 1); saveBag(); renderBag(); } });
+$("bagBtn").onclick = () => { $("drawer").hidden = false; $("close").focus(); };
+$("close").onclick = () => $("drawer").hidden = true;
+$("drawer").onclick = e => { if (e.target.id === "drawer") $("drawer").hidden = true; };
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("drawer").hidden = true; });
+try { $("buyer").value = localStorage.getItem("dd-name") || ""; } catch {}
+$("order").onsubmit = e => { e.preventDefault(); openWA(orderText(bag, $("buyer").value.trim())); };
+$("alt").onclick = e => { if (bag.length) { e.preventDefault(); openWA(orderText(bag, $("buyer").value.trim()), "97430723503"); } };
+$("copy").onclick = () => navigator.clipboard?.writeText($("summary").textContent).catch(() => {});
+$("teamBtn").href = `https://wa.me/${WA}?text=${encodeURIComponent("Hi Dinkin' Donut! I'd like a team quote for Glaze Jerseys.\nTeam name:\nNumber of players:\nSizes:")}`;
+
+// Coming soon shelf
 const logo = (x, y, s) => `<image href="/assets/logo.svg" x="${x}" y="${y}" width="${s}" height="${s}"/>`;
 const ART = {
   tee: c => `<svg viewBox="0 0 200 200"><path d="M70 30l-46 22 14 36 20-8v92h84V80l20 8 14-36-46-22c-4 14-16 22-30 22s-26-8-30-22z" fill="${c}" stroke="#3B2416" stroke-width="4" stroke-linejoin="round"/><path d="M70 30c4 14 16 22 30 22s26-8 30-22" fill="none" stroke="#3B2416" stroke-width="4"/>${logo(82, 74, 36)}</svg>`,
@@ -116,65 +324,10 @@ const ART = {
   stickers: () => `<svg viewBox="0 0 200 200"><rect x="30" y="40" width="84" height="84" rx="20" fill="#FF5FA2" transform="rotate(-10 72 82)" stroke="#fff" stroke-width="6"/><text x="72" y="92" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="20" fill="#fff" transform="rotate(-10 72 82)">DINK</text><circle cx="140" cy="70" r="40" fill="#fff"/>${logo(104, 34, 72)}<rect x="70" y="118" width="110" height="50" rx="25" fill="#D7F03C" stroke="#fff" stroke-width="6" transform="rotate(6 125 143)"/><text x="125" y="150" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="17" fill="#3B2416" transform="rotate(6 125 143)">Stay glazed</text></svg>`,
   bottle: c => `<svg viewBox="0 0 200 200"><rect x="80" y="18" width="40" height="24" rx="8" fill="#3B2416"/><path d="M76 42h48c8 10 14 20 14 34v96a14 14 0 0 1-14 14H76a14 14 0 0 1-14-14V76c0-14 6-24 14-34z" fill="${c}" stroke="#3B2416" stroke-width="4"/><rect x="62" y="96" width="76" height="6" fill="#D7F03C"/>${logo(78, 112, 44)}</svg>`,
 };
-const GROUP = { tee: "wear", hoodie: "wear", cap: "wear", cover: "gear", towel: "gear", balls: "gear", stickers: "gear", bottle: "gear" };
-const pick = {}; M.forEach(p => pick[p.id] = { color: p.colors[0]?.[0] || "", size: p.sizes.includes("M") ? "M" : p.sizes[0] || "" });
-let bag = []; try { bag = JSON.parse(localStorage.getItem("dd-bag")) || []; } catch {}
-const saveBag = () => { try { localStorage.setItem("dd-bag", JSON.stringify(bag)); } catch {} };
-const colorHex = (p, name) => (p.colors.find(c => c[0] === name) || [, "#FFF6EA"])[1];
-let filter = "all";
+$("shelf").innerHTML = window.MERCH.map(p => `<div class="it"><span class="soonpill">Coming soon</span>${ART[p.art](p.colors[0]?.[1] || "#FFF6EA")}<b>${esc(p.name)}</b><small>${esc(p.blurb)}</small><a href="https://wa.me/${WA}?text=${encodeURIComponent("Hi! Please let me know when the " + p.name + " is available.")}" target="_blank" rel="noopener">Notify me</a></div>`).join("");
 
-function card(p) {
-  const s = pick[p.id], label = { available: "Ready now", preorder: "Pre-order", soon: "Coming soon" }[p.status];
-  return `<article class="item" data-id="${p.id}">
-    <div class="tray"><span class="badge ${p.status}">${label}</span>${ART[p.art](colorHex(p, s.color))}</div>
-    <div class="body"><h2>${esc(p.name)}<span class="price">${money(p.price)}</span></h2><p>${esc(p.blurb)}</p>
-      ${p.colors.length ? `<div class="opts" role="group" aria-label="Colour">${p.colors.map(([n, h]) => `<button class="sw" style="background:${h}" title="${n}" aria-label="${n}" aria-pressed="${s.color === n}" data-color="${n}"></button>`).join("")}<span class="note">${esc(s.color)}</span></div>` : ""}
-      ${p.sizes.length ? `<div class="opts" role="group" aria-label="Size">${p.sizes.map(z => `<button class="sz" aria-pressed="${s.size === z}" data-size="${z}">${z}</button>`).join("")}</div>` : ""}
-      <button class="btn ${p.status === "soon" ? "ghost" : ""} add" data-add ${p.status === "soon" ? "disabled" : ""}>${p.status === "soon" ? "Coming soon" : p.status === "preorder" ? "Pre-order" : "Add to bag"}</button>
-    </div></article>`;
-}
-function renderGrid() {
-  $("grid").innerHTML = M.filter(p => filter === "all" || (filter === "available" ? p.status === "available" : GROUP[p.art] === filter)).map(card).join("");
-}
-function renderBag() {
-  const n = bag.reduce((a, l) => a + l.qty, 0); $("cnt").textContent = n;
-  $("lines").innerHTML = bag.length ? bag.map((l, i) => { const p = M.find(x => x.id === l.id); if (!p) return "";
-    return `<div class="line">${ART[p.art](colorHex(p, l.color))}<div><b>${esc(p.name)}</b><br><small>${[l.color, l.size].filter(Boolean).join(" · ")} · ${money(p.price)}</small></div>
-      <div class="qty"><button data-q="${i}" data-d="-1" aria-label="One less">–</button><b class="tabnum">${l.qty}</b><button data-q="${i}" data-d="1" aria-label="One more">+</button></div></div>`; }).join("")
-    : '<p class="empty">Your box is empty.<br>Every Dinker needs a cap.</p>';
-  $("total").textContent = money(bag.reduce((a, l) => a + l.qty * (M.find(p => p.id === l.id)?.price || 0), 0));
-  $("order").hidden = !bag.length;
-}
-function orderText() {
-  const lines = bag.map(l => { const p = M.find(x => x.id === l.id); return `• ${l.qty} × ${p.name}${l.color ? " (" + l.color + (l.size ? ", " + l.size : "") + ")" : l.size ? " (" + l.size + ")" : ""} = ${money(l.qty * p.price)}`; });
-  return `🍩 Dinkin' Donut merch order\nName: ${$("buyer").value.trim()}\n\n${lines.join("\n")}\n\nTotal: ${$("total").textContent}\nPick up at open play. Stay glazed!`;
-}
-document.addEventListener("click", e => {
-  const art = e.target.closest(".item"), p = art && M.find(x => x.id === art.dataset.id);
-  if (p && e.target.dataset.color) { pick[p.id].color = e.target.dataset.color; art.outerHTML = card(p); return; }
-  if (p && e.target.dataset.size) { pick[p.id].size = e.target.dataset.size; art.outerHTML = card(p); return; }
-  if (p && e.target.closest("[data-add]")) {
-    const s = pick[p.id], ex = bag.find(l => l.id === p.id && l.color === s.color && l.size === s.size);
-    ex ? ex.qty++ : bag.push({ id: p.id, color: s.color, size: s.size, qty: 1 }); saveBag(); renderBag();
-    const b = $("bagBtn"); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop");
-    const btn = e.target.closest("[data-add]"); btn.textContent = "Added ✓"; setTimeout(() => renderGrid(), 900); return;
-  }
-  if (e.target.dataset.q !== undefined) { const l = bag[+e.target.dataset.q]; l.qty += +e.target.dataset.d; if (l.qty < 1) bag.splice(+e.target.dataset.q, 1); saveBag(); renderBag(); return; }
-  if (e.target.dataset.f) { filter = e.target.dataset.f; document.querySelectorAll("[data-f]").forEach(b => b.setAttribute("aria-pressed", b === e.target)); renderGrid(); }
-});
-$("bagBtn").onclick = () => { $("drawer").hidden = false; $("close").focus(); };
-$("close").onclick = () => $("drawer").hidden = true;
-$("drawer").onclick = e => { if (e.target.id === "drawer") $("drawer").hidden = true; };
-document.addEventListener("keydown", e => { if (e.key === "Escape") $("drawer").hidden = true; });
-try { $("buyer").value = localStorage.getItem("dd-name") || ""; } catch {}
-$("order").onsubmit = e => {
-  e.preventDefault();
-  if (C.whatsappNumber) { const a = document.createElement("a"); a.href = `https://wa.me/${C.whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(orderText())}`; a.target = "_blank"; a.rel = "noopener"; a.click(); }
-  else { $("summary").textContent = orderText(); $("fallback").hidden = false; }
-};
-$("alt").onclick = e => { if (bag.length) e.currentTarget.href = "https://wa.me/97430723503?text=" + encodeURIComponent(orderText()); };
-$("copy").onclick = () => navigator.clipboard?.writeText($("summary").textContent).then(() => $("copy").textContent = "Copied ✓").catch(() => {});
-renderGrid(); renderBag();
+all(false); renderBag();
 </script>
+<script src="/js/film.js"></script>
 </body>
 </html>
