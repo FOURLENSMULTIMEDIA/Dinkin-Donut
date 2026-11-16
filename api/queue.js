@@ -1,5 +1,5 @@
 const { fresh, apply, PUBLIC } = require("./_engine");
-const { load, save, withLock, hasDb, loadHall, addHall } = require("./_store");
+const { load, save, withLock, hasDb, loadHall, addHall, clearHall } = require("./_store");
 const { sendPass, configured } = require("./_wa");
 const { login, isHost: hostOk } = require("./_auth");
 
@@ -38,6 +38,10 @@ module.exports = async (req, res) => {
 
     const a = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
     if (req.query && req.query.login !== undefined) return res.status(200).json(login(req, a));
+    if (a.type === "clearHall") {
+      if (!hostOk(req)) return res.status(401).json({ error: "Your host session has ended. Please sign in again.", signin: true });
+      await clearHall(); return res.status(200).json({ ok: true, hall: [] });
+    }
     const isHost = hostOk(req);
     if (!PUBLIC.has(a.type) && !isHost) {
       return res.status(401).json({ error: "Your host session has ended. Please sign in again.", signin: true });

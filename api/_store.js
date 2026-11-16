@@ -62,4 +62,9 @@ async function setDoc(key, value) {
   await redis(["SET", "dinkin:" + key, JSON.stringify(value)]);
 }
 
-module.exports = { load, save, withLock, hasDb, loadHall, addHall, getDoc, setDoc };
+async function clearHall() {
+  if (!hasDb()) { mem.hall = []; return; }
+  await redis(["DEL", HALL]);
+}
+
+module.exports = { load, save, withLock, hasDb, loadHall, addHall, clearHall, getDoc, setDoc };
