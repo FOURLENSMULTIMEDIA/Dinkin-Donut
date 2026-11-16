@@ -42,11 +42,11 @@ function createGlazeCardForm() {
 
   form.addTextItem()
     .setTitle('WhatsApp number')
-    .setHelpText('Qatar mobile, 8 digits. Example: 3076 3431')
+    .setHelpText('Mobile, 8 digits. Example: 3076 3431')
     .setRequired(true)
     .setValidation(FormApp.createTextValidation()
       .requireTextMatchesPattern('^\\s*(\\+?974)?[\\s-]*[3567]\\d{3}[\\s-]*\\d{4}\\s*$')
-      .setHelpText('Please enter an 8-digit Qatar mobile number.')
+      .setHelpText('Please enter an 8-digit mobile number.')
       .build());
 
   form.addTextItem()
@@ -57,7 +57,7 @@ function createGlazeCardForm() {
   form.addTextItem().setTitle('Instagram handle').setHelpText('Optional. So we can tag you in session photos.');
 
   form.addListItem()
-    .setTitle('Where in Qatar are you based?')
+    .setTitle('Where are you based?')
     .setChoiceValues(['Doha', 'Al Rayyan', 'Lusail', 'Al Wakrah', 'Al Daayen', 'Umm Salal', 'Al Khor', 'Other']);
 
   // Your game
