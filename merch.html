@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/theme.js"></script>
+<script src="/js/motion.js" defer></script>
 <script src="/js/sound.js" defer></script>
 <style>
 /* ---------- Film ---------- */
@@ -22,16 +23,16 @@
 .film .lights{position:absolute;inset:0;background:radial-gradient(ellipse at 20% -10%,rgba(255,246,234,.18),transparent 45%),radial-gradient(ellipse at 80% -10%,rgba(255,246,234,.18),transparent 45%)}
 .film .court{position:absolute;left:-10%;right:-10%;bottom:-30%;height:70%;background:#2F7A4F;transform:perspective(500px) rotateX(58deg);box-shadow:inset 0 0 0 6px #FFF6EA}
 .film .court::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:6px;background:#FFF6EA}
-.film .dripwall{position:absolute;inset:0;background:#FF5FA2;transform:translateY(-105%);transition:transform 1.4s cubic-bezier(.6,0,.3,1)}
+.film .dripwall{position:absolute;inset:0;background:#FF5FA2;transform:translateY(-105%);transition:transform 1.4s cubic-bezier(.76,0,.24,1)}
 .film .sc.on .dripwall{transform:translateY(0)}
 .film .dripwall svg{position:absolute;top:100%;left:0;width:100%;height:70px}
 .film .stage{display:flex;align-items:center;justify-content:center;gap:4%;width:100%;height:100%}
 .film .stage .jersey{height:78%;width:auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
-.film .flip{transition:transform .8s cubic-bezier(.5,0,.2,1)}
+.film .flip{transition:transform .8s cubic-bezier(.76,0,.24,1)}
 .film .tag{position:absolute;left:6%;bottom:9%;font:700 clamp(18px,2.6vw,32px)/1.1 var(--display)}
 .film .tag span{display:block;font:600 clamp(10px,1.1vw,13px) var(--body);letter-spacing:.3em;text-transform:uppercase;color:var(--ball);margin-bottom:6px}
 .film .row3{display:flex;gap:2%;align-items:flex-end;height:74%}
-.film .row3 > div{height:100%;display:flex;flex-direction:column;align-items:center;gap:8px;transform:translateY(40px);opacity:0;transition:all .7s cubic-bezier(.2,.9,.3,1.2)}
+.film .row3 > div{height:100%;display:flex;flex-direction:column;align-items:center;gap:8px;transform:translateY(40px);opacity:0;transition:all .7s cubic-bezier(.16,1,.3,1)}
 .film .sc.on .row3 > div{transform:none;opacity:1}
 .film .row3 > div:nth-child(2){transition-delay:.25s}.film .row3 > div:nth-child(3){transition-delay:.5s}
 .film .row3 .jersey{height:84%;width:auto;filter:drop-shadow(0 24px 30px rgba(0,0,0,.4))}
@@ -39,7 +40,7 @@
 .film .row3 small{font:600 clamp(9px,.9vw,11px) var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--ball)}
 .film .end{background:#FF5FA2}
 .film .end .cap{color:#3B2416}
-.film .end img{width:clamp(70px,11vw,130px);margin:0 auto 14px;display:block;animation:spinin 1s cubic-bezier(.2,.9,.3,1.2)}
+.film .end img{width:clamp(70px,11vw,130px);margin:0 auto 14px;display:block;animation:spinin 1s cubic-bezier(.16,1,.3,1)}
 @keyframes spinin{from{transform:rotate(-180deg) scale(.4)}}
 .film .end .cap small{color:#3B2416}
 .film .price{display:inline-block;margin-top:18px;background:#3B2416;color:#FFF6EA;border-radius:999px;padding:10px 20px;font:700 clamp(13px,1.5vw,18px) var(--body)}
@@ -89,7 +90,7 @@
 :root[data-theme="dark"] .studio{background:radial-gradient(circle at 50% 38%,#4A3222 0,#2B1C12 60%,#1E130C 100%)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .studio{background:radial-gradient(circle at 50% 38%,#4A3222 0,#2B1C12 60%,#1E130C 100%)}}
 @media (max-width:900px){.studio{position:relative;top:0}}
-.studio .spin{width:84%;transition:transform .7s cubic-bezier(.5,0,.2,1)}
+.studio .spin{width:84%;transition:transform .7s cubic-bezier(.76,0,.24,1)}
 .studio .spin.out{transform:perspective(900px) rotateY(90deg)}
 .studio .jersey{width:100%;height:auto;display:block}
 .studio .side{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:4px;background:rgba(255,255,255,.75);backdrop-filter:blur(8px);border-radius:999px;padding:4px}

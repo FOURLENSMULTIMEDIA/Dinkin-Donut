@@ -4,7 +4,7 @@
   function welcomeBack(n) {
     try { if (!n || sessionStorage.getItem("dd-wb")) return; sessionStorage.setItem("dd-wb", "1"); } catch (e) { return; }
     var st = document.createElement("style");
-    st.textContent = "#wb{position:fixed;left:50%;top:calc(76px + env(safe-area-inset-top,0px));z-index:60;transform:translate(-50%,-160%);display:flex;align-items:center;gap:10px;padding:8px 18px 8px 8px;border-radius:999px;background:#FF5FA2;color:#fff;font:700 15px Fredoka,ui-rounded,system-ui,sans-serif;box-shadow:0 14px 30px rgba(255,95,162,.4);animation:wb-in .7s .6s cubic-bezier(.2,.9,.3,1.3) forwards,wb-out .5s 4.6s forwards}" +
+    st.textContent = "#wb{position:fixed;left:50%;top:calc(76px + env(safe-area-inset-top,0px));z-index:60;transform:translate(-50%,-160%);display:flex;align-items:center;gap:10px;padding:8px 18px 8px 8px;border-radius:999px;background:#FF5FA2;color:#fff;font:700 15px Fredoka,ui-rounded,system-ui,sans-serif;box-shadow:0 14px 30px rgba(255,95,162,.4);animation:wb-in .7s .6s cubic-bezier(.16,1,.3,1) forwards,wb-out .5s 4.6s forwards}" +
       "#wb img{width:30px;height:30px}#wb::after{content:'';position:absolute;left:24px;bottom:-9px;width:10px;height:14px;border-radius:0 0 8px 8px;background:#FF5FA2}" +
       "@keyframes wb-in{to{transform:translate(-50%,0)}}@keyframes wb-out{to{transform:translate(-50%,-160%);opacity:0}}@media (prefers-reduced-motion:reduce){#wb{animation:none;transform:translate(-50%,0)}}";
     document.head.appendChild(st);
@@ -22,16 +22,16 @@
     "#intro .stage{display:grid;justify-items:center;gap:2vmin}",
     "#intro .ball{position:relative;width:min(28vmin,180px);aspect-ratio:1;animation:in-drop 1.05s cubic-bezier(.45,0,.55,1) both}",
     "#intro .ball img{width:100%;height:100%;filter:drop-shadow(0 2vmin 2.4vmin rgba(59,36,22,.25))}",
-    "#intro .bite{position:absolute;right:4%;top:2%;width:30%;aspect-ratio:1;border-radius:50%;background:#FFF6EA;transform:scale(0);animation:in-bite .18s .95s cubic-bezier(.2,.9,.3,1.6) forwards}",
+    "#intro .bite{position:absolute;right:4%;top:2%;width:30%;aspect-ratio:1;border-radius:50%;background:#FFF6EA;transform:scale(0);animation:in-bite .18s .95s cubic-bezier(.16,1,.3,1) forwards}",
     "#intro .shadow{width:min(20vmin,130px);height:2vmin;border-radius:50%;background:rgba(59,36,22,.18);animation:in-shadow 1.05s both}",
     "#intro .name{display:flex;font:700 min(9vmin,64px)/1 Fredoka,ui-rounded,system-ui,sans-serif;color:#3B2416;letter-spacing:-.01em}",
-    "#intro .name span{display:inline-block;opacity:0;transform:translateY(60%) scale(.6);animation:in-pop .42s cubic-bezier(.2,.9,.3,1.5) forwards}",
+    "#intro .name span{display:inline-block;opacity:0;transform:translateY(60%) scale(.6);animation:in-pop .42s cubic-bezier(.16,1,.3,1) forwards}",
     "#intro .tag{font:700 min(1.8vmin,13px) 'DM Sans',system-ui,sans-serif;letter-spacing:.45em;text-transform:uppercase;color:#FF5FA2;opacity:0;animation:in-fade .5s 1.9s forwards}",
     "#intro i{position:absolute;left:50%;top:44%;width:10px;height:26px;border-radius:9px;opacity:0;animation:in-spr 1s 1.55s cubic-bezier(.1,.7,.3,1) forwards}",
     "#intro .glaze{position:absolute;inset:0;background:#FF5FA2;transform:translateY(calc(-100% - 12vh));z-index:2}",
     "#intro .glaze svg{position:absolute;left:0;top:100%;width:100%;height:10vh}",
-    "#intro.out .glaze{animation:in-pour .55s cubic-bezier(.7,0,.25,1) forwards}",
-    "#intro.gone{animation:in-lift .6s .55s cubic-bezier(.7,0,.25,1) forwards}",
+    "#intro.out .glaze{animation:in-pour .55s cubic-bezier(.76,0,.24,1) forwards}",
+    "#intro.gone{animation:in-lift .6s .55s cubic-bezier(.76,0,.24,1) forwards}",
     "@keyframes in-drop{0%{transform:translateY(-70vh)}42%{transform:translateY(0) scale(1.1,.86)}58%{transform:translateY(-14vmin) scale(.96,1.04)}74%{transform:translateY(0) scale(1.04,.95)}86%{transform:translateY(-3vmin)}100%{transform:none}}",
     "@keyframes in-shadow{0%{transform:scale(.2);opacity:0}42%{transform:scale(1.1);opacity:1}58%{transform:scale(.6)}74%{transform:scale(1)}86%{transform:scale(.9)}100%{transform:none;opacity:1}}",
     "@keyframes in-bite{to{transform:scale(1)}}",

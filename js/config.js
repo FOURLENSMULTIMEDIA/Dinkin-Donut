@@ -16,6 +16,9 @@ window.CLUB = {
   // Glaze Card loyalty sign-up (Google Form short link, see google-form/SETUP.md)
   loyaltyFormUrl: "https://docs.google.com/forms/d/1TqgQPkL9SCaWjwWpEvg3VU1uV5ERvEHyLesmacjYezY/viewform",
 
+  // The Glaze Cup tournament. Leave the date empty for "coming soon"; set it (Doha time) to show a countdown.
+  tournament: { name: "The Glaze Cup", date: "", registerUrl: "" },   // e.g. date: "2026-12-18T19:00:00+03:00"
+
   // DUPR-rated games are booked on Reclub
   reclubUrl: "",                       // your club page, e.g. "https://reclub.co/clubs/dinkin-donut"
   duprClubUrl: "",                     // optional: your DUPR club page
