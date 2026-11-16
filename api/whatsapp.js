@@ -56,6 +56,7 @@ async function reply(from, text) {
   }
   if (what === "thanks") return "You're welcome. See you on court.";
   if (what === "help" && !p) return "Hi, welcome to Dinkin' Donut Pickleball Club. Pay at the check-in table and your queue PIN will arrive here.\n\n" + HELP;
+  if (what === "help" && p && p.pin) return [`Hi ${p.name}, here's your queue PIN for tonight: *${p.pin}*`, "", "Join the queue in one tap:", joinLink(p.name, p.pin), "", "Reply *STATUS* any time to see your place in line."].join("\n");
   if (what === "help") return `Hi ${p.name}.\n\n` + HELP;
 
   if (!p || !p.pin) return "We couldn't find a pass for this number tonight. Pay at the check-in table and we'll send your queue PIN here.\n\nReply *PAY* for payment details.";

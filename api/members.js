@@ -15,15 +15,21 @@ const phoneKey = p => { const d = String(p || "").replace(/\D/g, ""); return d.l
 
 // Pull the fields we care about out of a form response, whatever the exact question wording.
 function fromAnswers(ans) {
-  const pick = re => { for (const [q, v] of Object.entries(ans || {})) if (re.test(q)) return Array.isArray(v) ? v.join(", ") : v; return ""; };
+  const entries = Object.entries(ans || {}).map(([q, v]) => [q, Array.isArray(v) ? v.join(", ") : String(v ?? "")]);
+  const pick = re => (entries.find(([q, v]) => re.test(q) && v.trim()) || [])[1] || "";
+  // Name: any question mentioning "name" that isn't Instagram / username / team; otherwise the first short text answer
+  let name = pick(/^(?!.*(insta|user|team|club|ig\b)).*\b(name|pangalan|ism|اسم)/i);
+  if (!name) name = (entries.find(([q, v]) => v && v.length <= 40 && !/@|\d{5,}|http/.test(v)) || [])[1] || "";
+  let phone = pick(/whats ?app|phone|mobile|number|contact|tel/i);
+  if (!phone) phone = (entries.find(([, v]) => /(\+?974)?[\s-]*\d{4}[\s-]*\d{4}/.test(v)) || [])[1] || "";
   return {
-    name: clean(pick(/full name|^name|your name|pangalan/i), 40),
-    phone: clean(pick(/whats ?app|phone|mobile|number|contact/i), 30),
-    email: clean(pick(/e-?mail/i), 80),
-    instagram: clean(pick(/insta/i), 40),
-    level: normLevel(pick(/level|skill|experience|dupr rating/i)),
+    name: clean(name, 40),
+    phone: clean(phone, 30),
+    email: clean(pick(/e-?mail/i) || (entries.find(([, v]) => /@.+\./.test(v) && !/^@/.test(v)) || [])[1], 80),
+    instagram: clean(pick(/insta|\big\b/i), 40),
+    level: normLevel(pick(/level|skill|experience|rating|dupr/i)),
     levelRaw: clean(pick(/level|skill|experience/i), 60),
-    plays: clean(pick(/which session|play|games/i), 60),
+    plays: clean(pick(/which session|sessions|open play|dupr game/i), 60),
     dupr: clean(pick(/dupr id/i), 30),
   };
 }

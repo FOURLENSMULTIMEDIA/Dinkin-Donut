@@ -529,16 +529,17 @@ function waLink(phone, name, pin, amount) {
 function showPass(r) {
   const c = $("passCard"); c.hidden = false;
   c.innerHTML = `<div class="digits" aria-label="PIN ${r.pin}">${r.pin.split("").map(d => `<i>${d}</i>`).join("")}</div>
-    <div><b>${DD.esc(r.name)}</b><br><small>${r.sent ? "Sent automatically to their WhatsApp." : "WhatsApp opened with the PIN message ready. Tap Send."}${r.waError ? " (Automatic send failed: " + DD.esc(r.waError) + ")" : ""}</small></div>
+    <div><b>${DD.esc(r.name)}</b><br><small>${r.sent ? "Sent automatically to their WhatsApp." : r.needsHello ? "Ask them to send “Hi” to the club on WhatsApp. The PIN replies instantly, free." : "WhatsApp opened with the PIN message ready. Tap Send."}${r.waError ? " (Automatic send failed: " + DD.esc(r.waError) + ")" : ""}</small></div>
     <a class="btn ghost sm" href="${r.link}" target="_blank" rel="noopener">Open WhatsApp again</a>`;
 }
 async function issuePass(action) {
   // Open the WhatsApp tab inside the tap, so phones don't block it as a pop-up
-  const tab = S.waAuto ? null : window.open("", "_blank");
+  const tab = (S.waAuto || S.waFree) ? null : window.open("", "_blank");
   try {
     const st = await DD.send(action, PIN); S = st; render();
     const r = st.result || {};
     if (r.sent) { tab && tab.close(); toast(`PIN sent to ${r.name} on WhatsApp`); }
+    else if (r.needsHello) toast(`${r.name} will get the PIN when they message the club on WhatsApp`);
     else if (tab) tab.location.href = r.link; else window.open(r.link, "_blank");
     showPass(r); return r;
   } catch (e) { tab && tab.close(); toast(e.message, true); }
