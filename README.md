@@ -82,3 +82,11 @@ Sending the PIN:
 - **Fully automatic**: set up the WhatsApp Business Cloud API (Meta), create a template with two variables
   (`{{1}}` name, `{{2}}` PIN), then add `WA_TOKEN`, `WA_PHONE_ID`, `WA_TEMPLATE` (and optionally `WA_LANG`) in Vercel.
   The console then sends the PIN with no extra tap.
+
+## Autopilot
+Host console bar → **Autopilot** (on by default). Courts fill themselves the moment a game finishes or enough players check in.
+- **Scores**: type both scores on the court card and tap **Finish**. The winner is worked out and checked against the rules (to 11, win by 2; 15 or 21 available under **Game to**).
+- **Equal play**: players who have played fewer games tonight get priority; nobody is skipped more than twice.
+- **Fresh partners**: the same pair is avoided in back-to-back games, and the same four never go straight back on.
+- **Up next**: the next game, exactly as it will be built, shows on the console, players' phones and the TV.
+- **Court calls (TV)**: tap *Turn on court announcements* on `/tv` once; each new game gets a full-screen call and a spoken announcement.

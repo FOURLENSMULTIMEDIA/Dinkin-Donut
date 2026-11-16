@@ -5,7 +5,7 @@ const MAX_LOG = 150;
 function fresh() {
   return {
     v: 0, updatedAt: Date.now(), nightTitle: "Open Play Night",
-    format: 2, rotation: "winstay", maxWins: 2, match: "smart", requirePin: true,
+    format: 2, rotation: "winstay", maxWins: 2, match: "smart", requirePin: true, autopilot: true, gameCap: 0, target: 11,
     players: {}, queue: [], bench: [], games: 0, nextId: 1, durSum: 0, durN: 0,
     fee: 0, pay: {}, fawran: "",
     courts: [1, 2, 3].map(id => ({ id, teams: null, start: null, stayers: null, streak: 0 })),
@@ -94,6 +94,17 @@ function court(S, id) {
   return c;
 }
 
+// Who plays next: the game the matchmaker would build for the next free court, without changing anything.
+function previewNext(S) {
+  const take = S.format * 2;
+  if (S.queue.length < take) return null;
+  const free = S.courts.find(c => !c.teams && !c.stayers) || S.courts.slice().sort((x, y) => (x.start || 0) - (y.start || 0))[0] || { id: 0 };
+  const ids = M.choose(S, { ...free, stayers: null }, take, []);
+  if (!ids || ids.length < take) return null;
+  const teams = M.split(S, ids, S.format);
+  return { teams, balance: M.quality(S, teams), court: free.teams ? null : free.id };
+}
+
 const actions = {
   // public
   join: (S, a) => ({ player: addPlayer(S, a.name, a.level, false, a.pin) }),
@@ -165,6 +176,9 @@ const actions = {
     W.forEach(id => { const p = S.players[id]; p.w++; p.streak = p.streak > 0 ? p.streak + 1 : 1; p.pf += ws; p.pa += ls; });
     L.forEach(id => { const p = S.players[id]; p.l++; p.streak = p.streak < 0 ? p.streak - 1 : -1; p.pf += ls; p.pa += ws; });
     S.games++;
+    const pair = (t, k) => t.forEach(a => t.forEach(b => { if (a !== b) { const p = S.players[a]; if (p) { p[k] = p[k] || {}; p[k][b] = (p[k][b] || 0) + 1; } } }));
+    pair(W, "partners"); pair(L, "partners");
+    c.lastFour = [...W, ...L].sort().join(",");
     const mins = Math.max(1, Math.round((Date.now() - c.start) / 60000));
     if (mins <= 45) { S.durSum = (S.durSum || 0) + mins; S.durN = (S.durN || 0) + 1; }
     log(S, `Court ${c.id}: ${names(S, W)} beat ${names(S, L)}${ws ? ` ${ws}–${ls}` : ""} (${mins} min)`);
@@ -177,6 +191,16 @@ const actions = {
     }
     c.teams = null; c.start = null;
     fillCourt(S, c);
+  },
+  // Type the score; the winner is worked out and checked against the game rules (to 11, win by 2)
+  score: (S, a) => {
+    const x = parseInt(a.a, 10), y = parseInt(a.b, 10), T = S.target || 11;
+    if (!(x >= 0) || !(y >= 0)) throw new Error("Enter both scores.");
+    const hi = Math.max(x, y), lo = Math.min(x, y);
+    if (hi < T) throw new Error(`A game goes to ${T}. Check the score.`);
+    if (hi - lo < 2) throw new Error("A game must be won by 2 points.");
+    if (hi > T && hi - lo !== 2) throw new Error(`After ${T - 1}–${T - 1}, the game ends as soon as someone leads by 2.`);
+    return actions.win(S, { court: a.court, team: x > y ? 0 : 1, ws: hi, ls: lo });
   },
   fill: (S, a) => fillCourt(S, court(S, a.court)),
   fillAll: S => S.courts.forEach(c => fillCourt(S, c)),
@@ -207,6 +231,9 @@ const actions = {
   settings: (S, a) => {
     if (a.format && !S.courts.some(c => c.teams)) S.format = Number(a.format) === 1 ? 1 : 2;
     if (typeof a.requirePin === "boolean") S.requirePin = a.requirePin;
+    if (typeof a.autopilot === "boolean") S.autopilot = a.autopilot;
+    if (a.target) S.target = [11, 15, 21].includes(Number(a.target)) ? Number(a.target) : 11;
+    if (a.gameCap !== undefined) S.gameCap = Math.max(0, Math.min(40, Number(a.gameCap) || 0));
     if (a.match) S.match = ["order", "smart", "levels"].includes(a.match) ? a.match : "smart";
     if (a.rotation) S.rotation = a.rotation === "all" ? "all" : "winstay";
     if (a.maxWins) S.maxWins = Math.min(5, Math.max(1, Number(a.maxWins)));
@@ -216,7 +243,7 @@ const actions = {
   reset: (S, a) => {
     const n = fresh();
     if (!a.clearRoster) Object.values(S.players).forEach(p => { n.players[p.id] = { id: p.id, name: p.name, level: p.level, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false }; });
-    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.requirePin = S.requirePin !== false;
+    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.requirePin = S.requirePin !== false; n.autopilot = S.autopilot !== false; n.gameCap = 0; n.target = S.target || 11;
     n.courts = S.courts.map(c => ({ id: c.id, teams: null, start: null, stayers: null, streak: 0, level: c.level || "any" }));
     return n;
   },
@@ -229,6 +256,8 @@ function apply(S, a) {
   if (!fn) throw new Error("Unknown action.");
   const out = fn(S, a) || {};
   const next = out && out.v !== undefined && out.players ? out : S; // reset returns a new state
+  if (next.autopilot !== false && !["cancel", "removeCourt", "reset"].includes(a.type)) next.courts.forEach(c => fillCourt(next, c));
+  next.upNext = previewNext(next);
   next.v = (S.v || 0) + 1; next.updatedAt = Date.now();
   return { state: next, result: next === S ? out : {} };
 }

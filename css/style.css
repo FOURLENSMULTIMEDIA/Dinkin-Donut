@@ -113,3 +113,15 @@ img,svg{-webkit-user-drag:none}
   .theme button{width:28px;height:28px}
   .soundbtn{height:34px;padding:0 9px}
 }
+
+/* Game time cap */
+[data-cap].over{background:#FF5FA2;color:#fff!important;border-radius:999px;padding:2px 8px;animation:pulse2 1.2s infinite}
+[data-cap].over::after{content:" · time"}
+
+/* Up next card */
+.upnext{border-radius:18px;background:var(--deep);color:#FFF6EA;padding:14px 16px;display:grid;gap:8px;margin-bottom:10px}
+.upnext .h{display:flex;justify-content:space-between;align-items:center;font:700 11px var(--body);letter-spacing:.2em;text-transform:uppercase;color:#D7F03C}
+.upnext .m{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;font:700 17px/1.25 var(--display)}
+.upnext .m span:last-child{text-align:right}
+.upnext .v{font:700 11px var(--display);letter-spacing:.3em;color:#FF5FA2}
+.upnext.me{background:#FF5FA2}.upnext.me .h{color:#3B2416}.upnext.me .v{color:#3B2416}

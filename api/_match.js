@@ -33,7 +33,8 @@ function split(S, ids, per) {
   if (per === 1) return [[ids[0]], [ids[1]]];
   const [a, b, c, d] = ids, options = [[[a, b], [c, d]], [[a, c], [b, d]], [[a, d], [b, c]]];
   let best = options[0], bestDiff = Infinity;
-  options.forEach(o => { const diff = Math.abs(avg(S, o[0]) - avg(S, o[1])); if (diff < bestDiff - 1e-9) { best = o; bestDiff = diff; } });
+  const repeat = t => ((S.players[t[0]]?.partners || {})[t[1]] || 0);
+  options.forEach(o => { const diff = Math.abs(avg(S, o[0]) - avg(S, o[1])) + 0.45 * (repeat(o[0]) + repeat(o[1])); if (diff < bestDiff - 1e-9) { best = o; bestDiff = diff; } });
   return best;
 }
 
@@ -71,9 +72,19 @@ function choose(S, court, take, stay) {
   if (!stay.length) picked.push(win[0]);
   must.forEach(id => { if (picked.length < take && !picked.includes(id)) picked.push(id); });
   const target = stay.length ? avg(S, stay) : rating(S.players[win[0]]);
+  const games = id => (S.players[id].w || 0) + (S.players[id].l || 0);
+  const fewest = Math.min(...win.map(games));
+  // Lower score = better fit: skill distance, plus a nudge for anyone who has played more than others tonight
+  const score = id => Math.abs(rating(S.players[id]) - target) + 0.25 * (games(id) - fewest);
   win.filter(id => !picked.includes(id))
-    .sort((x, y) => Math.abs(rating(S.players[x]) - target) - Math.abs(rating(S.players[y]) - target) || q.indexOf(x) - q.indexOf(y))
+    .sort((x, y) => score(x) - score(y) || q.indexOf(x) - q.indexOf(y))
     .forEach(id => { if (picked.length < take) picked.push(id); });
+  // Never put the exact same four straight back on court
+  const key = ids => [...ids].sort().join(",");
+  if (!stay.length && court.lastFour && key(picked) === court.lastFour) {
+    const swap = win.find(id => !picked.includes(id));
+    if (swap) picked[picked.length - 1] = swap;
+  }
   return picked;
 }
 

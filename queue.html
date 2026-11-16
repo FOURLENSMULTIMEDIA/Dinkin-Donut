@@ -104,7 +104,7 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
 
   <div class="cols">
     <section class="panel"><h2>Courts <span class="chip tabnum" id="games">0 games</span></h2><div class="courts" id="courts"></div></section>
-    <section class="panel"><h2>Queue <span class="chip tabnum" id="qlen">0 waiting</span></h2><ol class="q" id="queue"></ol></section>
+    <section class="panel"><h2>Queue <span class="chip tabnum" id="qlen">0 waiting</span></h2><div id="upNext"></div><ol class="q" id="queue"></ol></section>
   </div>
 
   <section class="panel" id="standings"><h2>Live standings <span class="muted" style="font:500 13px var(--body)">Wins, then win %</span></h2>
@@ -120,6 +120,11 @@ const ME_KEY = "dd-player";
 let meId = null; try { meId = localStorage.getItem(ME_KEY); } catch {}
 let S = null, lastPhase = null;
 const $ = id => document.getElementById(id);
+function upNextCard(S, meId) {
+  const u = S && S.upNext; if (!u) return "";
+  const mine = meId && u.teams.flat().includes(meId), nm = t => t.map(id => DD.esc(S.players[id]?.name || "?")).join(" &amp; ");
+  return `<div class="upnext ${mine ? "me" : ""}"><div class="h"><span>${mine ? "You’re up next" : "Up next"}${u.court ? " · Court " + u.court : ""}</span><span>${{ even: "Even match", close: "Close match", uneven: "Mixed" }[u.balance] || ""}</span></div><div class="m"><span>${nm(u.teams[0])}</span><span class="v">VS</span><span>${nm(u.teams[1])}</span></div></div>`;
+}
 const JOIN_HTML = $("me").innerHTML;
 function alertBox(msg) { const e = document.createElement("p"); e.className = "err"; e.textContent = msg; $("me").appendChild(e); setTimeout(() => e.remove(), 5000); }
 // PIN boxes: auto-advance, backspace to previous, paste all three digits at once
@@ -213,12 +218,13 @@ function render() {
   if (meId) renderMe();
   const need = S.format * 2;
   $("games").textContent = `${S.games} game${S.games === 1 ? "" : "s"}`;
+  $("upNext").innerHTML = upNextCard(S, meId);
   $("qlen").textContent = `${S.queue.length} waiting`;
   const nm = id => `<span class="${id === meId ? "mine" : ""}">${DD.esc(S.players[id]?.name)}</span>`;
   $("courts").innerHTML = S.courts.map(c => c.teams
     ? `<div class="ct"><h3>Court ${c.id}<span class="tabnum" data-start="${c.start}">${DD.clock(c.start)}</span></h3><div>${c.teams[0].map(nm).join(" &amp; ")}</div><div class="vs">VS</div><div>${c.teams[1].map(nm).join(" &amp; ")}</div></div>`
     : `<div class="ct open"><h3>Court ${c.id}<span>Open</span></h3>${c.stayers ? `<div>Winners staying: ${c.stayers.map(nm).join(" &amp; ")}</div>` : '<div class="muted">Next up goes here</div>'}</div>`).join("");
-  $("queue").innerHTML = S.queue.length ? S.queue.map((id, i) => `<li class="${i < need ? "next" : ""} ${id === meId ? "you" : ""}"><span class="n">${i + 1}</span><span class="nm">${DD.esc(S.players[id]?.name)}<span class="lv">${LV[S.players[id]?.level] || ""}</span>${id === meId ? " (you)" : ""}</span><span class="muted tabnum" style="font-size:13px">${S.players[id].w}–${S.players[id].l}</span></li>`).join("")
+  $("queue").innerHTML = S.queue.length ? S.queue.map((id, i) => `<li class="${(S.upNext ? S.upNext.teams.flat().includes(id) : i < need) ? "next" : ""} ${id === meId ? "you" : ""}"><span class="n">${i + 1}</span><span class="nm">${DD.esc(S.players[id]?.name)}<span class="lv">${LV[S.players[id]?.level] || ""}</span>${id === meId ? " (you)" : ""}</span><span class="muted tabnum" style="font-size:13px">${S.players[id].w}–${S.players[id].l}</span></li>`).join("")
     : '<li><span class="muted">Nobody waiting. Join and you’re straight on.</span></li>';
   const rows = DD.ranked(S);
   $("table").innerHTML = rows.length ? rows.map((p, i) => { const d = p.pf - p.pa;

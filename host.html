@@ -61,6 +61,9 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .warn{background:#FFE7A8;color:var(--choco);border-radius:14px;padding:12px 14px;font-weight:600}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .muted{color:var(--muted);font-size:14px}
+.team{grid-template-columns:1fr 64px!important}
+.ct .score{width:64px;height:48px;font:700 24px var(--display)!important;text-align:center;border-radius:12px;padding:0}
+.autop{background:#D7F03C;color:#3B2416!important;border-radius:999px;padding:6px 12px}
 .passform{display:grid;gap:12px;background:linear-gradient(135deg,#3B2416,#57351F);color:#FFF6EA;border-radius:20px;padding:16px}
 .passhead{display:flex;gap:12px;align-items:center}.passhead b{font:700 18px var(--display);display:block}.passhead small{opacity:.8;font-size:13px}
 .passmark{width:44px;height:44px;border-radius:50%;background:#D7F03C;color:#3B2416;display:grid;place-items:center;font:700 20px var(--display);box-shadow:inset 0 0 0 9px #FF5FA2,inset 0 0 0 11px #3B2416;flex:none}
@@ -176,6 +179,8 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
   <div class="bar">
     <label for="title">Night</label><input id="title" style="width:200px">
     <label for="format">Format</label><select id="format"><option value="2">Doubles</option><option value="1">Singles</option></select>
+    <label class="row muted autop" style="gap:6px"><input type="checkbox" id="autopilot"> <b>Autopilot</b></label>
+    <label for="target">Game to</label><select id="target"><option value="11">11 points</option><option value="15">15 points</option><option value="21">21 points</option></select>
     <label class="row muted" style="gap:6px"><input type="checkbox" id="requirePin"> PIN to join</label>
     <label for="match">Matching</label><select id="match"><option value="smart">Smart match</option><option value="levels">Level courts</option><option value="order">Queue order</option></select>
     <label for="rotation">After a game</label><select id="rotation"><option value="winstay">Winners stay</option><option value="all">Everyone rotates</option></select>
@@ -185,10 +190,11 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
     <button class="btn pink sm" id="fillAll" type="button">Fill open courts</button>
   </div>
   <div class="cols">
-    <section class="panel"><h2>Courts <span class="muted">Optional score, then tap Won</span></h2><div class="courts" id="courts"></div></section>
+    <section class="panel"><h2>Courts <span class="muted">Type the score, then Finish</span></h2><div class="courts" id="courts"></div></section>
     <section class="panel">
       <h2>Queue <span class="muted" id="qinfo"></span></h2>
       <form class="row" id="addForm" autocomplete="off"><input id="newName" placeholder="Add a walk-in" style="flex:1" aria-label="Player name" maxlength="24"><button class="btn sm">Add</button></form>
+      <div id="upNext"></div>
       <ol class="q" id="queue"></ol>
       <div id="bench"></div>
     </section>
@@ -328,7 +334,7 @@ function render() {
   if (document.activeElement !== $("title")) $("title").value = S.nightTitle;
   $("format").disabled = S.courts.some(c => c.teams);
   $("maxWins").disabled = S.rotation !== "winstay";
-  $("qinfo").textContent = S.queue.length ? `next ${Math.min(need, S.queue.length)} highlighted` : "";
+  $("qinfo").textContent = S.upNext ? "Up next highlighted" : "";
 
   // Preserve typed scores across re-renders
   const scores = {}; document.querySelectorAll(".score").forEach(i => scores[i.id] = i.value);
@@ -340,17 +346,20 @@ function render() {
         <div class="row"><button class="btn pink sm" data-a="fill" data-c="${c.id}" ${short > 0 ? "disabled" : ""}>Start game</button>${short > 0 ? `<span class="muted">Need ${short} more</span>` : ""}
         <button class="btn ghost sm" data-a="removeCourt" data-c="${c.id}" style="margin-left:auto">Remove court</button></div></div>`;
     }
-    const t = k => `<div class="team"><span class="nm">${c.teams[k].map(n).join(" &amp; ")}</span><span class="row"><input class="score tabnum" id="s${c.id}-${k}" inputmode="numeric" placeholder="pts" aria-label="Points" value="${scores["s" + c.id + "-" + k] || ""}"><button class="btn lime sm" data-a="win" data-c="${c.id}" data-t="${k}">Won</button></span></div>`;
+    const t = k => `<div class="team"><span class="nm">${c.teams[k].map(n).join(" &amp; ")}</span><input class="score tabnum" id="s${c.id}-${k}" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="0" aria-label="Points for ${c.teams[k].map(id => DD.esc(S.players[id]?.name)).join(" and ")}" value="${scores["s" + c.id + "-" + k] || ""}"></div>`;
     return `<div class="ct"><h3>Court ${c.id}<span class="row" style="gap:6px">${c.balance && S.match !== "order" ? `<span class="bal ${c.balance}">${{ even: "Even match", close: "Close match", uneven: "Uneven" }[c.balance]}</span>` : ""}<span class="tabnum" data-start="${c.start}">${DD.clock(c.start)}</span></span></h3>${t(0)}<div class="vs">VS</div>${t(1)}
-      <div class="row"><button class="btn ghost sm" data-a="cancel" data-c="${c.id}">Cancel game</button>${c.streak ? `<span class="muted" style="color:inherit;opacity:.8">Winners on ${c.streak} win${c.streak > 1 ? "s" : ""}</span>` : ""}</div></div>`;
+      <div class="row"><button class="btn lime sm" data-a="score" data-c="${c.id}">Finish · save score</button><button class="btn ghost sm" data-a="cancel" data-c="${c.id}">Cancel game</button>${c.streak ? `<span class="muted" style="color:inherit;opacity:.8">Winners on ${c.streak} win${c.streak > 1 ? "s" : ""}</span>` : ""}</div></div>`;
   }).join("");
 
-  $("queue").innerHTML = S.queue.length ? S.queue.map((id, i) => `<li class="${i < need ? "next" : ""}"><span class="n">${i + 1}</span><span class="nm">${n(id)} <span class="muted">${S.players[id].w}–${S.players[id].l}</span></span>
+  $("queue").innerHTML = S.queue.length ? S.queue.map((id, i) => `<li class="${(S.upNext ? S.upNext.teams.flat().includes(id) : i < need) ? "next" : ""}"><span class="n">${i + 1}</span><span class="nm">${n(id)} <span class="muted">${S.players[id].w}–${S.players[id].l}</span></span>
     <button class="ib" title="Move up" aria-label="Move up" data-a="move" data-id="${id}" data-d="-1">▲</button><button class="ib" title="Move down" aria-label="Move down" data-a="move" data-id="${id}" data-d="1">▼</button>
     <button class="ib" title="Send to front" aria-label="Send to front" data-a="toFront" data-id="${id}">⇡</button><button class="ib" title="Take a break" aria-label="Take a break" data-a="bench" data-id="${id}">⏸</button></li>`).join("")
     : '<li class="muted">Queue is empty. Players join by scanning the QR code.</li>';
+  $("upNext").innerHTML = upNextCard(S);
   renderRoster(); renderPay();
   if (document.activeElement !== $("requirePin")) $("requirePin").checked = S.requirePin !== false;
+  $("autopilot").checked = S.autopilot !== false; if (document.activeElement !== $("target")) $("target").value = String(S.target || 11);
+  $("fillAll").textContent = S.autopilot !== false ? "Autopilot on" : "Fill open courts"; $("fillAll").disabled = S.autopilot !== false;
   $("gpNames").innerHTML = Object.values(S.players).map(p => `<option value="${DD.esc(p.name)}">`).join("");
   if (!$("gpAmt").value && document.activeElement !== $("gpAmt") && S.fee) $("gpAmt").value = S.fee;
   $("bench").innerHTML = S.bench.length ? `<p class="muted" style="margin:6px 0">On a break (tap to bring back, × to remove)</p><div class="row">${S.bench.map(id => `<span class="chip"><button class="ib" data-a="unbench" data-id="${id}">↩ ${n(id)}</button><button class="ib" title="Remove player" aria-label="Remove ${n(id)}" data-a="removePlayer" data-id="${id}">×</button></span>`).join("")}</div>` : "";
@@ -359,7 +368,7 @@ function render() {
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-a]"); if (!b) return;
   const a = { type: b.dataset.a, court: b.dataset.c, id: b.dataset.id, dir: b.dataset.d, team: b.dataset.t };
-  if (a.type === "win") { a.ws = $(`s${a.court}-${a.team}`).value; a.ls = $(`s${a.court}-${1 - a.team}`).value; }
+  if (a.type === "score") { a.a = $(`s${a.court}-0`).value; a.b = $(`s${a.court}-1`).value; }
   act(a);
 });
 $("addCourt").onclick = () => act({ type: "addCourt" }, "Court added");
@@ -374,6 +383,11 @@ $("csv").onclick = () => {
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dinkin-donut-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
 };
 
+function upNextCard(S, meId) {
+  const u = S && S.upNext; if (!u) return "";
+  const mine = meId && u.teams.flat().includes(meId), nm = t => t.map(id => DD.esc(S.players[id]?.name || "?")).join(" &amp; ");
+  return `<div class="upnext ${mine ? "me" : ""}"><div class="h"><span>${mine ? "You’re up next" : "Up next"}${u.court ? " · Court " + u.court : ""}</span><span>${{ even: "Even match", close: "Close match", uneven: "Mixed" }[u.balance] || ""}</span></div><div class="m"><span>${nm(u.teams[0])}</span><span class="v">VS</span><span>${nm(u.teams[1])}</span></div></div>`;
+}
 // Levels
 const LVL = { beginner: { label: "Beginner", short: "BEG" }, intermediate: { label: "Intermediate", short: "INT" }, advanced: { label: "Advanced", short: "ADV" } };
 const LV_ORDER = [null, "beginner", "intermediate", "advanced"];
@@ -550,6 +564,8 @@ $("passForm").onsubmit = e => {
     .then(r => { if (r) { $("gpName").value = ""; $("gpPhone").value = ""; $("gpAmt").value = S.fee || ""; $("gpName").focus(); } });
 };
 $("gpName").addEventListener("change", () => { const p = Object.values(S.players).find(x => x.name.toLowerCase() === $("gpName").value.trim().toLowerCase()); if (p && p.phone && !$("gpPhone").value) $("gpPhone").value = p.phone; });
+$("autopilot").onchange = e => act({ type: "settings", autopilot: e.target.checked }, e.target.checked ? "Autopilot on: courts fill themselves" : "Autopilot off: start games by hand");
+$("target").onchange = e => act({ type: "settings", target: e.target.value }, `Games now go to ${e.target.value}`);
 $("requirePin").onchange = e => act({ type: "settings", requirePin: e.target.checked }, e.target.checked ? "Players now need their PIN to join" : "PIN no longer required");
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-x=resend]"); if (!b) return;
