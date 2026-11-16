@@ -190,7 +190,7 @@
   <!-- Builder -->
   <div class="shop-h" id="build">
     <div><div class="eyebrow">Club shop · Drop 01</div><h2>Make it yours.</h2></div>
-    <div class="tabs" role="tablist" aria-label="Product"><button role="tab" aria-selected="true" data-p="jersey">Glaze Jersey</button><button role="tab" aria-selected="false" data-p="polo">Court Polo</button></div>
+    <div class="tabs" role="tablist" aria-label="Product"><button role="tab" aria-selected="true" data-p="jersey">Glaze Jersey</button><button role="tab" aria-selected="false" data-p="pro">Doha Pro Kit</button><button role="tab" aria-selected="false" data-p="polo">Court Polo</button></div>
   </div>
 
   <section class="builder">
@@ -267,9 +267,10 @@ const money = n => `${n.toLocaleString("en")} ${C.currency || "QAR"}`;
 const WA = (C.whatsappNumber || "97430763431").replace(/\D/g, "");
 const PRODUCTS = {
   jersey: { ...window.JERSEY, ways: J.WAYS, draw: o => J.render(o), defWay: "glaze" },
+  pro: { ...window.PRO, ways: J.PRO_WAYS, draw: o => J.renderPro(o), defWay: "adaam" },
   polo: { ...window.POLO, ways: J.POLO_WAYS, draw: o => J.renderPolo(o), defWay: "clubhouse" },
 };
-const st = { p: "jersey", side: "front", qty: 1, jersey: { way: "glaze", print: "full", name: "", num: "", fit: 0, size: "M" }, polo: { way: "clubhouse", print: "name", name: "", num: "", fit: 0, size: "M" } };
+const st = { p: "jersey", side: "front", qty: 1, jersey: { way: "glaze", print: "full", name: "", num: "", fit: 0, size: "M" }, pro: { way: "adaam", print: "full", name: "", num: "", fit: 0, size: "M" }, polo: { way: "clubhouse", print: "name", name: "", num: "", fit: 0, size: "M" } };
 const cur = () => st[st.p], P = () => PRODUCTS[st.p];
 
 function draw(animate) {
@@ -281,18 +282,18 @@ function draw(animate) {
 function renderPanel() {
   const p = P(), o = cur();
   $("pName").textContent = p.name; $("pPrice").textContent = money(p.price); $("leadTime").textContent = p.leadTime;
-  $("pLead").textContent = st.p === "jersey" ? "Our match-day kit. Glaze-dipped yoke, pickleball-hole print and your name across the back." : "Built for court, sharp enough for the clubhouse. Quarter zip, contrast yoke with glaze piping, mesh side panels and a tapered cut.";
+  $("pLead").textContent = st.p === "pro" ? "An international match kit made in Doha’s colours. V-neck, glaze sash, serrated cuffs and a tonal mashrabiya lattice. Built for tournament day." : st.p === "jersey" ? "Our match-day kit. Glaze-dipped yoke, pickleball-hole print and your name across the back." : "Built for court, sharp enough for the clubhouse. Quarter zip, contrast yoke with glaze piping, mesh side panels and a tapered cut.";
   $("ways").innerHTML = Object.entries(p.ways).map(([k, w]) => `<button class="way" type="button" data-way="${k}" aria-pressed="${o.way === k}">${p.draw({ way: k, side: "front" })}<b>${w.label}</b><small>${w.note}</small></button>`).join("");
   $("wayName").textContent = p.ways[o.way].label;
   $("prints").innerHTML = p.prints.map(([k, l]) => `<button type="button" data-print="${k}" aria-pressed="${o.print === k}">${l}</button>`).join("");
-  $("printLbl").textContent = st.p === "jersey" ? "Back print" : "Embroidery";
+  $("printLbl").textContent = (st.p === "jersey" || st.p === "pro") ? "Back print" : "Embroidery";
   $("fits").innerHTML = p.fits.map((f, i) => `<button type="button" data-fit="${i}" aria-pressed="${o.fit === i}">${f}</button>`).join("");
   $("sizes").innerHTML = p.sizes.map(z => `<button type="button" data-size="${z}" aria-pressed="${o.size === z}">${z}</button>`).join("");
   $("nm").value = o.name; $("no").value = o.num;
-  const showName = o.print !== "plain", showNum = st.p === "jersey" && o.print === "full";
+  const showName = o.print !== "plain", showNum = (st.p === "jersey" || st.p === "pro") && o.print === "full";
   $("fields").hidden = !showName; $("numWrap").hidden = !showNum;
   $("fields").style.gridTemplateColumns = showNum ? "" : "1fr";
-  $("hint").textContent = !showName ? (st.p === "jersey" ? "Plain back with the oversized Dinkin’ Donut crest." : "Crest and club name only.") : st.p === "jersey" ? (showNum ? "Name and number printed on the back for free. Up to 12 letters, numbers 0 to 99." : "Your name, large across the back. Up to 12 letters.") : "Embroidered under the club name on the back. Up to 12 letters.";
+  $("hint").textContent = !showName ? ((st.p === "jersey" || st.p === "pro") ? "Plain back with the oversized Dinkin’ Donut crest." : "Crest and club name only.") : (st.p === "jersey" || st.p === "pro") ? (showNum ? "Name and number printed on the back for free. Up to 12 letters, numbers 0 to 99." : "Your name, large across the back. Up to 12 letters.") : "Embroidered under the club name on the back. Up to 12 letters.";
   $("qv").textContent = st.qty;
   $("specs").innerHTML = p.specs.map(([t, d]) => `<div><b>${t}</b><p>${d}</p></div>`).join("");
   $("chart").innerHTML = `<table><caption>Approximate chest width laid flat, in cm. Between sizes? Go one up for a relaxed fit.</caption><tr><th>Size</th>${Object.keys(p.sizeChart).map(k => `<th>${k}</th>`).join("")}</tr><tr><td><b>Chest</b></td>${Object.values(p.sizeChart).map(v => `<td>${v}</td>`).join("")}</tr></table>`;
@@ -319,15 +320,15 @@ let bag = []; try { bag = JSON.parse(localStorage.getItem("dd-bag2")) || []; } c
 const saveBag = () => { try { localStorage.setItem("dd-bag2", JSON.stringify(bag)); } catch {} };
 function describe(l) {
   const p = PRODUCTS[l.p], w = p.ways[l.way], bits = [w.label, p.fits[l.fit], "Size " + l.size];
-  if (l.print === "plain") bits.push(l.p === "jersey" ? "Plain back" : "No name");
-  else bits.push(l.p === "jersey" && l.print === "full" ? `Name: ${l.name || "-"} · Number: ${l.num || "-"}` : `Name: ${l.name || "-"}`);
+  if (l.print === "plain") bits.push((l.p === "jersey" || l.p === "pro") ? "Plain back" : "No name");
+  else bits.push((l.p === "jersey" || l.p === "pro") && l.print === "full" ? `Name: ${l.name || "-"} · Number: ${l.num || "-"}` : `Name: ${l.name || "-"}`);
   return bits.join(" · ");
 }
 function addLine() {
   const o = cur();
-  if (o.print !== "plain" && !o.name.trim()) { $("nm").focus(); $("hint").textContent = "Add a name, or choose " + (st.p === "jersey" ? "“Plain back”." : "“No name”."); return null; }
-  if (st.p === "jersey" && o.print === "full" && o.num === "") { $("no").focus(); $("hint").textContent = "Add your jersey number, or choose “Name only”."; return null; }
-  const line = { p: st.p, way: o.way, print: o.print, name: o.print === "plain" ? "" : o.name.trim().toUpperCase(), num: st.p === "jersey" && o.print === "full" ? o.num : "", fit: o.fit, size: o.size, qty: st.qty };
+  if (o.print !== "plain" && !o.name.trim()) { $("nm").focus(); $("hint").textContent = "Add a name, or choose " + ((st.p === "jersey" || st.p === "pro") ? "“Plain back”." : "“No name”."); return null; }
+  if ((st.p === "jersey" || st.p === "pro") && o.print === "full" && o.num === "") { $("no").focus(); $("hint").textContent = "Add your jersey number, or choose “Name only”."; return null; }
+  const line = { p: st.p, way: o.way, print: o.print, name: o.print === "plain" ? "" : o.name.trim().toUpperCase(), num: (st.p === "jersey" || st.p === "pro") && o.print === "full" ? o.num : "", fit: o.fit, size: o.size, qty: st.qty };
   const key = l => JSON.stringify({ ...l, qty: 0 }), ex = bag.find(l => key(l) === key(line));
   ex ? ex.qty += line.qty : bag.push(line); saveBag(); renderBag(); return line;
 }
@@ -344,7 +345,7 @@ const bagTotal = lines => lines.reduce((a, l) => a + l.qty * PRODUCTS[l.p].price
 // Plain text with WhatsApp bold; no emoji (they can arrive garbled through links)
 const orderText = (lines, who) => {
   const ref = orderRef(), items = lines.map(l => { const p = PRODUCTS[l.p], w = p.ways[l.way];
-    const back = l.print === "plain" ? (l.p === "jersey" ? "Plain back" : "No name") : (l.p === "jersey" && l.print === "full" ? `Back: ${l.name} · No. ${l.num}` : `Name: ${l.name}`);
+    const back = l.print === "plain" ? ((l.p === "jersey" || l.p === "pro") ? "Plain back" : "No name") : ((l.p === "jersey" || l.p === "pro") && l.print === "full" ? `Back: ${l.name} · No. ${l.num}` : `Name: ${l.name}`);
     return `${l.qty} × ${p.name} - ${money(l.qty * p.price)}\n   ${w.label} · ${p.fits[l.fit]} · Size ${l.size}\n   ${back}`; }).join("\n\n");
   return [`*Dinkin' Donut · Shop order*`, `Order ref: *${ref}*`, `Name: ${who || "-"}`, "", items, "", `*Total: ${money(bagTotal(lines))}*`, "",
     `Payment: Fawran to ${FAWRAN}`, `Transfer note: ${ref}`, `Receipt: attached below`, "",

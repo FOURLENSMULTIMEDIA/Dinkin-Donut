@@ -168,5 +168,68 @@
     s += '<path d="' + P_BODY + '" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="1.5"/>';
     return s + "</svg>";
   }
-  window.Jersey = { render: render, WAYS: WAYS, renderPolo: renderPolo, POLO_WAYS: POLO_WAYS };
+
+  // Doha Pro Kit: international cut. V-neck, diagonal sash, serrated cuffs (Qatar flag), tonal mashrabiya lattice.
+  var PRO_WAYS = {
+    adaam:  { label: "Al Adaam", note: "Home", body: "#8A1538", deep: "#6E0F2B", sash: "#F7F2EA", sash2: "#C9A24B", trim: "#C9A24B", collar: "#F7F2EA", ink: "#F7F2EA", num: "#F7F2EA", numLine: "#C9A24B" },
+    pearl:  { label: "Pearl", note: "Away", body: "#F7F2EA", deep: "#E6DCCD", sash: "#8A1538", sash2: "#C9A24B", trim: "#8A1538", collar: "#8A1538", ink: "#8A1538", num: "#8A1538", numLine: "#C9A24B" },
+    gold:   { label: "Gold Night", note: "Third", body: "#24170E", deep: "#170E08", sash: "#C9A24B", sash2: "#E8D29A", trim: "#C9A24B", collar: "#C9A24B", ink: "#E8D29A", num: "#E8D29A", numLine: "#24170E" },
+    glazepro: { label: "Glaze Pro", note: "Club", body: "#D7F03C", deep: "#B8D02A", sash: "#FF6FAB", sash2: "#3B2416", trim: "#3B2416", collar: "#3B2416", ink: "#3B2416", num: "#3B2416", numLine: "#FF6FAB" },
+  };
+  var PRO_BODY = "M146 36L198 98L254 36L320 54L386 122L352 176L318 156L322 412Q200 428 78 412L82 156L48 176L14 122L80 54Z";
+  var PRO_BACK = "M150 34Q200 46 250 34L320 54L386 122L352 176L318 156L322 412Q200 428 78 412L82 156L48 176L14 122L80 54Z";
+  function serr(x1, y1, x2, y2, n, h, fill) { // serrated band along a line, teeth pointing inward
+    var s = "", dx = (x2 - x1) / n, dy = (y2 - y1) / n, len = Math.hypot(x2 - x1, y2 - y1), nx = -(y2 - y1) / len * h, ny = (x2 - x1) / len * h, d = "M" + x1 + " " + y1;
+    for (var i = 0; i < n; i++) { var ax = x1 + dx * i, ay = y1 + dy * i; d += "L" + (ax + dx / 2 + nx) + " " + (ay + dy / 2 + ny) + "L" + (ax + dx) + " " + (ay + dy); }
+    return '<path d="' + d + 'Z" fill="' + fill + '"/>';
+  }
+  function renderPro(o) {
+    var w = PRO_WAYS[o.way] || PRO_WAYS.adaam, back = o.side === "back", id = "k" + (++uid), mode = o.print || "full";
+    var name = String(o.name || "").toUpperCase().slice(0, 12), num = String(o.num || "").replace(/\D/g, "").slice(0, 2), esc = function (t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
+    var outline = back ? PRO_BACK : PRO_BODY;
+    var s = '<svg viewBox="0 0 400 450" class="jersey" role="img" aria-label="' + w.label + ' Doha Pro Kit, ' + (back ? "back" : "front") + '">';
+    s += '<defs><clipPath id="' + id + 'c"><path d="' + outline + '"/></clipPath>' +
+      '<pattern id="' + id + 'lat" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M12 0L24 12L12 24L0 12Z M12 6L18 12L12 18L6 12Z" fill="none" stroke="' + w.deep + '" stroke-width="1.2"/></pattern>' +
+      '<linearGradient id="' + id + 'shade" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".34"/><stop offset=".2" stop-color="#000" stop-opacity=".05"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset=".8" stop-color="#000" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".36"/></linearGradient>' +
+      '<linearGradient id="' + id + 'v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".14"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>' +
+      '<radialGradient id="' + id + 'hl" cx=".42" cy=".3" r=".55"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
+      '<filter id="' + id + 'n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" seed="5"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.14"/></feComponentTransfer></filter>' +
+      '<filter id="' + id + 'b"><feGaussianBlur stdDeviation="5"/></filter><filter id="' + id + 'sh" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur stdDeviation="12"/></filter></defs>';
+    s += '<ellipse cx="200" cy="430" rx="150" ry="13" fill="#3B2416" opacity=".28" filter="url(#' + id + 'sh)"/>';
+    s += '<g clip-path="url(#' + id + 'c)"><rect width="400" height="450" fill="' + w.body + '"/><rect width="400" height="450" fill="url(#' + id + 'lat)" opacity=".55"/>';
+    // diagonal sash: wearer's right shoulder to left hip (mirrored on the back)
+    var sa = back ? "M70 120L120 120L330 430L280 430Z" : "M280 120L330 120L120 430L70 430Z", sb = back ? "M126 120L134 120L344 430L336 430Z" : "M266 120L274 120L64 430L56 430Z";
+    if (!back) s += '<path d="' + sa + '" fill="' + w.sash + '"/><path d="' + sb + '" fill="' + w.sash2 + '"/>';
+    else s += '<rect x="78" y="396" width="244" height="6" fill="' + w.sash + '"/><rect x="78" y="404" width="244" height="2" fill="' + w.sash2 + '"/>';
+    // side seams
+    s += '<g stroke="#000" stroke-opacity=".18" stroke-width="1.2" fill="none"><path d="M82 156V412"/><path d="M318 156V412"/></g>';
+    // serrated cuffs (nine points)
+    s += '<path d="M14 122L48 176L58 170L24 116Z" fill="' + w.trim + '"/>' + serr(24, 116, 58, 170, 9, 4, w.trim);
+    s += '<path d="M386 122L352 176L342 170L376 116Z" fill="' + w.trim + '"/>' + serr(342, 170, 376, 116, 9, 4, w.trim);
+    if (!back) {
+      s += '<image href="/assets/logo.svg" x="244" y="138" width="40" height="40"/>';
+      s += '<text x="140" y="160" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="8" letter-spacing="3" fill="' + w.ink + '">DOHA · QATAR</text>';
+      s += '<text x="140" y="172" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="11" fill="' + w.ink + '">Dinkin’ Donut</text>';
+      if (num && mode === "full") s += '<text x="140" y="214" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="30" fill="' + w.num + '">' + num + '</text>';
+    } else {
+      s += '<text x="200" y="76" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="7" letter-spacing="3.2" fill="' + w.ink + '" opacity=".85">DINKIN’ DONUT · DOHA</text>';
+      if (mode === "plain") s += '<image href="/assets/logo.svg" x="150" y="190" width="100" height="100"/>';
+      else {
+        s += '<text x="200" y="' + (mode === "name" ? 250 : 150) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (mode === "name" ? 40 : (name.length > 9 ? 22 : 26)) + '" letter-spacing="' + (mode === "name" ? 4 : 5) + '" fill="' + w.ink + '">' + esc(name || "YOUR NAME") + '</text>';
+        if (mode === "full") s += '<text x="200" y="312" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="136" letter-spacing="-4" fill="' + w.num + '" stroke="' + w.numLine + '" stroke-width="3" paint-order="stroke">' + (num || "00") + '</text>';
+      }
+    }
+    s += '<g filter="url(#' + id + 'b)" fill="none" stroke-linecap="round"><path d="M130 330Q142 372 134 408" stroke="#000" stroke-opacity=".08" stroke-width="10"/><path d="M262 300Q252 352 268 404" stroke="#000" stroke-opacity=".08" stroke-width="12"/></g>';
+    s += '<rect width="400" height="450" fill="url(#' + id + 'shade)"/><rect width="400" height="450" fill="url(#' + id + 'v)"/><rect width="400" height="450" fill="url(#' + id + 'hl)"/><rect width="400" height="450" filter="url(#' + id + 'n)"/></g>';
+    // collar
+    if (!back) {
+      s += '<path d="M146 36L198 98L254 36L246 34L198 86L154 34Z" fill="' + w.collar + '"/><path d="M152 34L198 84L248 34" fill="none" stroke="' + w.trim + '" stroke-width="2"/>';
+      s += '<path d="M180 76L198 96L216 76" fill="none" stroke="' + w.trim + '" stroke-width="1.5" stroke-dasharray="3 2.4"/>';
+    } else {
+      s += '<path d="M150 34Q200 46 250 34" fill="none" stroke="' + w.collar + '" stroke-width="7" stroke-linecap="round"/>';
+    }
+    s += '<path d="' + outline + '" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="1.5"/>';
+    return s + "</svg>";
+  }
+  window.Jersey = { render: render, WAYS: WAYS, renderPolo: renderPolo, POLO_WAYS: POLO_WAYS, renderPro: renderPro, PRO_WAYS: PRO_WAYS };
 })();

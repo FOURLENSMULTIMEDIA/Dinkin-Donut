@@ -38,6 +38,24 @@ window.POLO = {
   sizeChart: { XS: 47, S: 50, M: 53, L: 56, XL: 59, "2XL": 62, "3XL": 65 },
 };
 
+// The Doha Pro Kit: international-style match jersey.
+window.PRO = {
+  name: "The Doha Pro Kit",
+  price: 199,
+  status: "preorder",
+  leadTime: "Made to order. Ready in about 3 weeks.",
+  fits: ["Men’s fit", "Women’s fit"],
+  sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
+  prints: [["full", "Name + number"], ["name", "Name only"], ["plain", "Plain back"]],
+  specs: [
+    ["International cut", "V-neck, raglan-free shoulders and an athletic fit, like a pro match kit."],
+    ["Doha details", "Nine-point serrated cuffs and a tonal mashrabiya lattice woven into the print."],
+    ["The glaze sash", "One clean diagonal band, our signature, front only."],
+    ["Match-day fabric", "Lightweight performance knit, sublimated so colours never crack."],
+  ],
+  sizeChart: { XS: 46, S: 49, M: 52, L: 55, XL: 58, "2XL": 61, "3XL": 64 },
+};
+
 window.MERCH = [
   { id: "tee", name: "Glazed Classic Tee", price: 89, status: "soon", art: "tee",
     blurb: "Heavyweight cotton, full-colour bitten-ball mark on the chest. Cut for court and café.",
