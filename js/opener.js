@@ -4,7 +4,7 @@
   var root = document.getElementById("ad"); if (!root) return;
   var $ = function (s) { return root.querySelector(s); };
   var scenes = root.querySelectorAll(".asc");
-  var SHOTS = [3000, 3500, 4000, 4500, 4000, 3500, 3500, 4000], TOTAL = SHOTS.reduce(function (a, b) { return a + b; }, 0);
+  var SHOTS = [3000, 3500, 3500, 5000, 4000, 5000, 3500, 3500, 3500, 4500], TOTAL = SHOTS.reduce(function (a, b) { return a + b; }, 0);
   var music = new Audio("/assets/audio/opener.mp3"); music.preload = "auto";
   var playing = false, sound = false, t0 = 0, elapsed = 0, raf, cur = -1, timers = [];
   var clear = function () { timers.forEach(clearTimeout); timers = []; };
@@ -13,14 +13,15 @@
   function scene(i) {
     cur = i; clear();
     scenes.forEach(function (s, k) { s.classList.toggle("on", k === i); });
-    if (i === 3) { // phone ticket: #3 -> #2 -> #1 -> Court 2
+    var has = function (c) { return scenes[i].classList.contains(c); };
+    if (has("s-scan")) { // phone ticket: #3 -> #2 -> #1 -> Court 2
       var t = $("#adTicket"); t.className = "ticket"; t.innerHTML = "<small>Your place</small><b>#3</b>";
       later(function () { t.innerHTML = "<small>Your place</small><b>#2</b>"; }, 900);
       later(function () { t.innerHTML = "<small>Your place</small><b>#1</b>"; }, 1700);
       later(function () { t.className = "ticket go"; t.innerHTML = "<small>You're up</small><b>Court 2</b>"; }, 2600);
     }
-    if (i === 5) { var a = $("#adA"), b = $("#adB"), s0 = performance.now() + 700;
-      (function tick(now) { var p = Math.min(1, Math.max(0, (now - s0) / 800)), e = 1 - Math.pow(1 - p, 3); a.textContent = Math.round(11 * e); b.textContent = Math.round(7 * e); if (p < 1 && cur === 5) requestAnimationFrame(tick); })(performance.now()); }
+    if (has("s-win")) { var a = $("#adA"), b = $("#adB"), s0 = performance.now() + 700;
+      (function tick(now) { var p = Math.min(1, Math.max(0, (now - s0) / 800)), e = 1 - Math.pow(1 - p, 3); a.textContent = Math.round(11 * e); b.textContent = Math.round(7 * e); if (p < 1 && scenes[cur].classList.contains("s-win")) requestAnimationFrame(tick); })(performance.now()); }
   }
   function tick(now) {
     if (!playing) return;
@@ -40,7 +41,7 @@
   }
   function stop(ended) {
     playing = false; cancelAnimationFrame(raf); clear(); music.pause(); window.SiteSound && SiteSound.duck(false);
-    if (ended) { scene(7); $("#adPlay").hidden = false; $("#adPlay").querySelector("b").textContent = "Watch again"; }
+    if (ended) { scene(scenes.length - 1); $("#adPlay").hidden = false; $("#adPlay").querySelector("b").textContent = "Watch again"; }
     paint();
   }
   function paint() {
@@ -51,8 +52,10 @@
   // Big play: always starts from the top with sound
   $("#adPlay").onclick = function () { play(true); };
   $("#adSound").onclick = function () { play(true); };
-  $("#adToggle").onclick = function () { if (playing) stop(false); else play(sound); };
-  scenes[7].classList.add("on"); paint();
+  $("#adToggle").onclick = function (e) { e.stopPropagation(); if (playing) stop(false); else play(true); };
+  // Tapping a muted teaser restarts it from the top with sound
+  root.addEventListener("click", function (e) { if (e.target.closest("a,button")) return; if (!playing || !sound) play(true); });
+  scenes[scenes.length - 1].classList.add("on"); paint();
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if ("IntersectionObserver" in window && !reduce) new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting && e.intersectionRatio > 0.5) { if (!playing && !root.dataset.seen) { root.dataset.seen = 1; play(false); } } else if (playing && !sound && !e.isIntersecting) stop(false); });

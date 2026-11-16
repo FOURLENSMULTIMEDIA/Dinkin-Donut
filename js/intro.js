@@ -1,7 +1,20 @@
 // Entrance: ball drops and bounces, a bite is taken, the name pops in, glaze pours and lifts to reveal the site.
-// Once per visit; tap to skip; skipped for reduced motion.
+// First visit only; tap to skip; skipped for reduced motion.
 (function () {
-  try { if (sessionStorage.getItem("dd-intro")) return; sessionStorage.setItem("dd-intro", "1"); } catch (e) {}
+  function welcomeBack(n) {
+    try { if (!n || sessionStorage.getItem("dd-wb")) return; sessionStorage.setItem("dd-wb", "1"); } catch (e) { return; }
+    var st = document.createElement("style");
+    st.textContent = "#wb{position:fixed;left:50%;top:calc(76px + env(safe-area-inset-top,0px));z-index:60;transform:translate(-50%,-160%);display:flex;align-items:center;gap:10px;padding:8px 18px 8px 8px;border-radius:999px;background:#FF5FA2;color:#fff;font:700 15px Fredoka,ui-rounded,system-ui,sans-serif;box-shadow:0 14px 30px rgba(255,95,162,.4);animation:wb-in .7s .6s cubic-bezier(.2,.9,.3,1.3) forwards,wb-out .5s 4.6s forwards}" +
+      "#wb img{width:30px;height:30px}#wb::after{content:'';position:absolute;left:24px;bottom:-9px;width:10px;height:14px;border-radius:0 0 8px 8px;background:#FF5FA2}" +
+      "@keyframes wb-in{to{transform:translate(-50%,0)}}@keyframes wb-out{to{transform:translate(-50%,-160%);opacity:0}}@media (prefers-reduced-motion:reduce){#wb{animation:none;transform:translate(-50%,0)}}";
+    document.head.appendChild(st);
+    var go = function () { var d = document.createElement("div"); d.id = "wb"; d.innerHTML = '<img src="/assets/logo.svg" alt="">Welcome back, ' + n.replace(/[<>&]/g, "") + "."; document.body.appendChild(d); setTimeout(function () { d.remove(); }, 5400); };
+    if (document.body) go(); else document.addEventListener("DOMContentLoaded", go);
+  }
+  // Full entrance on the very first visit only; returning players get a short welcome-back instead
+  var seen = false, name = "";
+  try { seen = !!localStorage.getItem("dd-intro-seen"); localStorage.setItem("dd-intro-seen", "1"); name = (localStorage.getItem("dd-name") || "").trim().split(/\s+/)[0]; } catch (e) {}
+  if (seen) { welcomeBack(name); return; }
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   var css = document.createElement("style");
   css.textContent = [

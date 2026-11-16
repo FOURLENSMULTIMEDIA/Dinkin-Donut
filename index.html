@@ -256,6 +256,68 @@ section.block{padding-block:80px 0}
   .s-win .score{font-size:30cqw}.s-card .stamps{gap:1.6cqw;flex-wrap:wrap;justify-content:center;width:80%}.s-card .stamps i{width:16cqw;height:16cqw;font-size:3cqw}
   .s-end img{width:24cqw}.s-end .t1{font-size:12cqw}.s-end .t2{font-size:5.6cqw}.s-end .t0{font-size:2.6cqw}.s-end .ig{font-size:3cqw}}
 @media (prefers-reduced-motion:reduce){.ad *{animation-duration:.01s!important;animation-delay:0s!important}}
+/* PIN scene */
+.s-pin{background:linear-gradient(160deg,#0B3D2A,#075E54)}
+.s-pin .chat{position:absolute;right:8cqw;top:9cqw;width:38cqw;opacity:0;transform:translateY(4cqw) scale(.9)}
+.s-pin.on .chat{animation:adin .6s .2s cubic-bezier(.2,.9,.3,1.3) forwards}
+.s-pin .who{display:flex;align-items:center;gap:1cqw;font:700 1.3cqw var(--body);margin-bottom:1cqw;color:#D9FDD3}
+.s-pin .who i{width:2.6cqw;height:2.6cqw;border-radius:50%;background:url(/assets/logo.svg) center/cover,#FFF6EA}
+.s-pin .bubble{background:#DCF8C6;color:#123B24;border-radius:1.6cqw 1.6cqw 1.6cqw .3cqw;padding:1.6cqw 2cqw;font:500 1.6cqw/1.4 var(--body);box-shadow:0 1cqw 2cqw rgba(0,0,0,.25)}
+.s-pin .bubble b{display:block;font:700 4.4cqw/1.1 var(--display);letter-spacing:.3em;color:#3B2416;margin:.6cqw 0}
+.s-pin .bubble small{display:block;text-align:right;font-size:1cqw;color:#34B7F1}
+.s-pin .pins{position:absolute;right:8cqw;top:30cqw;display:flex;gap:1.4cqw;align-items:center}
+.s-pin .pins i{width:6.6cqw;height:6.6cqw;border-radius:50%;display:grid;place-items:center;font:700 3.2cqw var(--display);font-style:normal;color:#3B2416;background:#D7F03C;box-shadow:inset 0 0 0 .8cqw #FF5FA2,inset 0 0 0 1cqw #3B2416;opacity:0;transform:scale(.4)}
+.s-pin.on .pins i{animation:adin .35s cubic-bezier(.2,.9,.3,1.6) forwards}.s-pin.on .pins i:nth-child(1){animation-delay:1.6s}.s-pin.on .pins i:nth-child(2){animation-delay:1.9s}.s-pin.on .pins i:nth-child(3){animation-delay:2.2s}
+.s-pin .ok{font:700 2cqw var(--display);color:#D7F03C;opacity:0}.s-pin.on .ok{animation:adup .5s 2.7s forwards}
+/* Autopilot scene */
+.s-auto{background:radial-gradient(circle at 70% 30%,#3B2416,#140D08)}
+.s-auto .cap{font-size:4.4cqw}
+.s-auto .chip-auto{position:absolute;left:6cqw;top:6cqw;font:700 1.5cqw var(--body);letter-spacing:.15em;text-transform:uppercase;background:#D7F03C;color:#3B2416;padding:.8cqw 1.8cqw;border-radius:99cqw;animation:pulse2 1.4s infinite}
+.s-auto .courts3{position:absolute;left:6cqw;top:12cqw;display:flex;gap:1.6cqw}
+.s-auto .mc{width:17cqw;background:#2F7A4F;border-radius:1.6cqw;padding:1.4cqw;display:grid;gap:.5cqw;opacity:0;transform:translateY(-6cqw)}
+.s-auto.on .mc{animation:adlock .55s cubic-bezier(.2,.9,.3,1.3) forwards}.s-auto.on .mc:nth-child(2){animation-delay:.35s}.s-auto.on .mc:nth-child(3){animation-delay:.7s}
+.s-auto .mc b{font:700 1.6cqw var(--display)}.s-auto .mc span{font:600 1.25cqw var(--body)}.s-auto .mc em{font:700 .95cqw var(--body);font-style:normal;letter-spacing:.1em;text-transform:uppercase;background:#D7F03C;color:#3B2416;border-radius:99cqw;padding:.3cqw .8cqw;justify-self:start}
+.s-auto .upn{position:absolute;right:6cqw;top:12cqw;width:26cqw;background:#FF5FA2;color:#3B2416;border-radius:1.6cqw;padding:1.4cqw 1.8cqw;font:700 1.7cqw/1.25 var(--display);opacity:0;transform:translateX(8cqw)}
+.s-auto .upn small{display:block;font:700 1cqw var(--body);letter-spacing:.2em;text-transform:uppercase}
+.s-auto.on .upn{animation:adin .6s 1.2s cubic-bezier(.2,.9,.3,1.3) forwards}
+.s-auto .voice{position:absolute;right:6cqw;top:22cqw;display:flex;align-items:center;gap:.5cqw;opacity:0}
+.s-auto.on .voice{animation:adup .5s 1.8s forwards}
+.s-auto .voice i{width:.6cqw;height:2cqw;border-radius:1cqw;background:#D7F03C;animation:eq .8s ease-in-out infinite}.s-auto .voice i:nth-child(2){animation-delay:.15s}.s-auto .voice i:nth-child(3){animation-delay:.3s}
+.s-auto .voice span{font:600 1.6cqw var(--body);margin-left:.8cqw;font-style:italic}
+.s-auto .share{position:absolute;right:6cqw;top:28cqw;display:flex;align-items:center;gap:.6cqw}
+.s-auto .share small{font:700 1cqw var(--body);letter-spacing:.2em;text-transform:uppercase;margin-right:.6cqw;opacity:.7}
+.s-auto .share i{width:1.8cqw;height:1.8cqw;border-radius:50%;border:.25cqw solid rgba(255,246,234,.4)}
+.s-auto.on .share i{animation:adfill .3s forwards}.s-auto.on .share i:nth-child(2){animation-delay:2.2s}.s-auto.on .share i:nth-child(3){animation-delay:2.45s}.s-auto.on .share i:nth-child(4){animation-delay:2.7s}.s-auto.on .share i:nth-child(5){animation-delay:2.95s}.s-auto.on .share i:nth-child(6){animation-delay:3.2s}.s-auto.on .share i:nth-child(7){animation-delay:3.45s}
+@keyframes adfill{to{background:#D7F03C;border-color:#D7F03C}}
+@media (max-width:640px){
+  .s-pin .chat{left:8cqw;right:8cqw;width:auto;top:8cqw}.s-pin .who{font-size:2.8cqw}.s-pin .who i{width:5cqw;height:5cqw}.s-pin .bubble{font-size:3.4cqw;padding:3cqw}.s-pin .bubble b{font-size:9cqw}.s-pin .bubble small{font-size:2.2cqw}
+  .s-pin .pins{left:8cqw;right:auto;top:52cqw}.s-pin .pins i{width:14cqw;height:14cqw;font-size:7cqw;box-shadow:inset 0 0 0 1.6cqw #FF5FA2,inset 0 0 0 2cqw #3B2416}.s-pin .ok{font-size:4.6cqw}
+  .s-auto .chip-auto{font-size:3cqw;top:5cqw}.s-auto .courts3{top:14cqw;left:6cqw;right:6cqw;flex-direction:column;gap:1.6cqw}.s-auto .mc{width:auto;grid-template-columns:auto 1fr;padding:2cqw 3cqw;column-gap:3cqw}.s-auto .mc b{font-size:3.4cqw;grid-row:span 2}.s-auto .mc span{font-size:2.8cqw}.s-auto .mc em{display:none}
+  .s-auto .courts3{top:12cqw}.s-auto .upn{left:6cqw;right:6cqw;width:auto;top:56cqw;font-size:3.4cqw;padding:2.4cqw 3cqw}.s-auto .upn small{font-size:2.2cqw}.s-auto .voice,.s-auto .share{display:none}.s-auto .cap{font-size:6.6cqw;bottom:14cqw}}
+.s-card .signup{position:absolute;top:8cqw;font:700 1.6cqw var(--body);letter-spacing:.18em;text-transform:uppercase;background:#3B2416;color:#D7F03C;padding:1cqw 2.4cqw;border-radius:99cqw;opacity:0}
+.s-card.on .signup{animation:adin .5s 2.4s cubic-bezier(.2,.9,.3,1.5) forwards}
+.s-end .endbtns{display:flex;gap:1cqw;flex-wrap:wrap;justify-content:center;position:relative;z-index:6}
+.s-end .glaze-cta{background:#FF5FA2;color:#fff;margin-top:1cqw;font-size:max(13px,1.6cqw)}
+@media (max-width:640px){.s-card .signup{font-size:3cqw;top:6cqw}}
+/* Glaze Card band */
+.cardband{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:30px;align-items:center;background:#FFF6EA;color:#3B2416;border:2px solid var(--line);border-radius:32px;padding:clamp(22px,4vw,44px);overflow:hidden;position:relative}
+:root[data-theme="dark"] .cardband{border-color:transparent}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .cardband{border-color:transparent}}
+.cardband h2{font-size:clamp(34px,5vw,58px);line-height:.95}.cardband h2 span{display:block;color:#2F7A4F}
+.cardband p{margin:14px 0 22px;color:#6E5240;max-width:42ch}
+.cardband .btns{display:flex;gap:10px;flex-wrap:wrap}
+.cardband .btns .btn.pink{box-shadow:0 10px 24px rgba(255,95,162,.35)}
+.cardband .free{display:inline-block;font:700 11px var(--body);letter-spacing:.2em;text-transform:uppercase;background:#D7F03C;padding:6px 12px;border-radius:999px;margin-bottom:12px}
+.cardband .deck{position:relative;aspect-ratio:1.3;max-width:100%}
+.cardband .deck img{position:absolute;width:76%;border-radius:4.5%;box-shadow:0 26px 44px rgba(59,36,22,.28);transition:transform .6s cubic-bezier(.2,.9,.3,1.2)}
+.cardband .deck .b{right:0;bottom:4%;transform:rotate(7deg)}.cardband .deck .f{left:0;top:4%;transform:rotate(-8deg)}
+.cardband:hover .deck .f{transform:rotate(-12deg) translate(-10px,-12px)}.cardband:hover .deck .b{transform:rotate(10deg) translate(10px,10px)}
+.cardband .stamps{display:flex;gap:6px;margin:0 0 18px}.cardband .stamps i{width:22px;height:22px;border-radius:50%;border:2px dashed #C9A98C}
+.cardband.seen .stamps i{animation:cbst .3s forwards}.cardband.seen .stamps i:nth-child(2){animation-delay:.15s}.cardband.seen .stamps i:nth-child(3){animation-delay:.3s}.cardband.seen .stamps i:nth-child(4){animation-delay:.45s}.cardband.seen .stamps i:nth-child(5){animation-delay:.6s}.cardband.seen .stamps i:nth-child(6){animation-delay:.75s}
+.cardband .stamps i:last-child{border:2px solid #D7F03C;width:auto;padding:0 8px;border-radius:999px;font:700 10px/18px var(--body);font-style:normal}
+.cardband.seen .stamps i:last-child{animation:cbfree .4s .95s forwards}
+@keyframes cbst{to{background:#FF5FA2;border:0}}@keyframes cbfree{to{background:#D7F03C}}
+@media (max-width:760px){.cardband{grid-template-columns:1fr}.cardband .deck{order:-1}}
 /* Court show */
 .show{position:relative;border-radius:32px;overflow:hidden;aspect-ratio:16/8;max-width:100%;background:#1A110B;color:#FFF6EA}
 .show canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -282,7 +344,7 @@ section.block{padding-block:80px 0}
 <body>
 <nav class="nav"><div class="wrap">
   <a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a>
-  <ul><li><a href="#live">Live courts</a></li><li><a href="#nights">Nights</a></li><li><a href="#rules">Rules</a></li><li><a href="/dupr">DUPR</a></li><li><a href="#hall">Hall of Glaze</a></li><li><a href="/merch">Shop</a></li><li><a href="#contact">Contact</a></li></ul>
+  <ul><li><a href="#live">Live courts</a></li><li><a href="#nights">Nights</a></li><li><a href="#rules">Rules</a></li><li><a href="/dupr">DUPR</a></li><li><a href="#hall">Hall of Glaze</a></li><li><a href="/loyalty">Glaze Card</a></li><li><a href="/merch">Shop</a></li><li><a href="#contact">Contact</a></li></ul>
   <a class="btn pink sm btn-join" href="/queue"><span class="jb" aria-hidden="true"><svg viewBox="0 0 24 24"><g transform="rotate(-35 12 12)"><rect x="7" y="2.5" width="10" height="12" rx="5" fill="#FF5FA2" stroke="#3B2416" stroke-width="1.6"/><rect x="10.6" y="14" width="2.8" height="7" rx="1.2" fill="#3B2416"/></g><g class="ball"><circle cx="19.5" cy="5" r="3.2" fill="#D7F03C" stroke="#3B2416" stroke-width="1.2"/><circle cx="18.8" cy="4.4" r=".6" fill="#3B2416"/><circle cx="20.4" cy="5.8" r=".6" fill="#3B2416"/></g></svg></span>Join the queue</a>
 </div></nav>
 
@@ -314,16 +376,23 @@ section.block{padding-block:80px 0}
       <div class="asc s-lights"><div class="beam b1"></div><div class="beam b2"></div><div class="court3d"></div><div class="cap"><small>Every week</small>Doha. Under the lights.</div></div>
       <!-- 3 every level -->
       <div class="asc s-levels"><div class="chips"><span class="beg">Beginner</span><span class="int">Intermediate</span><span class="adv">Advanced</span></div><div class="pads"><i class="p1"></i><i class="p2"></i></div><div class="cap">Open play for <em>every level.</em></div></div>
+      <!-- PIN on WhatsApp -->
+      <div class="asc s-pin"><div class="chat"><div class="who"><i></i><span>Dinkin’ Donut Pickleball Club</span></div><div class="bubble">Payment received, Drew. Your queue PIN:<b>7 5 5</b><small>12:04 ✓✓</small></div></div><div class="pins"><i>7</i><i>5</i><i>5</i><span class="ok">✓ Joined</span></div><div class="cap">Pay at the table. <em>Your PIN lands on WhatsApp.</em></div></div>
       <!-- 4 scan in -->
-      <div class="asc s-scan"><div class="phone"><div class="notch"></div><div class="ticket" id="adTicket"></div><div class="mini">Dinkin’ Donut · Live queue</div></div><div class="cap side">Scan in.<em>We call your court.</em></div></div>
+      <div class="asc s-scan"><div class="phone"><div class="notch"></div><div class="ticket" id="adTicket"></div><div class="mini">Dinkin’ Donut · Live queue</div></div><div class="cap side">Enter your PIN.<em>We call your court.</em></div></div>
+      <!-- Autopilot -->
+      <div class="asc s-auto"><div class="chip-auto">● Autopilot</div><div class="courts3"><div class="mc"><b>Court 1</b><span>Drew &amp; Angel</span><span>Kong &amp; Kuya</span><em>Even match</em></div><div class="mc"><b>Court 2</b><span>Araykoh &amp; Ate</span><span>Ng &amp; Mama</span><em>Even match</em></div><div class="mc"><b>Court 3</b><span>Tae &amp; JD</span><span>Puta &amp; Alyana</span><em>Close match</em></div></div>
+        <div class="upn"><small>Up next</small>Vincent &amp; Omar vs Lahat &amp; Gusto</div><div class="voice"><i></i><i></i><i></i><span>“Court two, please.”</span></div><div class="share"><small>Games each</small><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="cap">Autopilot runs the courts. <em>Smart match. Fair turns. Everyone plays.</em></div></div>
+
       <!-- 5 fair games -->
       <div class="asc s-fair"><div class="teams"><div class="tm"><span>Drew</span><span>Angel</span></div><div class="vs">VS</div><div class="tm"><span>Araykoh</span><span>Kong</span></div></div><div class="badge">Even match</div><div class="cap">Fair games. <em>Every game.</em></div></div>
       <!-- 6 win -->
       <div class="asc s-win"><div class="pour"></div><div class="score"><b id="adA">0</b><span>–</span><b id="adB">0</b></div><div class="cap dark">Win? <em>Get glazed.</em></div></div>
       <!-- 7 glaze card -->
-      <div class="asc s-card"><div class="stamps"><i></i><i></i><i></i><i></i><i></i><i></i><i class="free">FREE</i></div><div class="cap">Play 6. <em>The 7th is on us.</em></div></div>
+      <div class="asc s-card"><div class="stamps"><i></i><i></i><i></i><i></i><i></i><i></i><i class="free">FREE</i></div><div class="signup">Sign up free · link below</div><div class="cap">Play 6. <em>The 7th is on us.</em></div></div>
       <!-- 8 end card -->
-      <div class="asc s-end"><img src="/assets/logo.svg" alt=""><div class="t1">Dinkin’ Donut</div><div class="t2">Sweet game, soft hands.</div><div class="t0">Open play · DUPR games · Doha</div><a class="btn lime" href="/queue">Join the next session</a><div class="ig">@dinkindonutqa</div></div>
+      <div class="asc s-end"><img src="/assets/logo.svg" alt=""><div class="t1">Dinkin’ Donut</div><div class="t2">Sweet game, soft hands.</div><div class="t0">Open play · DUPR games · Doha</div><div class="endbtns"><a class="btn lime" href="/queue">Join the next session</a><a class="btn glaze-cta" data-loyalty href="/loyalty">Get the Glaze Card</a></div><div class="ig">@dinkindonutqa</div></div>
       <button class="adplay" id="adPlay" type="button"><span><svg width="34" height="34" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg></span><b>Play with sound</b></button>
       <div class="adui"><button id="adToggle" type="button"></button><div class="adbar"><i id="adBar"></i></div><button id="adSound" type="button"></button></div>
     </div>
@@ -356,6 +425,19 @@ section.block{padding-block:80px 0}
       <span class="chip tabnum" id="gCount">Games played: —</span>
       <a class="btn pink sm" href="/queue">Open the full queue</a>
       <a class="btn ghost sm" href="/tv" title="Big-screen mode for a TV at the venue">TV mode</a>
+    </div>
+  </section>
+
+  <section class="block wrap" id="glazecard">
+    <div class="cardband">
+      <div>
+        <span class="free">Free to join</span>
+        <h2>Play 6. <span>The 7th is on us.</span></h2>
+        <div class="stamps" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i>FREE</i></div>
+        <p>Sign up for the Glaze Card in one minute. Collect your card at any session, get a stamp every paid game, open play or DUPR, and your seventh session is free.</p>
+        <div class="btns"><a class="btn pink" data-loyalty href="/loyalty">Sign up free</a><a class="btn ghost" href="/loyalty" style="color:#3B2416">How it works</a></div>
+      </div>
+      <div class="deck"><img class="b" src="/assets/loyalty/card-back.png" alt="Back of the Glaze Card with six stamp circles"><img class="f" src="/assets/loyalty/card-front.png" alt="Front of the Glaze Card"></div>
     </div>
   </section>
 
@@ -479,6 +561,8 @@ section.block{padding-block:80px 0}
 <script src="/js/opener.js" defer></script>
 <script>
 const C = window.CLUB;
+if (C.loyaltyFormUrl) document.querySelectorAll("[data-loyalty]").forEach(a => { a.href = C.loyaltyFormUrl; a.target = "_blank"; a.rel = "noopener"; });
+{ const cb = document.querySelector(".cardband"); if (cb && "IntersectionObserver" in window) new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { cb.classList.add("seen"); o.disconnect(); } }, { threshold: .4 }).observe(cb); else cb && cb.classList.add("seen"); }
 document.querySelectorAll("[data-venue]").forEach(el => el.textContent = C.venue);
 document.querySelectorAll("[data-day]").forEach(el => el.textContent = C.nightDay);
 document.querySelectorAll("[data-hours]").forEach(el => el.textContent = C.hours);

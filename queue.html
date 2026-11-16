@@ -33,6 +33,8 @@
 .pinrow small{opacity:.75;font-size:13px}
 .shake{animation:shake .4s}@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 .share{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:6px}.share i{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,246,234,.45)}.share i.on{background:#D7F03C;border-color:#D7F03C}.share span{margin-left:6px;font-weight:700;font-size:13px;opacity:.85}
+.gcpromo{display:grid!important;grid-template-columns:96px 1fr auto;gap:14px;align-items:center;text-decoration:none;background:#FFF6EA!important;color:#3B2416}.gcpromo[hidden]{display:none!important}.gcpromo img{width:96px;border-radius:8px;transform:rotate(-6deg);box-shadow:0 8px 16px rgba(59,36,22,.2)}.gcpromo b{display:block;font:700 18px var(--display)}.gcpromo span{font-size:14px}
+@media (max-width:480px){.gcpromo{grid-template-columns:72px 1fr}.gcpromo img{width:72px}.gcpromo .btn{grid-column:1/-1;justify-self:start}}
 .me .err{color:#FFB3CF;font-weight:600;margin:0}
 .ticket{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .ticket .big{font:700 clamp(64px,16vw,110px)/1 var(--display);color:var(--ball);font-variant-numeric:tabular-nums}
@@ -111,10 +113,12 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
   <section class="panel" id="standings"><h2>Live standings <span class="muted" style="font:500 13px var(--body)">Wins, then win %</span></h2>
     <div class="tablewrap"><table><thead><tr><th>#</th><th>Dinker</th><th class="r">W</th><th class="r">L</th><th class="r">Win %</th><th class="r">+/-</th><th class="r">Streak</th></tr></thead><tbody id="table"></tbody></table></div>
   </section>
+  <a class="panel gcpromo" id="gcPromo" href="/loyalty" hidden><img src="/assets/loyalty/card-front.png" alt=""><span><b>Not a Glaze Card member yet?</b>Sign up free. Six stamps and your 7th session is on us.</span><span class="btn pink sm">Sign up</span></a>
   <a class="panel" href="/dupr" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--court);color:#FFF6EA;border:0"><span><b style="font:700 22px var(--display)">Want rated games?</b><br>DUPR sessions are booked on Reclub.</span><span class="btn lime sm">DUPR games →</span></a>
   <section class="panel"><h2>Game log</h2><ul class="log" id="log"></ul></section>
 </main>
 
+<script src="/js/config.js"></script>
 <script src="/js/common.js"></script>
 <script src="/js/celebrate.js"></script>
 <script>
@@ -221,6 +225,8 @@ function renderMe() {
 
 let lastRes = null;
 function render() {
+  { const g = $("gcPromo"); let member = false; try { member = localStorage.getItem("dd-gc") === "1"; } catch {}
+    if (g) { g.hidden = member || !meId; if (window.CLUB && CLUB.loyaltyFormUrl) { g.href = CLUB.loyaltyFormUrl; g.target = "_blank"; g.rel = "noopener"; g.onclick = () => { try { localStorage.setItem("dd-gc", "1"); } catch {} }; } } }
   if (S.lastResult && lastRes !== null && S.lastResult.t !== lastRes && meId && S.lastResult.w.includes(meId)) { celebrate({ ...S.lastResult, wn: ["You"] }, { hold: 3000 }); buzz(); }
   lastRes = S.lastResult ? S.lastResult.t : 0;
   { const r = $("pinRow"); if (r) r.hidden = S.requirePin === false; }

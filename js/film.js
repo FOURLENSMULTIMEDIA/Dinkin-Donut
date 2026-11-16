@@ -90,7 +90,9 @@
   // Resting frame: the end card, so the price is visible before anything plays
   scenes[5].classList.add("on"); paint();
   $("play").onclick = function () { muted = false; elapsed = 0; music.play().catch(function () {}); play(); };
-  $("fToggle").onclick = function () { playing ? pause() : play(); };
+  $("fToggle").onclick = function (e) { e.stopPropagation(); if (playing) pause(); else { muted = false; ac(); play(); syncMusic(); paint(); } };
+  // Tapping a muted film turns the sound on
+  root.addEventListener("click", function (e) { if (e.target.closest("a,button")) return; if (muted) { muted = false; ac(); if (!playing) { elapsed = 0; play(); } else syncMusic(); paint(); } });
   $("fSound").onclick = function () {
     muted = !muted; paint();
     if (!muted) { if (!playing) { elapsed = 0; play(); } else syncMusic(); } else music.pause();

@@ -125,3 +125,8 @@ img,svg{-webkit-user-drag:none}
 .upnext .m span:last-child{text-align:right}
 .upnext .v{font:700 11px var(--display);letter-spacing:.3em;color:#FF5FA2}
 .upnext.me{background:#FF5FA2}.upnext.me .h{color:#3B2416}.upnext.me .v{color:#3B2416}
+/* Menu: never wrap, drop secondary links when space is tight */
+.nav ul{gap:18px}
+.nav ul a{white-space:nowrap}
+@media (max-width:1240px){.nav ul li:has(a[href="#nights"]),.nav ul li:has(a[href="#rules"]){display:none}}
+@media (max-width:1020px){.nav ul li:has(a[href="#hall"]),.nav ul li:has(a[href="#contact"]){display:none}}
