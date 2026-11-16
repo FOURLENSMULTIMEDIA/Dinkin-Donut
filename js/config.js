@@ -12,6 +12,7 @@ window.CLUB = {
   whatsappNumber: "97430763431",       // main number for merch orders (digits only)
   whatsappNumbers: ["+974 3076 3431", "+974 3072 3503"], // shown on the site, first one is the main contact
   currency: "QAR",
+  shopFawran: "+974 3020 3100",       // merch payments: Fawran goes to this number
 
   // Glaze Card loyalty sign-up (Google Form short link, see google-form/SETUP.md)
   loyaltyFormUrl: "https://docs.google.com/forms/d/1TqgQPkL9SCaWjwWpEvg3VU1uV5ERvEHyLesmacjYezY/viewform",

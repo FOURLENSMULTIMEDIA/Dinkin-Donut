@@ -160,6 +160,15 @@
 .summary{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13px}
 .empty{color:var(--muted);text-align:center;padding:40px 0}
 .footer{padding-bottom:110px}
+.paybox{border-radius:18px;background:#3B2416;color:#FFF6EA;padding:16px;display:grid;gap:10px}
+.payhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;opacity:.95}
+.payhead .fw{font:700 13px var(--body);letter-spacing:.06em;background:#D7F03C;color:#3B2416;padding:5px 10px;border-radius:999px}
+.payrow{display:grid;grid-template-columns:84px 1fr auto;gap:8px;align-items:center;border-top:1px solid rgba(255,246,234,.12);padding-top:8px}
+.payrow small{font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;opacity:.7}
+.payrow b{font:700 18px var(--display)}
+.payrow .btn{color:#FFF6EA;padding:6px 12px}
+.paysteps{margin:4px 0 0;padding-left:18px;display:grid;gap:4px;font-size:13px;opacity:.9}
+.paid{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14px}
 </style>
 </head>
 <body>
@@ -230,10 +239,18 @@
   <h2 id="bagTitle">Your bag <button class="btn ghost sm" id="close">Close</button></h2>
   <div id="lines"></div>
   <div class="total"><span>Total</span><span id="total" class="tabnum">0</span></div>
-  <form id="order" autocomplete="on" style="display:grid;gap:10px">
+  <form id="order" autocomplete="on" style="display:grid;gap:12px">
+    <div class="paybox">
+      <div class="payhead"><span class="fw">Fawran</span><span>Pay first, then we make your order</span></div>
+      <div class="payrow"><small>Send to</small><b id="fwNum"></b><button type="button" class="btn sm ghost" id="fwCopy">Copy</button></div>
+      <div class="payrow"><small>Amount</small><b id="fwAmt" class="tabnum"></b></div>
+      <div class="payrow"><small>Reference</small><b id="fwRef" class="tabnum"></b><button type="button" class="btn sm ghost" id="refCopy">Copy</button></div>
+      <ol class="paysteps"><li>Send the Fawran payment. Add the reference as the note.</li><li>Tap the button below to send your order on WhatsApp.</li><li>Attach your Fawran receipt screenshot in the chat.</li></ol>
+    </div>
     <label for="buyer" class="note">Your name (for pick-up)</label>
     <input id="buyer" required maxlength="40" placeholder="e.g. Angel K.">
-    <button class="btn pink" id="send">Send order on WhatsApp</button>
+    <label class="paid"><input type="checkbox" id="paidOk" required> I’ve sent the Fawran payment</label>
+    <button class="btn pink" id="send">Send order and receipt on WhatsApp</button>
     <p class="note" style="margin:0">Goes to +974 3076 3431. No reply? Try <a id="alt" href="https://wa.me/97430723503" target="_blank" rel="noopener">+974 3072 3503</a>.</p>
   </form>
   <div id="fallback" hidden><p class="note">Copy your order and show it at the check-in table.</p><div class="summary" id="summary"></div><button class="btn sm" id="copy" style="margin-top:8px">Copy order</button></div>
@@ -320,19 +337,33 @@ function renderBag() {
   $("total").textContent = money(bag.reduce((a, l) => a + l.qty * PRODUCTS[l.p].price, 0));
   $("order").hidden = !bag.length;
 }
-const orderText = (lines, who) => `Dinkin' Donut shop order\nName: ${who}\n\n${lines.map(l => `• ${l.qty} × ${PRODUCTS[l.p].name} (${describe(l)}) = ${money(l.qty * PRODUCTS[l.p].price)}`).join("\n")}\n\nTotal: ${money(lines.reduce((a, l) => a + l.qty * PRODUCTS[l.p].price, 0))}\nPick-up at open play. 🍩`;
+// Order reference: stays the same for this bag until the order is sent
+function orderRef() { let r = ""; try { r = localStorage.getItem("dd-ref") || ""; } catch {} if (!r) { const d = new Date(); r = `DD-${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}-${Math.floor(1000 + Math.random() * 9000)}`; try { localStorage.setItem("dd-ref", r); } catch {} } return r; }
+const FAWRAN = C.shopFawran || "+974 3020 3100";
+const bagTotal = lines => lines.reduce((a, l) => a + l.qty * PRODUCTS[l.p].price, 0);
+// Plain text with WhatsApp bold; no emoji (they can arrive garbled through links)
+const orderText = (lines, who) => {
+  const ref = orderRef(), items = lines.map(l => { const p = PRODUCTS[l.p], w = p.ways[l.way];
+    const back = l.print === "plain" ? (l.p === "jersey" ? "Plain back" : "No name") : (l.p === "jersey" && l.print === "full" ? `Back: ${l.name} · No. ${l.num}` : `Name: ${l.name}`);
+    return `${l.qty} × ${p.name} - ${money(l.qty * p.price)}\n   ${w.label} · ${p.fits[l.fit]} · Size ${l.size}\n   ${back}`; }).join("\n\n");
+  return [`*Dinkin' Donut · Shop order*`, `Order ref: *${ref}*`, `Name: ${who || "-"}`, "", items, "", `*Total: ${money(bagTotal(lines))}*`, "",
+    `Payment: Fawran to ${FAWRAN}`, `Transfer note: ${ref}`, `Receipt: attached below`, "",
+    `We start making your order once payment is confirmed. Ready in about 3 weeks, pick-up at open play.`].join("\n");
+};
+function paintPay() { $("fwNum").textContent = FAWRAN; $("fwAmt").textContent = money(bagTotal(bag)); $("fwRef").textContent = orderRef(); }
+const copyBtn = (btn, text) => navigator.clipboard?.writeText(text).then(() => { const t = btn.textContent; btn.textContent = "Copied"; setTimeout(() => btn.textContent = t, 1400); }).catch(() => {});
 const openWA = (text, num = WA) => { const a = document.createElement("a"); a.href = `https://wa.me/${num}?text=${encodeURIComponent(text)}`; a.target = "_blank"; a.rel = "noopener"; a.click(); };
 $("add").onclick = () => { if (addLine()) { const b = $("bagBtn"); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); $("add").textContent = "Added"; setTimeout(() => $("add").textContent = "Add to bag", 1200); } };
-$("waNow").onclick = () => { const o = cur(); if (o.print !== "plain" && !o.name.trim()) return addLine();
-  const line = { p: st.p, way: o.way, print: o.print, name: o.print === "plain" ? "" : o.name.trim().toUpperCase(), num: st.p === "jersey" && o.print === "full" ? o.num : "", fit: o.fit, size: o.size, qty: st.qty };
-  openWA(orderText([line], "")); };
+$("waNow").onclick = () => { if (addLine()) { paintPay(); $("drawer").hidden = false; $("buyer").focus(); } };
 document.addEventListener("click", e => { const d = e.target.dataset; if (d.q !== undefined) { const l = bag[+d.q]; l.qty += +d.d; if (l.qty < 1) bag.splice(+d.q, 1); saveBag(); renderBag(); } });
-$("bagBtn").onclick = () => { $("drawer").hidden = false; $("close").focus(); };
+$("bagBtn").onclick = () => { paintPay(); $("drawer").hidden = false; $("close").focus(); };
+$("fwCopy").onclick = e => copyBtn(e.target, FAWRAN.replace(/\s/g, ""));
+$("refCopy").onclick = e => copyBtn(e.target, orderRef());
 $("close").onclick = () => $("drawer").hidden = true;
 $("drawer").onclick = e => { if (e.target.id === "drawer") $("drawer").hidden = true; };
 document.addEventListener("keydown", e => { if (e.key === "Escape") $("drawer").hidden = true; });
 try { $("buyer").value = localStorage.getItem("dd-name") || ""; } catch {}
-$("order").onsubmit = e => { e.preventDefault(); openWA(orderText(bag, $("buyer").value.trim())); };
+$("order").onsubmit = e => { e.preventDefault(); openWA(orderText(bag, $("buyer").value.trim())); setTimeout(() => { try { localStorage.removeItem("dd-ref"); } catch {} }, 2000); };
 $("alt").onclick = e => { if (bag.length) { e.preventDefault(); openWA(orderText(bag, $("buyer").value.trim()), "97430723503"); } };
 $("copy").onclick = () => navigator.clipboard?.writeText($("summary").textContent).catch(() => {});
 $("teamBtn").href = `https://wa.me/${WA}?text=${encodeURIComponent("Hi Dinkin' Donut! I'd like a team quote for Glaze Jerseys.\nTeam name:\nNumber of players:\nSizes:")}`;
