@@ -58,6 +58,27 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .warn{background:#FFE7A8;color:var(--choco);border-radius:14px;padding:12px 14px;font-weight:600}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .muted{color:var(--muted);font-size:14px}
+.mfilter{display:flex;flex-wrap:wrap;gap:6px}
+.mfilter button{border:2px solid var(--line);background:var(--surface);color:var(--fg);font:700 13px var(--body);padding:8px 12px;border-radius:12px;cursor:pointer}
+.mfilter button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.mlist{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:560px;overflow:auto}
+.mlist li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}
+.mlist .cardno{width:56px;height:36px;border-radius:8px;background:#3B2416;color:#D7F03C;display:grid;place-items:center;font:700 14px var(--display);font-variant-numeric:tabular-nums}
+.mlist .cardno.none{background:var(--sunk);color:var(--muted);font:700 10px var(--body);letter-spacing:.06em}
+.mlist .who b{font-size:16px}.mlist .who small{display:block;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.mlist .who a{color:inherit}
+.mlist .acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.stampbar{display:flex;gap:4px;align-items:center}
+.stampbar button{width:22px;height:22px;border-radius:50%;border:1.5px dashed #C9A98C;background:transparent;cursor:pointer;padding:0}
+.stampbar button.on{border:0;background:var(--glaze)}
+.stampbar .free{width:auto;height:22px;border-radius:999px;padding:0 8px;font:700 10px var(--body);letter-spacing:.06em;border:1.5px solid var(--ball);color:var(--fg)}
+.stampbar .free.ready{background:var(--ball);color:#3B2416;border-color:var(--ball);animation:pulse2 1.6s infinite}
+@media (max-width:700px){.mlist li{grid-template-columns:auto minmax(0,1fr)}.mlist .acts{grid-column:1/-1;justify-content:flex-start}}
+.lvchip{border:0;border-radius:8px;font:700 11px var(--body);letter-spacing:.08em;padding:5px 8px;cursor:pointer;min-width:44px}
+.lvchip.beginner,.lvdot.beginner{background:#7FD3A3;color:#123B24}.lvchip.intermediate,.lvdot.intermediate{background:#FFD66B;color:#3B2416}.lvchip.advanced,.lvdot.advanced{background:#FF5FA2;color:#fff}.lvchip.none{background:var(--sunk);color:var(--muted)}
+.lvdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px;box-shadow:0 0 0 1.5px rgba(255,255,255,.6)}
+.bal{font:700 10px var(--body);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px}
+.bal.even{background:#D7F03C;color:#3B2416}.bal.close{background:#FFD66B;color:#3B2416}.bal.uneven{background:#FF8DB6;color:#3B2416}
 .roster{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:420px;overflow:auto}
 .roster li{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg);flex-wrap:wrap}
 .roster .nm{flex:1;font-weight:700;min-width:120px;overflow-wrap:anywhere}
@@ -125,6 +146,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
   <div class="bar">
     <label for="title">Night</label><input id="title" style="width:200px">
     <label for="format">Format</label><select id="format"><option value="2">Doubles</option><option value="1">Singles</option></select>
+    <label for="match">Matching</label><select id="match"><option value="smart">Smart match</option><option value="levels">Level courts</option><option value="order">Queue order</option></select>
     <label for="rotation">After a game</label><select id="rotation"><option value="winstay">Winners stay</option><option value="all">Everyone rotates</option></select>
     <label for="maxWins">Max wins</label><select id="maxWins"><option>1</option><option>2</option><option>3</option></select>
     <span class="sp"></span>
@@ -176,6 +198,20 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
   </section>
   </div>
 
+  <section class="panel" id="membersPanel">
+    <h2>Glaze Card members <span class="muted" id="mInfo">Loading…</span></h2>
+    <div class="paystats" id="mStats"></div>
+    <div class="row">
+      <input id="mFind" placeholder="Search name or phone" aria-label="Search members" style="flex:1;min-width:180px">
+      <div class="seg mfilter" role="group" aria-label="Filter members">
+        <button type="button" data-mf="todo" aria-pressed="true">Cards to hand out</button><button type="button" data-mf="issued" aria-pressed="false">Card holders</button><button type="button" data-mf="free" aria-pressed="false">Free session ready</button><button type="button" data-mf="all" aria-pressed="false">Everyone</button>
+      </div>
+      <button class="btn ghost sm" id="mRefresh" type="button">Refresh</button>
+    </div>
+    <ul class="mlist" id="mList"></ul>
+    <p class="muted" id="mHelp" hidden>No sign-ups yet. Connect the Google Form with <code>google-form/GlazeCardSync.gs</code> (see SETUP.md) and new sign-ups appear here automatically.</p>
+  </section>
+
   <section class="panel">
     <h2>Session controls</h2>
     <div class="row">
@@ -207,7 +243,8 @@ async function unlock(pin) {
   PIN = pin;
   try { ($("remember").checked || localStorage.getItem("dd-pin") ? localStorage : sessionStorage).setItem("dd-pin", pin); } catch {}
   $("lock").hidden = true; $("app").hidden = false;
-  feed = feed || DD.live(st => { S = st; render(); }, 2500, () => PIN);
+  feed = feed || DD.live(st => { S = st; render(); renderMembers(); }, 2500, () => PIN);
+  loadMembers(); setInterval(() => { if (!document.hidden) loadMembers(); }, 20000);
 }
 function logout() { try { sessionStorage.removeItem("dd-pin"); localStorage.removeItem("dd-pin"); } catch {} location.reload(); }
 $("lock").onsubmit = async e => {
@@ -221,11 +258,11 @@ if (PIN) unlock(PIN).catch(() => { try { sessionStorage.removeItem("dd-pin"); lo
 
 function render() {
   if (!S) return;
-  const need = S.format * 2, n = id => DD.esc(S.players[id]?.name);
+  const need = S.format * 2, n = id => lvDot(S.players[id]) + DD.esc(S.players[id]?.name);
   $("noDb").hidden = S.persistent;
   $("sP").textContent = Object.keys(S.players).length; $("sQ").textContent = S.queue.length;
   $("sC").textContent = S.courts.filter(c => c.teams).length; $("sG").textContent = S.games;
-  for (const k of ["format", "rotation", "maxWins"]) if (document.activeElement !== $(k)) $(k).value = S[k];
+  for (const k of ["format", "rotation", "maxWins", "match"]) if (document.activeElement !== $(k)) $(k).value = S[k];
   if (document.activeElement !== $("title")) $("title").value = S.nightTitle;
   $("format").disabled = S.courts.some(c => c.teams);
   $("maxWins").disabled = S.rotation !== "winstay";
@@ -236,12 +273,13 @@ function render() {
   $("courts").innerHTML = S.courts.map(c => {
     if (!c.teams) {
       const short = need - (c.stayers ? c.stayers.length : 0) - S.queue.length;
-      return `<div class="ct open"><h3>Court ${c.id}<span>Open</span></h3>${c.stayers ? `<div class="muted">Winners staying: <b>${DD.team(S, c.stayers)}</b> (${c.streak} win${c.streak > 1 ? "s" : ""})</div>` : ""}
+      const lvSel = S.match === "levels" ? `<label class="row muted" style="color:inherit">Level <select data-court-level="${c.id}" aria-label="Court ${c.id} level">${["any", "beginner", "intermediate", "advanced"].map(l => `<option value="${l}" ${(c.level || "any") === l ? "selected" : ""}>${l === "any" ? "Any level" : LVL[l].label}</option>`).join("")}</select></label>` : "";
+      return `<div class="ct open"><h3>Court ${c.id}<span>${S.match === "levels" && c.level && c.level !== "any" ? LVL[c.level].label : "Open"}</span></h3>${lvSel}${c.stayers ? `<div class="muted">Winners staying: <b>${DD.team(S, c.stayers)}</b> (${c.streak} win${c.streak > 1 ? "s" : ""})</div>` : ""}
         <div class="row"><button class="btn pink sm" data-a="fill" data-c="${c.id}" ${short > 0 ? "disabled" : ""}>Start game</button>${short > 0 ? `<span class="muted">Need ${short} more</span>` : ""}
         <button class="btn ghost sm" data-a="removeCourt" data-c="${c.id}" style="margin-left:auto">Remove court</button></div></div>`;
     }
     const t = k => `<div class="team"><span class="nm">${c.teams[k].map(n).join(" &amp; ")}</span><span class="row"><input class="score tabnum" id="s${c.id}-${k}" inputmode="numeric" placeholder="pts" aria-label="Points" value="${scores["s" + c.id + "-" + k] || ""}"><button class="btn lime sm" data-a="win" data-c="${c.id}" data-t="${k}">Won</button></span></div>`;
-    return `<div class="ct"><h3>Court ${c.id}<span class="tabnum" data-start="${c.start}">${DD.clock(c.start)}</span></h3>${t(0)}<div class="vs">VS</div>${t(1)}
+    return `<div class="ct"><h3>Court ${c.id}<span class="row" style="gap:6px">${c.balance && S.match !== "order" ? `<span class="bal ${c.balance}">${{ even: "Even match", close: "Close match", uneven: "Uneven" }[c.balance]}</span>` : ""}<span class="tabnum" data-start="${c.start}">${DD.clock(c.start)}</span></span></h3>${t(0)}<div class="vs">VS</div>${t(1)}
       <div class="row"><button class="btn ghost sm" data-a="cancel" data-c="${c.id}">Cancel game</button>${c.streak ? `<span class="muted" style="color:inherit;opacity:.8">Winners on ${c.streak} win${c.streak > 1 ? "s" : ""}</span>` : ""}</div></div>`;
   }).join("");
 
@@ -261,7 +299,7 @@ document.addEventListener("click", e => {
 });
 $("addCourt").onclick = () => act({ type: "addCourt" }, "Court added");
 $("fillAll").onclick = () => act({ type: "fillAll" });
-for (const k of ["format", "rotation", "maxWins"]) $(k).onchange = e => act({ type: "settings", [k]: e.target.value }, "Saved");
+for (const k of ["format", "rotation", "maxWins", "match"]) $(k).onchange = e => act({ type: "settings", [k]: e.target.value }, "Saved");
 $("title").onchange = e => act({ type: "settings", nightTitle: e.target.value }, "Saved");
 $("addForm").onsubmit = e => { e.preventDefault(); const v = $("newName").value; $("newName").value = ""; act({ type: "add", name: v }, "Added to queue"); };
 $("logout").onclick = logout;
@@ -270,6 +308,12 @@ $("csv").onclick = () => {
   const blob = new Blob([rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dinkin-donut-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
 };
+
+// Levels
+const LVL = { beginner: { label: "Beginner", short: "BEG" }, intermediate: { label: "Intermediate", short: "INT" }, advanced: { label: "Advanced", short: "ADV" } };
+const LV_ORDER = [null, "beginner", "intermediate", "advanced"];
+const lvDot = p => p && p.level ? `<i class="lvdot ${p.level}" title="${LVL[p.level].label}"></i>` : "";
+document.addEventListener("change", e => { const c = e.target.dataset.courtLevel; if (c) act({ type: "courtLevel", court: c, level: e.target.value }, "Court level saved"); });
 
 // Roster and payments
 const money = DD.qar;
@@ -298,7 +342,7 @@ function renderRoster() {
     (f === "all" || (f === "in" && p.in) || (f === "out" && !p.in) || (f === "unpaid" && payOf(p.id).bal > 0)));
   $("roster").innerHTML = rows.length ? rows.map(p => {
     const [cls, label] = where(p.id), pay = payOf(p.id), active = cls === "court" || cls === "queue";
-    return `<li><span class="nm">${DD.esc(p.name)}</span><span class="pill ${cls}">${label}</span><span class="pill ${pay.status}">${STATUS[pay.status]}${pay.bal > 0 && pay.paid ? " · " + money(pay.bal) + " left" : ""}</span>
+    return `<li><button class="lvchip ${p.level || "none"}" data-x="lvl" data-id="${p.id}" title="Tap to change level">${p.level ? LVL[p.level].short : "Set level"}</button><span class="nm">${DD.esc(p.name)}</span><span class="pill ${cls}">${label}</span><span class="pill ${pay.status}">${STATUS[pay.status]}${pay.bal > 0 && pay.paid ? " · " + money(pay.bal) + " left" : ""}</span>
       ${active ? "" : `<button class="btn lime sm" data-x="checkin" data-id="${p.id}">Check in</button>`}
       ${active ? "" : `<button class="ib" title="Remove from list" aria-label="Remove ${DD.esc(p.name)} from list" data-x="remove" data-id="${p.id}">×</button>`}</li>`;
   }).join("") : `<li class="muted">${all.length ? "No names match." : "No names yet. Paste tonight’s players above."}</li>`;
@@ -330,6 +374,7 @@ function renderPay() {
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-x]"); if (!b) return;
   const id = b.dataset.id, nm = S.players[id]?.name;
+  if (b.dataset.x === "lvl") { const cur = S.players[id].level || null; act({ type: "setLevel", id, level: LV_ORDER[(LV_ORDER.indexOf(cur) + 1) % 4] || "" }); }
   if (b.dataset.x === "checkin") act({ type: "add", name: nm }, `${nm} checked in`);
   if (b.dataset.x === "remove") act({ type: "removePlayer", id }, `${nm} removed`);
   if (b.dataset.x === "unpay") act({ type: "unpay", id, i: b.dataset.i }, "Payment removed");
@@ -355,6 +400,51 @@ $("payCsv").onclick = () => {
   const blob = new Blob([rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" });
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dinkin-payments-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
 };
+
+
+// Glaze Card members
+let MEM = null, mFilter = "todo";
+async function memReq(body) {
+  const r = await fetch("/api/members", { method: body ? "POST" : "GET", headers: { "x-host-pin": PIN, "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+  const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || "Couldn’t reach the members list."); return j;
+}
+async function loadMembers() { try { MEM = await memReq(); renderMembers(); } catch (e) { $("mInfo").textContent = e.message; } }
+async function memAct(a, msg) { try { MEM = await memReq(a); renderMembers(); if (msg) toast(msg); } catch (e) { toast(e.message, true); } }
+function renderMembers() {
+  if (!MEM) return;
+  const all = Object.values(MEM.members).sort((a, b) => b.created - a.created), full = MEM.stampsForFree || 6;
+  const todo = all.filter(m => !m.issued).length, ready = all.filter(m => m.stamps >= full).length;
+  $("mInfo").textContent = `${all.length} signed up`;
+  $("mStats").innerHTML = `<div class="${todo ? "due" : ""}"><span>Cards to hand out</span><b>${todo}</b></div><div class="got"><span>Card holders</span><b>${all.length - todo}</b></div><div><span>Free sessions ready</span><b>${ready}</b></div><div><span>Free sessions used</span><b>${all.reduce((a, m) => a + (m.redeemed || 0), 0)}</b></div>`;
+  const q = $("mFind").value.trim().toLowerCase().replace(/\s/g, "");
+  const rows = all.filter(m => (!q || (m.name + (m.phone || "")).toLowerCase().replace(/\s/g, "").includes(q)) &&
+    (mFilter === "all" || (mFilter === "todo" && !m.issued) || (mFilter === "issued" && m.issued) || (mFilter === "free" && m.stamps >= full)));
+  $("mHelp").hidden = all.length > 0;
+  const inTonight = m => Object.values(S?.players || {}).some(p => p.name.toLowerCase() === m.name.toLowerCase());
+  $("mList").innerHTML = rows.map(m => {
+    const wa = (m.phone || "").replace(/\D/g, ""), waNum = wa.length === 8 ? "974" + wa : wa;
+    return `<li>
+      <span class="cardno ${m.no ? "" : "none"}">${m.no ? "#" + String(m.no).padStart(3, "0") : "NO CARD"}</span>
+      <div class="who"><b>${lvDot(m)}${DD.esc(m.name)}</b><small>${m.phone ? `<a href="https://wa.me/${waNum}" target="_blank" rel="noopener">${DD.esc(m.phone)}</a> · ` : ""}${m.level ? LVL[m.level].label : DD.esc(m.levelRaw || "Level not given")} · signed up ${new Date(m.created).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}${m.redeemed ? ` · ${m.redeemed} free used` : ""}</small></div>
+      <div class="acts">
+        ${m.issued ? `<div class="stampbar" title="Stamps">${Array.from({ length: full }, (_, i) => `<button type="button" class="${i < m.stamps ? "on" : ""}" data-m="${i < m.stamps ? "unstamp" : "stamp"}" data-id="${m.id}" aria-label="${i < m.stamps ? "Remove stamp" : "Add stamp"}"></button>`).join("")}<button type="button" class="free ${m.stamps >= full ? "ready" : ""}" data-m="redeem" data-id="${m.id}" ${m.stamps >= full ? "" : "disabled"}>FREE</button></div>`
+        : `<button class="btn lime sm" type="button" data-m="issue" data-id="${m.id}">Give card</button>`}
+        ${inTonight(m) ? `<span class="pill queue">On tonight’s list</span>` : `<button class="btn ghost sm" type="button" data-m="tonight" data-id="${m.id}">Add to tonight</button>`}
+      </div></li>`;
+  }).join("") || (all.length ? '<li class="muted" style="display:block">Nobody here.</li>' : "");
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-m],[data-mf]"); if (!b) return;
+  if (b.dataset.mf) { mFilter = b.dataset.mf; document.querySelectorAll("[data-mf]").forEach(x => x.setAttribute("aria-pressed", x === b)); return renderMembers(); }
+  const m = MEM.members[b.dataset.id], t = b.dataset.m;
+  if (t === "issue") memAct({ type: "issue", id: m.id }, `Card given to ${m.name}. Write #${String((MEM.lastNo || 0) + (m.no ? 0 : 1)).padStart(3, "0")} on it.`);
+  if (t === "stamp") memAct({ type: "stamp", id: m.id }, `Stamped ${m.name}’s card`);
+  if (t === "unstamp") memAct({ type: "unstamp", id: m.id });
+  if (t === "redeem") memAct({ type: "redeem", id: m.id }, `${m.name}’s free session used. Fresh card started.`);
+  if (t === "tonight") act({ type: "rosterOne", name: m.name, level: m.level || "" }, `${m.name} added to tonight’s list`).then(renderMembers);
+});
+$("mFind").oninput = renderMembers;
+$("mRefresh").onclick = loadMembers;
 
 const RESET_BTN = '<button class="btn pink sm" id="reset" type="button">End session</button>';
 $("resetZone").innerHTML = RESET_BTN;

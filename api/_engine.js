@@ -1,10 +1,11 @@
+const M = require("./_match");
 // Queue rules engine. Pure functions on a plain state object, shared by every API call.
 const MAX_LOG = 150;
 
 function fresh() {
   return {
     v: 0, updatedAt: Date.now(), nightTitle: "Open Play Night",
-    format: 2, rotation: "winstay", maxWins: 2,
+    format: 2, rotation: "winstay", maxWins: 2, match: "smart",
     players: {}, queue: [], bench: [], games: 0, nextId: 1, durSum: 0, durN: 0,
     fee: 0, pay: {}, fawran: "",
     courts: [1, 2, 3].map(id => ({ id, teams: null, start: null, stayers: null, streak: 0 })),
@@ -28,7 +29,6 @@ function newPlayer(S, name) {
   return (S.players[id] = { id, name, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false });
 }
 
-const LEVELS = ["new", "social", "competitive"];
 // Public check-in only works for names the host has put on tonight's list.
 function addPlayer(S, rawName, level, fromHost) {
   const name = clean(rawName);
@@ -39,7 +39,7 @@ function addPlayer(S, rawName, level, fromHost) {
   if (S.queue.includes(p.id) || busy(S).has(p.id)) return p; // already in, just return them
   S.bench = S.bench.filter(id => id !== p.id);
   p.in = true;
-  if (LEVELS.includes(level)) p.level = level;
+  const lv = M.normLevel(level); if (lv && (!p.level || !fromHost || level)) p.level = lv;
   S.queue.push(p.id);
   log(S, `${p.name} checked in`);
   return p;
@@ -50,10 +50,23 @@ function fillCourt(S, c) {
   const need = S.format * 2, stay = c.stayers || [];
   const take = need - stay.length;
   if (S.queue.length < take) return;
-  const incoming = S.queue.splice(0, take);
-  c.teams = stay.length ? [stay, incoming] : [incoming.slice(0, S.format), incoming.slice(S.format)];
+  // Winners stay only if there is a fair opponent; otherwise they rotate and a fresh game is built.
+  if (stay.length && S.match !== "order") {
+    const next = S.queue.find(id => (S.players[id].skips || 0) >= 1) || S.queue[0];
+    if (next && Math.abs(M.rating(S.players[next]) - M.avgOf(S, stay)) > 1.1) {
+      S.queue.push(...stay); c.stayers = null; c.streak = 0; c.lastWinners = null;
+      log(S, `Court ${c.id}: winners rotate off for a fairer match`);
+      return fillCourt(S, c);
+    }
+  }
+  const incoming = M.choose(S, c, take, stay);
+  if (!incoming || incoming.length < take) return;
+  M.markSkips(S, incoming);
+  S.queue = S.queue.filter(id => !incoming.includes(id));
+  c.teams = stay.length ? [stay, incoming] : M.split(S, incoming, S.format);
+  c.balance = M.quality(S, c.teams);
   c.stayers = null; c.start = Date.now();
-  log(S, `Court ${c.id}: ${names(S, c.teams[0])} vs ${names(S, c.teams[1])}`);
+  log(S, `Court ${c.id}: ${names(S, c.teams[0])} vs ${names(S, c.teams[1])}${S.match !== "order" ? ` (${c.balance} match)` : ""}`);
 }
 
 function court(S, id) {
@@ -73,6 +86,9 @@ const actions = {
   },
   // host
   add: (S, a) => ({ player: addPlayer(S, a.name, a.level, true) }),
+  rosterOne: (S, a) => { const n = clean(a.name); if (n.length < 2) throw new Error("Name is too short."); const p = findByName(S, n) || newPlayer(S, n); const lv = M.normLevel(a.level); if (lv) p.level = lv; return { id: p.id }; },
+  setLevel: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.level = M.normLevel(a.level) || null; },
+  courtLevel: (S, a) => { const c = court(S, a.court); c.level = ["beginner", "intermediate", "advanced"].includes(a.level) ? a.level : "any"; },
   // Roster: names allowed to check in. One per line or comma separated.
   roster: (S, a) => {
     const list = String(a.names || "").split(/[\n,;]+/).map(clean).filter(n => n.length >= 2);
@@ -157,6 +173,7 @@ const actions = {
   },
   settings: (S, a) => {
     if (a.format && !S.courts.some(c => c.teams)) S.format = Number(a.format) === 1 ? 1 : 2;
+    if (a.match) S.match = ["order", "smart", "levels"].includes(a.match) ? a.match : "smart";
     if (a.rotation) S.rotation = a.rotation === "all" ? "all" : "winstay";
     if (a.maxWins) S.maxWins = Math.min(5, Math.max(1, Number(a.maxWins)));
     if (typeof a.nightTitle === "string") S.nightTitle = clean(a.nightTitle) || S.nightTitle;
@@ -165,8 +182,8 @@ const actions = {
   reset: (S, a) => {
     const n = fresh();
     if (!a.clearRoster) Object.values(S.players).forEach(p => { n.players[p.id] = { id: p.id, name: p.name, level: p.level, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false }; });
-    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins;
-    n.courts = S.courts.map(c => ({ id: c.id, teams: null, start: null, stayers: null, streak: 0 }));
+    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart";
+    n.courts = S.courts.map(c => ({ id: c.id, teams: null, start: null, stayers: null, streak: 0, level: c.level || "any" }));
     return n;
   },
 };

@@ -77,10 +77,10 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
       <input id="name" placeholder="Your name (e.g. Aisha K.)" maxlength="24" required>
       <button class="btn lime" type="submit">Join the queue</button>
       <fieldset class="levels">
-        <legend>How do you play? <span>(helps captains mix games)</span></legend>
-        <label><input type="radio" name="level" value="new"><span data-ic="sprout">New</span></label>
-        <label><input type="radio" name="level" value="social" checked><span data-ic="ring">Social</span></label>
-        <label><input type="radio" name="level" value="competitive"><span data-ic="flame">Competitive</span></label>
+        <legend>Your level <span>(we use it to build fair games)</span></legend>
+        <label><input type="radio" name="level" value="beginner"><span data-ic="sprout">Beginner</span></label>
+        <label><input type="radio" name="level" value="intermediate" checked><span data-ic="ring">Intermediate</span></label>
+        <label><input type="radio" name="level" value="advanced"><span data-ic="flame">Advanced</span></label>
       </fieldset>
     </form>
     <p class="err" id="err" hidden></p>
@@ -126,7 +126,7 @@ function buzz() {
       o.connect(g).connect(A.destination); o.start(A.currentTime + t); o.stop(A.currentTime + t + .55); });
   } catch {}
 }
-const LV = { new: DD.icon("sprout", 14), social: DD.icon("ring", 14), competitive: DD.icon("flame", 14) };
+const LV = { beginner: DD.icon("sprout", 14), intermediate: DD.icon("ring", 14), advanced: DD.icon("flame", 14), new: DD.icon("sprout", 14), social: DD.icon("ring", 14), competitive: DD.icon("flame", 14) };
 const decorate = () => document.querySelectorAll("[data-ic]:not([data-done])").forEach(el => { el.dataset.done = 1; el.insertAdjacentHTML("afterbegin", DD.icon(el.dataset.ic, 15) + " "); });
 decorate();
 function eta(pos) {

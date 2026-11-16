@@ -51,4 +51,15 @@ async function addHall(entry) {
   await redis(["SET", HALL, JSON.stringify(h)]);
 }
 
-module.exports = { load, save, withLock, hasDb, loadHall, addHall };
+// Generic JSON documents (members database, etc.)
+async function getDoc(key, fallback) {
+  if (!hasDb()) return mem[key] ?? fallback;
+  const raw = await redis(["GET", "dinkin:" + key]);
+  return raw ? JSON.parse(raw) : fallback;
+}
+async function setDoc(key, value) {
+  if (!hasDb()) { mem[key] = value; return; }
+  await redis(["SET", "dinkin:" + key, JSON.stringify(value)]);
+}
+
+module.exports = { load, save, withLock, hasDb, loadHall, addHall, getDoc, setDoc };

@@ -34,3 +34,26 @@ poster QR code (which points to `/loyalty`) then lead straight to the form.
 ## Running the card
 The response sheet has three extra columns: **Member no.**, **Card issued** (tick box) and **Stamps**.
 Write the member number on the card when you hand it over. Stamp the circle and write the date each paid session.
+
+---
+
+# Connect your form to the host console (members database)
+
+Every sign-up appears in **Host console → Glaze Card members**, where you give out cards, stamp sessions and redeem free games.
+
+1. **Vercel** → Settings → Environment Variables → add `MEMBERS_SECRET` with the secret you were given → **Redeploy**.
+2. Open https://script.google.com → **New project** → paste `GlazeCardSync.gs`.
+3. Replace `PASTE_SECRET_HERE` with the same secret. Save.
+4. Choose **setup** in the toolbar → **Run** → allow the permissions.
+
+`setup` does three things:
+- sets the form's confirmation message ("You can collect your card in person at any Dinkin' Donut session…")
+- turns on automatic sync for every new sign-up
+- sends everyone who has already signed up
+
+Run `syncAll` any time to resend everything. Members are matched by phone number, so nobody is duplicated.
+
+## At the check-in table
+- **Cards to hand out** lists people who signed up but have no card yet. Tap **Give card**, then write the number shown (#001, #002…) on the card.
+- Tap a circle to stamp a session. When six are filled, **FREE** lights up. Tap it when they use their free session and the card starts again.
+- **Add to tonight** puts a member on tonight's list with their level already set.

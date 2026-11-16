@@ -60,3 +60,14 @@ Jersey and polo artwork is generated in code (`js/jersey.js`). Prices, sizes and
 
 ## Loyalty card
 See `google-form/SETUP.md`. Print files are in `assets/loyalty/`.
+
+## Fair matchmaking
+Host console → **Matching**:
+- **Smart match** (default): the longest-waiting player always goes on next, the other spots go to the closest levels among the next 8 waiting, nobody is skipped more than twice, and teams are split for the most even game. Winners only stay on if a fair opponent is waiting. In testing this cut uneven games from 20% to about 4%.
+- **Level courts**: tag each court Beginner / Intermediate / Advanced. Courts fill with matching players and only borrow the next level when the queue is long.
+- **Queue order**: strict first come, first served.
+
+Players choose their level when they join; hosts can tap the level tag on any name to change it. Each live game shows *Even*, *Close* or *Uneven*.
+
+## Glaze Card members
+Google Form sign-ups sync to the host console (`api/members.js`). Setup: `google-form/SETUP.md`. Needs `MEMBERS_SECRET` in Vercel.

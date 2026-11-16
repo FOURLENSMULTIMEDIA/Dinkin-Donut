@@ -14,7 +14,7 @@ window.CLUB = {
   currency: "QAR",
 
   // Glaze Card loyalty sign-up (Google Form short link, see google-form/SETUP.md)
-  loyaltyFormUrl: "",
+  loyaltyFormUrl: "https://docs.google.com/forms/d/1TqgQPkL9SCaWjwWpEvg3VU1uV5ERvEHyLesmacjYezY/viewform",
 
   // DUPR-rated games are booked on Reclub
   reclubUrl: "",                       // your club page, e.g. "https://reclub.co/clubs/dinkin-donut"
