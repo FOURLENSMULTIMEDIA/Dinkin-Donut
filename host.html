@@ -181,6 +181,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
   <div class="bar">
     <label for="title">Night</label><input id="title" style="width:200px">
     <label for="format">Format</label><select id="format"><option value="2">Doubles</option><option value="1">Singles</option></select>
+    <label class="row muted" style="gap:6px"><input type="checkbox" id="announce"> Announce games</label>
     <label class="row muted autop" style="gap:6px"><input type="checkbox" id="autopilot"> <b>Autopilot</b></label>
     <label for="gameLimit">Games each</label><select id="gameLimit"><option value="auto">Auto</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="0">No limit</option></select>
     <span class="sharechip" id="shareChip"></span>
@@ -279,6 +280,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
   </section>
 </main>
 
+<script src="/js/announce.js"></script>
 <script src="/js/qrcode.js"></script>
 <script src="/js/common.js"></script>
 <script>
@@ -344,7 +346,8 @@ function render() {
   $("qinfo").textContent = S.upNext ? "Up next highlighted" : "";
 
   // Preserve typed scores across re-renders
-  const scores = {}; document.querySelectorAll(".score").forEach(i => scores[i.id] = i.value);
+  // Keep typed scores only for the same game (court + start time), so a new game always starts at blank
+  const scores = {}; document.querySelectorAll(".score").forEach(i => scores[i.id + "@" + i.dataset.game] = i.value);
   $("courts").innerHTML = S.courts.map(c => {
     if (!c.teams) {
       const short = need - (c.stayers ? c.stayers.length : 0) - S.queue.length;
@@ -353,9 +356,9 @@ function render() {
         <div class="row"><button class="btn pink sm" data-a="fill" data-c="${c.id}" ${short > 0 ? "disabled" : ""}>Start game</button>${short > 0 ? `<span class="muted">Need ${short} more</span>` : ""}
         <button class="btn ghost sm" data-a="removeCourt" data-c="${c.id}" style="margin-left:auto">Remove court</button></div></div>`;
     }
-    const t = k => `<div class="team"><span class="nm">${c.teams[k].map(n).join(" &amp; ")}</span><input class="score tabnum" id="s${c.id}-${k}" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="0" aria-label="Points for ${c.teams[k].map(id => DD.esc(S.players[id]?.name)).join(" and ")}" value="${scores["s" + c.id + "-" + k] || ""}"></div>`;
+    const t = k => `<div class="team"><span class="nm">${c.teams[k].map(n).join(" &amp; ")}</span><input class="score tabnum" id="s${c.id}-${k}" data-game="${c.start}" inputmode="numeric" pattern="[0-9]*" maxlength="2" placeholder="0" aria-label="Points for ${c.teams[k].map(id => DD.esc(S.players[id]?.name)).join(" and ")}" value="${scores["s" + c.id + "-" + k + "@" + c.start] || ""}"></div>`;
     return `<div class="ct"><h3>Court ${c.id}<span class="row" style="gap:6px">${c.balance && S.match !== "order" ? `<span class="bal ${c.balance}">${{ even: "Even match", close: "Close match", uneven: "Uneven" }[c.balance]}</span>` : ""}<span class="tabnum" data-start="${c.start}">${DD.clock(c.start)}</span></span></h3>${t(0)}<div class="vs">VS</div>${t(1)}
-      <div class="row"><button class="btn lime sm" data-a="score" data-c="${c.id}">Finish · save score</button><button class="btn ghost sm" data-a="cancel" data-c="${c.id}">Cancel game</button>${c.streak ? `<span class="muted" style="color:inherit;opacity:.8">Winners on ${c.streak} win${c.streak > 1 ? "s" : ""}</span>` : ""}</div></div>`;
+      <div class="row"><button class="btn lime sm" data-a="score" data-c="${c.id}">Finish · save score</button><button class="btn ghost sm" data-call="${c.id}" title="Announce this court again">Call again</button><button class="btn ghost sm" data-a="cancel" data-c="${c.id}">Cancel game</button>${c.streak ? `<span class="muted" style="color:inherit;opacity:.8">Winners on ${c.streak} win${c.streak > 1 ? "s" : ""}</span>` : ""}</div></div>`;
   }).join("");
 
   $("queue").innerHTML = S.queue.length ? S.queue.map((id, i) => `<li class="${(S.upNext ? S.upNext.teams.flat().includes(id) : i < need) ? "next" : ""}"><span class="n">${i + 1}</span><span class="nm">${n(id)} <span class="muted">${S.players[id].w}–${S.players[id].l}</span></span>
@@ -364,6 +367,7 @@ function render() {
     : '<li class="muted">Queue is empty. Players join by scanning the QR code.</li>';
   $("upNext").innerHTML = upNextCard(S);
   $("doneList").innerHTML = (S.done || []).length ? `<p class="muted" style="margin:8px 0 6px">Done for tonight (${S.done.length}). They get a bonus game if courts would otherwise sit empty.</p><div class="row">${S.done.map(id => `<span class="chip">${DD.esc(S.players[id]?.name)} · ${(S.players[id]?.w || 0) + (S.players[id]?.l || 0)}</span>`).join("")}</div>` : "";
+  announceNew();
   renderRoster(); renderPay();
   if (document.activeElement !== $("requirePin")) $("requirePin").checked = S.requirePin !== false;
   if (document.activeElement !== $("gameLimit")) $("gameLimit").value = String(S.gameLimit ?? "auto");
@@ -379,7 +383,7 @@ function render() {
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-a]"); if (!b) return;
   const a = { type: b.dataset.a, court: b.dataset.c, id: b.dataset.id, dir: b.dataset.d, team: b.dataset.t };
-  if (a.type === "score") { a.a = $(`s${a.court}-0`).value; a.b = $(`s${a.court}-1`).value; }
+  if (a.type === "score") { a.a = $(`s${a.court}-0`).value; a.b = $(`s${a.court}-1`).value; return act(a, `Court ${a.court}: ${a.a}–${a.b} saved`).then(() => { if (!document.querySelector(".toast.bad")) [0, 1].forEach(k => { const i = $(`s${a.court}-${k}`); if (i && i.dataset.game !== String(S.courts.find(c => c.id === +a.court)?.start)) i.value = ""; }); }); }
   act(a);
 });
 $("addCourt").onclick = () => act({ type: "addCourt" }, "Court added");
@@ -575,6 +579,17 @@ $("passForm").onsubmit = e => {
     .then(r => { if (r) { $("gpName").value = ""; $("gpPhone").value = ""; $("gpAmt").value = S.fee || ""; $("gpName").focus(); } });
 };
 $("gpName").addEventListener("change", () => { const p = Object.values(S.players).find(x => x.name.toLowerCase() === $("gpName").value.trim().toLowerCase()); if (p && p.phone && !$("gpPhone").value) $("gpPhone").value = p.phone; });
+// Announcements from the console (for nights without a TV)
+let sayOn = false, lastStarts = null; try { sayOn = localStorage.getItem("dd-host-voice") === "on"; } catch {}
+$("announce").checked = sayOn;
+$("announce").onchange = e => { sayOn = e.target.checked; try { localStorage.setItem("dd-host-voice", sayOn ? "on" : "off"); } catch {} if (sayOn) { Announcer.unlock(); Announcer.test(); } };
+const names = ids => ids.map(id => S.players[id]?.name || "");
+function announceNew() {
+  const now = Object.fromEntries(S.courts.map(c => [c.id, c.teams ? c.start : null]));
+  if (lastStarts && sayOn) { let k = 0; S.courts.forEach(c => { if (c.teams && now[c.id] !== lastStarts[c.id]) setTimeout(() => Announcer.call(c.id, names(c.teams[0]), names(c.teams[1])), k++ * 9000); }); }
+  lastStarts = now;
+}
+document.addEventListener("click", e => { const b = e.target.closest("[data-call]"); if (!b) return; const c = S.courts.find(x => x.id === +b.dataset.call); if (c && c.teams) { Announcer.unlock(); Announcer.call(c.id, names(c.teams[0]), names(c.teams[1])); } });
 $("autopilot").onchange = e => act({ type: "settings", autopilot: e.target.checked }, e.target.checked ? "Autopilot on: courts fill themselves" : "Autopilot off: start games by hand");
 $("gameLimit").onchange = e => act({ type: "settings", gameLimit: e.target.value }, e.target.value === "auto" ? "Games each: worked out from who’s here" : e.target.value === "0" ? "No game limit" : `Everyone gets ${e.target.value} games`);
 $("sessionEnd").onchange = e => { const [h, m] = e.target.value.split(":").map(Number); act({ type: "settings", sessionEnd: (h * 60 + m) || 1440 }, "End time saved"); };
