@@ -116,5 +116,6 @@ DD.live(S => {
   $("top").innerHTML = DD.ranked(S).filter(p => p.w + p.l).slice(0, 5).map((p, i) => `<li><span class="n">${i + 1}</span>${DD.esc(p.name)}<span class="rec">${p.w}W ${p.l}L</span></li>`).join("") || "<li>First result coming soon</li>";
 }, 3000);
 </script>
+<script src="/js/social.js" defer></script>
 </body>
 </html>
