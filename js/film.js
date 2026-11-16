@@ -44,7 +44,7 @@
       $("fName").textContent = "Made for you.";
       later(function () { f.style.transform = "perspective(900px) rotateY(90deg)"; }, 1200);
       later(function () {
-        var name = "AISHA", n = 0, num = 0;
+        var name = "ANGEL", n = 0, num = 0;
         f.innerHTML = J.render({ way: "midnight", side: "back", name: "", num: "" });
         f.style.transform = "perspective(900px) rotateY(0)";
         var iv = setInterval(function () {
@@ -60,7 +60,7 @@
       var row = [["glaze", "DREW", "10", "Glaze", "Home"], ["midnight", "ANGEL", "23", "Midnight", "Tournament"], ["court", "ARAYKOH", "4", "Court", "Away"]];
       $("fRow").innerHTML = row.map(function (r) { return "<div>" + J.render({ way: r[0], side: "back", name: r[1], num: r[2] }) + "<small>" + r[4] + "</small><b>" + r[3] + "</b></div>"; }).join("");
     }
-    if (i === 4) $("fPolo").innerHTML = J.renderPolo({ way: "night", side: "front" }) + J.renderPolo({ way: "clubhouse", side: "back", name: "AISHA" });
+    if (i === 4) $("fPolo").innerHTML = J.renderPolo({ way: "night", side: "front" }) + J.renderPolo({ way: "clubhouse", side: "back", name: "ANGEL" });
   }
 
   function tick(now) {
@@ -73,14 +73,15 @@
     raf = requestAnimationFrame(tick);
   }
   function syncMusic() {
-    if (muted || !playing) { music.pause(); return; }
+    if (muted || !playing) { music.pause(); window.SiteSound && SiteSound.duck(false); return; }
     try { music.currentTime = Math.min(elapsed / 1000, 21.5); } catch (e) {}
+    window.SiteSound && SiteSound.duck(true);
     var p = music.play(); if (p && p.catch) p.catch(function () {});
   }
   function play() { if (playing) return; playing = true; $("play").hidden = true; t0 = performance.now() - elapsed; cur = -1; raf = requestAnimationFrame(tick); paint(); syncMusic(); }
   // Paused mid-shot: show the finished frame of that shot, never a half-turned or empty stage.
   function settle(i) {
-    if (i === 2) { var f = $("fJ"); f.style.transform = "none"; f.innerHTML = J.render({ way: "midnight", side: "back", name: "AISHA", num: "7" }); $("fName").textContent = "Your name. Your number."; }
+    if (i === 2) { var f = $("fJ"); f.style.transform = "none"; f.innerHTML = J.render({ way: "midnight", side: "back", name: "ANGEL", num: "7" }); $("fName").textContent = "Your name. Your number."; }
     if (i === 0) $("t0").textContent = "Courts are lit.";
   }
   function pause() { playing = false; cancelAnimationFrame(raf); clear(); settle(cur); paint(); music.pause(); }

@@ -147,7 +147,7 @@ const TPL = {
     caption: v => `That’s a wrap on ${v.title}. 🍩\n\n🥇 ${v.g1 || "-"}\n🥈 ${v.g2 || "-"}\n🥉 ${v.g3 || "-"}\n\n${[v.games && v.games + " games", v.players && v.players + " Dinkers"].filter(Boolean).join(", ")} on court tonight. Thank you, Dinkers. See you next session.\n\nStay glazed.\n\n${TAGS} #HallOfGlaze`,
   },
   jersey: {
-    fields: () => [["name", "Name on back", "AISHA"], ["num", "Jersey number", "7"], ["way", "Colourway (glaze, court, midnight)", "midnight"], ["price", "Price", money(window.JERSEY?.price || 165)]],
+    fields: () => [["name", "Name on back", "ANGEL"], ["num", "Jersey number", "7"], ["way", "Colourway (glaze, court, midnight)", "midnight"], ["price", "Price", money(window.JERSEY?.price || 165)]],
     draw: async v => {
       rr(0, 0, 1080, 1350, 0, COL.glaze); brand(false);
       const j = await svgImg(Jersey.render({ way: (v.way || "midnight").toLowerCase().trim(), side: "back", name: v.name, num: v.num, print: v.num ? "full" : "name" }));

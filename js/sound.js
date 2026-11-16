@@ -1,7 +1,7 @@
-// Ambient club loop, synthesised in the browser (no audio files, no licensing).
-// Off by default; browsers only allow audio after a user gesture.
+// Soft background music bed, synthesised in the browser (no files, no licensing, seamless loop).
+// On by default at a low level; starts on the visitor's first tap or click (browsers block sound before that).
 (function () {
-  var KEY = "dd-sound", ctx, master, timer, step = 0, nextT = 0, on = false;
+  var KEY = "dd-sound", ctx, master, timer, step = 0, nextT = 0, on = false, ducked = false, LEVEL = 0.22;
   var BPM = 84, SPB = 60 / BPM / 2; // eighth notes
   // Fmaj7 · Em7 · Dm7 · Cmaj7, two bars each
   var CHORDS = [[53, 57, 60, 64], [52, 55, 59, 62], [50, 53, 57, 60], [48, 52, 55, 59]];
@@ -23,8 +23,8 @@
       [-6, 6].forEach(function (det) {
         var o = ctx.createOscillator(), g = ctx.createGain();
         o.type = "triangle"; o.frequency.value = hz(m); o.detune.value = det;
-        g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.045, t + 0.6); g.gain.linearRampToValueAtTime(0.0001, t + dur);
-        o.connect(g).connect(f); o.start(t); o.stop(t + dur + 0.05);
+        g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.04, t + 1.4); g.gain.linearRampToValueAtTime(0.0001, t + dur + 0.6);
+        o.connect(g).connect(f); o.start(t); o.stop(t + dur + 0.7);
       });
     });
   }
@@ -47,11 +47,8 @@
       var bar = Math.floor(step / 8), beat = step % 8, ci = Math.floor(bar / 2) % 4;
       if (step % 16 === 0) { pad(CHORDS[ci], nextT, SPB * 16); }
       if (beat === 0 || beat === 3 && bar % 2) bass(BASS[ci], nextT);
-      if (beat === 0 || beat === 5) kick(nextT);
-      if (beat === 4) snap(nextT);
-      hat(nextT + (beat % 2 ? SPB * 0.12 : 0), beat % 2 ? 0.025 : 0.04); // swung
-      if (beat % 2 === 0 && Math.random() < 0.13) pock(nextT + SPB * 0.5);
-      if (beat % 2 === 0 && Math.random() < 0.05) pock(nextT + SPB * 1.1);
+      if (beat % 2 === 0) hat(nextT, 0.012);
+      if (beat === 0 && Math.random() < 0.18) pock(nextT + SPB * 0.5);
       nextT += SPB; step++;
     }
   }
@@ -64,7 +61,7 @@
       NOISE = noise(1);
     }
     ctx.resume(); nextT = ctx.currentTime + 0.1;
-    master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setTargetAtTime(0.5, ctx.currentTime, 0.8);
+    master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setTargetAtTime(ducked ? 0 : LEVEL, ctx.currentTime, 1.2);
     clearInterval(timer); timer = setInterval(schedule, 60); on = true; paint();
   }
   function stop() {
@@ -74,19 +71,24 @@
     setTimeout(function () { if (!on) { clearInterval(timer); ctx.suspend(); } }, 900);
   }
   function save(v) { try { localStorage.setItem(KEY, v ? "on" : "off"); } catch (e) {} }
-  function wanted() { try { return localStorage.getItem(KEY) === "on"; } catch (e) { return false; } }
+  function wanted() { try { return localStorage.getItem(KEY) !== "off"; } catch (e) { return true; } }
 
   var btn;
   var ICON_ON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
   var ICON_OFF = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="m16 9.5 5 5M21 9.5l-5 5"/></svg>';
   function paint() { if (!btn) return; btn.innerHTML = (on ? ICON_ON : ICON_OFF) + '<span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>'; btn.setAttribute("aria-pressed", on); btn.title = on ? "Mute club sounds" : "Play club sounds"; btn.classList.toggle("playing", on); }
 
+  // Films with their own soundtrack fade the bed out, then back in
+  window.SiteSound = { duck: function (v) { ducked = v; if (ctx && master) master.gain.setTargetAtTime(v ? 0 : (on ? LEVEL : 0), ctx.currentTime, 0.4); } };
   document.addEventListener("DOMContentLoaded", function () {
     var nav = document.querySelector(".nav .wrap"); if (!nav || document.body.dataset.nosound !== undefined) return;
     btn = document.createElement("button"); btn.type = "button"; btn.className = "soundbtn"; btn.setAttribute("aria-label", "Club sounds");
     var theme = nav.querySelector(".theme"); nav.insertBefore(btn, theme ? theme.nextSibling : nav.querySelector(".btn, .chip"));
     paint();
     btn.addEventListener("click", function (e) { e.stopPropagation(); if (on) { stop(); save(false); } else { start(); save(true); } });
-    if (wanted()) document.addEventListener("pointerdown", function once() { document.removeEventListener("pointerdown", once); if (!on && wanted()) start(); });
+    if (wanted()) {
+      var first = function (e) { if (e.target.closest && e.target.closest(".soundbtn")) return; ["pointerdown", "keydown"].forEach(function (t) { document.removeEventListener(t, first, true); }); if (!on && wanted()) start(); };
+      ["pointerdown", "keydown"].forEach(function (t) { document.addEventListener(t, first, true); });
+    }
   });
 })();
