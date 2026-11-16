@@ -68,7 +68,13 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .passform .methods input:checked+span{background:#FFF6EA;color:#3B2416;border-color:#FFF6EA}
 @media (max-width:600px){.passgrid{grid-template-columns:1fr 1fr}.passgrid input:first-child{grid-column:1/-1}}
 .passcard{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;border:2px dashed var(--glaze);border-radius:18px;padding:12px 14px;background:var(--surface)}
-.passcard .digits{display:flex;gap:6px}
+.passcard .digits{display:flex;gap:6px;margin-bottom:6px}
+.passqr{width:140px;height:140px;background:#FFF6EA;border-radius:14px;padding:8px}.passqr svg{width:100%;height:100%}
+@media (max-width:600px){.passcard{grid-template-columns:auto 1fr}.passcard > .row{grid-column:1/-1;flex-direction:row!important}}
+.qrfull{position:fixed;inset:0;z-index:70;background:rgba(26,17,11,.75);display:grid;place-items:center;padding:20px}
+.qrbox{background:#FFF6EA;color:#3B2416;border-radius:28px;padding:28px;text-align:center;display:grid;gap:12px;justify-items:center;max-width:420px;width:100%}
+.qrbox h2{font-size:34px}.qrbox #bigQr{width:min(320px,70vw);aspect-ratio:1}.qrbox #bigQr svg{width:100%;height:100%}
+.qrbox p{margin:0;font-size:18px}.qrbox p b{font:700 26px var(--display);letter-spacing:.2em}
 .passcard .digits i{width:40px;height:48px;border-radius:12px;background:#3B2416;color:#D7F03C;display:grid;place-items:center;font:700 26px var(--display);font-style:normal}
 .passcard small{color:var(--muted)}
 .pinchip{font:700 12px var(--body);letter-spacing:.12em;background:#3B2416;color:#D7F03C;border-radius:8px;padding:4px 8px;white-space:nowrap}
@@ -251,6 +257,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
   </section>
 </main>
 
+<script src="/js/qrcode.js"></script>
 <script src="/js/common.js"></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -479,6 +486,12 @@ $("mRefresh").onclick = loadMembers;
 
 
 // Glaze Pass
+function bigQr(name, pin, url) {
+  const d = document.createElement("div"); d.className = "qrfull"; d.setAttribute("role", "dialog");
+  d.innerHTML = `<div class="qrbox"><div class="eyebrow">Scan with your phone camera</div><h2>${DD.esc(name)}</h2><div id="bigQr"></div><p>PIN <b>${pin}</b></p><button class="btn pink" type="button">Done</button></div>`;
+  document.body.appendChild(d); DD.qr(d.querySelector("#bigQr"), url, 320);
+  d.onclick = e => { if (e.target === d || e.target.tagName === "BUTTON") d.remove(); };
+}
 function waLink(phone, name, pin, amount) {
   let d = String(phone || "").replace(/\D/g, ""); if (d.length === 8) d = "974" + d;
   const link = `${location.origin}/queue?n=${encodeURIComponent(name)}&p=${pin}`;
@@ -487,9 +500,13 @@ function waLink(phone, name, pin, amount) {
 }
 function showPass(r) {
   const c = $("passCard"); c.hidden = false;
-  c.innerHTML = `<div class="digits" aria-label="PIN ${r.pin}">${r.pin.split("").map(d => `<i>${d}</i>`).join("")}</div>
-    <div><b>${DD.esc(r.name)}</b><br><small>${r.sent ? "Sent automatically on WhatsApp" : r.auto ? "Automatic send failed, so WhatsApp opened instead. Tap Send." : "WhatsApp opened with the PIN ready. Tap Send."}${r.waError ? " (auto-send failed: " + DD.esc(r.waError) + ")" : ""}</small></div>
-    <a class="btn ghost sm" href="${r.link}" target="_blank" rel="noopener">Send again</a>`;
+  const join = `${location.origin}/queue?n=${encodeURIComponent(r.name)}&p=${r.pin}`;
+  const how = r.sent ? (r.free ? "Sent free on WhatsApp" : "Sent automatically on WhatsApp") : r.auto ? "Automatic send failed. Let them scan the code, or tap WhatsApp." : "Let them scan the code to join, or send it on WhatsApp.";
+  c.innerHTML = `<div class="passqr" id="passQr" aria-label="Scan to join as ${DD.esc(r.name)}"></div>
+    <div><div class="digits" aria-label="PIN ${r.pin}">${r.pin.split("").map(d => `<i>${d}</i>`).join("")}</div><b>${DD.esc(r.name)}</b><br><small>${how}${r.waError ? " (" + DD.esc(r.waError) + ")" : ""}</small></div>
+    <div class="row" style="flex-direction:column;align-items:stretch"><a class="btn ghost sm" href="${r.link}" target="_blank" rel="noopener">WhatsApp</a><button class="btn ghost sm" type="button" id="passBig">Full screen</button></div>`;
+  DD.qr($("passQr"), join, 140);
+  $("passBig").onclick = () => bigQr(r.name, r.pin, join);
 }
 async function issuePass(action) {
   // Open the WhatsApp tab inside the tap, so phones don't block it as a pop-up

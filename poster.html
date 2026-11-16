@@ -23,6 +23,8 @@ body{background:#ddd}
 .tools{text-align:center;margin:20px}
 @media print{body{background:none}.sheet{margin:0;box-shadow:none}.tools{display:none}}
 @media (max-width:820px){.sheet{transform:scale(.45);transform-origin:top left;margin:0}}
+.sheet2{background:#FF5FA2}.sheet2 .eyebrow,.sheet2 h1,.sheet2 p,.sheet2 small{color:#3B2416}
+@media print{.sheet{page-break-after:always}}
 </style>
 </head>
 <body>
@@ -34,8 +36,17 @@ body{background:#ddd}
   <p>Scan to join the queue.<br>We’ll call you to your court.</p>
   <small id="url"></small>
 </div>
+<div class="sheet sheet2">
+  <img src="/assets/logo.svg" alt="">
+  <div><div class="eyebrow">Get your queue PIN on WhatsApp</div><h1 style="font-size:24mm">Say hi first.</h1></div>
+  <div class="qr"><div id="qr2"></div></div>
+  <p>Scan, send “Hi”, then pay.<br>Your PIN arrives in the same chat.</p>
+  <small id="url2"></small>
+</div>
+<script src="/js/config.js"></script>
 <script src="/js/qrcode.js"></script>
 <script src="/js/common.js"></script>
-<script>DD.qr(document.getElementById("qr"), DD.queueUrl(), 400); document.getElementById("url").textContent = location.host + "/queue · Stay glazed.";</script>
+<script>DD.qr(document.getElementById("qr"), DD.queueUrl(), 400); document.getElementById("url").textContent = location.host + "/queue · Stay glazed.";
+const WA = (window.CLUB.whatsappNumber || "97430763431").replace(/\D/g, ""); DD.qr(document.getElementById("qr2"), `https://wa.me/${WA}?text=${encodeURIComponent("Hi Dinkin' Donut")}`, 400); document.getElementById("url2").textContent = "WhatsApp +" + WA.replace(/^974/, "974 ").replace(/(\d{4})(\d{4})$/, "$1 $2");</script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 // Club assistant on WhatsApp. Meta calls this webhook for every message sent to the club number.
 // Players can ask for their queue position, resend their PIN, take a break, get back in line,
 // see who is on court, or ask how to pay. Replies are plain, friendly and short.
-const { load, save, withLock } = require("./_store");
+const { load, save, withLock, getDoc, setDoc } = require("./_store");
 const { fresh, apply } = require("./_engine");
 const { sendText, toIntl, joinLink, configured, SITE, qar } = require("./_wa");
 
@@ -55,7 +55,8 @@ async function reply(from, text) {
     return ["*On court now*", "", ...live.map(c => `Court ${c.id}: ${names(S, c.teams[0])} vs ${names(S, c.teams[1])}`), "", `${S.queue.length} waiting. Live board: ${SITE}/queue`].join("\n");
   }
   if (what === "thanks") return "You're welcome. See you on court.";
-  if (what === "help") return p ? `Hi ${p.name}.\n\n` + HELP : HELP;
+  if (what === "help" && !p) return "Hi, welcome to Dinkin' Donut Pickleball Club. Pay at the check-in table and your queue PIN will arrive here.\n\n" + HELP;
+  if (what === "help") return `Hi ${p.name}.\n\n` + HELP;
 
   if (!p || !p.pin) return "We couldn't find a pass for this number tonight. Pay at the check-in table and we'll send your queue PIN here.\n\nReply *PAY* for payment details.";
 
@@ -95,6 +96,13 @@ module.exports = async (req, res) => {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
     const msgs = (body.entry || []).flatMap(e => (e.changes || []).flatMap(c => c.value?.messages || []));
     const out = [];
+    if (msgs.length) {
+      // Remember who messaged us: replies within 24 hours are free, so PINs go out as normal messages
+      const seen = await getDoc("wa-seen", {});
+      msgs.forEach(m => { seen[m.from.replace(/\D/g, "").slice(-8)] = Date.now(); });
+      const cutoff = Date.now() - 864e5; Object.keys(seen).forEach(k => { if (seen[k] < cutoff) delete seen[k]; });
+      await setDoc("wa-seen", seen);
+    }
     for (const m of msgs) {
       const text = m.type === "text" ? m.text?.body : m.type === "button" ? m.button?.text : m.interactive?.button_reply?.title || "";
       const answer = await reply(m.from, text);

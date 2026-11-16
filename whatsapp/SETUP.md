@@ -1,5 +1,11 @@
 # WhatsApp: automatic PINs and the club assistant
 
+## Free options first
+1. **Scan to join (no WhatsApp, no setup).** After you record a payment, the console shows a QR code next to the PIN. The player scans it with their phone camera and joins in one tap. Tap **Full screen** to make it bigger.
+2. **Free automatic WhatsApp.** Print the pink **"Say hi first"** sheet from `/poster` and put it on the check-in table. Players scan it and send "Hi" to the club. When you then record their payment, the PIN is sent automatically as a reply, which Meta does not charge for (replies within 24 hours of the player's message). This needs steps 1–3, 5 and 6 below, but **not** the template in step 4. Meta's prices change from time to time; check their WhatsApp pricing page.
+
+The template (step 4) is only needed if you want PINs to reach players who have **not** messaged the club first. Those messages are charged by Meta.
+
 Once this is set up:
 - **Automatic PIN**: in the host console you type the player's name and number, press **Record & send PIN**, and the message arrives on their WhatsApp. No extra tap.
 - **Club assistant**: players message the club number and get instant replies to STATUS, PIN, COURTS, BREAK, BACK and PAY.

@@ -59,7 +59,14 @@ const sendText = (to, text) => graph({ to: toIntl(to), type: "text", text: { bod
 async function sendPass({ name, pin, phone, amount }) {
   const text = passMessage({ name, pin, amount });
   const link = `https://wa.me/${toIntl(phone)}?text=${encodeURIComponent(text)}`;
-  if (!(configured() && TEMPLATE)) return { sent: false, link, auto: false };
+  if (!configured()) return { sent: false, link, auto: false };
+  // Free route: the player messaged the club in the last 24 hours, so a normal reply is allowed and free
+  try {
+    const seen = await require("./_store").getDoc("wa-seen", {});
+    const t = seen[String(phone).replace(/\D/g, "").slice(-8)];
+    if (t && Date.now() - t < 23.5 * 36e5) { await sendText(phone, text); return { sent: true, link, auto: true, free: true }; }
+  } catch (e) { /* fall through to the template */ }
+  if (!TEMPLATE) return { sent: false, link, auto: false, needsHello: true };
   try {
     await graph({
       to: toIntl(phone), type: "template",
