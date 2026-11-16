@@ -292,6 +292,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 </main>
 
 <script src="/js/announce.js"></script>
+<script src="/js/celebrate.js"></script>
 <script src="/js/qrcode.js"></script>
 <script src="/js/common.js"></script>
 <script>
@@ -601,13 +602,16 @@ if (sayOn) document.addEventListener("pointerdown", function once() { document.r
 $("announceBtn").onclick = () => { sayOn = !sayOn; try { localStorage.setItem("dd-host-voice", sayOn ? "on" : "off"); } catch {} paintAnn(); if (sayOn) Announcer.unlock(); };
 Announcer.onStatus(s => { if (s === "no-voice") toast("This device didn’t speak. Check the volume, or try another phone or browser.", true); });
 const names = ids => ids.map(id => S.players[id]?.name || "");
-let lastMoment = null;
+let lastMoment = null, lastRes = null;
+const fxBox = (() => { const d = document.createElement("div"); d.style.cssText = "position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:340px;max-width:calc(100vw - 32px);height:230px;border-radius:24px;overflow:hidden;z-index:85;pointer-events:none;box-shadow:0 20px 50px rgba(0,0,0,.3)"; d.hidden = true; document.body.appendChild(d); return d; })();
 function showMoment(m) {
   const d = document.createElement("div"); d.className = "moment " + m.kind;
   d.innerHTML = `<i>${({ fire: "▲", upset: "★", bagel: "0", nail: "!" })[m.kind]}</i><div><b>${DD.esc(m.title)}</b><small>${DD.esc(m.line)}</small></div>`;
   document.body.appendChild(d); setTimeout(() => d.remove(), 6000);
 }
 function announceNew() {
+  if (S.lastResult && lastRes !== null && S.lastResult.t !== lastRes) { fxBox.hidden = false; celebrate(S.lastResult, { into: fxBox, hold: 2600, onDone: () => { fxBox.hidden = true; } }); }
+  lastRes = S.lastResult ? S.lastResult.t : 0;
   if (S.moment && lastMoment !== null && S.moment.t !== lastMoment) { showMoment(S.moment); if (sayOn) Announcer.say(S.moment.say); }
   lastMoment = S.moment ? S.moment.t : 0;
   const now = Object.fromEntries(S.courts.map(c => [c.id, c.teams ? c.start : null]));

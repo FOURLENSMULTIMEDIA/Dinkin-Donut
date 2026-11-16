@@ -116,6 +116,7 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
 </main>
 
 <script src="/js/common.js"></script>
+<script src="/js/celebrate.js"></script>
 <script>
 const ME_KEY = "dd-player";
 let meId = null; try { meId = localStorage.getItem(ME_KEY); } catch {}
@@ -218,7 +219,10 @@ function renderMe() {
   box.innerHTML = html;
 }
 
+let lastRes = null;
 function render() {
+  if (S.lastResult && lastRes !== null && S.lastResult.t !== lastRes && meId && S.lastResult.w.includes(meId)) { celebrate({ ...S.lastResult, wn: ["You"] }, { hold: 3000 }); buzz(); }
+  lastRes = S.lastResult ? S.lastResult.t : 0;
   { const r = $("pinRow"); if (r) r.hidden = S.requirePin === false; }
   $("nightName").textContent = S.nightTitle;
   if (meId) renderMe();

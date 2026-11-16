@@ -61,6 +61,7 @@ ol .rec{margin-left:auto;font:500 1.1vw var(--body);opacity:.8}
   </div>
 </div>
 <script src="/js/announce.js"></script>
+<script src="/js/celebrate.js"></script>
 <script src="/js/qrcode.js"></script>
 <script src="/js/common.js"></script>
 <script>
@@ -73,7 +74,7 @@ let voice = false, started = null;
 try { voice = localStorage.getItem("dd-tv-voice") === "on"; } catch {}
 const spk = $("speak");
 const paintSpk = () => { spk.textContent = voice ? "Announcements on" : "Turn on court announcements"; spk.classList.toggle("on", voice); };
-let unlocked = false, lastMom = null;
+let unlocked = false, lastMom = null, lastRes = null;
 function moment(m) {
   const d = document.createElement("div"); d.className = "mom " + m.kind;
   d.innerHTML = `<i>${({ fire: "▲", upset: "★", bagel: "0", nail: "!" })[m.kind]}</i><div><b>${DD.esc(m.title)}</b><small>${DD.esc(m.line)}</small></div>`;
@@ -93,10 +94,14 @@ function call(S, c) {
 }
 DD.live(S => {
   const now = Object.fromEntries(S.courts.map(c => [c.id, c.teams ? c.start : null]));
-  let k = 0;
-  if (S.moment && lastMom !== null && S.moment.t !== lastMom) { moment(S.moment); k = 1; }
+  // Sequence: winner reveal, then the Glaze Moment, then court calls
+  let base = 0;
+  if (S.lastResult && lastRes !== null && S.lastResult.t !== lastRes) { celebrate(S.lastResult); base = 4300; }
+  lastRes = S.lastResult ? S.lastResult.t : 0;
+  if (S.moment && lastMom !== null && S.moment.t !== lastMom) { const m = S.moment; setTimeout(() => moment(m), base); base += 6500; }
   lastMom = S.moment ? S.moment.t : 0;
-  if (started) S.courts.forEach((c, i) => { if (c.teams && now[c.id] !== started[c.id]) setTimeout(() => call(S, c), k++ * 9000); });
+  let k = 0;
+  if (started) S.courts.forEach((c, i) => { if (c.teams && now[c.id] !== started[c.id]) setTimeout(() => call(S, c), base + k++ * 9000); });
   started = now;
   $("title").textContent = S.limitNow ? `${S.nightTitle} · ${S.limitNow} games each` : S.nightTitle;
   const un = DD.upNext(S); $("tvNext").innerHTML = un ? `<div class="tvnext"><span>${un[0].map(DD.esc).join(" &amp; ")}</span><i>VS</i><span>${un[1].map(DD.esc).join(" &amp; ")}</span></div>` : "";

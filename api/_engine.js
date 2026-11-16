@@ -219,6 +219,7 @@ const actions = {
     W.forEach(id => { const p = S.players[id]; p.w++; p.streak = p.streak > 0 ? p.streak + 1 : 1; p.pf += ws; p.pa += ls; });
     L.forEach(id => { const p = S.players[id]; p.l++; p.streak = p.streak < 0 ? p.streak - 1 : -1; p.pf += ls; p.pa += ws; });
     S.games++;
+    S.lastResult = { t: Date.now(), court: c.id, w: W.slice(), l: L.slice(), wn: W.map(id => S.players[id]?.name), ln: L.map(id => S.players[id]?.name), ws, ls };
     // Glaze Moments: highlights the TV and console celebrate
     const nm = ids => ids.map(id => S.players[id]?.name).join(" and "), gap = M.avgOf(S, L) - M.avgOf(S, W);
     const hot = W.map(id => S.players[id]).find(p => p && (p.streak === 3 || p.streak === 5 || p.streak === 7));
