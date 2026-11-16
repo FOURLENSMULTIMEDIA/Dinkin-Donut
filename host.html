@@ -500,13 +500,9 @@ function waLink(phone, name, pin, amount) {
 }
 function showPass(r) {
   const c = $("passCard"); c.hidden = false;
-  const join = `${location.origin}/queue?n=${encodeURIComponent(r.name)}&p=${r.pin}`;
-  const how = r.sent ? (r.free ? "Sent free on WhatsApp" : "Sent automatically on WhatsApp") : r.auto ? "Automatic send failed. Let them scan the code, or tap WhatsApp." : "Let them scan the code to join, or send it on WhatsApp.";
-  c.innerHTML = `<div class="passqr" id="passQr" aria-label="Scan to join as ${DD.esc(r.name)}"></div>
-    <div><div class="digits" aria-label="PIN ${r.pin}">${r.pin.split("").map(d => `<i>${d}</i>`).join("")}</div><b>${DD.esc(r.name)}</b><br><small>${how}${r.waError ? " (" + DD.esc(r.waError) + ")" : ""}</small></div>
-    <div class="row" style="flex-direction:column;align-items:stretch"><a class="btn ghost sm" href="${r.link}" target="_blank" rel="noopener">WhatsApp</a><button class="btn ghost sm" type="button" id="passBig">Full screen</button></div>`;
-  DD.qr($("passQr"), join, 140);
-  $("passBig").onclick = () => bigQr(r.name, r.pin, join);
+  c.innerHTML = `<div class="digits" aria-label="PIN ${r.pin}">${r.pin.split("").map(d => `<i>${d}</i>`).join("")}</div>
+    <div><b>${DD.esc(r.name)}</b><br><small>WhatsApp opened with the PIN message ready. Tap Send.</small></div>
+    <a class="btn ghost sm" href="${r.link}" target="_blank" rel="noopener">Open WhatsApp again</a>`;
 }
 async function issuePass(action) {
   // Open the WhatsApp tab inside the tap, so phones don't block it as a pop-up
