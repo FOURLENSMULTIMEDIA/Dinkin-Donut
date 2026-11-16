@@ -4,7 +4,7 @@ Everything for the loyalty sign-up: the form, the member spreadsheet, the card a
 
 ## 1. Deploy the website first
 The script pulls the card image from the live site, so push to GitHub and let Vercel deploy.
-Check that this loads: https://dinkindonutqatar.vercel.app/assets/loyalty/form-card-preview.png
+Check that this loads: https://dinkindonut.asia/assets/loyalty/form-card-preview.png
 
 ## 2. Create the form (2 minutes)
 1. Open https://script.google.com and sign in with the club Google account.

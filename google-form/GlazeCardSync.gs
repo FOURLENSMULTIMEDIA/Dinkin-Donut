@@ -10,7 +10,7 @@
  */
 
 const FORM_ID = '1TqgQPkL9SCaWjwWpEvg3VU1uV5ERvEHyLesmacjYezY';
-const SITE = 'https://dinkindonutqatar.vercel.app';
+const SITE = 'https://dinkindonut.asia';
 const MEMBERS_SECRET = 'PASTE_SECRET_HERE';
 
 const CONFIRMATION =
