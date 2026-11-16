@@ -61,6 +61,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .warn{background:#FFE7A8;color:var(--choco);border-radius:14px;padding:12px 14px;font-weight:600}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .muted{color:var(--muted);font-size:14px}
+.annbtn{background:var(--sunk);color:var(--fg)}.annbtn.on{background:#FF5FA2;color:#fff}
 .sharechip{font:700 12px var(--body);background:var(--ink);color:var(--on-ink);border-radius:999px;padding:6px 10px;white-space:nowrap}
 .sharechip:empty{display:none}
 .team{grid-template-columns:1fr 64px!important}
@@ -181,7 +182,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
   <div class="bar">
     <label for="title">Night</label><input id="title" style="width:200px">
     <label for="format">Format</label><select id="format"><option value="2">Doubles</option><option value="1">Singles</option></select>
-    <label class="row muted" style="gap:6px"><input type="checkbox" id="announce"> Announce games</label>
+    <button type="button" class="btn sm annbtn" id="announceBtn" aria-pressed="false">Announce games: off</button><input type="checkbox" id="announce" hidden>
     <label class="row muted autop" style="gap:6px"><input type="checkbox" id="autopilot"> <b>Autopilot</b></label>
     <label for="gameLimit">Games each</label><select id="gameLimit"><option value="auto">Auto</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="0">No limit</option></select>
     <span class="sharechip" id="shareChip"></span>
@@ -582,7 +583,12 @@ $("gpName").addEventListener("change", () => { const p = Object.values(S.players
 // Announcements from the console (for nights without a TV)
 let sayOn = false, lastStarts = null; try { sayOn = localStorage.getItem("dd-host-voice") === "on"; } catch {}
 $("announce").checked = sayOn;
-$("announce").onchange = e => { sayOn = e.target.checked; try { localStorage.setItem("dd-host-voice", sayOn ? "on" : "off"); } catch {} if (sayOn) { Announcer.unlock(); Announcer.test(); } };
+const paintAnn = () => { const b = $("announceBtn"); b.textContent = sayOn ? "Announce games: on" : "Announce games: off"; b.setAttribute("aria-pressed", sayOn); b.classList.toggle("on", sayOn); };
+paintAnn();
+// After a reload, sound needs one tap: the first tap anywhere re-enables announcements
+if (sayOn) document.addEventListener("pointerdown", function once() { document.removeEventListener("pointerdown", once); Announcer.unlock(); });
+$("announceBtn").onclick = () => { sayOn = !sayOn; try { localStorage.setItem("dd-host-voice", sayOn ? "on" : "off"); } catch {} paintAnn(); if (sayOn) Announcer.unlock(); };
+Announcer.onStatus(s => { if (s === "no-voice") toast("This device didn’t speak. Check the volume, or try another phone or browser.", true); });
 const names = ids => ids.map(id => S.players[id]?.name || "");
 function announceNew() {
   const now = Object.fromEntries(S.courts.map(c => [c.id, c.teams ? c.start : null]));

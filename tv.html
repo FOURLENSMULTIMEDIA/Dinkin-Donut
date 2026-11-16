@@ -69,8 +69,9 @@ try { voice = localStorage.getItem("dd-tv-voice") === "on"; } catch {}
 const spk = $("speak");
 const paintSpk = () => { spk.textContent = voice ? "Announcements on" : "Turn on court announcements"; spk.classList.toggle("on", voice); };
 let unlocked = false;
+Announcer.onStatus(s => { if (s === "no-voice") { spk.textContent = "This screen has no voice. Use Announce games in the console."; } });
 paintSpk(); if (voice) spk.textContent = "Tap once to enable sound";
-spk.onclick = () => { if (voice && !unlocked) { unlocked = true; Announcer.unlock(); Announcer.test(); paintSpk(); return; } unlocked = true; voice = !voice; try { localStorage.setItem("dd-tv-voice", voice ? "on" : "off"); } catch {} paintSpk(); if (voice) { Announcer.unlock(); Announcer.test(); } };
+spk.onclick = () => { if (voice && !unlocked) { unlocked = true; Announcer.unlock(); paintSpk(); return; } unlocked = true; voice = !voice; try { localStorage.setItem("dd-tv-voice", voice ? "on" : "off"); } catch {} paintSpk(); if (voice) Announcer.unlock(); };
 function say(text) { try { const u = new SpeechSynthesisUtterance(text); u.lang = "en-GB"; u.rate = 0.95; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch {} }
 function call(S, c) {
   const nm = ids => ids.map(id => S.players[id]?.name || "").join(" and ");
