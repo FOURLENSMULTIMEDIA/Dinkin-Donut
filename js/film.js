@@ -57,7 +57,7 @@
       }, 1700);
     }
     if (i === 3) {
-      var row = [["glaze", "NOOR", "10", "Glaze", "Home"], ["midnight", "OMAR", "23", "Midnight", "Tournament"], ["court", "LEA", "4", "Court", "Away"]];
+      var row = [["glaze", "DREW", "10", "Glaze", "Home"], ["midnight", "ANGEL", "23", "Midnight", "Tournament"], ["court", "ALYANA", "4", "Court", "Away"]];
       $("fRow").innerHTML = row.map(function (r) { return "<div>" + J.render({ way: r[0], side: "back", name: r[1], num: r[2] }) + "<small>" + r[4] + "</small><b>" + r[3] + "</b></div>"; }).join("");
     }
     if (i === 4) $("fPolo").innerHTML = J.renderPolo({ way: "night", side: "front" }) + J.renderPolo({ way: "clubhouse", side: "back", name: "AISHA" });
