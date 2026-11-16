@@ -54,5 +54,5 @@
   // Browsers only allow sound after a tap; call this from a button press
   function unlock() { chime(); if (synth) { var u = new SpeechSynthesisUtterance("Announcements on."); u.volume = 1; u.rate = 0.95; keep.push(u); synth.cancel(); synth.speak(u); } }
   if (synth) synth.onvoiceschanged = function () {};
-  window.Announcer = { call: call, unlock: unlock, onStatus: function (f) { listeners.push(f); }, supported: Boolean(synth), test: function () { call(1, ["Ana", "Ben"], ["Omar", "Lea"]); } };
+  window.Announcer = { say: function (t) { if (synth && synth.speaking) synth.cancel(); chime(); setTimeout(function () { say(t, true, function () { say(t, false); }); }, 900); }, call: call, unlock: unlock, onStatus: function (f) { listeners.push(f); }, supported: Boolean(synth), test: function () { call(1, ["Ana", "Ben"], ["Omar", "Lea"]); } };
 })();

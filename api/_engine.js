@@ -166,9 +166,10 @@ const actions = {
     const p = findByName(S, n) || newPlayer(S, n);
     p.phone = phone; p.pin = genPin(S); p.pinFails = 0;
     const lv = M.normLevel(a.level); if (lv) p.level = lv;
-    const amt = Math.round(Number(a.amt) * 100) / 100;
-    if (amt > 0) { const r = S.pay[p.id] || (S.pay[p.id] = { items: [] }); r.items.push({ amt, method: ["cash", "fawran", "card"].includes(a.method) ? a.method : "cash", ref: clean(a.ref), t: Date.now() }); }
-    log(S, `${p.name} paid and got a Glaze Pass`);
+    const amt = Math.round(Number(a.amt) * 100) / 100, r = S.pay[p.id] || (S.pay[p.id] = { items: [] });
+    if (a.method === "free") { r.fee = 0; log(S, `${p.name} plays free tonight and got a Glaze Pass`); }
+    else if (a.method === "later") { log(S, `${p.name} got a Glaze Pass, paying later`); }
+    else { if (amt > 0) r.items.push({ amt, method: ["cash", "fawran", "card"].includes(a.method) ? a.method : "cash", ref: clean(a.ref), t: Date.now() }); log(S, `${p.name} paid and got a Glaze Pass`); }
     return { id: p.id, name: p.name, pin: p.pin, phone: p.phone, amount: amt > 0 ? amt : (S.pay[p.id]?.items || []).reduce((x, i) => x + i.amt, 0) };
   },
   newPin: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.pin = genPin(S); p.pinFails = 0; return { id: p.id, name: p.name, pin: p.pin, phone: p.phone || "", amount: (S.pay[p.id]?.items || []).reduce((x, i) => x + i.amt, 0) }; },
@@ -218,6 +219,15 @@ const actions = {
     W.forEach(id => { const p = S.players[id]; p.w++; p.streak = p.streak > 0 ? p.streak + 1 : 1; p.pf += ws; p.pa += ls; });
     L.forEach(id => { const p = S.players[id]; p.l++; p.streak = p.streak < 0 ? p.streak - 1 : -1; p.pf += ls; p.pa += ws; });
     S.games++;
+    // Glaze Moments: highlights the TV and console celebrate
+    const nm = ids => ids.map(id => S.players[id]?.name).join(" and "), gap = M.avgOf(S, L) - M.avgOf(S, W);
+    const hot = W.map(id => S.players[id]).find(p => p && (p.streak === 3 || p.streak === 5 || p.streak === 7));
+    let mo = null;
+    if (ws >= 11 && ls === 0) mo = { kind: "bagel", title: "Bagel!", line: `${nm(W)} win 11–0 on Court ${c.id}`, say: `Bagel on court ${c.id}! ${nm(W)} win eleven, nil.` };
+    else if (gap >= 0.6) mo = { kind: "upset", title: "Upset!", line: `${nm(W)} beat the favourites on Court ${c.id}`, say: `Upset on court ${c.id}! ${nm(W)} take it.` };
+    else if (hot) mo = { kind: "fire", title: `${hot.name} is on fire`, line: `${hot.streak} wins in a row`, say: `${hot.name} is on fire! ${hot.streak} wins in a row.` };
+    else if (ws >= 12) mo = { kind: "nail", title: "Nail-biter!", line: `${nm(W)} win ${ws}–${ls} on Court ${c.id}`, say: `What a game on court ${c.id}! ${ws}, ${ls}.` };
+    if (mo) { S.moment = { ...mo, t: Date.now(), court: c.id }; log(S, `${mo.title} ${mo.line}`); }
     const pair = (t, k) => t.forEach(a => t.forEach(b => { if (a !== b) { const p = S.players[a]; if (p) { p[k] = p[k] || {}; p[k][b] = (p[k][b] || 0) + 1; } } }));
     pair(W, "partners"); pair(L, "partners");
     c.lastFour = [...W, ...L].sort().join(",");

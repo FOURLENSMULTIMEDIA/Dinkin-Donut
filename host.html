@@ -61,7 +61,16 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .warn{background:#FFE7A8;color:var(--choco);border-radius:14px;padding:12px 14px;font-weight:600}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .muted{color:var(--muted);font-size:14px}
-.annbtn{background:var(--sunk);color:var(--fg)}.annbtn.on{background:#FF5FA2;color:#fff}
+.passgrid .methods{flex-wrap:wrap}
+.moment{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:14px;padding:14px 22px 14px 14px;border-radius:999px;color:#3B2416;font-family:var(--display);box-shadow:0 18px 40px rgba(0,0,0,.3);animation:momin .5s cubic-bezier(.2,.9,.3,1.3)}
+.moment i{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:24px;background:#3B2416;color:#D7F03C}
+.moment b{display:block;font-size:22px}.moment small{display:block;font:600 14px var(--body)}
+.moment.fire{background:#FF8A3D}.moment.upset{background:#D7F03C}.moment.bagel{background:#FF5FA2;color:#fff}.moment.nail{background:#FFD66B}
+@keyframes momin{from{transform:translate(-50%,-30px);opacity:0}}
+.annbig{display:flex;align-items:center;gap:12px;border:0;cursor:pointer;border-radius:16px;padding:12px 18px;background:#FF5FA2;color:#fff;text-align:left;box-shadow:0 8px 20px rgba(255,95,162,.35)}
+.annbig b{display:block;font:700 17px var(--display)}.annbig small{display:block;font-size:12px;opacity:.9}
+.annbig.on{background:#2F7A4F;box-shadow:none}
+.annbig:not(.on) svg{animation:pulse2 1.6s infinite}
 .sharechip{font:700 12px var(--body);background:var(--ink);color:var(--on-ink);border-radius:999px;padding:6px 10px;white-space:nowrap}
 .sharechip:empty{display:none}
 .team{grid-template-columns:1fr 64px!important}
@@ -178,11 +187,11 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 
 <main class="wrap page" id="app" hidden>
   <div class="warn" id="noDb" hidden>No database connected. The queue resets whenever Vercel restarts. Add Upstash Redis in Vercel (see README) before your first real night.</div>
-  <div class="stats"><div class="stat"><b id="sP">0</b><span>Dinkers</span></div><div class="stat"><b id="sQ">0</b><span>In queue</span></div><div class="stat"><b id="sC">0</b><span>Courts live</span></div><div class="stat"><b id="sG">0</b><span>Games</span></div></div>
+  <div class="stats"><button type="button" class="annbig" id="announceBtn" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><span><b>Turn on announcements</b><small>Calls each new game out loud</small></span></button><div class="stat"><b id="sP">0</b><span>Dinkers</span></div><div class="stat"><b id="sQ">0</b><span>In queue</span></div><div class="stat"><b id="sC">0</b><span>Courts live</span></div><div class="stat"><b id="sG">0</b><span>Games</span></div></div>
   <div class="bar">
     <label for="title">Night</label><input id="title" style="width:200px">
     <label for="format">Format</label><select id="format"><option value="2">Doubles</option><option value="1">Singles</option></select>
-    <button type="button" class="btn sm annbtn" id="announceBtn" aria-pressed="false">Announce games: off</button><input type="checkbox" id="announce" hidden>
+    <input type="checkbox" id="announce" hidden>
     <label class="row muted autop" style="gap:6px"><input type="checkbox" id="autopilot"> <b>Autopilot</b></label>
     <label for="gameLimit">Games each</label><select id="gameLimit"><option value="auto">Auto</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="0">No limit</option></select>
     <span class="sharechip" id="shareChip"></span>
@@ -229,7 +238,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
         <datalist id="gpNames"></datalist>
         <input id="gpPhone" type="tel" inputmode="tel" placeholder="WhatsApp e.g. 3076 3431" aria-label="WhatsApp number" required>
         <input id="gpAmt" inputmode="decimal" placeholder="Amount" aria-label="Amount paid">
-        <div class="methods" role="radiogroup" aria-label="Method"><label><input type="radio" name="gpm" value="cash" checked><span data-ic="cash">Cash</span></label><label><input type="radio" name="gpm" value="fawran"><span data-ic="fawran">Fawran</span></label><label><input type="radio" name="gpm" value="card"><span data-ic="card">Card</span></label></div>
+        <div class="methods" role="radiogroup" aria-label="Method"><label><input type="radio" name="gpm" value="cash" checked><span data-ic="cash">Cash</span></label><label><input type="radio" name="gpm" value="fawran"><span data-ic="fawran">Fawran</span></label><label><input type="radio" name="gpm" value="card"><span data-ic="card">Card</span></label><label><input type="radio" name="gpm" value="later"><span>Pay later</span></label><label><input type="radio" name="gpm" value="free"><span>Free</span></label></div>
       </div>
       <button class="btn pink" id="gpGo">Record & send PIN</button>
     </form>
@@ -575,6 +584,7 @@ async function issuePass(action) {
     showPass(r); return r;
   } catch (e) { tab && tab.close(); toast(e.message, true); }
 }
+document.addEventListener("change", e => { if (e.target.name === "gpm") { const off = ["later", "free"].includes(e.target.value); $("gpAmt").disabled = off; if (off) $("gpAmt").value = ""; } });
 $("passForm").onsubmit = e => {
   e.preventDefault();
   issuePass({ type: "pass", name: $("gpName").value, phone: $("gpPhone").value, amt: $("gpAmt").value, method: document.querySelector("input[name=gpm]:checked").value })
@@ -584,16 +594,24 @@ $("gpName").addEventListener("change", () => { const p = Object.values(S.players
 // Announcements from the console (for nights without a TV)
 let sayOn = false, lastStarts = null; try { sayOn = localStorage.getItem("dd-host-voice") === "on"; } catch {}
 $("announce").checked = sayOn;
-const paintAnn = () => { const b = $("announceBtn"); b.textContent = sayOn ? "Announce games: on" : "Announce games: off"; b.setAttribute("aria-pressed", sayOn); b.classList.toggle("on", sayOn); };
+const paintAnn = () => { const b = $("announceBtn"); b.querySelector("b").textContent = sayOn ? "Announcements on" : "Turn on announcements"; b.querySelector("small").textContent = sayOn ? "Tap to turn off" : "Calls each new game out loud"; b.setAttribute("aria-pressed", sayOn); b.classList.toggle("on", sayOn); };
 paintAnn();
 // After a reload, sound needs one tap: the first tap anywhere re-enables announcements
 if (sayOn) document.addEventListener("pointerdown", function once() { document.removeEventListener("pointerdown", once); Announcer.unlock(); });
 $("announceBtn").onclick = () => { sayOn = !sayOn; try { localStorage.setItem("dd-host-voice", sayOn ? "on" : "off"); } catch {} paintAnn(); if (sayOn) Announcer.unlock(); };
 Announcer.onStatus(s => { if (s === "no-voice") toast("This device didn’t speak. Check the volume, or try another phone or browser.", true); });
 const names = ids => ids.map(id => S.players[id]?.name || "");
+let lastMoment = null;
+function showMoment(m) {
+  const d = document.createElement("div"); d.className = "moment " + m.kind;
+  d.innerHTML = `<i>${({ fire: "▲", upset: "★", bagel: "0", nail: "!" })[m.kind]}</i><div><b>${DD.esc(m.title)}</b><small>${DD.esc(m.line)}</small></div>`;
+  document.body.appendChild(d); setTimeout(() => d.remove(), 6000);
+}
 function announceNew() {
+  if (S.moment && lastMoment !== null && S.moment.t !== lastMoment) { showMoment(S.moment); if (sayOn) Announcer.say(S.moment.say); }
+  lastMoment = S.moment ? S.moment.t : 0;
   const now = Object.fromEntries(S.courts.map(c => [c.id, c.teams ? c.start : null]));
-  if (lastStarts && sayOn) { let k = 0; S.courts.forEach(c => { if (c.teams && now[c.id] !== lastStarts[c.id]) setTimeout(() => Announcer.call(c.id, names(c.teams[0]), names(c.teams[1])), k++ * 9000); }); }
+  if (lastStarts && sayOn) { let k = S.moment && S.moment.t > Date.now() - 5000 ? 1 : 0; S.courts.forEach(c => { if (c.teams && now[c.id] !== lastStarts[c.id]) setTimeout(() => Announcer.call(c.id, names(c.teams[0]), names(c.teams[1])), k++ * 9000); }); }
   lastStarts = now;
 }
 document.addEventListener("click", e => { const b = e.target.closest("[data-call]"); if (!b) return; const c = S.courts.find(x => x.id === +b.dataset.call); if (c && c.teams) { Announcer.unlock(); Announcer.call(c.id, names(c.teams[0]), names(c.teams[1])); } });
