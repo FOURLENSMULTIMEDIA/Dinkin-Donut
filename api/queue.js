@@ -1,6 +1,6 @@
 const { fresh, apply, PUBLIC } = require("./_engine");
 const { load, save, withLock, hasDb, loadHall, addHall } = require("./_store");
-const { sendPass } = require("./_wa");
+const { sendPass, configured } = require("./_wa");
 
 // What the public pages may see: no payments, no Fawran details, and only players who checked in.
 function publicView(S) {
@@ -50,7 +50,7 @@ module.exports = async (req, res) => {
       if (req.query && req.query.hall !== undefined) return res.status(200).json({ hall: await loadHall() });
       const S = (await load()) || fresh();
       const host = req.headers["x-host-pin"] ? checkPin(req) : false;
-      return res.status(200).json({ ...(host ? S : publicView(S)), host, persistent: hasDb() });
+      return res.status(200).json({ ...(host ? { ...S, waAuto: configured() && Boolean(process.env.WA_TEMPLATE) } : publicView(S)), host, persistent: hasDb() });
     }
     if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 

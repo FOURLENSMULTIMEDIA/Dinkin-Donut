@@ -116,9 +116,9 @@ const actions = {
     const amt = Math.round(Number(a.amt) * 100) / 100;
     if (amt > 0) { const r = S.pay[p.id] || (S.pay[p.id] = { items: [] }); r.items.push({ amt, method: ["cash", "fawran", "card"].includes(a.method) ? a.method : "cash", ref: clean(a.ref), t: Date.now() }); }
     log(S, `${p.name} paid and got a Glaze Pass`);
-    return { id: p.id, name: p.name, pin: p.pin, phone: p.phone };
+    return { id: p.id, name: p.name, pin: p.pin, phone: p.phone, amount: amt > 0 ? amt : (S.pay[p.id]?.items || []).reduce((x, i) => x + i.amt, 0) };
   },
-  newPin: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.pin = genPin(S); p.pinFails = 0; return { id: p.id, name: p.name, pin: p.pin, phone: p.phone || "" }; },
+  newPin: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.pin = genPin(S); p.pinFails = 0; return { id: p.id, name: p.name, pin: p.pin, phone: p.phone || "", amount: (S.pay[p.id]?.items || []).reduce((x, i) => x + i.amt, 0) }; },
   rosterOne: (S, a) => { const n = clean(a.name); if (n.length < 2) throw new Error("Name is too short."); const p = findByName(S, n) || newPlayer(S, n); const lv = M.normLevel(a.level); if (lv) p.level = lv; return { id: p.id }; },
   setLevel: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.level = M.normLevel(a.level) || null; },
   courtLevel: (S, a) => { const c = court(S, a.court); c.level = ["beginner", "intermediate", "advanced"].includes(a.level) ? a.level : "any"; },

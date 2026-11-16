@@ -133,6 +133,16 @@ function pinBoxes() {
   });
 }
 pinBoxes();
+// One-tap link from the WhatsApp message: /queue?n=Name&p=123
+function prefill() {
+  const q = new URLSearchParams(location.search), n = q.get("n"), pin = (q.get("p") || "").replace(/\D/g, "").slice(0, 3);
+  if (!n) return;
+  meId = null; try { localStorage.removeItem(ME_KEY); } catch {}
+  $("name").value = n; [...document.querySelectorAll(".pd")].forEach((b, i) => b.value = pin[i] || "");
+  history.replaceState(null, "", location.pathname);
+  const btn = document.querySelector("#joinForm button[type=submit]"); if (btn) { btn.textContent = `Join as ${n}`; btn.focus(); }
+}
+prefill();
 try { const n = localStorage.getItem("dd-name"); if (n) $("name").value = n; } catch {}
 
 function sprinkles() {
