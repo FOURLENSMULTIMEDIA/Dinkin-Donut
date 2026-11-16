@@ -38,13 +38,7 @@ svg{overflow:visible}
 
 <!-- S3: donut + logo -->
 <div class="l" id="s3"><div style="display:grid;place-items:center;gap:4vmin">
-  <svg viewBox="-60 -60 120 120" style="width:46vmin;height:46vmin" id="donut">
-    <defs><radialGradient id="dg" cx=".4" cy=".35"><stop offset="0" stop-color="#F3BE78"/><stop offset="1" stop-color="#C9853F"/></radialGradient></defs>
-    <circle r="52" fill="url(#dg)"/>
-    <path id="glz" fill="#FF5FA2"/>
-    <circle r="17" fill="#3B2416"/>
-    <g id="spr"></g>
-  </svg>
+  <img id="donut" src="../assets/logo.svg" alt="" style="width:46vmin;height:46vmin"><svg style="position:absolute;width:0;height:0"><path id="glz"/><g id="spr"></g></svg>
   <div class="h" id="logo" style="font-size:13vmin;color:var(--cream)">Dinkin’<br><span style="color:var(--glaze)">Donut</span></div>
 </div></div>
 
@@ -67,7 +61,7 @@ svg{overflow:visible}
 
 <!-- S8: end card -->
 <div class="l" id="s8"><div style="display:grid;place-items:center;gap:3.2vmin">
-  <svg viewBox="-60 -60 120 120" style="width:22vmin;height:22vmin"><circle r="52" fill="#E8A95B"/><path d="M-50 -8C-48 -40 -20 -52 0 -52C30 -52 50 -32 50 -6C50 4 44 6 40 2C36 -2 34 14 28 12C22 10 24 -2 18 0C12 2 14 18 6 18C-2 18 0 4 -8 4C-16 4 -14 20 -24 18C-32 16 -28 4 -36 6C-44 8 -50 4 -50 -8Z" fill="#FF5FA2"/><circle r="17" fill="#3B2416"/></svg>
+  <img src="../assets/logo.svg" alt="" style="width:24vmin;height:24vmin">
   <div class="h" style="font-size:10vmin">Dinkin’ <span style="color:var(--glaze)">Donut</span></div>
   <div style="font-family:Fredoka;font-weight:600;font-size:4.4vmin;color:var(--ball)">Sweet game, soft hands.</div>
   <div class="k" style="opacity:.85;margin-top:2vmin">@dinkindonutqa · dinkindonut.asia</div>
@@ -113,8 +107,8 @@ function seek(t){
   words.forEach((w,i)=>{const e=$("w"+i),u=eo(r(t,3.3+i*.32,3.8+i*.32));e.style.opacity=u;e.style.transform=`translateY(${(1-u)*40}%)`;e.style.filter=`blur(${(1-u)*8}px)`});
   // S3 donut 7.6-12
   const v3=show($("s3"),7.6,12.2,t,.4);
-  const dz=back(r(t,7.6,8.6));$("donut").style.transform=`scale(${dz}) rotate(${(t-7.6)*30}deg)`;
-  sprs.forEach((s,i)=>{const u=back(r(t,8.2+i*.025,8.8+i*.025));s.setAttribute("transform",`translate(${s.dataset.x*u} ${s.dataset.y*u-(1-u)*70}) rotate(${s.dataset.r})`);s.style.opacity=u>0?1:0});
+  const dz=back(r(t,7.6,8.6));$("donut").style.transform=`scale(${dz}) rotate(${(1-cl(dz))*-20}deg)`;
+  false&&sprs.forEach((s,i)=>{const u=back(r(t,8.2+i*.025,8.8+i*.025));s.setAttribute("transform",`translate(${s.dataset.x*u} ${s.dataset.y*u-(1-u)*70}) rotate(${s.dataset.r})`);s.style.opacity=u>0?1:0});
   const lu=eo(r(t,9,9.8));$("logo").style.opacity=lu;$("logo").style.transform=`translateY(${(1-lu)*6}vmin) scale(${.9+lu*.1})`;
   // S4 phone 12-16.4
   show($("s4"),12,16.6,t);

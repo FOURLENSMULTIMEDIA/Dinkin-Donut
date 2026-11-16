@@ -15,6 +15,7 @@
   var seen = false, name = "";
   try { seen = !!localStorage.getItem("dd-intro-seen"); localStorage.setItem("dd-intro-seen", "1"); name = (localStorage.getItem("dd-name") || "").trim().split(/\s+/)[0]; } catch (e) {}
   if (seen) { welcomeBack(name); return; }
+  if (window.DD_TEASER) return; // the opening-soon film is playing instead
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   var css = document.createElement("style");
   css.textContent = [
