@@ -5,6 +5,8 @@
   var scenes = root.querySelectorAll(".sc"), price = (window.JERSEY && window.JERSEY.price) || 165;
   $("fPrice").textContent = price + " QAR";
   var SHOTS = [3200, 2600, 5200, 3800, 3200, 3800], TOTAL = SHOTS.reduce(function (a, b) { return a + b; }, 0);
+  // Soundtrack: "Trailer" by nastelbom (Pixabay Content License), cut so the drop lands on the lineup reveal.
+  var music = new Audio("/assets/audio/glaze-film.mp3"); music.preload = "auto"; music.volume = 0.85;
   var playing = false, muted = true, t0 = 0, elapsed = 0, raf, timers = [], cur = -1, ctx;
 
   var ICON = {
@@ -35,7 +37,6 @@
   function scene(i) {
     cur = i; clear();
     scenes.forEach(function (s, k) { s.classList.toggle("on", k === i); });
-    if (!muted) try { CUES[i](); } catch (e) {}
     if (i === 0) later(function () { type($("t0"), "Courts are lit.", 75); }, 350);
     if (i === 2) {
       var f = $("fJ"); f.style.transform = "perspective(900px) rotateY(0)";
@@ -49,7 +50,7 @@
         var iv = setInterval(function () {
           n++; num = Math.min(7, num + 1);
           f.innerHTML = J.render({ way: "midnight", side: "back", name: name.slice(0, n), num: String(num) });
-          if (!muted) try { pock(0); } catch (e) {}
+
           if (n >= name.length && num >= 7) { clearInterval(iv); $("fName").textContent = "Your name. Your number."; }
         }, 170);
         timers.push(iv);
@@ -59,27 +60,40 @@
       var row = [["glaze", "NOOR", "10", "Glaze", "Home"], ["midnight", "OMAR", "23", "Midnight", "Tournament"], ["court", "LEA", "4", "Court", "Away"]];
       $("fRow").innerHTML = row.map(function (r) { return "<div>" + J.render({ way: r[0], side: "back", name: r[1], num: r[2] }) + "<small>" + r[4] + "</small><b>" + r[3] + "</b></div>"; }).join("");
     }
-    if (i === 4) $("fPolo").innerHTML = J.renderPolo({ way: "choco", side: "front" }) + J.renderPolo({ way: "cream", side: "back", name: "AISHA" });
+    if (i === 4) $("fPolo").innerHTML = J.renderPolo({ way: "night", side: "front" }) + J.renderPolo({ way: "clubhouse", side: "back", name: "AISHA" });
   }
 
   function tick(now) {
     if (!playing) return;
     elapsed = now - t0;
-    if (elapsed >= TOTAL) { t0 = now; elapsed = 0; }
+    if (elapsed >= TOTAL) { t0 = now; elapsed = 0; syncMusic(); }
     var acc = 0, idx = 0; for (; idx < SHOTS.length; idx++) { if (elapsed < acc + SHOTS[idx]) break; acc += SHOTS[idx]; }
     if (idx !== cur) scene(idx);
     $("fBar").style.width = (elapsed / TOTAL * 100) + "%";
     raf = requestAnimationFrame(tick);
   }
-  function play() { if (playing) return; playing = true; $("play").hidden = true; t0 = performance.now() - elapsed; cur = -1; raf = requestAnimationFrame(tick); paint(); }
-  function pause() { playing = false; cancelAnimationFrame(raf); clear(); paint(); }
+  function syncMusic() {
+    if (muted || !playing) { music.pause(); return; }
+    try { music.currentTime = Math.min(elapsed / 1000, 21.5); } catch (e) {}
+    var p = music.play(); if (p && p.catch) p.catch(function () {});
+  }
+  function play() { if (playing) return; playing = true; $("play").hidden = true; t0 = performance.now() - elapsed; cur = -1; raf = requestAnimationFrame(tick); paint(); syncMusic(); }
+  // Paused mid-shot: show the finished frame of that shot, never a half-turned or empty stage.
+  function settle(i) {
+    if (i === 2) { var f = $("fJ"); f.style.transform = "none"; f.innerHTML = J.render({ way: "midnight", side: "back", name: "AISHA", num: "7" }); $("fName").textContent = "Your name. Your number."; }
+    if (i === 0) $("t0").textContent = "Courts are lit.";
+  }
+  function pause() { playing = false; cancelAnimationFrame(raf); clear(); settle(cur); paint(); music.pause(); }
   function paint() { $("fToggle").innerHTML = playing ? ICON.pause : ICON.play; $("fToggle").setAttribute("aria-label", playing ? "Pause" : "Play"); $("fSound").innerHTML = (muted ? ICON.off : ICON.on) + (muted ? " Sound off" : " Sound on"); }
 
   // Resting frame: the end card, so the price is visible before anything plays
   scenes[5].classList.add("on"); paint();
-  $("play").onclick = function () { muted = false; elapsed = 0; play(); };
+  $("play").onclick = function () { muted = false; elapsed = 0; music.play().catch(function () {}); play(); };
   $("fToggle").onclick = function () { playing ? pause() : play(); };
-  $("fSound").onclick = function () { muted = !muted; if (!muted) ac(); paint(); if (!playing) play(); };
+  $("fSound").onclick = function () {
+    muted = !muted; paint();
+    if (!muted) { if (!playing) { elapsed = 0; play(); } else syncMusic(); } else music.pause();
+  };
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if ("IntersectionObserver" in window && !reduce) {
     new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting && e.intersectionRatio > 0.6) { if (!playing && $("play").hidden === false && !root.dataset.seen) { root.dataset.seen = 1; play(); } } else if (playing && !e.isIntersecting) pause(); }); }, { threshold: [0, 0.6] }).observe(root);

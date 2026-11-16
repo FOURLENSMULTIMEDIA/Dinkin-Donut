@@ -20,9 +20,9 @@ window.JERSEY = {
   // Approximate chest width, laid flat (cm)
   sizeChart: { XS: 46, S: 49, M: 52, L: 55, XL: 58, "2XL": 61, "3XL": 64 },
 };
-// The Clubhouse Polo: second featured product.
+// The Court Polo: second featured product.
 window.POLO = {
-  name: "The Clubhouse Polo",
+  name: "The Court Polo",
   price: 145,
   status: "preorder",
   leadTime: "Made to order. Ready in about 3 weeks.",
@@ -30,10 +30,10 @@ window.POLO = {
   sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
   prints: [["name", "Embroidered name"], ["plain", "No name"]],
   specs: [
-    ["Piqué knit", "Breathable, holds its shape after every wash."],
-    ["Embroidered crest", "The bitten-ball mark, stitched on the chest."],
-    ["Tipped collar", "Glaze and ball stripes on the collar and cuffs."],
-    ["Court to café", "Smart enough for the clubhouse, light enough to play in."],
+    ["Quarter-zip placket", "Zip it up for the clubhouse, open it for match play."],
+    ["Mesh side panels", "Contrast mesh with glaze piping keeps you cool on court."],
+    ["Tapered athletic cut", "Shaped through the body, split hem so it moves with you."],
+    ["Embroidered crest", "The bitten-ball mark on the chest, club name across the back."],
   ],
   sizeChart: { XS: 47, S: 50, M: 53, L: 56, XL: 59, "2XL": 62, "3XL": 65 },
 };

@@ -101,52 +101,67 @@
     return s + "</svg>";
   }
 
-  // Clubhouse Polo: set-in sleeves, knit collar, 3-button placket, embroidered crest.
+  // Court Polo: tapered performance polo, quarter zip, contrast yoke with piping, mesh side panels.
   var POLO_WAYS = {
-    cream: { label: "Cream", note: "Clubhouse", body: "#FBF1E2", collar: "#3B2416", tipA: "#FF5FA2", tipB: "#D7F03C", ink: "#3B2416", button: "#3B2416" },
-    choco: { label: "Choco", note: "Evening", body: "#3B2416", collar: "#FFF6EA", tipA: "#D7F03C", tipB: "#FF5FA2", ink: "#FFF6EA", button: "#FFF6EA" },
-    court: { label: "Court", note: "Match day", body: "#2F7A4F", collar: "#FFF6EA", tipA: "#FF5FA2", tipB: "#D7F03C", ink: "#FFF6EA", button: "#FFF6EA" },
+    clubhouse: { label: "Clubhouse", note: "Cream & court", body: "#FBF2E4", yoke: "#2F7A4F", side: "#2F7A4F", collar: "#2F7A4F", tipA: "#FF5FA2", tipB: "#D7F03C", pipe: "#FF5FA2", ink: "#2F7A4F", inkOnYoke: "#FFF6EA", zip: "#FF5FA2" },
+    night:     { label: "Night", note: "Choco & glaze", body: "#3B2416", yoke: "#24160D", side: "#24160D", collar: "#FBF2E4", tipA: "#FF5FA2", tipB: "#D7F03C", pipe: "#FF5FA2", ink: "#FBF2E4", inkOnYoke: "#FBF2E4", zip: "#D7F03C" },
+    glaze:     { label: "Glaze", note: "Pink & choco", body: "#FF6FAB", yoke: "#3B2416", side: "#3B2416", collar: "#3B2416", tipA: "#D7F03C", tipB: "#FBF2E4", pipe: "#D7F03C", ink: "#3B2416", inkOnYoke: "#FBF2E4", zip: "#D7F03C" },
   };
-  var P_BODY = "M140 40L96 54L30 112L60 168L96 150L96 412Q200 428 304 412L304 150L340 168L370 112L304 54L260 40Q200 58 140 40Z";
+  var P_BODY = "M160 40C176 50 224 50 240 40L300 56C318 60 330 70 338 84L374 152L332 174L312 142C312 170 314 200 310 240C308 300 314 360 318 404Q262 418 200 420Q138 418 82 404C86 360 92 300 90 240C86 200 88 170 88 142L68 174L26 152L62 84C70 70 82 60 100 56Z";
   function renderPolo(o) {
-    var w = POLO_WAYS[o.way] || POLO_WAYS.cream, back = o.side === "back", id = "p" + (++uid);
+    var w = POLO_WAYS[o.way] || POLO_WAYS.clubhouse, back = o.side === "back", id = "p" + (++uid);
     var name = String(o.name || "").slice(0, 14), esc = function (t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
-    var s = '<svg viewBox="0 0 400 450" class="jersey" role="img" aria-label="' + w.label + ' polo, ' + (back ? "back" : "front") + '">';
+    var yokeEdge = back ? "M60 96Q200 120 340 96" : "M60 104Q200 132 340 104";
+    var s = '<svg viewBox="0 0 400 450" class="jersey" role="img" aria-label="' + w.label + ' court polo, ' + (back ? "back" : "front") + '">';
     s += '<defs><clipPath id="' + id + 'c"><path d="' + P_BODY + '"/></clipPath>' +
-      '<linearGradient id="' + id + 'shade" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".30"/><stop offset=".22" stop-color="#000" stop-opacity=".04"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset=".78" stop-color="#000" stop-opacity=".05"/><stop offset="1" stop-color="#000" stop-opacity=".32"/></linearGradient>' +
-      '<linearGradient id="' + id + 'v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".14"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>' +
-      '<filter id="' + id + 'n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" seed="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.2"/></feComponentTransfer></filter>' +
-      '<pattern id="' + id + 'pq" width="3" height="3" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".6" fill="#000" fill-opacity=".07"/></pattern>' +
+      '<linearGradient id="' + id + 'shade" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".32"/><stop offset=".2" stop-color="#000" stop-opacity=".05"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset=".8" stop-color="#000" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".34"/></linearGradient>' +
+      '<linearGradient id="' + id + 'v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>' +
+      '<radialGradient id="' + id + 'hl" cx=".4" cy=".32" r=".55"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
+      '<filter id="' + id + 'n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.3" numOctaves="2" seed="3"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.17"/></feComponentTransfer></filter>' +
+      '<pattern id="' + id + 'mesh" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1" fill="#000" fill-opacity=".28"/></pattern>' +
       '<filter id="' + id + 'b"><feGaussianBlur stdDeviation="5"/></filter><filter id="' + id + 'sh" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur stdDeviation="12"/></filter>' +
-      '<filter id="' + id + 'emb"><feDropShadow dx="0" dy="1.2" stdDeviation=".6" flood-color="#000" flood-opacity=".45"/></filter></defs>';
-    s += '<ellipse cx="200" cy="428" rx="140" ry="14" fill="#3B2416" opacity=".28" filter="url(#' + id + 'sh)"/>';
-    s += '<g clip-path="url(#' + id + 'c)"><rect width="400" height="450" fill="' + w.body + '"/><rect width="400" height="450" fill="url(#' + id + 'pq)"/>';
-    // set-in sleeve seams, side vents, cuffs with tipping
-    s += '<g fill="none" stroke="#000" stroke-opacity=".22" stroke-width="1.3"><path d="M96 54Q104 104 96 150"/><path d="M304 54Q296 104 304 150"/></g>';
-    s += '<path d="M30 112L60 168L70 162L40 106Z" fill="' + w.collar + '"/><path d="M38 108L68 164" stroke="' + w.tipA + '" stroke-width="2.4"/><path d="M42 106L72 162" stroke="' + w.tipB + '" stroke-width="1.4"/>';
-    s += '<path d="M370 112L340 168L330 162L360 106Z" fill="' + w.collar + '"/><path d="M362 108L332 164" stroke="' + w.tipA + '" stroke-width="2.4"/><path d="M358 106L328 162" stroke="' + w.tipB + '" stroke-width="1.4"/>';
-    s += '<g fill="none" stroke="#fff" stroke-opacity=".35" stroke-width=".9" stroke-dasharray="3 3"><path d="M100 404Q200 418 300 404"/></g>';
+      '<filter id="' + id + 'emb"><feDropShadow dx="0" dy="1" stdDeviation=".6" flood-color="#000" flood-opacity=".5"/></filter></defs>';
+    s += '<ellipse cx="200" cy="430" rx="140" ry="13" fill="#3B2416" opacity=".3" filter="url(#' + id + 'sh)"/>';
+    s += '<g clip-path="url(#' + id + 'c)"><rect width="400" height="450" fill="' + w.body + '"/>';
+    // contrast yoke + piping
+    s += '<path d="M0 0H400V' + (back ? 96 : 104) + yokeEdge.replace(/^M60 \d+/, "L340 " + (back ? 96 : 104)).replace("Q200", "Q200").replace(/L340 \d+Q200 (\d+) 340 \d+/, "L340 " + (back ? 96 : 104) + "Q200 $1 60 " + (back ? 96 : 104)) + 'L0 ' + (back ? 96 : 104) + 'Z" fill="' + w.yoke + '"/>';
+    s += '<path d="' + yokeEdge + '" fill="none" stroke="' + w.pipe + '" stroke-width="3.2"/>';
+    // mesh side panels
+    s += '<path d="M88 142C88 200 92 300 82 404L112 410C116 300 112 200 114 150Z" fill="' + w.side + '"/><path d="M88 142C88 200 92 300 82 404L112 410C116 300 112 200 114 150Z" fill="url(#' + id + 'mesh)"/>';
+    s += '<path d="M312 142C312 200 308 300 318 404L288 410C284 300 288 200 286 150Z" fill="' + w.side + '"/><path d="M312 142C312 200 308 300 318 404L288 410C284 300 288 200 286 150Z" fill="url(#' + id + 'mesh)"/>';
+    s += '<g fill="none" stroke="' + w.pipe + '" stroke-width="1.6" opacity=".9"><path d="M114 150C112 200 116 300 112 410"/><path d="M286 150C288 200 284 300 288 410"/></g>';
+    // sleeves: set-in seam, cuff band with tipping
+    s += '<g fill="none" stroke="#000" stroke-opacity=".25" stroke-width="1.3"><path d="M100 56C96 90 92 116 88 142"/><path d="M300 56C304 90 308 116 312 142"/></g>';
+    s += '<path d="M26 152L68 174L74 162L33 140Z" fill="' + w.yoke + '"/><path d="M31 145L71 167" stroke="' + w.tipA + '" stroke-width="2.4"/><path d="M34 140L73 161" stroke="' + w.tipB + '" stroke-width="1.4"/>';
+    s += '<path d="M374 152L332 174L326 162L367 140Z" fill="' + w.yoke + '"/><path d="M369 145L329 167" stroke="' + w.tipA + '" stroke-width="2.4"/><path d="M366 140L327 161" stroke="' + w.tipB + '" stroke-width="1.4"/>';
+    // hem with side slits
+    s += '<path d="M84 398L94 384M316 398L306 384" stroke="#000" stroke-opacity=".3" stroke-width="1.4"/><path d="M86 396Q200 414 314 396" fill="none" stroke="#fff" stroke-opacity=".3" stroke-dasharray="3 3" stroke-width=".9"/>';
     if (!back) {
-      // placket
-      s += '<path d="M188 52H212V132H188Z" fill="' + w.body + '"/><path d="M188 52V132H212V52" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="1.2"/><path d="M192 56V128M208 56V128" stroke="#fff" stroke-opacity=".3" stroke-dasharray="2.5 2.5" stroke-width=".8"/>';
-      [74, 96, 118].forEach(function (y) { s += '<circle cx="200" cy="' + y + '" r="4.2" fill="' + w.button + '"/><circle cx="198.7" cy="' + (y - .8) + '" r=".8" fill="' + w.body + '"/><circle cx="201.3" cy="' + (y + .8) + '" r=".8" fill="' + w.body + '"/>'; });
-      // embroidered crest, left chest
-      s += '<g filter="url(#' + id + 'emb)"><image href="/assets/logo.svg" x="240" y="104" width="40" height="40"/></g><circle cx="260" cy="124" r="20.5" fill="none" stroke="#000" stroke-opacity=".25" stroke-dasharray="1.2 1.2" stroke-width=".8"/>';
+      // quarter zip
+      s += '<path d="M200 56V170" stroke="#000" stroke-opacity=".35" stroke-width="5"/><path d="M200 58V168" stroke="#C9C2B8" stroke-width="2.4" stroke-dasharray="1.2 1.6"/>';
+      s += '<rect x="195" y="96" width="10" height="16" rx="3" fill="' + w.zip + '" stroke="#000" stroke-opacity=".3"/><rect x="198" y="112" width="4" height="12" rx="2" fill="' + w.zip + '"/>';
+      // crest + chest line
+      s += '<g filter="url(#' + id + 'emb)"><image href="/assets/logo.svg" x="244" y="146" width="36" height="36"/></g><circle cx="262" cy="164" r="18.5" fill="none" stroke="#000" stroke-opacity=".22" stroke-dasharray="1.1 1.1" stroke-width=".8"/>';
+      s += '<text x="140" y="164" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="12" fill="' + w.ink + '" filter="url(#' + id + 'emb)">Dinkin’ Donut</text><text x="140" y="176" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="5.6" letter-spacing="2.4" fill="' + w.ink + '" opacity=".8">PICKLEBALL CLUB</text>';
     } else {
-      s += '<path d="M120 76Q200 92 280 76" fill="none" stroke="#000" stroke-opacity=".18" stroke-width="1.2"/>';
-      s += '<text x="200" y="118" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="17" fill="' + w.ink + '" filter="url(#' + id + 'emb)">Dinkin’ Donut</text>';
-      if (name && o.print !== "plain") s += '<text x="200" y="146" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="11" letter-spacing="4" fill="' + w.tipA + '" filter="url(#' + id + 'emb)">' + esc(name.toUpperCase()) + '</text>';
+      s += '<text x="200" y="80" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="19" fill="' + w.inkOnYoke + '" filter="url(#' + id + 'emb)">Dinkin’ Donut</text>';
+      s += '<text x="200" y="91" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="6" letter-spacing="3" fill="' + w.inkOnYoke + '" opacity=".8">PICKLEBALL CLUB · DOHA</text>';
+      if (name && o.print !== "plain") s += '<text x="200" y="146" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="13" letter-spacing="5" fill="' + w.ink + '" filter="url(#' + id + 'emb)">' + esc(name.toUpperCase()) + '</text>';
+      s += '<rect x="188" y="44" width="24" height="9" rx="2" fill="' + w.pipe + '"/>';
     }
-    s += '<g filter="url(#' + id + 'b)" fill="none" stroke-linecap="round"><path d="M134 300Q146 352 138 406" stroke="#000" stroke-opacity=".12" stroke-width="10"/><path d="M262 290Q252 346 268 404" stroke="#000" stroke-opacity=".12" stroke-width="12"/><path d="M152 300Q162 352 156 400" stroke="#fff" stroke-opacity=".12" stroke-width="7"/></g>';
-    s += '<rect width="400" height="450" fill="url(#' + id + 'shade)"/><rect width="400" height="450" fill="url(#' + id + 'v)"/><rect width="400" height="450" filter="url(#' + id + 'n)"/></g>';
+    // folds + light + grain
+    s += '<g filter="url(#' + id + 'b)" fill="none" stroke-linecap="round"><path d="M138 300Q150 352 142 406" stroke="#000" stroke-opacity=".12" stroke-width="10"/><path d="M262 290Q252 346 268 404" stroke="#000" stroke-opacity=".12" stroke-width="12"/><path d="M156 300Q166 352 160 400" stroke="#fff" stroke-opacity=".12" stroke-width="7"/><path d="M120 200Q132 236 124 270" stroke="#000" stroke-opacity=".1" stroke-width="8"/></g>';
+    s += '<rect width="400" height="450" fill="url(#' + id + 'shade)"/><rect width="400" height="450" fill="url(#' + id + 'v)"/><rect width="400" height="450" fill="url(#' + id + 'hl)"/><rect width="400" height="450" filter="url(#' + id + 'n)"/></g>';
     // collar
     if (!back) {
-      s += '<path d="M140 40Q200 60 260 40L246 30Q200 46 154 30Z" fill="#000" opacity=".25"/>';
-      s += '<path d="M150 30Q172 44 200 52L188 94L136 62Z" fill="' + w.collar + '"/><path d="M250 30Q228 44 200 52L212 94L264 62Z" fill="' + w.collar + '"/>';
-      s += '<path d="M140 58L186 88M144 54L188 84" stroke="' + w.tipA + '" stroke-width="2"/><path d="M260 58L214 88M256 54L212 84" stroke="' + w.tipA + '" stroke-width="2"/>';
-      s += '<path d="M150 30Q172 44 200 52L188 94L136 62ZM250 30Q228 44 200 52L212 94L264 62Z" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="1"/>';
+      s += '<path d="M152 34Q200 20 248 34Q200 46 152 34Z" fill="' + w.collar + '"/><path d="M152 34Q200 20 248 34Q200 46 152 34Z" fill="#000" opacity=".3"/>';
+      s += '<path d="M150 32Q172 46 198 56L182 98Q158 82 128 68Z" fill="' + w.collar + '"/><path d="M250 32Q228 46 202 56L218 98Q242 82 272 68Z" fill="' + w.collar + '"/>';
+      s += '<path d="M134 66Q160 79 180 92" fill="none" stroke="' + w.tipA + '" stroke-width="2.2"/><path d="M138 61Q162 74 182 87" fill="none" stroke="' + w.tipB + '" stroke-width="1.3"/>';
+      s += '<path d="M266 66Q240 79 220 92" fill="none" stroke="' + w.tipA + '" stroke-width="2.2"/><path d="M262 61Q238 74 218 87" fill="none" stroke="' + w.tipB + '" stroke-width="1.3"/>';
+      s += '<path d="M150 32Q172 46 198 56L182 98Q158 82 128 68ZM250 32Q228 46 202 56L218 98Q242 82 272 68Z" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="1"/>';
+      s += '<path d="M182 98Q158 82 128 68M218 98Q242 82 272 68" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="4" filter="url(#' + id + 'b)"/>';
     } else {
-      s += '<path d="M140 40Q200 58 260 40L262 30Q200 50 138 30Z" fill="' + w.collar + '"/><path d="M140 36Q200 54 260 36" stroke="' + w.tipA + '" stroke-width="2" fill="none"/>';
+      s += '<path d="M150 40Q200 52 250 40L252 28Q200 42 148 28Z" fill="' + w.collar + '"/><path d="M150 36Q200 48 250 36" stroke="' + w.tipA + '" stroke-width="2" fill="none"/><path d="M150 32Q200 44 250 32" stroke="' + w.tipB + '" stroke-width="1.2" fill="none"/>';
     }
     s += '<path d="' + P_BODY + '" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="1.5"/>';
     return s + "</svg>";
