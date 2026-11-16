@@ -1,0 +1,148 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Dinkin' Donut · Opening Soon</title>
+<style>
+@font-face{font-family:Fredoka;font-weight:700;src:url(../assets/fonts/fredoka-700.woff2)}
+@font-face{font-family:Fredoka;font-weight:600;src:url(../assets/fonts/fredoka-600.woff2)}
+@font-face{font-family:"DM Sans";font-weight:500;src:url(../assets/fonts/dm-sans-500.woff2)}
+@font-face{font-family:"DM Sans";font-weight:700;src:url(../assets/fonts/dm-sans-700.woff2)}
+:root{--glaze:#FF5FA2;--ball:#D7F03C;--dough:#E8A95B;--court:#2F7A4F;--choco:#3B2416;--cream:#FFF6EA}
+*{margin:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--choco)}
+#v{position:fixed;inset:0;overflow:hidden;background:var(--choco);font-family:"DM Sans";color:var(--cream)}
+.l{position:absolute;inset:0;display:grid;place-items:center;will-change:transform,opacity}
+.bg{position:absolute;inset:0}
+.h{font-family:Fredoka;font-weight:700;line-height:.92;letter-spacing:-.02em;text-align:center}
+.k{font-weight:700;letter-spacing:.32em;text-transform:uppercase;font-size:2.8vmin;text-align:center}
+.w{display:inline-block}
+svg{overflow:visible}
+#grain{position:absolute;inset:-50%;opacity:.07;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.45))}
+.court{position:absolute;inset:0;background:var(--court)}
+.court i{position:absolute;background:rgba(255,246,234,.35)}
+.shirts{display:flex;gap:2vmin;align-items:center;justify-content:center}
+.shirts>div{width:30vmin}
+.phone{width:30vmin;height:58vmin;border-radius:5vmin;background:#160d08;border:1vmin solid #241710;box-shadow:0 4vmin 8vmin rgba(0,0,0,.5);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.4vmin;padding:3vmin}
+.pin{display:flex;gap:1.4vmin}.pin b{width:6vmin;height:8vmin;border-radius:1.6vmin;background:var(--cream);color:var(--choco);font-family:Fredoka;font-size:5vmin;display:grid;place-items:center}
+.score{display:flex;gap:3vmin;font-family:Fredoka;font-weight:700;font-size:22vmin;line-height:1}
+</style></head><body><div id="v">
+
+<!-- S1: ball drop -->
+<div class="l" id="s1"><svg id="ball" width="18vmin" height="18vmin" viewBox="-50 -50 100 100" style="width:18vmin;height:18vmin">
+  <circle r="46" fill="#D7F03C"/><g fill="#9DB020">
+  <circle cx="-20" cy="-18" r="5"/><circle cx="12" cy="-26" r="5"/><circle cx="26" cy="4" r="5"/><circle cx="-4" cy="6" r="5"/><circle cx="-28" cy="16" r="5"/><circle cx="8" cy="30" r="5"/></g>
+  <circle id="hole" r="0" fill="#3B2416"/></svg></div>
+<div class="l" id="shadow" style="place-items:end center;padding-bottom:30vh"><div style="width:16vmin;height:2vmin;border-radius:50%;background:rgba(0,0,0,.45);filter:blur(.6vmin)"></div></div>
+
+<!-- S2: line -->
+<div class="l" id="s2"><div class="h" style="font-size:9vmin;max-width:82vmin" id="l2"></div></div>
+
+<!-- S3: donut + logo -->
+<div class="l" id="s3"><div style="display:grid;place-items:center;gap:4vmin">
+  <svg viewBox="-60 -60 120 120" style="width:46vmin;height:46vmin" id="donut">
+    <defs><radialGradient id="dg" cx=".4" cy=".35"><stop offset="0" stop-color="#F3BE78"/><stop offset="1" stop-color="#C9853F"/></radialGradient></defs>
+    <circle r="52" fill="url(#dg)"/>
+    <path id="glz" fill="#FF5FA2"/>
+    <circle r="17" fill="#3B2416"/>
+    <g id="spr"></g>
+  </svg>
+  <div class="h" id="logo" style="font-size:13vmin;color:var(--cream)">Dinkin’<br><span style="color:var(--glaze)">Donut</span></div>
+</div></div>
+
+<!-- S4: phone -->
+<div class="l" id="s4"><div style="display:grid;place-items:center;gap:5vmin">
+  <div class="phone" id="phone"><div class="k" style="color:var(--ball);font-size:1.7vmin">Your Glaze Pass</div><div class="pin"><b>4</b><b>2</b><b>7</b></div><div style="font-family:Fredoka;font-size:3.4vmin">You’re up next</div><div style="width:70%;height:1.2vmin;border-radius:1vmin;background:#3a2a20;overflow:hidden"><div id="bar" style="height:100%;background:var(--glaze);width:0"></div></div></div>
+  <div class="h" style="font-size:8vmin" id="l4">Scan. Queue. <span style="color:var(--ball)">Play.</span></div>
+</div></div>
+
+<!-- S5: court score -->
+<div class="l" id="s5"><div class="court" id="crt"><i style="left:8%;right:8%;top:50%;height:.5vmin"></i><i style="left:50%;top:10%;bottom:10%;width:.5vmin"></i><i style="left:8%;right:8%;top:10%;height:.5vmin"></i><i style="left:8%;right:8%;bottom:10%;height:.5vmin"></i><i style="left:8%;top:10%;bottom:10%;width:.5vmin"></i><i style="right:8%;top:10%;bottom:10%;width:.5vmin"></i></div>
+  <div style="position:relative;display:grid;place-items:center;gap:3vmin;background:rgba(47,122,79,.92);padding:4vmin 6vmin;border-radius:4vmin"><div class="k" style="color:var(--ball)">Games to eleven</div><div class="score"><span id="sa">0</span><span style="opacity:.4">–</span><span id="sb">0</span></div><div class="h" style="font-size:7vmin" id="l5">Every level welcome.</div></div></div>
+
+<!-- S6: shirts -->
+<div class="l" id="s6"><div style="display:grid;place-items:center;gap:4vmin"><div class="shirts" id="shirts"></div><div class="h" style="font-size:7.5vmin" id="l6">Your kit. <span style="color:var(--glaze)">1 of 1.</span></div></div></div>
+
+<!-- S7: opening soon -->
+<div class="l" id="s7"><div class="bg" id="s7bg" style="background:var(--glaze)"></div>
+  <div style="position:relative;display:grid;place-items:center;gap:3vmin"><div class="k" style="color:var(--choco)" id="k7">Doha · Pickleball club</div><div class="h" style="font-size:20vmin;color:var(--choco)" id="l7">Opening<br>soon</div></div></div>
+
+<!-- S8: end card -->
+<div class="l" id="s8"><div style="display:grid;place-items:center;gap:3.2vmin">
+  <svg viewBox="-60 -60 120 120" style="width:22vmin;height:22vmin"><circle r="52" fill="#E8A95B"/><path d="M-50 -8C-48 -40 -20 -52 0 -52C30 -52 50 -32 50 -6C50 4 44 6 40 2C36 -2 34 14 28 12C22 10 24 -2 18 0C12 2 14 18 6 18C-2 18 0 4 -8 4C-16 4 -14 20 -24 18C-32 16 -28 4 -36 6C-44 8 -50 4 -50 -8Z" fill="#FF5FA2"/><circle r="17" fill="#3B2416"/></svg>
+  <div class="h" style="font-size:10vmin">Dinkin’ <span style="color:var(--glaze)">Donut</span></div>
+  <div style="font-family:Fredoka;font-weight:600;font-size:4.4vmin;color:var(--ball)">Sweet game, soft hands.</div>
+  <div class="k" style="opacity:.85;margin-top:2vmin">@dinkindonutqa · dinkindonut.asia</div>
+  <div style="font-family:Fredoka;font-size:3.4vmin;opacity:.7;margin-top:1vmin">Stay glazed.</div>
+</div></div>
+
+<div id="grain"></div><div id="vig"></div>
+</div>
+<script src="../js/jersey.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const r=(t,a,b)=>cl((t-a)/(b-a));
+const eo=x=>1-Math.pow(1-x,4), eio=x=>x<.5?8*x*x*x*x:1-Math.pow(-2*x+2,4)/2;
+const back=x=>{const c=1.7,d=c+1;return 1+d*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const show=(el,a,b,t,f=.35)=>{const v=Math.min(r(t,a,a+f),1-r(t,b-f,b));el.style.opacity=t<a||t>b?0:eo(v);return v};
+
+// words for S2
+const words="Something sweet is coming to Doha.".split(" ");
+$("l2").innerHTML=words.map((w,i)=>`<span class="w" id="w${i}" style="margin:0 .12em;${w.startsWith("sweet")?"color:#FF5FA2":""}">${w}</span>`).join(" ");
+// glaze drip path (seeded wave)
+let gp="M-50 -6";for(let a=180;a<=360;a+=6){const rad=a*Math.PI/180;gp+=`L${(50*Math.cos(rad)).toFixed(1)} ${(50*Math.sin(rad)).toFixed(1)}`}
+for(let a=0;a<=180;a+=12){const rad=a*Math.PI/180,R=44+((a/12)%2?-6:10)*Math.abs(Math.sin(a*.7));gp+=`L${(R*Math.cos(rad)).toFixed(1)} ${(R*Math.sin(rad)*.55).toFixed(1)}`}
+$("glz").setAttribute("d",gp+"Z");
+const cols=["#D7F03C","#FFF6EA","#2F7A4F","#E8A95B","#FFFFFF"];let sp="";
+for(let i=0;i<34;i++){const a=i*2.39996,R=24+(i*7.3%22),x=R*Math.cos(a),y=R*Math.sin(a)*.8-6;sp+=`<rect class="s" x="-4" y="-1.2" width="8" height="2.4" rx="1.2" fill="${cols[i%5]}" data-x="${x}" data-y="${y}" data-r="${(i*47)%180}"/>`}
+$("spr").innerHTML=sp;const sprs=[...document.querySelectorAll("#spr .s")];
+const J=window.Jersey;
+$("shirts").innerHTML=`<div>${J.render({way:Object.keys(J.WAYS)[0],side:"back",name:"DREW",num:"7"})}</div><div>${J.renderPro({way:"bughaw",side:"back",name:"ANGEL",num:"11"})}</div><div>${J.renderPolo({way:Object.keys(J.POLO_WAYS)[0],side:"back",name:"ARAYKOH",num:"3"})}</div>`;
+const shirts=[...$("shirts").children];
+
+function seek(t){
+  // S1 ball drop and bounce 0-3.2
+  const s1=$("s1");s1.style.opacity=t<3.4?1:0;$("shadow").style.opacity=t<2.6?1:0;
+  let y;const g=r(t,0,1.1);
+  if(t<1.1)y=-60+60*g*g; else if(t<1.9){const u=r(t,1.1,1.9);y=-22*4*u*(1-u)}else{const u=r(t,1.9,2.4);y=-6*4*u*(1-u)}
+  const sq=t>1.05&&t<1.2?.82:1;
+  const zoom=t>2.4?1+eio(r(t,2.4,3.3))*14:1;
+  $("ball").style.transform=`translateY(${y}vh) scale(${1/sq*zoom},${sq*zoom}) rotate(${t*140}deg)`;
+  $("hole").setAttribute("r",t>2.4?eio(r(t,2.4,3.1))*60:0);
+  // S2 words 3.2-7.6
+  const s2=$("s2");s2.style.opacity=t>3.1&&t<7.7?1-r(t,7.3,7.7):0;
+  words.forEach((w,i)=>{const e=$("w"+i),u=eo(r(t,3.3+i*.32,3.8+i*.32));e.style.opacity=u;e.style.transform=`translateY(${(1-u)*40}%)`;e.style.filter=`blur(${(1-u)*8}px)`});
+  // S3 donut 7.6-12
+  const v3=show($("s3"),7.6,12.2,t,.4);
+  const dz=back(r(t,7.6,8.6));$("donut").style.transform=`scale(${dz}) rotate(${(t-7.6)*30}deg)`;
+  sprs.forEach((s,i)=>{const u=back(r(t,8.2+i*.025,8.8+i*.025));s.setAttribute("transform",`translate(${s.dataset.x*u} ${s.dataset.y*u-(1-u)*70}) rotate(${s.dataset.r})`);s.style.opacity=u>0?1:0});
+  const lu=eo(r(t,9,9.8));$("logo").style.opacity=lu;$("logo").style.transform=`translateY(${(1-lu)*6}vmin) scale(${.9+lu*.1})`;
+  // S4 phone 12-16.4
+  show($("s4"),12,16.6,t);
+  const pu=eo(r(t,12,12.9));$("phone").style.transform=`translateY(${(1-pu)*30}vmin) rotate(${(1-pu)*-8}deg)`;
+  $("bar").style.width=(eio(r(t,13,15.6))*100)+"%";
+  const l4=eo(r(t,12.5,13.3));$("l4").style.opacity=l4;$("l4").style.transform=`translateY(${(1-l4)*4}vmin)`;
+  // S5 court + score 16.4-21
+  show($("s5"),16.4,21.2,t,.3);
+  $("crt").style.transform=`scale(${1.25-.25*eo(r(t,16.4,17.6))})`;
+  const sa=Math.round(eio(r(t,16.9,19.4))*11),sb=Math.round(eio(r(t,16.9,19.2))*9);$("sa").textContent=sa;$("sb").textContent=sb;
+  $("sa").style.color=sa===11?"#D7F03C":"#FFF6EA";
+  const l5=eo(r(t,19.4,20.1));$("l5").style.opacity=l5;$("l5").style.transform=`translateY(${(1-l5)*4}vmin)`;
+  // S6 shirts 21-25.6
+  show($("s6"),21,25.8,t);
+  shirts.forEach((s,i)=>{const u=back(r(t,21.1+i*.22,21.9+i*.22));s.style.transform=`translateY(${(1-u)*40}vmin) rotate(${(i-1)*4*(u)}deg) scale(${i===1?1.08:1})`;s.style.opacity=cl(u*2)});
+  const l6=eo(r(t,22.2,23));$("l6").style.opacity=l6;
+  // S7 opening soon 25.6-30
+  const s7=$("s7");s7.style.opacity=t>25.6&&t<30.3?1:0;
+  const wipe=eio(r(t,25.6,26.3));$("s7bg").style.clipPath=`circle(${wipe*150}% at 50% 50%)`;
+  const o7=back(r(t,26.1,26.9));$("l7").style.transform=`scale(${o7}) rotate(${(1-cl(o7))*-6}deg)`;$("l7").style.opacity=cl(o7*2);
+  const pulse=t>27?1+.025*Math.sin((t-27)*Math.PI*2.2):1;$("l7").style.transform+=` scale(${pulse})`;
+  $("k7").style.opacity=eo(r(t,26.8,27.4));
+  // S8 end 30-34
+  const v8=eo(r(t,30,30.8));$("s8").style.opacity=v8;$("s8").style.transform=`scale(${.94+.06*v8})`;
+  if(t>30)s7.style.opacity=1-r(t,30,30.4);
+  // grain jitter
+  $("grain").style.transform=`translate(${(Math.floor(t*24)*37)%40-20}px,${(Math.floor(t*24)*53)%40-20}px)`;
+}
+window.seek=seek;seek(0);
+if(!/[?&]render/.test(location.search)){let t0=performance.now();(function f(){seek(((performance.now()-t0)/1000)%34);requestAnimationFrame(f)})()}
+</script></body></html>
