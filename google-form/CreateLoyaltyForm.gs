@@ -6,7 +6,7 @@
  * Authorise when prompted. The form and sheet links are printed in the execution log.
  */
 
-const SITE = 'https://dunkindonutqatar.vercel.app';
+const SITE = 'https://dinkindonutqatar.vercel.app';
 const IMG = {
   header: SITE + '/assets/loyalty/form-header.png',
   card: SITE + '/assets/loyalty/form-card-preview.png',

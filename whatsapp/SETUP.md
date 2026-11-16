@@ -44,13 +44,13 @@ Join the queue in one tap: {{4}}
 Or scan the QR code at the court and enter your name and PIN. This PIN is valid for tonight only.
 ```
 - Footer: `See you on court.`
-- Sample values: `Drew`, `50 QAR`, `405`, `https://dunkindonutqatar.vercel.app/queue?n=Drew&p=405`
+- Sample values: `Drew`, `50 QAR`, `405`, `https://dinkindonutqatar.vercel.app/queue?n=Drew&p=405`
 
 Submit. Utility templates are usually approved within minutes to a few hours.
 
 ## 5. Turn on the assistant (webhook)
 1. App → **WhatsApp → Configuration → Webhook → Edit**.
-2. Callback URL: `https://dunkindonutqatar.vercel.app/api/whatsapp`
+2. Callback URL: `https://dinkindonutqatar.vercel.app/api/whatsapp`
 3. Verify token: make up a phrase, e.g. `glaze-2026` (this is `WA_VERIFY_TOKEN`). Add it to Vercel **first** (step 6) and redeploy, then click **Verify and save**.
 4. Under **Webhook fields**, subscribe to **messages**.
 

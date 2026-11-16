@@ -6,17 +6,17 @@
 //   WA_TEMPLATE      approved template name, body variables: {{1}} name, {{2}} amount, {{3}} PIN, {{4}} join link
 //   WA_LANG          template language code (default "en")
 //   WA_VERIFY_TOKEN  any string; used once when Meta verifies the webhook (api/whatsapp.js)
-//   SITE_URL         public site address (default https://dunkindonutqatar.vercel.app)
+//   SITE_URL         public site address (default https://dinkindonutqatar.vercel.app)
 // Without WA_TOKEN / WA_PHONE_ID / WA_TEMPLATE, the console falls back to a ready-made wa.me link.
 const TOKEN = process.env.WA_TOKEN, PHONE_ID = process.env.WA_PHONE_ID, TEMPLATE = process.env.WA_TEMPLATE, LANG = process.env.WA_LANG || "en";
-const SITE = (process.env.SITE_URL || "https://dunkindonutqatar.vercel.app").replace(/\/$/, "");
+const SITE = (process.env.SITE_URL || "https://dinkindonutqatar.vercel.app").replace(/\/$/, "");
 const GRAPH = "https://graph.facebook.com/v20.0/";
 
 const configured = () => Boolean(TOKEN && PHONE_ID);
 
 function toIntl(phone) {
   let d = String(phone || "").replace(/\D/g, "");
-  if (d.length === 8) d = "974" + d; // Qatar local number
+  if (d.length === 8) d = "974" + d; // local 8-digit number
   return d;
 }
 

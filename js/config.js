@@ -1,7 +1,7 @@
 // Club settings. Edit this file to update club details across the whole site.
 window.CLUB = {
   name: "Dinkin' Donut",
-  city: "Doha, Qatar",
+  city: "Doha",
   venue: "Venue: TBA — stay tuned",   // e.g. "Aspire Zone, Court 3" once confirmed
   mapUrl: "",                          // Google Maps link once the venue is locked
   nightDay: "Open play nights",        // e.g. "Every Thursday"

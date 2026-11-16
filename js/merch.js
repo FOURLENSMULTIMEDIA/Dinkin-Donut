@@ -12,7 +12,7 @@ window.JERSEY = {
   prints: [["full", "Name + number"], ["name", "Name only"], ["plain", "Plain back"]],
   sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
   specs: [
-    ["Tennis cut", "Slim athletic fit with a curved shirt-tail hem and side vents."],
+    ["Court cut", "Slim athletic fit with a curved shirt-tail hem and side vents."],
     ["1 of 1", "The tonal hole pattern is generated from your name, with a numbered hem tag."],
     ["Performance knit", "Lightweight, quick-dry fabric for Doha nights."],
     ["Full sublimation", "Colours are dyed into the fabric. They won't crack or peel."],
@@ -40,9 +40,9 @@ window.POLO = {
   sizeChart: { XS: 47, S: 50, M: 53, L: 56, XL: 59, "2XL": 62, "3XL": 65 },
 };
 
-// The Doha Pro Polo: international-style tennis polo.
+// The Mabuhay Polo: Filipino-inspired pickleball polo.
 window.PRO = {
-  name: "The Doha Pro Polo",
+  name: "The Mabuhay Polo",
   price: 199,
   status: "preorder",
   leadTime: "Made to order. Ready in about 3 weeks.",
@@ -50,9 +50,9 @@ window.PRO = {
   sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
   prints: [["full", "Name + number"], ["name", "Name only"], ["plain", "Plain back"]],
   specs: [
-    ["Tennis polo cut", "Knit collar, three-button placket, athletic fit and a curved shirt-tail hem."],
-    ["Doha details", "Nine-point serrated collar tips and cuffs, a tonal mashrabiya lattice in the print."],
-    ["1 of 1", "The lattice is generated from your name, with a numbered hem tag. No two are alike."],
+    ["Court polo cut", "Knit collar, three-button placket, athletic fit and a curved shirt-tail hem."],
+    ["Filipino details", "A tonal banig weave in the print and an eight-ray sun with three stars under the collar."],
+    ["1 of 1", "The weave is generated from your name, with a numbered hem tag. No two are alike."],
     ["Match-day fabric", "Lightweight performance knit, sublimated so colours never crack."],
   ],
   sizeChart: { XS: 46, S: 49, M: 52, L: 55, XL: 58, "2XL": 61, "3XL": 64 },

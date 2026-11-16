@@ -4,7 +4,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var scenes = root.querySelectorAll(".sc"), price = (window.JERSEY && window.JERSEY.price) || 165;
   $("fPrice").textContent = price + " QAR";
-  var SHOTS = [3200, 2600, 5200, 3800, 3200, 3800], TOTAL = SHOTS.reduce(function (a, b) { return a + b; }, 0);
+  var SHOTS = [3200, 2600, 5200, 3800, 3200, 4200, 4200, 5000, 4000, 3800], TOTAL = SHOTS.reduce(function (a, b) { return a + b; }, 0);
   // Soundtrack: "Trailer" by nastelbom (Pixabay Content License), cut so the drop lands on the lineup reveal.
   var music = new Audio("/assets/audio/glaze-film.mp3"); music.preload = "auto"; music.volume = 0.85;
   var playing = false, muted = true, t0 = 0, elapsed = 0, raf, timers = [], cur = -1, ctx;
@@ -60,6 +60,11 @@
       var row = [["glaze", "DREW", "10", "Glaze", "Home"], ["midnight", "ANGEL", "23", "Midnight", "Tournament"], ["court", "ARAYKOH", "4", "Court", "Away"]];
       $("fRow").innerHTML = row.map(function (r) { return "<div>" + J.render({ way: r[0], side: "back", name: r[1], num: r[2] }) + "<small>" + r[4] + "</small><b>" + r[3] + "</b></div>"; }).join("");
     }
+    if (i === 5) $("fSeven").innerHTML = ["glaze", "court", "midnight", "cream", "cocoa", "sage", "blush"].map(function (w) { return J.render({ way: w, side: "front" }); }).join("");
+    if (i === 6) $("fPro").innerHTML = J.renderPro({ way: "bughaw", side: "front" }) + J.renderPro({ way: "perlas", side: "back", name: "DREW", num: "10" });
+    if (i === 7) { var nm = "ARAYKOH", f1 = $("fOne"), tg = $("fOneTag");
+      var p1 = function (n) { var svg = J.render({ way: "cream", side: "back", name: n, num: n ? "8" : "" }); f1.innerHTML = svg; var m = svg.match(/DD-[0-9A-F]{4}/); tg.textContent = "1 of 1 · " + (m ? m[0] : "DD-····"); };
+      p1(""); for (var c = 1; c <= nm.length; c++) (function (k) { later(function () { p1(nm.slice(0, k)); }, 400 + k * 380); })(c); }
     if (i === 4) $("fPolo").innerHTML = J.renderPolo({ way: "night", side: "front" }) + J.renderPolo({ way: "clubhouse", side: "back", name: "ANGEL" });
   }
 
@@ -88,7 +93,7 @@
   function paint() { $("fToggle").innerHTML = playing ? ICON.pause : ICON.play; $("fToggle").setAttribute("aria-label", playing ? "Pause" : "Play"); $("fSound").innerHTML = (muted ? ICON.off : ICON.on) + (muted ? " Sound off" : " Sound on"); }
 
   // Resting frame: the end card, so the price is visible before anything plays
-  scenes[5].classList.add("on"); paint();
+  scenes[scenes.length - 1].classList.add("on"); paint();
   $("play").onclick = function () { muted = false; elapsed = 0; music.play().catch(function () {}); play(); };
   $("fToggle").onclick = function (e) { e.stopPropagation(); if (playing) pause(); else { muted = false; ac(); play(); syncMusic(); paint(); } };
   // Tapping a muted film turns the sound on
