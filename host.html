@@ -271,6 +271,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
     <h2>Session controls</h2>
     <div class="row">
       <a class="btn ghost sm" href="/tv" target="_blank">Open TV mode</a>
+      <a class="btn pink sm" href="/studio" target="_blank">Post Studio (Instagram)</a>
       <button class="btn ghost sm" id="csv" type="button">Download results (CSV)</button>
       <span id="resetZone"></span>
       <button class="btn ghost sm" id="logout" type="button">Sign out</button>
@@ -611,7 +612,7 @@ function showRecap() {
     <label class="row muted"><input type="checkbox" id="rPub" checked> Put the top 3 in the Hall of Glaze on the website</label>
     <label class="row muted"><input type="checkbox" id="rClr"> Also clear tonight’s list (otherwise names stay for next session)</label>
     <p class="muted">Download the results before you reset. Resetting clears players, the queue, scores and the log for everyone.</p>
-    <div class="row"><button class="btn sm" id="rCsv">Download results (CSV)</button><button class="btn sm" id="rPay">Download payments (CSV)</button><button class="btn sm ghost" id="rCopy">Copy recap for Instagram</button></div>
+    <div class="row"><button class="btn sm" id="rCsv">Download results (CSV)</button><button class="btn sm" id="rPay">Download payments (CSV)</button><button class="btn sm ghost" id="rCopy">Copy recap for Instagram</button><a class="btn sm ghost" href="/studio#recap" target="_blank">Make recap post</a></div>
     <div class="row" style="justify-content:space-between;border-top:1px dashed var(--line);padding-top:14px">
       <button class="btn ghost sm" id="rKeep">Keep playing</button><button class="btn pink" id="rReset">Reset for next session</button></div></div>`;
   document.body.appendChild(d); $("rKeep").focus();

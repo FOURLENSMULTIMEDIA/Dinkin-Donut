@@ -97,3 +97,8 @@ Host console → **Games each**:
 - **4–8**: a fixed number for everyone. **No limit** turns it off.
 
 Players who reach their share move to *Done for tonight* and their phone thanks them. Courts never sit empty: if too few are waiting, players with the fewest games get a bonus game. Winners rotate off once they reach their share.
+
+## Post Studio (Instagram)
+`/studio` (linked from the host console). Ready-made posts in the club's brand, filled from live data:
+open play tonight, session recap (Hall of Glaze), Glaze Jersey, Glaze Card. Post 4:5 or Story 9:16.
+On a phone, **Share to Instagram** opens the share sheet with the image and copies the caption.
