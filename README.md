@@ -90,3 +90,10 @@ Host console bar → **Autopilot** (on by default). Courts fill themselves the m
 - **Fresh partners**: the same pair is avoided in back-to-back games, and the same four never go straight back on.
 - **Up next**: the next game, exactly as it will be built, shows on the console, players' phones and the TV.
 - **Court calls (TV)**: tap *Turn on court announcements* on `/tv` once; each new game gets a full-screen call and a spoken announcement.
+
+## Games each (fair share)
+Host console → **Games each**:
+- **Auto** (default): shares the games left tonight across everyone who's here, using courts, real game length and the **Ends** time (default midnight). More people means fewer games each; it recalculates as people join or leave.
+- **4–8**: a fixed number for everyone. **No limit** turns it off.
+
+Players who reach their share move to *Done for tonight* and their phone thanks them. Courts never sit empty: if too few are waiting, players with the fewest games get a bonus game. Winners rotate off once they reach their share.

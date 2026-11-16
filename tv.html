@@ -82,9 +82,9 @@ DD.live(S => {
   let k = 0;
   if (started) S.courts.forEach((c, i) => { if (c.teams && now[c.id] !== started[c.id]) setTimeout(() => call(S, c), k++ * 7500); });
   started = now;
+  $("title").textContent = S.limitNow ? `${S.nightTitle} · ${S.limitNow} games each` : S.nightTitle;
   const un = DD.upNext(S); $("tvNext").innerHTML = un ? `<div class="tvnext"><span>${un[0].map(DD.esc).join(" &amp; ")}</span><i>VS</i><span>${un[1].map(DD.esc).join(" &amp; ")}</span></div>` : "";
   const need = S.format * 2;
-  $("title").textContent = S.nightTitle;
   $("courts").innerHTML = S.courts.map(c => c.teams
     ? `<div class="ct"><h2>Court ${c.id}<span data-start="${c.start}" data-cap="${S.gameCap || 0}">${DD.clock(c.start)}</span></h2><div class="tm">${DD.team(S, c.teams[0])}</div><div class="vs">VS</div><div class="tm">${DD.team(S, c.teams[1])}</div></div>`
     : `<div class="ct open"><h2>Court ${c.id}<span>OPEN</span></h2><div class="tm" style="opacity:.6">${c.stayers ? "Winners staying: " + DD.team(S, c.stayers) : "Next up, head over"}</div></div>`).join("");

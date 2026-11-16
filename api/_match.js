@@ -75,7 +75,7 @@ function choose(S, court, take, stay) {
   const games = id => (S.players[id].w || 0) + (S.players[id].l || 0);
   const fewest = Math.min(...win.map(games));
   // Lower score = better fit: skill distance, plus a nudge for anyone who has played more than others tonight
-  const score = id => Math.abs(rating(S.players[id]) - target) + 0.25 * (games(id) - fewest);
+  const score = id => Math.abs(rating(S.players[id]) - target) + (S.gameLimit ? 0.6 : 0.25) * (games(id) - fewest);
   win.filter(id => !picked.includes(id))
     .sort((x, y) => score(x) - score(y) || q.indexOf(x) - q.indexOf(y))
     .forEach(id => { if (picked.length < take) picked.push(id); });

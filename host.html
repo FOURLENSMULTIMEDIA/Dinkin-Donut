@@ -61,6 +61,8 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .warn{background:#FFE7A8;color:var(--choco);border-radius:14px;padding:12px 14px;font-weight:600}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .muted{color:var(--muted);font-size:14px}
+.sharechip{font:700 12px var(--body);background:var(--ink);color:var(--on-ink);border-radius:999px;padding:6px 10px;white-space:nowrap}
+.sharechip:empty{display:none}
 .team{grid-template-columns:1fr 64px!important}
 .ct .score{width:64px;height:48px;font:700 24px var(--display)!important;text-align:center;border-radius:12px;padding:0}
 .autop{background:#D7F03C;color:#3B2416!important;border-radius:999px;padding:6px 12px}
@@ -180,6 +182,9 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
     <label for="title">Night</label><input id="title" style="width:200px">
     <label for="format">Format</label><select id="format"><option value="2">Doubles</option><option value="1">Singles</option></select>
     <label class="row muted autop" style="gap:6px"><input type="checkbox" id="autopilot"> <b>Autopilot</b></label>
+    <label for="gameLimit">Games each</label><select id="gameLimit"><option value="auto">Auto</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="0">No limit</option></select>
+    <span class="sharechip" id="shareChip"></span>
+    <label for="sessionEnd">Ends</label><input id="sessionEnd" type="time" style="width:110px">
     <label for="target">Game to</label><select id="target"><option value="11">11 points</option><option value="15">15 points</option><option value="21">21 points</option></select>
     <label class="row muted" style="gap:6px"><input type="checkbox" id="requirePin"> PIN to join</label>
     <label for="match">Matching</label><select id="match"><option value="smart">Smart match</option><option value="levels">Level courts</option><option value="order">Queue order</option></select>
@@ -196,6 +201,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
       <form class="row" id="addForm" autocomplete="off"><input id="newName" placeholder="Add a walk-in" style="flex:1" aria-label="Player name" maxlength="24"><button class="btn sm">Add</button></form>
       <div id="upNext"></div>
       <ol class="q" id="queue"></ol>
+      <div id="doneList"></div>
       <div id="bench"></div>
     </section>
   </div>
@@ -356,8 +362,12 @@ function render() {
     <button class="ib" title="Send to front" aria-label="Send to front" data-a="toFront" data-id="${id}">⇡</button><button class="ib" title="Take a break" aria-label="Take a break" data-a="bench" data-id="${id}">⏸</button></li>`).join("")
     : '<li class="muted">Queue is empty. Players join by scanning the QR code.</li>';
   $("upNext").innerHTML = upNextCard(S);
+  $("doneList").innerHTML = (S.done || []).length ? `<p class="muted" style="margin:8px 0 6px">Done for tonight (${S.done.length}). They get a bonus game if courts would otherwise sit empty.</p><div class="row">${S.done.map(id => `<span class="chip">${DD.esc(S.players[id]?.name)} · ${(S.players[id]?.w || 0) + (S.players[id]?.l || 0)}</span>`).join("")}</div>` : "";
   renderRoster(); renderPay();
   if (document.activeElement !== $("requirePin")) $("requirePin").checked = S.requirePin !== false;
+  if (document.activeElement !== $("gameLimit")) $("gameLimit").value = String(S.gameLimit ?? "auto");
+  if (document.activeElement !== $("sessionEnd")) { const m = (S.sessionEnd || 1440) % 1440; $("sessionEnd").value = String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); }
+  $("shareChip").textContent = S.limitNow ? `${S.gameLimit === "auto" ? "Auto: " : ""}${S.limitNow} games each` : (S.gameLimit === "auto" ? "Auto: waiting for players" : "");
   $("autopilot").checked = S.autopilot !== false; if (document.activeElement !== $("target")) $("target").value = String(S.target || 11);
   $("fillAll").textContent = S.autopilot !== false ? "Autopilot on" : "Fill open courts"; $("fillAll").disabled = S.autopilot !== false;
   $("gpNames").innerHTML = Object.values(S.players).map(p => `<option value="${DD.esc(p.name)}">`).join("");
@@ -565,6 +575,8 @@ $("passForm").onsubmit = e => {
 };
 $("gpName").addEventListener("change", () => { const p = Object.values(S.players).find(x => x.name.toLowerCase() === $("gpName").value.trim().toLowerCase()); if (p && p.phone && !$("gpPhone").value) $("gpPhone").value = p.phone; });
 $("autopilot").onchange = e => act({ type: "settings", autopilot: e.target.checked }, e.target.checked ? "Autopilot on: courts fill themselves" : "Autopilot off: start games by hand");
+$("gameLimit").onchange = e => act({ type: "settings", gameLimit: e.target.value }, e.target.value === "auto" ? "Games each: worked out from who’s here" : e.target.value === "0" ? "No game limit" : `Everyone gets ${e.target.value} games`);
+$("sessionEnd").onchange = e => { const [h, m] = e.target.value.split(":").map(Number); act({ type: "settings", sessionEnd: (h * 60 + m) || 1440 }, "End time saved"); };
 $("target").onchange = e => act({ type: "settings", target: e.target.value }, `Games now go to ${e.target.value}`);
 $("requirePin").onchange = e => act({ type: "settings", requirePin: e.target.checked }, e.target.checked ? "Players now need their PIN to join" : "PIN no longer required");
 document.addEventListener("click", e => {

@@ -5,7 +5,7 @@ const MAX_LOG = 150;
 function fresh() {
   return {
     v: 0, updatedAt: Date.now(), nightTitle: "Open Play Night",
-    format: 2, rotation: "winstay", maxWins: 2, match: "smart", requirePin: true, autopilot: true, gameCap: 0, target: 11,
+    format: 2, rotation: "winstay", maxWins: 2, match: "smart", requirePin: true, autopilot: true, gameCap: 0, target: 11, gameLimit: "auto", sessionEnd: 1440, done: [],
     players: {}, queue: [], bench: [], games: 0, nextId: 1, durSum: 0, durN: 0,
     fee: 0, pay: {}, fawran: "",
     courts: [1, 2, 3].map(id => ({ id, teams: null, start: null, stayers: null, streak: 0 })),
@@ -78,6 +78,7 @@ function fillCourt(S, c) {
       return fillCourt(S, c);
     }
   }
+  if (S.queue.length < take) topUp(S, take);
   const incoming = M.choose(S, c, take, stay);
   if (!incoming || incoming.length < take) return;
   M.markSkips(S, incoming);
@@ -92,6 +93,47 @@ function court(S, id) {
   const c = S.courts.find(c => c.id === Number(id));
   if (!c) throw new Error("That court no longer exists.");
   return c;
+}
+
+// Fair share: how many games each player gets tonight.
+// Auto: (games still possible before the session ends × players per game) shared across everyone here,
+// added to what the average player has already played. Recalculates as people join or leave.
+const played = p => (p.w || 0) + (p.l || 0);
+function activeIds(S) {
+  const onCourt = S.courts.flatMap(c => [...(c.teams ? c.teams.flat() : []), ...(c.stayers || [])]);
+  return [...new Set([...S.queue, ...onCourt, ...(S.done || [])])].filter(id => S.players[id]);
+}
+function minutesLeft(S) {
+  const doha = new Date(Date.now() + 3 * 3600e3), now = doha.getUTCHours() * 60 + doha.getUTCMinutes();
+  // Minutes until the session end, across midnight; more than 18 hours away means it has already passed
+  const diff = ((S.sessionEnd || 1440) - now + 2880) % 1440;
+  return diff > 18 * 60 ? 0 : diff;
+}
+function gameLimit(S) {
+  if (!S.gameLimit) return 0;
+  if (S.gameLimit !== "auto") return S.gameLimit;
+  const ids = activeIds(S); if (ids.length < S.format * 2) return 0;
+  const avgLen = S.durN >= 3 ? S.durSum / S.durN : 13;
+  const gamesLeft = Math.floor(minutesLeft(S) / avgLen) * S.courts.length;
+  const perPlayer = gamesLeft * S.format * 2 / ids.length;
+  const playedAvg = ids.reduce((a, id) => a + played(S.players[id]), 0) / ids.length;
+  return Math.max(3, Math.min(12, Math.round(playedAvg + perPlayer)));
+}
+// Move players who reached their share to "done"; bring them back if the share grows.
+function applyLimit(S) {
+  S.done = (S.done || []).filter(id => S.players[id]);
+  const lim = gameLimit(S); S.limitNow = lim;
+  if (!lim) { if (S.done.length) { S.queue.push(...S.done); S.done = []; } return; }
+  S.queue = S.queue.filter(id => { if (played(S.players[id]) >= lim) { if (!S.done.includes(id)) { S.done.push(id); log(S, `${S.players[id].name} played ${lim} games. Done for tonight, thank you!`); } return false; } return true; });
+  S.done = S.done.filter(id => { if (played(S.players[id]) < lim) { S.queue.push(id); return false; } return true; });
+}
+// Courts never sit empty: if too few are waiting, players who are done get a bonus game (fewest games first).
+function topUp(S, need) {
+  if (S.queue.length >= need || !(S.done || []).length) return;
+  const extra = S.done.slice().sort((a, b) => played(S.players[a]) - played(S.players[b])).slice(0, need - S.queue.length);
+  S.done = S.done.filter(id => !extra.includes(id)); S.queue.push(...extra);
+  extra.forEach(id => { S.players[id].bonus = true; });
+  if (extra.length) log(S, `Bonus game: ${extra.map(id => S.players[id].name).join(", ")}`);
 }
 
 // Who plays next: the game the matchmaker would build for the next free court, without changing anything.
@@ -110,7 +152,7 @@ const actions = {
   join: (S, a) => ({ player: addPlayer(S, a.name, a.level, false, a.pin) }),
   leave: (S, a) => {
     const p = S.players[a.id]; if (!p) return;
-    S.queue = S.queue.filter(id => id !== p.id);
+    S.queue = S.queue.filter(id => id !== p.id); S.done = (S.done || []).filter(id => id !== p.id);
     if (!S.bench.includes(p.id)) S.bench.push(p.id);
     log(S, `${p.name} is taking a break`);
   },
@@ -183,7 +225,8 @@ const actions = {
     if (mins <= 45) { S.durSum = (S.durSum || 0) + mins; S.durN = (S.durN || 0) + 1; }
     log(S, `Court ${c.id}: ${names(S, W)} beat ${names(S, L)}${ws ? ` ${ws}–${ls}` : ""} (${mins} min)`);
     const teamStreak = c.lastWinners && c.lastWinners.join() === [...W].sort().join() ? c.streak + 1 : 1;
-    if (S.rotation === "winstay" && teamStreak < S.maxWins) {
+    const capped = S.limitNow && W.some(id => played(S.players[id]) >= S.limitNow);
+    if (S.rotation === "winstay" && teamStreak < S.maxWins && !capped) {
       c.streak = teamStreak; c.lastWinners = [...W].sort(); c.stayers = W.slice(); S.queue.push(...L);
     } else {
       if (S.rotation === "winstay") log(S, `${names(S, W)} hit ${S.maxWins} wins and rotate off. Sweet run!`);
@@ -232,6 +275,8 @@ const actions = {
     if (a.format && !S.courts.some(c => c.teams)) S.format = Number(a.format) === 1 ? 1 : 2;
     if (typeof a.requirePin === "boolean") S.requirePin = a.requirePin;
     if (typeof a.autopilot === "boolean") S.autopilot = a.autopilot;
+    if (a.gameLimit !== undefined) S.gameLimit = a.gameLimit === "auto" ? "auto" : Math.max(0, Math.min(20, parseInt(a.gameLimit, 10) || 0));
+    if (a.sessionEnd !== undefined) S.sessionEnd = Math.max(0, Math.min(1800, parseInt(a.sessionEnd, 10) || 1440));
     if (a.target) S.target = [11, 15, 21].includes(Number(a.target)) ? Number(a.target) : 11;
     if (a.gameCap !== undefined) S.gameCap = Math.max(0, Math.min(40, Number(a.gameCap) || 0));
     if (a.match) S.match = ["order", "smart", "levels"].includes(a.match) ? a.match : "smart";
@@ -243,7 +288,7 @@ const actions = {
   reset: (S, a) => {
     const n = fresh();
     if (!a.clearRoster) Object.values(S.players).forEach(p => { n.players[p.id] = { id: p.id, name: p.name, level: p.level, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false }; });
-    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.requirePin = S.requirePin !== false; n.autopilot = S.autopilot !== false; n.gameCap = 0; n.target = S.target || 11;
+    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.requirePin = S.requirePin !== false; n.autopilot = S.autopilot !== false; n.gameCap = 0; n.target = S.target || 11; n.gameLimit = S.gameLimit ?? "auto"; n.sessionEnd = S.sessionEnd || 1440;
     n.courts = S.courts.map(c => ({ id: c.id, teams: null, start: null, stayers: null, streak: 0, level: c.level || "any" }));
     return n;
   },
@@ -256,6 +301,7 @@ function apply(S, a) {
   if (!fn) throw new Error("Unknown action.");
   const out = fn(S, a) || {};
   const next = out && out.v !== undefined && out.players ? out : S; // reset returns a new state
+  applyLimit(next);
   if (next.autopilot !== false && !["cancel", "removeCourt", "reset"].includes(a.type)) next.courts.forEach(c => fillCourt(next, c));
   next.upNext = previewNext(next);
   next.v = (S.v || 0) + 1; next.updatedAt = Date.now();

@@ -32,6 +32,7 @@
 .pd:focus{outline:3px solid #FFF6EA;outline-offset:3px}
 .pinrow small{opacity:.75;font-size:13px}
 .shake{animation:shake .4s}@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.share{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:6px}.share i{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,246,234,.45)}.share i.on{background:#D7F03C;border-color:#D7F03C}.share span{margin-left:6px;font-weight:700;font-size:13px;opacity:.85}
 .me .err{color:#FFB3CF;font-weight:600;margin:0}
 .ticket{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .ticket .big{font:700 clamp(64px,16vw,110px)/1 var(--display);color:var(--ball);font-variant-numeric:tabular-nums}
@@ -188,7 +189,9 @@ function renderMe() {
   const staying = S.courts.find(c => c.stayers && c.stayers.includes(meId));
   const pos = S.queue.indexOf(meId), need = S.format * 2;
   let phase, html;
-  const rec = `<p style="margin:0">Tonight: <b>${me.w}W · ${me.l}L</b>${me.streak > 1 ? ` · on a ${me.streak}-game streak` : ""}</p>`;
+  const gp = me.w + me.l, lim = S.limitNow;
+  const share = lim ? `<div class="share" aria-label="${gp} of ${lim} games played">${Array.from({ length: lim }, (_, i) => `<i class="${i < gp ? "on" : ""}"></i>`).join("")}<span>${Math.min(gp, lim)} of ${lim} games</span></div>` : "";
+  const rec = `<p style="margin:0">Tonight: <b>${me.w}W · ${me.l}L</b>${me.streak > 1 ? ` · on a ${me.streak}-game streak` : ""}</p>${share}`;
   if (court) {
     phase = "court" + court.id; box.classList.add("oncourt");
     const mine = court.teams.findIndex(t => t.includes(meId));
@@ -202,6 +205,9 @@ function renderMe() {
     html = `<div class="eyebrow" style="color:var(--ball)">${pos < need ? "Get your paddle ready" : "You’re in the queue"}</div>
       <div class="ticket"><span class="big">#${pos + 1}</span><div><b>${DD.esc(me.name)}</b> ${LV[me.level] || ""}<br>${pos < need ? "You’re on the next open court." : `${pos} ahead of you`}<br><span class="eta">${DD.icon("clock", 15)} ${eta(pos)}</span></div></div>
       ${rec}<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost sm" id="leave">Take a break</button><button class="btn ghost sm" id="notme">Not ${DD.esc(me.name)}?</button></div>`;
+  } else if ((S.done || []).includes(meId)) {
+    phase = "done";
+    html = `<div class="eyebrow" style="color:var(--ball)">Done for tonight</div><h1>That’s your ${lim} games, ${DD.esc(me.name)}.</h1><p style="margin:0">Thanks for playing. Everyone gets a fair share tonight. If a court opens up with nobody waiting, you’ll get a bonus game and this page will call you.</p>${rec}`;
   } else {
     phase = "out";
     html = `<div class="eyebrow" style="color:var(--dough)">On a break</div><h1>Hi ${DD.esc(me.name)}</h1>${rec}
