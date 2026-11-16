@@ -8,7 +8,6 @@ Club website + live court queue for open-play nights in Doha. Sweet game, soft h
 | `/queue` | Players: scan the QR, type a name, see your position and court |
 | `/host` | Hosts (PIN): run courts, record wins + scores, reorder queue, CSV export |
 | `/tv` | A TV/laptop at the venue: big live board with QR |
-| `/poster` | Printable A4 QR poster for the check-in table |
 | `/merch` | Club shop: Glaze Jersey and Clubhouse Polo builder (name, number, colourway, size), shop film, WhatsApp ordering |
 | `/loyalty` | Glaze Card loyalty programme: play 6, get the 7th free |
 | `/dupr` | DUPR rated games, sends players to your Reclub page |
@@ -28,7 +27,7 @@ No build step. Plain HTML/CSS/JS + one Vercel serverless function (`api/queue.js
 3. **Database (required for a real night)** – in the Vercel project: Storage → Create / Marketplace → **Upstash for Redis** (free tier) → connect to the project. This adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` automatically.
 4. **Host PIN** – Settings → Environment Variables → add `HOST_PIN` = your host password. It is case-sensitive and never stored in the code, so the host console stays locked until you set it. 5 wrong tries locks that device out for 10 minutes.
 5. **Redeploy** (Deployments → ⋯ → Redeploy) so the new variables load.
-6. Open `/host`, sign in, and print `/poster`.
+6. Open `/host` and sign in.
 
 Optional: Settings → Domains to add e.g. `dinkindonut.qa`. The QR codes follow whatever domain the page is opened on, so print the poster **from your final domain**.
 
