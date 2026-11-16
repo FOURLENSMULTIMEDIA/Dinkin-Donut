@@ -160,6 +160,8 @@
 .summary{white-space:pre-wrap;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;font-size:13px}
 .empty{color:var(--muted);text-align:center;padding:40px 0}
 .footer{padding-bottom:110px}
+.oneofone{display:flex;gap:10px;align-items:center;margin:0;font-size:14px;background:var(--sunk);border-radius:14px;padding:10px 14px}
+.oneofone b{font:700 12px var(--body);letter-spacing:.14em;background:var(--ink);color:var(--on-ink);border-radius:6px;padding:4px 8px;white-space:nowrap}
 .paybox{border-radius:18px;background:#3B2416;color:#FFF6EA;padding:16px;display:grid;gap:10px}
 .payhead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;opacity:.95}
 .payhead .fw{font:700 13px var(--body);letter-spacing:.06em;background:#D7F03C;color:#3B2416;padding:5px 10px;border-radius:999px}
@@ -190,7 +192,7 @@
   <!-- Builder -->
   <div class="shop-h" id="build">
     <div><div class="eyebrow">Club shop · Drop 01</div><h2>Make it yours.</h2></div>
-    <div class="tabs" role="tablist" aria-label="Product"><button role="tab" aria-selected="true" data-p="jersey">Glaze Jersey</button><button role="tab" aria-selected="false" data-p="pro">Doha Pro Kit</button><button role="tab" aria-selected="false" data-p="polo">Court Polo</button></div>
+    <div class="tabs" role="tablist" aria-label="Product"><button role="tab" aria-selected="true" data-p="jersey">Glaze Jersey</button><button role="tab" aria-selected="false" data-p="pro">Doha Pro Polo</button><button role="tab" aria-selected="false" data-p="polo">Court Polo</button></div>
   </div>
 
   <section class="builder">
@@ -216,6 +218,7 @@
         <button class="btn pink" id="add" type="button">Add to bag</button>
         <button class="btn ghost" id="waNow" type="button">Order on WhatsApp</button>
       </div>
+      <p class="oneofone" id="oneOf"></p>
       <p class="note" id="leadTime"></p>
     </div>
   </section>
@@ -282,7 +285,7 @@ function draw(animate) {
 function renderPanel() {
   const p = P(), o = cur();
   $("pName").textContent = p.name; $("pPrice").textContent = money(p.price); $("leadTime").textContent = p.leadTime;
-  $("pLead").textContent = st.p === "pro" ? "An international match kit made in Doha’s colours. V-neck, glaze sash, serrated cuffs and a tonal mashrabiya lattice. Built for tournament day." : st.p === "jersey" ? "Our match-day kit. Glaze-dipped yoke, pickleball-hole print and your name across the back." : "Built for court, sharp enough for the clubhouse. Quarter zip, contrast yoke with glaze piping, mesh side panels and a tapered cut.";
+  $("pLead").textContent = st.p === "pro" ? "A tennis polo in Doha’s colours. Knit collar with serrated tips, glaze sash and a mashrabiya lattice generated from your name." : st.p === "jersey" ? "Our tennis tee. Glaze-dipped yoke, a quiet crest on the chest and your name across the back." : "Built for court, sharp enough for the clubhouse. Quarter zip, contrast yoke with glaze piping, mesh side panels and a tapered cut.";
   $("ways").innerHTML = Object.entries(p.ways).map(([k, w]) => `<button class="way" type="button" data-way="${k}" aria-pressed="${o.way === k}">${p.draw({ way: k, side: "front" })}<b>${w.label}</b><small>${w.note}</small></button>`).join("");
   $("wayName").textContent = p.ways[o.way].label;
   $("prints").innerHTML = p.prints.map(([k, l]) => `<button type="button" data-print="${k}" aria-pressed="${o.print === k}">${l}</button>`).join("");
@@ -298,7 +301,11 @@ function renderPanel() {
   $("specs").innerHTML = p.specs.map(([t, d]) => `<div><b>${t}</b><p>${d}</p></div>`).join("");
   $("chart").innerHTML = `<table><caption>Approximate chest width laid flat, in cm. Between sizes? Go one up for a relaxed fit.</caption><tr><th>Size</th>${Object.keys(p.sizeChart).map(k => `<th>${k}</th>`).join("")}</tr><tr><td><b>Chest</b></td>${Object.values(p.sizeChart).map(v => `<td>${v}</td>`).join("")}</tr></table>`;
 }
-function all(animate) { renderPanel(); draw(animate); }
+function oneOf() { const o = cur(), n = (o.name || "").trim(); const el = $("oneOf");
+  if (!n || o.print === "plain") { el.innerHTML = "<b>1 OF 1</b><span>Add a name and the pattern on your shirt is generated from it, with its own numbered tag.</span>"; return; }
+  const svg = P().draw({ way: o.way, side: "back", name: n, num: o.num, print: o.print }), code = (svg.match(/DD-[0-9A-F]{4}/) || [""])[0];
+  el.innerHTML = `<b>1 OF 1 · ${code}</b><span>This pattern is generated from “${n.replace(/[<>&]/g, "")}”. No other shirt will have it.</span>`; }
+function all(animate) { renderPanel(); draw(animate); oneOf(); }
 
 document.addEventListener("click", e => {
   const t = e.target.closest("button"); if (!t) return;
@@ -310,6 +317,7 @@ document.addEventListener("click", e => {
   else if (d.fit !== undefined) { o.fit = +d.fit; renderPanel(); }
   else if (d.size) { o.size = d.size; renderPanel(); }
 });
+$("nm").addEventListener("input", () => setTimeout(oneOf));
 $("nm").addEventListener("input", e => { cur().name = e.target.value.replace(/[^\p{L} .'-]/gu, "").slice(0, 12); e.target.value = cur().name; if (st.side !== "back") { st.side = "back"; draw(true); } else draw(false); });
 $("no").addEventListener("input", e => { cur().num = e.target.value.replace(/\D/g, "").slice(0, 2); e.target.value = cur().num; if (st.side !== "back") { st.side = "back"; draw(true); } else draw(false); });
 $("qm").onclick = () => { st.qty = Math.max(1, st.qty - 1); $("qv").textContent = st.qty; };

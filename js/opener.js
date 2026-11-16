@@ -4,7 +4,7 @@
   var root = document.getElementById("ad"); if (!root) return;
   var $ = function (s) { return root.querySelector(s); };
   var scenes = root.querySelectorAll(".asc");
-  var SHOTS = [3000, 3500, 3500, 5000, 4000, 5000, 3500, 3500, 3500, 4500], TOTAL = SHOTS.reduce(function (a, b) { return a + b; }, 0);
+  var SHOTS = [3000, 3500, 3500, 5000, 4000, 5000, 3500, 3500, 3500, 5000, 5000, 4500, 5000], TOTAL = SHOTS.reduce(function (a, b) { return a + b; }, 0);
   var music = new Audio("/assets/audio/opener.mp3"); music.preload = "auto";
   var playing = false, sound = false, t0 = 0, elapsed = 0, raf, cur = -1, timers = [];
   var clear = function () { timers.forEach(clearTimeout); timers = []; };
@@ -19,6 +19,16 @@
       later(function () { t.innerHTML = "<small>Your place</small><b>#2</b>"; }, 900);
       later(function () { t.innerHTML = "<small>Your place</small><b>#1</b>"; }, 1700);
       later(function () { t.className = "ticket go"; t.innerHTML = "<small>You're up</small><b>Court 2</b>"; }, 2600);
+    }
+    if (has("s-wear") && window.Jersey) {
+      var J = window.Jersey;
+      $("#adRack").innerHTML = J.render({ way: "glaze", side: "front" }) + J.renderPro({ way: "adaam", side: "front" }) + J.render({ way: "sage", side: "front" }) + J.renderPolo({ way: "night", side: "front" });
+    }
+    if (has("s-one") && window.Jersey) {
+      var full = "ANGEL", box = $("#adOne"), tag = $("#adOneTag");
+      var paint = function (n) { var svg = window.Jersey.render({ way: "cream", side: "back", name: n, num: n ? "7" : "", print: "full" }); box.innerHTML = svg; var m = svg.match(/DD-[0-9A-F]{4}/); tag.textContent = "1 OF 1 · " + (m ? m[0] : "DD-····"); };
+      paint("");
+      for (var c = 1; c <= full.length; c++) (function (k) { later(function () { paint(full.slice(0, k)); }, 500 + k * 420); })(c);
     }
     if (has("s-win")) { var a = $("#adA"), b = $("#adB"), s0 = performance.now() + 700;
       (function tick(now) { var p = Math.min(1, Math.max(0, (now - s0) / 800)), e = 1 - Math.pow(1 - p, 3); a.textContent = Math.round(11 * e); b.textContent = Math.round(7 * e); if (p < 1 && scenes[cur].classList.contains("s-win")) requestAnimationFrame(tick); })(performance.now()); }

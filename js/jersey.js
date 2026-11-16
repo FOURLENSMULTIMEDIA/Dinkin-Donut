@@ -11,8 +11,18 @@
   };
 
   var uid = 0;
-  var BODY = "M150 34Q200 66 250 34L318 54L384 120L352 174L318 154L323 412Q200 428 77 412L82 154L48 174L16 120L82 54Z";
-  var BODY_BACK = "M150 34Q200 46 250 34L318 54L384 120L352 174L318 154L323 412Q200 428 77 412L82 154L48 174L16 120L82 54Z";
+  // 1 of 1: a pattern seed and a short code derived from the name, so every personalised shirt is unique
+  function seed(str) {
+    var h = 2166136261 >>> 0, t = String(str || "DINKIN").toUpperCase();
+    for (var i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+    var a = h || 1, rng = function () { a ^= a << 13; a >>>= 0; a ^= a >> 17; a ^= a << 5; a >>>= 0; return a / 4294967296; };
+    return { rng: rng, code: "DD-" + (h >>> 16).toString(16).toUpperCase().padStart(4, "0") };
+  }
+  function hemTag(x, y, code, ink) {
+    return '<g opacity=".85"><rect x="' + (x - 34) + '" y="' + y + '" width="68" height="13" rx="2" fill="' + ink + '" opacity=".14"/><text x="' + x + '" y="' + (y + 9.2) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="5.4" letter-spacing="1.2" fill="' + ink + '">1 OF 1 · ' + code + '</text></g>';
+  }
+  var BODY = "M152 34Q200 64 248 34L316 54L380 122L350 172L314 154L312 392L318 404Q262 434 200 436Q138 434 82 404L88 392L86 154L50 172L20 122L84 54Z";
+  var BODY_BACK = "M152 34Q200 46 248 34L316 54L380 122L350 172L314 154L312 392L318 404Q262 434 200 436Q138 434 82 404L88 392L86 154L50 172L20 122L84 54Z";
   var SLEEVE_L = "M150 34L82 54L16 120L48 174L84 152Q114 88 156 38Z";
   var SLEEVE_R = "M250 34L318 54L384 120L352 174L316 152Q286 88 244 38Z";
   // Drip edge of the glaze yoke, left to right, then back across the shoulders
@@ -24,7 +34,7 @@
       "C168 " + (y + 4) + " 168 " + (y + 16) + " 158 " + (y + 16) + "C148 " + (y + 16) + " 146 " + (y + 2) + " 132 " + y + "C100 " + (y - 4) + " 70 " + (y + 2) + " 40 " + y + "Z";
   }
 
-  var HOLES = [[110,250],[150,236],[196,262],[246,240],[292,256],[124,300],[172,292],[222,306],[270,296],[102,350],[148,342],[198,356],[250,344],[298,352],[128,394],[178,388],[230,396],[278,390]];
+  var HOLES_BASE = [[110,250],[150,236],[196,262],[246,240],[292,256],[124,300],[172,292],[222,306],[270,296],[102,350],[148,342],[198,356],[250,344],[298,352],[128,394],[178,388],[230,396],[278,390]];
 
   function render(o) {
     var w = WAYS[o.way] || WAYS.glaze, back = o.side === "back", id = "j" + (++uid);
@@ -46,7 +56,8 @@
     s += '<g clip-path="url(#' + id + 'c)">';
     s += '<rect width="400" height="450" fill="' + w.body + '"/>';
     // tonal pickleball holes, sublimated into the body
-    s += '<g fill="' + w.hole + '" opacity=".06">' + HOLES.map(function (h) { return '<ellipse cx="' + h[0] + '" cy="' + (h[1] + (back ? -8 : 0)) + '" rx="9" ry="7.5"/>'; }).join("") + '</g>';
+    var sd = seed(o.name), HOLES = HOLES_BASE.map(function (h) { return [h[0] + (sd.rng() - 0.5) * 34, h[1] + (sd.rng() - 0.5) * 26, 5 + sd.rng() * 7]; });
+    s += '<g fill="' + w.hole + '" opacity=".07">' + HOLES.map(function (h) { return '<ellipse cx="' + h[0].toFixed(1) + '" cy="' + (h[1] + (back ? -8 : 0)).toFixed(1) + '" rx="' + h[2].toFixed(1) + '" ry="' + (h[2] * 0.83).toFixed(1) + '"/>'; }).join("") + '</g>';
     // side mesh panels
     s += '<path d="M82 154L118 160L112 414L77 412Z" fill="url(#' + id + 'mesh)"/><path d="M318 154L282 160L288 414L323 412Z" fill="url(#' + id + 'mesh)"/>';
     // glaze yoke with drips + drip shadow
@@ -60,8 +71,7 @@
     if (!back) {
       // left-chest crest, right-chest place line, centre wordmark
       s += '<image href="/assets/logo.svg" x="240" y="172" width="36" height="36"/>';
-      s += '<text x="142" y="194" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="8" letter-spacing="3.5" fill="' + w.ink + '" opacity=".75">DOHA</text>';
-      s += '<text x="200" y="258" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="24" letter-spacing=".5" fill="' + w.ink + '">Dinkin’ Donut</text>';
+      s += '<text x="258" y="222" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="6.5" letter-spacing="3" fill="' + w.ink + '" opacity=".75">DOHA</text>';
     } else {
       var mode = o.print || "full";
       s += '<image href="/assets/logo.svg" x="188" y="44" width="24" height="24"/>';
@@ -76,15 +86,18 @@
         s += '<text x="200" y="262" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (name.length > 8 ? 40 : 52) + '" fill="' + w.num + '" stroke="' + w.numLine + '" stroke-width="3" paint-order="stroke" stroke-linejoin="round">' + esc(name || "YOUR NAME") + '</text>';
       } else {
         s += '<text x="200" y="182" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (name.length > 9 ? 21 : 25) + '" letter-spacing="' + (name.length > 9 ? 3 : 6) + '" fill="' + w.ink + '">' + esc(name || "YOUR NAME") + '</text>';
-        var n = num || "00", big = '<text x="200" y="326" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="132" ';
+        var n = num || "00", big = '<text x="200" y="300" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="104" ';
         s += big + 'fill="none" stroke="' + w.numLine + '" stroke-width="7" stroke-linejoin="round" opacity=".9">' + n + '</text>';
         s += big + 'fill="' + w.num + '">' + n + '</text>';
       }
-      s += '<text x="200" y="392" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="8" letter-spacing="4" fill="' + w.ink + '" opacity=".75">STAY GLAZED</text>';
+      s += '<text x="200" y="372" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="7" letter-spacing="4" fill="' + w.ink + '" opacity=".7">STAY GLAZED</text>';
+      if (name) s += hemTag(200, 404, sd.code, w.ink);
     }
+    // side vents
+    s += '<g stroke="#000" stroke-opacity=".25" stroke-width="1.2"><path d="M88 392L84 404"/><path d="M312 392L316 404"/></g>';
     // construction: raglan seams + stitching, hem stitch
     s += '<g fill="none" stroke="#000" stroke-opacity=".28" stroke-width="1.4"><path d="M156 38Q114 88 84 152"/><path d="M244 38Q286 88 316 152"/></g>';
-    s += '<g fill="none" stroke="#fff" stroke-opacity=".35" stroke-width=".9" stroke-dasharray="3 3"><path d="M160 42Q119 90 89 154"/><path d="M240 42Q281 90 311 154"/><path d="M80 402Q200 418 320 402"/></g>';
+    s += '<g fill="none" stroke="#fff" stroke-opacity=".35" stroke-width=".9" stroke-dasharray="3 3"><path d="M160 42Q119 90 89 154"/><path d="M240 42Q281 90 311 154"/><path d="M90 400Q200 430 310 400"/></g>';
     // fabric folds
     s += '<g filter="url(#' + id + 'b)" fill="none" stroke-linecap="round"><path d="M128 330Q140 372 132 408" stroke="#000" stroke-opacity=".08" stroke-width="10"/><path d="M262 300Q252 352 268 404" stroke="#000" stroke-opacity=".08" stroke-width="12"/><path d="M146 318Q156 360 150 400" stroke="#fff" stroke-opacity=".14" stroke-width="7"/><path d="M98 168Q112 200 104 236" stroke="#000" stroke-opacity=".12" stroke-width="9"/></g>';
     // light
@@ -112,7 +125,7 @@
   var P_BODY = "M160 40C176 50 224 50 240 40L300 56C318 60 330 70 338 84L374 152L332 174L312 142C312 170 314 200 310 240C308 300 314 360 318 404Q262 418 200 420Q138 418 82 404C86 360 92 300 90 240C86 200 88 170 88 142L68 174L26 152L62 84C70 70 82 60 100 56Z";
   function renderPolo(o) {
     var w = POLO_WAYS[o.way] || POLO_WAYS.clubhouse, back = o.side === "back", id = "p" + (++uid);
-    var name = String(o.name || "").slice(0, 14), esc = function (t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
+    var name = String(o.name || "").slice(0, 14), esc = function (t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); }, sd = seed(o.name);
     var yokeEdge = back ? "M60 96Q200 120 340 96" : "M60 104Q200 132 340 104";
     var s = '<svg viewBox="0 0 400 450" class="jersey" role="img" aria-label="' + w.label + ' court polo, ' + (back ? "back" : "front") + '">';
     s += '<defs><clipPath id="' + id + 'c"><path d="' + P_BODY + '"/></clipPath>' +
@@ -125,6 +138,8 @@
       '<filter id="' + id + 'emb"><feDropShadow dx="0" dy="1" stdDeviation=".6" flood-color="#000" flood-opacity=".5"/></filter></defs>';
     s += '<ellipse cx="200" cy="430" rx="140" ry="13" fill="#3B2416" opacity=".3" filter="url(#' + id + 'sh)"/>';
     s += '<g clip-path="url(#' + id + 'c)"><rect width="400" height="450" fill="' + w.body + '"/>';
+    var dots = ""; for (var di = 0; di < 22; di++) dots += '<circle cx="' + (110 + sd.rng() * 180).toFixed(1) + '" cy="' + (190 + sd.rng() * 190).toFixed(1) + '" r="' + (1 + sd.rng() * 1.8).toFixed(1) + '"/>';
+    s += '<g fill="' + w.pipe + '" opacity=".25">' + dots + '</g>';
     // contrast yoke + piping
     s += '<path d="M0 0H400V' + (back ? 96 : 104) + yokeEdge.replace(/^M60 \d+/, "L340 " + (back ? 96 : 104)).replace("Q200", "Q200").replace(/L340 \d+Q200 (\d+) 340 \d+/, "L340 " + (back ? 96 : 104) + "Q200 $1 60 " + (back ? 96 : 104)) + 'L0 ' + (back ? 96 : 104) + 'Z" fill="' + w.yoke + '"/>';
     s += '<path d="' + yokeEdge + '" fill="none" stroke="' + w.pipe + '" stroke-width="3.2"/>';
@@ -144,11 +159,10 @@
       s += '<rect x="195" y="96" width="10" height="16" rx="3" fill="' + w.zip + '" stroke="#000" stroke-opacity=".3"/><rect x="198" y="112" width="4" height="12" rx="2" fill="' + w.zip + '"/>';
       // crest + chest line
       s += '<g filter="url(#' + id + 'emb)"><image href="/assets/logo.svg" x="244" y="146" width="36" height="36"/></g><circle cx="262" cy="164" r="18.5" fill="none" stroke="#000" stroke-opacity=".22" stroke-dasharray="1.1 1.1" stroke-width=".8"/>';
-      s += '<text x="140" y="164" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="12" fill="' + w.ink + '" filter="url(#' + id + 'emb)">Dinkin’ Donut</text><text x="140" y="176" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="5.6" letter-spacing="2.4" fill="' + w.ink + '" opacity=".8">PICKLEBALL CLUB</text>';
     } else {
       s += '<text x="200" y="80" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="19" fill="' + w.inkOnYoke + '" filter="url(#' + id + 'emb)">Dinkin’ Donut</text>';
       s += '<text x="200" y="91" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="6" letter-spacing="3" fill="' + w.inkOnYoke + '" opacity=".8">PICKLEBALL CLUB · DOHA</text>';
-      if (name && o.print !== "plain") s += '<text x="200" y="146" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="13" letter-spacing="5" fill="' + w.ink + '" filter="url(#' + id + 'emb)">' + esc(name.toUpperCase()) + '</text>';
+      if (name && o.print !== "plain") { s += '<text x="200" y="146" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="13" letter-spacing="5" fill="' + w.ink + '" filter="url(#' + id + 'emb)">' + esc(name.toUpperCase()) + '</text>'; s += hemTag(200, 404, sd.code, w.ink); }
       s += '<rect x="188" y="44" width="24" height="9" rx="2" fill="' + w.pipe + '"/>';
     }
     // folds + light + grain
@@ -176,8 +190,8 @@
     gold:   { label: "Gold Night", note: "Third", body: "#24170E", deep: "#170E08", sash: "#C9A24B", sash2: "#E8D29A", trim: "#C9A24B", collar: "#C9A24B", ink: "#E8D29A", num: "#E8D29A", numLine: "#24170E" },
     glazepro: { label: "Glaze Pro", note: "Club", body: "#D7F03C", deep: "#B8D02A", sash: "#FF6FAB", sash2: "#3B2416", trim: "#3B2416", collar: "#3B2416", ink: "#3B2416", num: "#3B2416", numLine: "#FF6FAB" },
   };
-  var PRO_BODY = "M146 36L198 98L254 36L320 54L386 122L352 176L318 156L322 412Q200 428 78 412L82 156L48 176L14 122L80 54Z";
-  var PRO_BACK = "M150 34Q200 46 250 34L320 54L386 122L352 176L318 156L322 412Q200 428 78 412L82 156L48 176L14 122L80 54Z";
+  var PRO_BODY = "M146 40Q200 60 254 40L318 56L380 124L348 172L314 156L312 392L318 404Q262 434 200 436Q138 434 82 404L88 392L86 156L52 172L20 124L82 56Z";
+  var PRO_BACK = "M146 36Q200 48 254 36L318 56L380 124L348 172L314 156L312 392L318 404Q262 434 200 436Q138 434 82 404L88 392L86 156L52 172L20 124L82 56Z";
   function serr(x1, y1, x2, y2, n, h, fill) { // serrated band along a line, teeth pointing inward
     var s = "", dx = (x2 - x1) / n, dy = (y2 - y1) / n, len = Math.hypot(x2 - x1, y2 - y1), nx = -(y2 - y1) / len * h, ny = (x2 - x1) / len * h, d = "M" + x1 + " " + y1;
     for (var i = 0; i < n; i++) { var ax = x1 + dx * i, ay = y1 + dy * i; d += "L" + (ax + dx / 2 + nx) + " " + (ay + dy / 2 + ny) + "L" + (ax + dx) + " " + (ay + dy); }
@@ -186,10 +200,10 @@
   function renderPro(o) {
     var w = PRO_WAYS[o.way] || PRO_WAYS.adaam, back = o.side === "back", id = "k" + (++uid), mode = o.print || "full";
     var name = String(o.name || "").toUpperCase().slice(0, 12), num = String(o.num || "").replace(/\D/g, "").slice(0, 2), esc = function (t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
-    var outline = back ? PRO_BACK : PRO_BODY;
-    var s = '<svg viewBox="0 0 400 450" class="jersey" role="img" aria-label="' + w.label + ' Doha Pro Kit, ' + (back ? "back" : "front") + '">';
+    var outline = back ? PRO_BACK : PRO_BODY, sd = seed(o.name), rot = Math.round(sd.rng() * 90 - 45), sc = (0.8 + sd.rng() * 0.6).toFixed(2);
+    var s = '<svg viewBox="0 0 400 450" class="jersey" role="img" aria-label="' + w.label + ' Doha Pro Polo, ' + (back ? "back" : "front") + '">';
     s += '<defs><clipPath id="' + id + 'c"><path d="' + outline + '"/></clipPath>' +
-      '<pattern id="' + id + 'lat" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M12 0L24 12L12 24L0 12Z M12 6L18 12L12 18L6 12Z" fill="none" stroke="' + w.deep + '" stroke-width="1.2"/></pattern>' +
+      '<pattern id="' + id + 'lat" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(' + rot + ') scale(' + sc + ')"><path d="M12 0L24 12L12 24L0 12Z M12 6L18 12L12 18L6 12Z" fill="none" stroke="' + w.deep + '" stroke-width="1.2"/></pattern>' +
       '<linearGradient id="' + id + 'shade" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".34"/><stop offset=".2" stop-color="#000" stop-opacity=".05"/><stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset=".8" stop-color="#000" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".36"/></linearGradient>' +
       '<linearGradient id="' + id + 'v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".14"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>' +
       '<radialGradient id="' + id + 'hl" cx=".42" cy=".3" r=".55"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
@@ -198,35 +212,38 @@
     s += '<ellipse cx="200" cy="430" rx="150" ry="13" fill="#3B2416" opacity=".28" filter="url(#' + id + 'sh)"/>';
     s += '<g clip-path="url(#' + id + 'c)"><rect width="400" height="450" fill="' + w.body + '"/><rect width="400" height="450" fill="url(#' + id + 'lat)" opacity=".55"/>';
     // diagonal sash: wearer's right shoulder to left hip (mirrored on the back)
-    var sa = back ? "M70 120L120 120L330 430L280 430Z" : "M280 120L330 120L120 430L70 430Z", sb = back ? "M126 120L134 120L344 430L336 430Z" : "M266 120L274 120L64 430L56 430Z";
+    var sa = "M70 120L120 120L330 430L280 430Z", sb = "M126 120L134 120L344 430L336 430Z";
     if (!back) s += '<path d="' + sa + '" fill="' + w.sash + '"/><path d="' + sb + '" fill="' + w.sash2 + '"/>';
-    else s += '<rect x="78" y="396" width="244" height="6" fill="' + w.sash + '"/><rect x="78" y="404" width="244" height="2" fill="' + w.sash2 + '"/>';
+    else s += '<path d="M84 382Q200 404 316 382L316 388Q200 410 84 388Z" fill="' + w.sash + '"/>';
     // side seams
     s += '<g stroke="#000" stroke-opacity=".18" stroke-width="1.2" fill="none"><path d="M82 156V412"/><path d="M318 156V412"/></g>';
     // serrated cuffs (nine points)
-    s += '<path d="M14 122L48 176L58 170L24 116Z" fill="' + w.trim + '"/>' + serr(24, 116, 58, 170, 9, 4, w.trim);
-    s += '<path d="M386 122L352 176L342 170L376 116Z" fill="' + w.trim + '"/>' + serr(342, 170, 376, 116, 9, 4, w.trim);
+    s += '<path d="M20 124L52 172L60 167L28 119Z" fill="' + w.trim + '"/>' + serr(28, 119, 60, 167, 9, 3.5, w.trim);
+    s += '<path d="M380 124L348 172L340 167L372 119Z" fill="' + w.trim + '"/>' + serr(340, 167, 372, 119, 9, 3.5, w.trim);
     if (!back) {
       s += '<image href="/assets/logo.svg" x="244" y="138" width="40" height="40"/>';
-      s += '<text x="140" y="160" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="8" letter-spacing="3" fill="' + w.ink + '">DOHA · QATAR</text>';
-      s += '<text x="140" y="172" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="11" fill="' + w.ink + '">Dinkin’ Donut</text>';
-      if (num && mode === "full") s += '<text x="140" y="214" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="30" fill="' + w.num + '">' + num + '</text>';
+      s += '<text x="264" y="192" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="6.5" letter-spacing="2.6" fill="' + w.ink + '">DOHA · QATAR</text>';
+      s += '<path d="M188 56H212V140H188Z" fill="' + w.body + '"/><path d="M188 56V140H212V56" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="1.2"/>';
+      [80, 102, 124].forEach(function (y) { s += '<circle cx="200" cy="' + y + '" r="3.8" fill="' + w.collar + '"/><circle cx="200" cy="' + y + '" r="3.8" fill="none" stroke="#000" stroke-opacity=".3" stroke-width=".8"/>'; });
     } else {
       s += '<text x="200" y="76" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="7" letter-spacing="3.2" fill="' + w.ink + '" opacity=".85">DINKIN’ DONUT · DOHA</text>';
       if (mode === "plain") s += '<image href="/assets/logo.svg" x="150" y="190" width="100" height="100"/>';
       else {
         s += '<text x="200" y="' + (mode === "name" ? 250 : 150) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (mode === "name" ? 40 : (name.length > 9 ? 22 : 26)) + '" letter-spacing="' + (mode === "name" ? 4 : 5) + '" fill="' + w.ink + '">' + esc(name || "YOUR NAME") + '</text>';
-        if (mode === "full") s += '<text x="200" y="312" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="136" letter-spacing="-4" fill="' + w.num + '" stroke="' + w.numLine + '" stroke-width="3" paint-order="stroke">' + (num || "00") + '</text>';
+        if (mode === "full") s += '<text x="200" y="290" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="104" letter-spacing="-3" fill="' + w.num + '" stroke="' + w.numLine + '" stroke-width="3" paint-order="stroke">' + (num || "00") + '</text>';
+        if (name) s += hemTag(200, 404, sd.code, w.ink);
       }
     }
     s += '<g filter="url(#' + id + 'b)" fill="none" stroke-linecap="round"><path d="M130 330Q142 372 134 408" stroke="#000" stroke-opacity=".08" stroke-width="10"/><path d="M262 300Q252 352 268 404" stroke="#000" stroke-opacity=".08" stroke-width="12"/></g>';
     s += '<rect width="400" height="450" fill="url(#' + id + 'shade)"/><rect width="400" height="450" fill="url(#' + id + 'v)"/><rect width="400" height="450" fill="url(#' + id + 'hl)"/><rect width="400" height="450" filter="url(#' + id + 'n)"/></g>';
     // collar
     if (!back) {
-      s += '<path d="M146 36L198 98L254 36L246 34L198 86L154 34Z" fill="' + w.collar + '"/><path d="M152 34L198 84L248 34" fill="none" stroke="' + w.trim + '" stroke-width="2"/>';
-      s += '<path d="M180 76L198 96L216 76" fill="none" stroke="' + w.trim + '" stroke-width="1.5" stroke-dasharray="3 2.4"/>';
+      s += '<path d="M146 40Q200 60 254 40L246 30Q200 46 154 30Z" fill="#000" opacity=".25"/>';
+      s += '<path d="M154 30Q174 46 200 56L186 96L134 64Z" fill="' + w.collar + '"/><path d="M246 30Q226 46 200 56L214 96L266 64Z" fill="' + w.collar + '"/>';
+      s += serr(140, 62, 184, 90, 6, 3, w.trim) + serr(216, 90, 260, 62, 6, 3, w.trim);
+      s += '<path d="M154 30Q174 46 200 56L186 96L134 64ZM246 30Q226 46 200 56L214 96L266 64Z" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="1"/>';
     } else {
-      s += '<path d="M150 34Q200 46 250 34" fill="none" stroke="' + w.collar + '" stroke-width="7" stroke-linecap="round"/>';
+      s += '<path d="M146 36Q200 50 254 36L256 26Q200 42 144 26Z" fill="' + w.collar + '"/>';
     }
     s += '<path d="' + outline + '" fill="none" stroke="#000" stroke-opacity=".22" stroke-width="1.5"/>';
     return s + "</svg>";
