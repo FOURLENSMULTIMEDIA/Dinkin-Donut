@@ -58,6 +58,20 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .warn{background:#FFE7A8;color:var(--choco);border-radius:14px;padding:12px 14px;font-weight:600}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .muted{color:var(--muted);font-size:14px}
+.passform{display:grid;gap:12px;background:linear-gradient(135deg,#3B2416,#57351F);color:#FFF6EA;border-radius:20px;padding:16px}
+.passhead{display:flex;gap:12px;align-items:center}.passhead b{font:700 18px var(--display);display:block}.passhead small{opacity:.8;font-size:13px}
+.passmark{width:44px;height:44px;border-radius:50%;background:#D7F03C;color:#3B2416;display:grid;place-items:center;font:700 20px var(--display);box-shadow:inset 0 0 0 9px #FF5FA2,inset 0 0 0 11px #3B2416;flex:none}
+.passgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.2fr) 110px;gap:8px}
+.passgrid .methods{grid-column:1/-1}
+.passform input{background:#FFF6EA;color:#3B2416;border-color:transparent}
+.passform .methods span{background:rgba(255,246,234,.1);color:#FFF6EA;border-color:rgba(255,246,234,.25)}
+.passform .methods input:checked+span{background:#FFF6EA;color:#3B2416;border-color:#FFF6EA}
+@media (max-width:600px){.passgrid{grid-template-columns:1fr 1fr}.passgrid input:first-child{grid-column:1/-1}}
+.passcard{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;border:2px dashed var(--glaze);border-radius:18px;padding:12px 14px;background:var(--surface)}
+.passcard .digits{display:flex;gap:6px}
+.passcard .digits i{width:40px;height:48px;border-radius:12px;background:#3B2416;color:#D7F03C;display:grid;place-items:center;font:700 26px var(--display);font-style:normal}
+.passcard small{color:var(--muted)}
+.pinchip{font:700 12px var(--body);letter-spacing:.12em;background:#3B2416;color:#D7F03C;border-radius:8px;padding:4px 8px;white-space:nowrap}
 .mfilter{display:flex;flex-wrap:wrap;gap:6px}
 .mfilter button{border:2px solid var(--line);background:var(--surface);color:var(--fg);font:700 13px var(--body);padding:8px 12px;border-radius:12px;cursor:pointer}
 .mfilter button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
@@ -146,6 +160,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
   <div class="bar">
     <label for="title">Night</label><input id="title" style="width:200px">
     <label for="format">Format</label><select id="format"><option value="2">Doubles</option><option value="1">Singles</option></select>
+    <label class="row muted" style="gap:6px"><input type="checkbox" id="requirePin"> PIN to join</label>
     <label for="match">Matching</label><select id="match"><option value="smart">Smart match</option><option value="levels">Level courts</option><option value="order">Queue order</option></select>
     <label for="rotation">After a game</label><select id="rotation"><option value="winstay">Winners stay</option><option value="all">Everyone rotates</option></select>
     <label for="maxWins">Max wins</label><select id="maxWins"><option>1</option><option>2</option><option>3</option></select>
@@ -177,6 +192,18 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 
   <section class="panel" id="payPanel">
     <h2>Payments <span class="muted">Only visible in this console</span></h2>
+    <form class="passform" id="passForm" autocomplete="off">
+      <div class="passhead"><span class="passmark" aria-hidden="true">3</span><div><b>Paid? Send a Glaze Pass</b><small>Records the payment and sends a 3-digit queue PIN to their WhatsApp.</small></div></div>
+      <div class="passgrid">
+        <input id="gpName" placeholder="Player name" aria-label="Player name" required list="gpNames">
+        <datalist id="gpNames"></datalist>
+        <input id="gpPhone" type="tel" inputmode="tel" placeholder="WhatsApp e.g. 3076 3431" aria-label="WhatsApp number" required>
+        <input id="gpAmt" inputmode="decimal" placeholder="Amount" aria-label="Amount paid">
+        <div class="methods" role="radiogroup" aria-label="Method"><label><input type="radio" name="gpm" value="cash" checked><span data-ic="cash">Cash</span></label><label><input type="radio" name="gpm" value="fawran"><span data-ic="fawran">Fawran</span></label><label><input type="radio" name="gpm" value="card"><span data-ic="card">Card</span></label></div>
+      </div>
+      <button class="btn pink" id="gpGo">Record & send PIN</button>
+    </form>
+    <div class="passcard" id="passCard" hidden></div>
     <div class="paystats" id="payStats"></div>
     <div class="row">
       <label class="muted" for="feeAll">Session fee</label><input id="feeAll" inputmode="decimal" style="width:90px" aria-label="Session fee in QAR"><span class="muted">QAR</span>
@@ -288,6 +315,9 @@ function render() {
     <button class="ib" title="Send to front" aria-label="Send to front" data-a="toFront" data-id="${id}">⇡</button><button class="ib" title="Take a break" aria-label="Take a break" data-a="bench" data-id="${id}">⏸</button></li>`).join("")
     : '<li class="muted">Queue is empty. Players join by scanning the QR code.</li>';
   renderRoster(); renderPay();
+  if (document.activeElement !== $("requirePin")) $("requirePin").checked = S.requirePin !== false;
+  $("gpNames").innerHTML = Object.values(S.players).map(p => `<option value="${DD.esc(p.name)}">`).join("");
+  if (!$("gpAmt").value && document.activeElement !== $("gpAmt") && S.fee) $("gpAmt").value = S.fee;
   $("bench").innerHTML = S.bench.length ? `<p class="muted" style="margin:6px 0">On a break (tap to bring back, × to remove)</p><div class="row">${S.bench.map(id => `<span class="chip"><button class="ib" data-a="unbench" data-id="${id}">↩ ${n(id)}</button><button class="ib" title="Remove player" aria-label="Remove ${n(id)}" data-a="removePlayer" data-id="${id}">×</button></span>`).join("")}</div>` : "";
 }
 
@@ -343,6 +373,7 @@ function renderRoster() {
   $("roster").innerHTML = rows.length ? rows.map(p => {
     const [cls, label] = where(p.id), pay = payOf(p.id), active = cls === "court" || cls === "queue";
     return `<li><button class="lvchip ${p.level || "none"}" data-x="lvl" data-id="${p.id}" title="Tap to change level">${p.level ? LVL[p.level].short : "Set level"}</button><span class="nm">${DD.esc(p.name)}</span><span class="pill ${cls}">${label}</span><span class="pill ${pay.status}">${STATUS[pay.status]}${pay.bal > 0 && pay.paid ? " · " + money(pay.bal) + " left" : ""}</span>
+      ${p.pin ? `<span class="pinchip" title="Glaze Pass PIN">PIN ${p.pin}</span><button class="ib" title="Resend PIN on WhatsApp" aria-label="Resend PIN to ${DD.esc(p.name)}" data-x="resend" data-id="${p.id}">${DD.icon("repeat", 14)}</button>` : ""}
       ${active ? "" : `<button class="btn lime sm" data-x="checkin" data-id="${p.id}">Check in</button>`}
       ${active ? "" : `<button class="ib" title="Remove from list" aria-label="Remove ${DD.esc(p.name)} from list" data-x="remove" data-id="${p.id}">×</button>`}</li>`;
   }).join("") : `<li class="muted">${all.length ? "No names match." : "No names yet. Paste tonight’s players above."}</li>`;
@@ -445,6 +476,44 @@ document.addEventListener("click", e => {
 });
 $("mFind").oninput = renderMembers;
 $("mRefresh").onclick = loadMembers;
+
+
+// Glaze Pass
+function waLink(phone, name, pin) {
+  let d = String(phone || "").replace(/\D/g, ""); if (d.length === 8) d = "974" + d;
+  const text = `Dinkin' Donut 🍩\n\nPayment received, ${name}. Here's your Glaze Pass for tonight:\n\nPIN  ${pin.split("").join(" ")}\n\nScan the QR code at the court, type your name and this PIN to join the queue.\n\nStay glazed.`;
+  return `https://wa.me/${d}?text=${encodeURIComponent(text)}`;
+}
+function showPass(r) {
+  const c = $("passCard"); c.hidden = false;
+  c.innerHTML = `<div class="digits" aria-label="PIN ${r.pin}">${r.pin.split("").map(d => `<i>${d}</i>`).join("")}</div>
+    <div><b>${DD.esc(r.name)}</b><br><small>${r.sent ? "Sent automatically on WhatsApp" : "WhatsApp opened with the PIN ready. Tap Send."}${r.waError ? " (auto-send failed: " + DD.esc(r.waError) + ")" : ""}</small></div>
+    <a class="btn ghost sm" href="${r.link}" target="_blank" rel="noopener">Send again</a>`;
+}
+async function issuePass(action) {
+  // Open the WhatsApp tab inside the tap, so phones don't block it as a pop-up
+  const tab = window.open("", "_blank");
+  try {
+    const st = await DD.send(action, PIN); S = st; render();
+    const r = st.result || {};
+    if (r.sent) { tab && tab.close(); toast(`PIN sent to ${r.name} on WhatsApp`); }
+    else if (tab) tab.location.href = r.link; else location.href = r.link;
+    showPass(r); return r;
+  } catch (e) { tab && tab.close(); toast(e.message, true); }
+}
+$("passForm").onsubmit = e => {
+  e.preventDefault();
+  issuePass({ type: "pass", name: $("gpName").value, phone: $("gpPhone").value, amt: $("gpAmt").value, method: document.querySelector("input[name=gpm]:checked").value })
+    .then(r => { if (r) { $("gpName").value = ""; $("gpPhone").value = ""; $("gpAmt").value = S.fee || ""; $("gpName").focus(); } });
+};
+$("gpName").addEventListener("change", () => { const p = Object.values(S.players).find(x => x.name.toLowerCase() === $("gpName").value.trim().toLowerCase()); if (p && p.phone && !$("gpPhone").value) $("gpPhone").value = p.phone; });
+$("requirePin").onchange = e => act({ type: "settings", requirePin: e.target.checked }, e.target.checked ? "Players now need their PIN to join" : "PIN no longer required");
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-x=resend]"); if (!b) return;
+  const p = S.players[b.dataset.id]; if (!p || !p.pin) return;
+  if (!p.phone) return toast("No WhatsApp number saved for this player.", true);
+  window.open(waLink(p.phone, p.name, p.pin), "_blank", "noopener");
+});
 
 const RESET_BTN = '<button class="btn pink sm" id="reset" type="button">End session</button>';
 $("resetZone").innerHTML = RESET_BTN;

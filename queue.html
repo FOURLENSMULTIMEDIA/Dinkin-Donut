@@ -20,11 +20,18 @@
 .levels{border:0;padding:0;margin:4px 0 0;display:flex;gap:8px;flex-wrap:wrap;width:100%}
 .levels legend{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--dough)}.levels legend span{font-weight:500;opacity:.8}
 .levels input{position:absolute;opacity:0}
-.levels span{display:inline-block;padding:9px 14px;border-radius:999px;border:2px solid rgba(255,246,234,.35);font-weight:700;font-size:14px;cursor:pointer}
+.levels label span{display:inline-block;padding:9px 14px;border-radius:999px;border:2px solid rgba(255,246,234,.35);font-weight:700;font-size:14px;cursor:pointer}
 .levels input:checked+span{background:var(--cream);color:#3B2416;border-color:var(--cream)}
 .levels input:focus-visible+span{outline:3px solid var(--glaze);outline-offset:2px}
 .eta{display:inline-flex;gap:6px;align-items:center;background:rgba(255,246,234,.12);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px}
 .lv{font-size:12px;margin-left:4px}
+.pinrow{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:center;width:100%}
+.pinlbl{grid-column:1/-1;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--dough)}
+.pins{display:flex;gap:10px}
+.pd{width:62px;height:62px;flex:none;text-align:center;font:700 30px var(--display)!important;border-radius:50%!important;border:0!important;background:#D7F03C;color:#3B2416;box-shadow:inset 0 0 0 7px #FF5FA2,inset 0 0 0 9px #3B2416;padding:0!important;caret-color:#3B2416}
+.pd:focus{outline:3px solid #FFF6EA;outline-offset:3px}
+.pinrow small{opacity:.75;font-size:13px}
+.shake{animation:shake .4s}@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
 .me .err{color:#FFB3CF;font-weight:600;margin:0}
 .ticket{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .ticket .big{font:700 clamp(64px,16vw,110px)/1 var(--display);color:var(--ball);font-variant-numeric:tabular-nums}
@@ -71,10 +78,19 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
   <section class="me" id="me">
     <div class="eyebrow" style="color:var(--dough)" id="nightName">Open Play Night</div>
     <h1>Paddles <span>up.</span></h1>
-    <p style="margin:0">Type your name the way you gave it at check-in. Keep this page open and it will tell you when you’re next.</p>
+    <p style="margin:0">Type your name and the 3-digit PIN we sent to your WhatsApp. Keep this page open and it will tell you when you’re next.</p>
     <form id="joinForm" autocomplete="off">
       <label for="name" class="sr" hidden>Your name</label>
       <input id="name" placeholder="Your name (e.g. Aisha K.)" maxlength="24" required>
+      <div class="pinrow" id="pinRow">
+        <span class="pinlbl">Glaze Pass PIN</span>
+        <div class="pins" role="group" aria-label="3-digit PIN from WhatsApp">
+          <input class="pd" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="PIN digit 1" autocomplete="one-time-code">
+          <input class="pd" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="PIN digit 2">
+          <input class="pd" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="PIN digit 3">
+        </div>
+        <small>Sent to your WhatsApp when you paid.</small>
+      </div>
       <button class="btn lime" type="submit">Join the queue</button>
       <fieldset class="levels">
         <legend>Your level <span>(we use it to build fair games)</span></legend>
@@ -105,6 +121,18 @@ let meId = null; try { meId = localStorage.getItem(ME_KEY); } catch {}
 let S = null, lastPhase = null;
 const $ = id => document.getElementById(id);
 const JOIN_HTML = $("me").innerHTML;
+function alertBox(msg) { const e = document.createElement("p"); e.className = "err"; e.textContent = msg; $("me").appendChild(e); setTimeout(() => e.remove(), 5000); }
+// PIN boxes: auto-advance, backspace to previous, paste all three digits at once
+function pinBoxes() {
+  if (S && S.requirePin === false) { const r = $("pinRow"); if (r) r.hidden = true; }
+  const boxes = [...document.querySelectorAll(".pd")];
+  boxes.forEach((b, i) => {
+    b.addEventListener("input", () => { b.value = b.value.replace(/\D/g, "").slice(-1); if (b.value && boxes[i + 1]) boxes[i + 1].focus(); });
+    b.addEventListener("keydown", e => { if (e.key === "Backspace" && !b.value && boxes[i - 1]) boxes[i - 1].focus(); });
+    b.addEventListener("paste", e => { const d = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 3); if (!d) return; e.preventDefault(); d.split("").forEach((c, k) => { if (boxes[k]) boxes[k].value = c; }); (boxes[d.length] || boxes[2]).focus(); });
+  });
+}
+pinBoxes();
 try { const n = localStorage.getItem("dd-name"); if (n) $("name").value = n; } catch {}
 
 function sprinkles() {
@@ -140,7 +168,7 @@ function eta(pos) {
 function renderMe() {
   const me = S.players[meId], box = $("me");
   box.className = "me";
-  if (!me) { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} box.innerHTML = JOIN_HTML; decorate(); try { const n = localStorage.getItem("dd-name"); if (n) $("name").value = n; } catch {} return; }
+  if (!me) { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} box.innerHTML = JOIN_HTML; decorate(); pinBoxes(); try { const n = localStorage.getItem("dd-name"); if (n) $("name").value = n; } catch {} return; }
   const court = S.courts.find(c => c.teams && c.teams.flat().includes(meId));
   const staying = S.courts.find(c => c.stayers && c.stayers.includes(meId));
   const pos = S.queue.indexOf(meId), need = S.format * 2;
@@ -170,6 +198,7 @@ function renderMe() {
 }
 
 function render() {
+  { const r = $("pinRow"); if (r) r.hidden = S.requirePin === false; }
   $("nightName").textContent = S.nightTitle;
   if (meId) renderMe();
   const need = S.format * 2;
@@ -196,17 +225,19 @@ document.addEventListener("submit", async e => {
   const err = $("err"); err.hidden = true;
   try {
     const lvl = (document.querySelector("input[name=level]:checked") || {}).value;
-    const st = await DD.send({ type: "join", name: $("name").value, level: lvl });
+    const pin = [...document.querySelectorAll(".pd")].map(i => i.value).join("");
+    const st = await DD.send({ type: "join", name: $("name").value, level: lvl, pin });
+    try { localStorage.setItem("dd-pin", pin); } catch {}
     try { localStorage.setItem("dd-name", $("name").value); } catch {}
     buzz.prime = true; try { (window.__ac || (window.__ac = new (window.AudioContext || window.webkitAudioContext)())).resume(); } catch {}
     meId = st.result.player.id; try { localStorage.setItem(ME_KEY, meId); } catch {}
     S = st; lastPhase = null; render(); sprinkles();
-  } catch (x) { err.textContent = x.message; err.hidden = false; }
+  } catch (x) { err.textContent = x.message; err.hidden = false; const r = $("pinRow"); if (r && /PIN/.test(x.message)) { r.classList.remove("shake"); void r.offsetWidth; r.classList.add("shake"); document.querySelectorAll(".pd").forEach(i => i.value = ""); document.querySelector(".pd").focus(); } }
 });
 document.addEventListener("click", async e => {
   const id = e.target.id;
   if (id === "leave") { S = await DD.send({ type: "leave", id: meId }); render(); }
-  if (id === "rejoin") { S = await DD.send({ type: "join", name: S.players[meId].name }); render(); }
+  if (id === "rejoin") { let pin = ""; try { pin = localStorage.getItem("dd-pin") || ""; } catch {} try { S = await DD.send({ type: "join", name: S.players[meId].name, pin }); render(); } catch (x) { alertBox(x.message); } }
   if (id === "notme") { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} location.reload(); }
 });
 </script>

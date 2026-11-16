@@ -1,10 +1,11 @@
 const { fresh, apply, PUBLIC } = require("./_engine");
 const { load, save, withLock, hasDb, loadHall, addHall } = require("./_store");
+const { sendPass } = require("./_wa");
 
 // What the public pages may see: no payments, no Fawran details, and only players who checked in.
 function publicView(S) {
   const players = {};
-  for (const p of Object.values(S.players)) if (p.in) players[p.id] = p;
+  for (const p of Object.values(S.players)) if (p.in) { const { pin, phone, pinFails, ...safe } = p; players[p.id] = safe; }
   const { pay, fawran, fee, ...rest } = S;
   return { ...rest, players };
 }
@@ -65,7 +66,11 @@ module.exports = async (req, res) => {
       await save(state);
       return { state, result };
     });
-    return res.status(200).json({ ...(isHost ? out.state : publicView(out.state)), host: isHost, persistent: hasDb(), result: out.result });
+    let result = out.result || {};
+    if (!isHost && result.player) { const { pin, phone, pinFails, ...safe } = result.player; result = { player: safe }; }
+    // Glaze Pass: try to send automatically; otherwise the console opens WhatsApp with the message ready
+    if (isHost && (a.type === "pass" || a.type === "newPin") && result.pin) result = { ...result, ...(await sendPass(result)) };
+    return res.status(200).json({ ...(isHost ? out.state : publicView(out.state)), host: isHost, persistent: hasDb(), result });
   } catch (e) {
     return res.status(e.code || 400).json({ error: e.message || "Something went wrong." });
   }

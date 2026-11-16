@@ -71,3 +71,14 @@ Players choose their level when they join; hosts can tap the level tag on any na
 
 ## Glaze Card members
 Google Form sign-ups sync to the host console (`api/members.js`). Setup: `google-form/SETUP.md`. Needs `MEMBERS_SECRET` in Vercel.
+
+## Glaze Pass (PIN to join)
+When someone pays, use **Payments → Paid? Send a Glaze Pass** in the host console: name, WhatsApp number, amount, method.
+It records the payment and creates a 3-digit PIN. Players join the queue with their name + PIN (5 tries, then they see the host).
+Untick **PIN to join** in the console bar to switch it off for a casual night.
+
+Sending the PIN:
+- **Out of the box**: WhatsApp opens with the message written to their number; tap Send.
+- **Fully automatic**: set up the WhatsApp Business Cloud API (Meta), create a template with two variables
+  (`{{1}}` name, `{{2}}` PIN), then add `WA_TOKEN`, `WA_PHONE_ID`, `WA_TEMPLATE` (and optionally `WA_LANG`) in Vercel.
+  The console then sends the PIN with no extra tap.

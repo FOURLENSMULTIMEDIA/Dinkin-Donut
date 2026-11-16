@@ -5,7 +5,7 @@ const MAX_LOG = 150;
 function fresh() {
   return {
     v: 0, updatedAt: Date.now(), nightTitle: "Open Play Night",
-    format: 2, rotation: "winstay", maxWins: 2, match: "smart",
+    format: 2, rotation: "winstay", maxWins: 2, match: "smart", requirePin: true,
     players: {}, queue: [], bench: [], games: 0, nextId: 1, durSum: 0, durN: 0,
     fee: 0, pay: {}, fawran: "",
     courts: [1, 2, 3].map(id => ({ id, teams: null, start: null, stayers: null, streak: 0 })),
@@ -29,13 +29,32 @@ function newPlayer(S, name) {
   return (S.players[id] = { id, name, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false });
 }
 
+// Glaze Pass: 3-digit PIN, unique among tonight's players
+function genPin(S) {
+  const used = new Set(Object.values(S.players).map(p => p.pin).filter(Boolean));
+  for (let i = 0; i < 200; i++) { const pin = String(100 + Math.floor(Math.random() * 900)); if (!used.has(pin)) return pin; }
+  return String(Math.floor(Math.random() * 900) + 100);
+}
+const MAX_PIN_TRIES = 5;
+
 // Public check-in only works for names the host has put on tonight's list.
-function addPlayer(S, rawName, level, fromHost) {
+function addPlayer(S, rawName, level, fromHost, pin) {
   const name = clean(rawName);
   if (name.length < 2) throw new Error("Please enter a name with at least 2 letters.");
   let p = findByName(S, name);
   if (!p && !fromHost) throw new Error("Your name isn’t on tonight’s list yet. Please see the host at the check-in table.");
   if (!p) p = newPlayer(S, name);
+  if (!fromHost && S.requirePin !== false) {
+    if (!p.pin) throw new Error("You don’t have a Glaze Pass yet. Pay at the check-in table and we’ll WhatsApp you a PIN.");
+    if ((p.pinFails || 0) >= MAX_PIN_TRIES) throw new Error("Too many wrong PINs. Please see the host at the check-in table.");
+    if (!String(pin || "").replace(/\D/g, "")) throw new Error("Enter the 3-digit PIN we sent to your WhatsApp.");
+    if (String(pin || "").replace(/\D/g, "") !== p.pin) {
+      p.pinFails = (p.pinFails || 0) + 1;
+      const left = MAX_PIN_TRIES - p.pinFails;
+      throw new Error(left > 0 ? `That PIN doesn’t match. ${left} ${left === 1 ? "try" : "tries"} left.` : "Too many wrong PINs. Please see the host at the check-in table.");
+    }
+    p.pinFails = 0;
+  }
   if (S.queue.includes(p.id) || busy(S).has(p.id)) return p; // already in, just return them
   S.bench = S.bench.filter(id => id !== p.id);
   p.in = true;
@@ -77,7 +96,7 @@ function court(S, id) {
 
 const actions = {
   // public
-  join: (S, a) => ({ player: addPlayer(S, a.name, a.level, false) }),
+  join: (S, a) => ({ player: addPlayer(S, a.name, a.level, false, a.pin) }),
   leave: (S, a) => {
     const p = S.players[a.id]; if (!p) return;
     S.queue = S.queue.filter(id => id !== p.id);
@@ -86,6 +105,20 @@ const actions = {
   },
   // host
   add: (S, a) => ({ player: addPlayer(S, a.name, a.level, true) }),
+  // Paid at the door: record payment, create the player if needed, issue a fresh Glaze Pass PIN.
+  pass: (S, a) => {
+    const n = clean(a.name); if (n.length < 2) throw new Error("Enter the player’s name.");
+    const phone = String(a.phone || "").replace(/[^\d+]/g, "");
+    if (phone.replace(/\D/g, "").length < 8) throw new Error("Enter a WhatsApp number with at least 8 digits.");
+    const p = findByName(S, n) || newPlayer(S, n);
+    p.phone = phone; p.pin = genPin(S); p.pinFails = 0;
+    const lv = M.normLevel(a.level); if (lv) p.level = lv;
+    const amt = Math.round(Number(a.amt) * 100) / 100;
+    if (amt > 0) { const r = S.pay[p.id] || (S.pay[p.id] = { items: [] }); r.items.push({ amt, method: ["cash", "fawran", "card"].includes(a.method) ? a.method : "cash", ref: clean(a.ref), t: Date.now() }); }
+    log(S, `${p.name} paid and got a Glaze Pass`);
+    return { id: p.id, name: p.name, pin: p.pin, phone: p.phone };
+  },
+  newPin: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.pin = genPin(S); p.pinFails = 0; return { id: p.id, name: p.name, pin: p.pin, phone: p.phone || "" }; },
   rosterOne: (S, a) => { const n = clean(a.name); if (n.length < 2) throw new Error("Name is too short."); const p = findByName(S, n) || newPlayer(S, n); const lv = M.normLevel(a.level); if (lv) p.level = lv; return { id: p.id }; },
   setLevel: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.level = M.normLevel(a.level) || null; },
   courtLevel: (S, a) => { const c = court(S, a.court); c.level = ["beginner", "intermediate", "advanced"].includes(a.level) ? a.level : "any"; },
@@ -173,6 +206,7 @@ const actions = {
   },
   settings: (S, a) => {
     if (a.format && !S.courts.some(c => c.teams)) S.format = Number(a.format) === 1 ? 1 : 2;
+    if (typeof a.requirePin === "boolean") S.requirePin = a.requirePin;
     if (a.match) S.match = ["order", "smart", "levels"].includes(a.match) ? a.match : "smart";
     if (a.rotation) S.rotation = a.rotation === "all" ? "all" : "winstay";
     if (a.maxWins) S.maxWins = Math.min(5, Math.max(1, Number(a.maxWins)));
@@ -182,7 +216,7 @@ const actions = {
   reset: (S, a) => {
     const n = fresh();
     if (!a.clearRoster) Object.values(S.players).forEach(p => { n.players[p.id] = { id: p.id, name: p.name, level: p.level, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false }; });
-    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart";
+    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.requirePin = S.requirePin !== false;
     n.courts = S.courts.map(c => ({ id: c.id, teams: null, start: null, stayers: null, streak: 0, level: c.level || "any" }));
     return n;
   },
