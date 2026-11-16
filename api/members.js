@@ -1,11 +1,11 @@
 // Glaze Card members.
 //   POST from Google Forms (Apps Script) with header x-members-secret: upsert one or many sign-ups.
-//   GET / POST from the host console with header x-host-pin: list, issue cards, stamps, notes.
+//   GET / POST from the host console with a signed host session (x-host-token): list, issue cards, stamps, notes.
 const crypto = require("crypto");
 const { getDoc, setDoc, withLock, hasDb } = require("./_store");
 const { normLevel } = require("./_match");
+const { isHost } = require("./_auth");
 
-const PIN = process.env.HOST_PIN ? String(process.env.HOST_PIN) : "";
 const SECRET = process.env.MEMBERS_SECRET ? String(process.env.MEMBERS_SECRET) : "";
 const STAMPS_FOR_FREE = 6;
 
@@ -57,7 +57,7 @@ module.exports = async (req, res) => {
   try {
     const body = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
     const fromForm = SECRET && same(req.headers["x-members-secret"], SECRET);
-    const host = PIN && same(req.headers["x-host-pin"], PIN);
+    const host = isHost(req);
     if (!fromForm && !host) return res.status(401).json({ error: "Not allowed." });
 
     if (req.method === "GET") {

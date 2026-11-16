@@ -17,18 +17,18 @@ const ICON_PATHS = {
 window.DD = {
   icon: (n, size = 16) => `<svg class="ic" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON_PATHS[n] || ""}</svg>`,
   async get(pin) {
-    const r = await fetch("/api/queue", { cache: "no-store", headers: pin ? { "x-host-pin": pin } : {} });
+    const r = await fetch("/api/queue", { cache: "no-store", headers: pin ? { "x-host-token": pin } : {} });
     if (!r.ok) throw new Error("Can't reach the queue right now.");
     return r.json();
   },
   async send(action, pin) {
     const r = await fetch("/api/queue", {
       method: "POST",
-      headers: { "Content-Type": "application/json", ...(pin ? { "x-host-pin": pin } : {}) },
+      headers: { "Content-Type": "application/json", ...(pin ? { "x-host-token": pin } : {}) },
       body: JSON.stringify(action),
     });
     const j = await r.json().catch(() => ({ error: "Unexpected reply from server." }));
-    if (!r.ok) throw new Error(j.error || "Something went wrong.");
+    if (!r.ok) { const e = new Error(j.error || "Something went wrong."); e.signin = Boolean(j.signin); throw e; }
     return j;
   },
   // Poll the shared queue; slows down when the tab is hidden.

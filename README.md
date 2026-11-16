@@ -25,7 +25,8 @@ No build step. Plain HTML/CSS/JS + one Vercel serverless function (`api/queue.js
    ```
 2. **Vercel** – vercel.com → Add New → Project → import the repo → Deploy (no settings needed).
 3. **Database (required for a real night)** – in the Vercel project: Storage → Create / Marketplace → **Upstash for Redis** (free tier) → connect to the project. This adds `KV_REST_API_URL` and `KV_REST_API_TOKEN` automatically.
-4. **Host PIN** – Settings → Environment Variables → add `HOST_PIN` = your host password. It is case-sensitive and never stored in the code, so the host console stays locked until you set it. 5 wrong tries locks that device out for 10 minutes.
+4. **Host PINs** – Settings → Environment Variables → add `HOST_PIN` (host password) and `HOST_PIN_2` (6-digit second PIN). Sign-in asks for both, then the device stays signed in for 180 days with a signed session; the PINs are never stored on the device. Changing either PIN signs every device out.
+   Previously: add `HOST_PIN` = your host password. It is case-sensitive and never stored in the code, so the host console stays locked until you set it. 5 wrong tries locks that device out for 10 minutes.
 5. **Redeploy** (Deployments → ⋯ → Redeploy) so the new variables load.
 6. Open `/host` and sign in.
 

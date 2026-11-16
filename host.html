@@ -19,6 +19,9 @@
 .pinwrap{position:relative}
 .pinwrap input{width:100%;font-size:20px;letter-spacing:.12em;text-align:center;padding:14px 70px}
 .peek{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:var(--sunk);color:var(--fg);font:700 12px var(--body);padding:8px 10px;border-radius:10px;cursor:pointer}
+.steps2{display:flex;gap:6px;justify-content:center}.steps2 i{width:28px;height:5px;border-radius:5px;background:var(--line)}.steps2 i.on{background:var(--glaze)}
+.six{display:flex;gap:8px;justify-content:center}
+.sx{width:44px;height:54px;text-align:center;font:700 24px var(--display)!important;border-radius:12px;padding:0!important}
 .remember{display:flex;gap:8px;align-items:center;justify-content:center;font-size:14px;color:var(--muted)}
 .lockerr{margin:0;color:var(--loss);font-weight:700}
 .shake{animation:shake .4s}
@@ -148,15 +151,22 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 <form class="lock" id="lock" autocomplete="off">
   <div class="lock-mark"><img src="/assets/logo.svg" alt=""></div>
   <div class="eyebrow">Crew only</div>
-  <h1>Host sign-in</h1>
-  <p class="muted" style="margin:0">Enter the host PIN to run tonight’s courts.</p>
-  <div class="pinwrap">
-    <label for="pin" class="sr">Host PIN</label>
-    <input id="pin" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" placeholder="Host PIN" required>
-    <button type="button" class="peek" id="peek" aria-label="Show PIN" aria-pressed="false">Show</button>
+  <h1 id="lockTitle">Host sign-in</h1>
+  <div class="steps2" aria-hidden="true"><i class="on"></i><i id="dot2"></i></div>
+  <div id="step1">
+    <p class="muted" style="margin:0 0 12px">Step 1 of 2. Enter the host PIN.</p>
+    <div class="pinwrap">
+      <label for="pin" class="sr">Host PIN</label>
+      <input id="pin" type="password" autocomplete="current-password" autocapitalize="off" spellcheck="false" placeholder="Host PIN">
+      <button type="button" class="peek" id="peek" aria-label="Show PIN" aria-pressed="false">Show</button>
+    </div>
   </div>
-  <label class="remember"><input type="checkbox" id="remember"> Keep me signed in on this device</label>
-  <button class="btn pink" id="go">Open console</button>
+  <div id="step2" hidden>
+    <p class="muted" style="margin:0 0 12px">Step 2 of 2. Enter the 6-digit second PIN.</p>
+    <div class="six" role="group" aria-label="Second PIN"><input class="sx" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit"><input class="sx" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit"><input class="sx" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit"><input class="sx" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit"><input class="sx" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit"><input class="sx" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit"></div>
+  </div>
+  <button class="btn pink" id="go">Continue</button>
+  <p class="muted" style="margin:0;font-size:13px">This device stays signed in until you sign out.</p>
   <p class="lockerr" id="lockErr" role="alert" hidden></p>
 </form>
 
@@ -260,34 +270,53 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 <script src="/js/common.js"></script>
 <script>
 const $ = id => document.getElementById(id);
-let PIN = ""; try { PIN = sessionStorage.getItem("dd-pin") || localStorage.getItem("dd-pin") || ""; } catch {}
+// PIN holds the signed host session token (never the PINs themselves)
+let PIN = ""; try { PIN = localStorage.getItem("dd-host-token") || ""; localStorage.removeItem("dd-pin"); sessionStorage.removeItem("dd-pin"); } catch {}
 let S = null, feed = null;
 
 function toast(msg, bad) { const t = document.createElement("div"); t.className = "toast" + (bad ? " bad" : ""); t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); }
 async function act(a, okMsg) {
   try { S = await DD.send(a, PIN); render(); if (okMsg) toast(okMsg); }
-  catch (e) { toast(e.message, true); if (/PIN/.test(e.message)) logout(); }
+  catch (e) { toast(e.message, true); if (e.signin) logout(); }
 }
-async function unlock(pin) {
-  const res = await fetch("/api/queue?check", { headers: { "x-host-pin": pin } });
-  const r = await res.json().catch(() => ({}));
-  if (r.error) throw new Error(r.error);
-  if (!r.ok) throw new Error("That PIN didn’t work. PINs are case-sensitive.");
-  PIN = pin;
-  try { ($("remember").checked || localStorage.getItem("dd-pin") ? localStorage : sessionStorage).setItem("dd-pin", pin); } catch {}
+function openConsole() {
   $("lock").hidden = true; $("app").hidden = false;
   feed = feed || DD.live(st => { S = st; render(); renderMembers(); }, 2500, () => PIN);
   loadMembers(); setInterval(() => { if (!document.hidden) loadMembers(); }, 20000);
 }
-function logout() { try { sessionStorage.removeItem("dd-pin"); localStorage.removeItem("dd-pin"); } catch {} location.reload(); }
+function logout() { try { localStorage.removeItem("dd-host-token"); } catch {} PIN = ""; location.reload(); }
+
+let step = 1;
+const sixVal = () => [...document.querySelectorAll(".sx")].map(i => i.value).join("");
+function showErr(m) { const f = $("lock"); $("lockErr").textContent = m; $("lockErr").hidden = false; f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake"); }
 $("lock").onsubmit = async e => {
-  e.preventDefault(); const f = $("lock"), go = $("go"); go.disabled = true; go.textContent = "Checking…";
-  try { await unlock($("pin").value); }
-  catch (x) { $("lockErr").textContent = x.message; $("lockErr").hidden = false; f.classList.remove("shake"); void f.offsetWidth; f.classList.add("shake"); $("pin").select(); }
-  finally { go.disabled = false; go.textContent = "Open console"; }
+  e.preventDefault(); const go = $("go"); $("lockErr").hidden = true;
+  if (step === 1 && !$("pin").value) return showErr("Enter the host PIN.");
+  if (step === 2 && sixVal().length < 6) return showErr("Enter all 6 digits.");
+  go.disabled = true; go.textContent = "Checking…";
+  try {
+    const r = await fetch("/api/queue?login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pin: $("pin").value, pin2: step === 2 ? sixVal() : "" }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || "Sign-in failed.");
+    if (j.step === 2) { step = 2; $("step1").hidden = true; $("step2").hidden = false; $("dot2").classList.add("on"); go.textContent = "Open console"; document.querySelector(".sx").focus(); return; }
+    PIN = j.token; try { localStorage.setItem("dd-host-token", PIN); } catch {}
+    $("pin").value = ""; document.querySelectorAll(".sx").forEach(i => i.value = "");
+    openConsole();
+  } catch (x) {
+    showErr(x.message);
+    if (step === 2) { document.querySelectorAll(".sx").forEach(i => i.value = ""); document.querySelector(".sx").focus(); }
+  } finally { go.disabled = false; if (!$("app").hidden) return; go.textContent = step === 2 ? "Open console" : "Continue"; }
 };
+// six boxes: auto-advance, backspace, paste
+(() => { const bx = [...document.querySelectorAll(".sx")];
+  bx.forEach((b, i) => {
+    b.addEventListener("input", () => { b.value = b.value.replace(/\D/g, "").slice(-1); if (b.value && bx[i + 1]) bx[i + 1].focus(); if (sixVal().length === 6) $("lock").requestSubmit(); });
+    b.addEventListener("keydown", e => { if (e.key === "Backspace" && !b.value && bx[i - 1]) bx[i - 1].focus(); });
+    b.addEventListener("paste", e => { const d = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 6); if (!d) return; e.preventDefault(); d.split("").forEach((c, k) => { if (bx[k]) bx[k].value = c; }); if (d.length === 6) $("lock").requestSubmit(); });
+  }); })();
 $("peek").onclick = () => { const i = $("pin"), show = i.type === "password"; i.type = show ? "text" : "password"; $("peek").textContent = show ? "Hide" : "Show"; $("peek").setAttribute("aria-pressed", show); i.focus(); };
-if (PIN) unlock(PIN).catch(() => { try { sessionStorage.removeItem("dd-pin"); localStorage.removeItem("dd-pin"); } catch {} });
+// Already signed in on this device: open straight away; only a rejected session signs out, never a weak connection
+if (PIN) fetch("/api/queue?check", { headers: { "x-host-token": PIN } }).then(r => r.json()).then(j => { if (j.ok) openConsole(); else logout(); }).catch(() => openConsole());
 
 function render() {
   if (!S) return;
@@ -442,7 +471,7 @@ $("payCsv").onclick = () => {
 // Glaze Card members
 let MEM = null, mFilter = "todo";
 async function memReq(body) {
-  const r = await fetch("/api/members", { method: body ? "POST" : "GET", headers: { "x-host-pin": PIN, "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch("/api/members", { method: body ? "POST" : "GET", headers: { "x-host-token": PIN, "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
   const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || "Couldn’t reach the members list."); return j;
 }
 async function loadMembers() { try { MEM = await memReq(); renderMembers(); } catch (e) { $("mInfo").textContent = e.message; } }
@@ -500,7 +529,7 @@ function waLink(phone, name, pin, amount) {
 function showPass(r) {
   const c = $("passCard"); c.hidden = false;
   c.innerHTML = `<div class="digits" aria-label="PIN ${r.pin}">${r.pin.split("").map(d => `<i>${d}</i>`).join("")}</div>
-    <div><b>${DD.esc(r.name)}</b><br><small>WhatsApp opened with the PIN message ready. Tap Send.</small></div>
+    <div><b>${DD.esc(r.name)}</b><br><small>${r.sent ? "Sent automatically to their WhatsApp." : "WhatsApp opened with the PIN message ready. Tap Send."}${r.waError ? " (Automatic send failed: " + DD.esc(r.waError) + ")" : ""}</small></div>
     <a class="btn ghost sm" href="${r.link}" target="_blank" rel="noopener">Open WhatsApp again</a>`;
 }
 async function issuePass(action) {
