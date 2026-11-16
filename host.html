@@ -68,6 +68,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .moment.fire{background:#FF8A3D}.moment.upset{background:#D7F03C}.moment.bagel{background:#FF5FA2;color:#fff}.moment.nail{background:#FFD66B}
 @keyframes momin{from{transform:translate(-50%,-30px);opacity:0}}
 .annbig{display:flex;align-items:center;gap:12px;border:0;cursor:pointer;border-radius:16px;padding:12px 18px;background:#FF5FA2;color:#fff;text-align:left;box-shadow:0 8px 20px rgba(255,95,162,.35)}
+.voicebox{display:flex;flex-direction:column;gap:6px;justify-content:center}.voicebox select{font-size:13px;padding:6px 8px}
 .annbig b{display:block;font:700 17px var(--display)}.annbig small{display:block;font-size:12px;opacity:.9}
 .annbig.on{background:#2F7A4F;box-shadow:none}
 .annbig:not(.on) svg{animation:pulse2 1.6s infinite}
@@ -187,7 +188,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 
 <main class="wrap page" id="app" hidden>
   <div class="warn" id="noDb" hidden>No database connected. The queue resets whenever Vercel restarts. Add Upstash Redis in Vercel (see README) before your first real night.</div>
-  <div class="stats"><button type="button" class="annbig" id="announceBtn" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><span><b>Turn on announcements</b><small>Calls each new game out loud</small></span></button><div class="stat"><b id="sP">0</b><span>Dinkers</span></div><div class="stat"><b id="sQ">0</b><span>In queue</span></div><div class="stat"><b id="sC">0</b><span>Courts live</span></div><div class="stat"><b id="sG">0</b><span>Games</span></div></div>
+  <div class="stats"><button type="button" class="annbig" id="announceBtn" aria-pressed="false"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg><span><b>Turn on announcements</b><small>Calls each new game out loud</small></span></button><div class="voicebox"><select id="voiceEngine" aria-label="Voice"><option value="builtin">Built-in voice (works everywhere)</option><option value="device">Natural voice (if this device has one)</option></select><button type="button" class="btn ghost sm" id="voiceTest">Test voice</button></div><div class="stat"><b id="sP">0</b><span>Dinkers</span></div><div class="stat"><b id="sQ">0</b><span>In queue</span></div><div class="stat"><b id="sC">0</b><span>Courts live</span></div><div class="stat"><b id="sG">0</b><span>Games</span></div></div>
   <div class="bar">
     <label for="title">Night</label><input id="title" style="width:200px">
     <label for="format">Format</label><select id="format"><option value="2">Doubles</option><option value="1">Singles</option></select>
@@ -599,6 +600,9 @@ const paintAnn = () => { const b = $("announceBtn"); b.querySelector("b").textCo
 paintAnn();
 // After a reload, sound needs one tap: the first tap anywhere re-enables announcements
 if (sayOn) document.addEventListener("pointerdown", function once() { document.removeEventListener("pointerdown", once); Announcer.unlock(); });
+$("voiceEngine").value = Announcer.engine();
+$("voiceEngine").onchange = e => { Announcer.setEngine(e.target.value); Announcer.say("This is the " + (e.target.value === "builtin" ? "built in" : "natural") + " voice."); };
+$("voiceTest").onclick = () => { Announcer.say("Testing. Court one. Kong and Kuya, versus, Ng and Papa."); };
 $("announceBtn").onclick = () => { sayOn = !sayOn; try { localStorage.setItem("dd-host-voice", sayOn ? "on" : "off"); } catch {} paintAnn(); if (sayOn) Announcer.unlock(); };
 Announcer.onStatus(s => { if (s === "no-voice") toast("This device didn’t speak. Check the volume, or try another phone or browser.", true); });
 const names = ids => ids.map(id => S.players[id]?.name || "");

@@ -38,6 +38,29 @@
     setTimeout(function () { if (!started && !synth.speaking) onFail && onFail(); }, 2000);
   }
 
+  // Built-in voice: works on any screen that can play the chime (no device voices needed)
+  var engine = "builtin"; try { engine = localStorage.getItem("dd-voice-engine") || "builtin"; } catch (e) {}
+  var msReady = null;
+  function loadBuiltin() {
+    if (msReady) return msReady;
+    msReady = new Promise(function (ok, no) { if (window.meSpeak) return ok(); var sc = document.createElement("script"); sc.src = "/js/vendor/mespeak.js"; sc.onload = function () { ok(); }; sc.onerror = no; document.head.appendChild(sc); });
+    return msReady;
+  }
+  function builtinSay(text) {
+    return loadBuiltin().then(function () {
+      ctx = ctx || new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === "suspended") ctx.resume();
+      var wav = window.meSpeak.speak(text, { rawdata: "array", speed: 140, amplitude: 200, pitch: 48, wordgap: 3 });
+      var buf = new Uint8Array(wav).buffer;
+      return new Promise(function (ok) { ctx.decodeAudioData(buf, function (audio) {
+        var src = ctx.createBufferSource(), g = ctx.createGain(), comp = ctx.createDynamicsCompressor();
+        g.gain.value = 1.8; src.buffer = audio; src.connect(g); g.connect(comp); comp.connect(ctx.destination); src.onended = ok; src.start(); }, ok); });
+    }).catch(function () { status("no-voice"); });
+  }
+  function speakAny(text) {
+    if (engine === "builtin" || !synth) return builtinSay(text);
+    say(text, true, function () { if (synth) synth.cancel(); builtinSay(text); });
+  }
+
   var NUM = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
   function call(court, teamA, teamB) {
     var n = NUM[court] || String(court);
@@ -45,14 +68,13 @@
     if (synth && synth.speaking) synth.cancel();
     chime();
     setTimeout(function () {
-      // First try: installed voice. If nothing starts, retry once with the browser default.
-      say(text, true, function () { if (synth) synth.cancel(); say(text, false, function () { status("no-voice"); }); });
+      speakAny(text);
     }, 900);
   }
   var listeners = [];
   function status(s) { listeners.forEach(function (f) { f(s); }); }
   // Browsers only allow sound after a tap; call this from a button press
-  function unlock() { chime(); if (synth) { var u = new SpeechSynthesisUtterance("Announcements on."); u.volume = 1; u.rate = 0.95; keep.push(u); synth.cancel(); synth.speak(u); } }
+  function unlock() { chime(); if (engine === "builtin") loadBuiltin().then(function () { setTimeout(function () { builtinSay("Announcements on."); }, 700); }); else if (synth) { var u = new SpeechSynthesisUtterance("Announcements on."); u.volume = 1; u.rate = 0.95; keep.push(u); synth.cancel(); synth.speak(u); } }
   if (synth) synth.onvoiceschanged = function () {};
-  window.Announcer = { say: function (t) { if (synth && synth.speaking) synth.cancel(); chime(); setTimeout(function () { say(t, true, function () { say(t, false); }); }, 900); }, call: call, unlock: unlock, onStatus: function (f) { listeners.push(f); }, supported: Boolean(synth), test: function () { call(1, ["Ana", "Ben"], ["Omar", "Lea"]); } };
+  window.Announcer = { say: function (t) { if (synth && synth.speaking) synth.cancel(); chime(); setTimeout(function () { speakAny(t); }, 900); }, call: call, engine: function () { return engine; }, setEngine: function (e) { engine = e; try { localStorage.setItem("dd-voice-engine", e); } catch (x) {} if (e === "builtin") loadBuiltin(); }, unlock: unlock, onStatus: function (f) { listeners.push(f); }, supported: Boolean(synth), test: function () { call(1, ["Ana", "Ben"], ["Omar", "Lea"]); } };
 })();
