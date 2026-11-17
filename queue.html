@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
+<script src="/js/tenant.js"></script>
 <script src="/js/theme.js"></script>
 <script src="/js/motion.js" defer></script>
 <script src="/js/sound.js" defer></script>
@@ -29,11 +30,11 @@
 .pinrow{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:center;width:100%}
 .pinlbl{grid-column:1/-1;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--dough)}
 .pins{display:flex;gap:10px}
-.pd{width:62px;height:62px;flex:none;text-align:center;font:700 30px var(--display)!important;border-radius:50%!important;border:0!important;background:#D7F03C;color:#3B2416;box-shadow:inset 0 0 0 7px #FF5FA2,inset 0 0 0 9px #3B2416;padding:0!important;caret-color:#3B2416}
+.pd{width:62px;height:62px;flex:none;text-align:center;font:700 30px var(--display)!important;border-radius:50%!important;border:0!important;background:var(--ball);color:#3B2416;box-shadow:inset 0 0 0 7px var(--glaze),inset 0 0 0 9px #3B2416;padding:0!important;caret-color:#3B2416}
 .pd:focus{outline:3px solid #FFF6EA;outline-offset:3px}
 .pinrow small{opacity:.75;font-size:13px}
 .shake{animation:shake .4s}@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-.share{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:6px}.share i{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,246,234,.45)}.share i.on{background:#D7F03C;border-color:#D7F03C}.share span{margin-left:6px;font-weight:700;font-size:13px;opacity:.85}
+.share{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:6px}.share i{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,246,234,.45)}.share i.on{background:var(--ball);border-color:var(--ball)}.share span{margin-left:6px;font-weight:700;font-size:13px;opacity:.85}
 .gcpromo{display:grid!important;grid-template-columns:96px 1fr auto;gap:14px;align-items:center;text-decoration:none;background:#FFF6EA!important;color:#3B2416}.gcpromo[hidden]{display:none!important}.gcpromo img{width:96px;border-radius:8px;transform:rotate(-6deg);box-shadow:0 8px 16px rgba(59,36,22,.2)}.gcpromo b{display:block;font:700 18px var(--display)}.gcpromo span{font-size:14px}
 @media (max-width:480px){.gcpromo{grid-template-columns:72px 1fr}.gcpromo img{width:72px}.gcpromo .btn{grid-column:1/-1;justify-self:start}}
 .me .err{color:#FFB3CF;font-weight:600;margin:0}

@@ -1,7 +1,46 @@
 {
   "cleanUrls": true,
   "headers": [
-    { "source": "/api/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-store" }] },
-    { "source": "/host", "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] }
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
+      "source": "/host",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/c/:slug/host",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/c/:slug",
+      "destination": "/queue"
+    },
+    {
+      "source": "/c/:slug/host",
+      "destination": "/host"
+    },
+    {
+      "source": "/c/:slug/tv",
+      "destination": "/tv"
+    }
   ]
 }

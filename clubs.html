@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Courtcall · Open play, run like a pro</title>
+<meta name="description" content="Courtcall runs your pickleball open play: QR check-in, fair matchmaking, live scores, a TV board and a host console, in your club's colours. 14-day free trial.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0E1311">
+<meta property="og:title" content="Courtcall · Open play, run like a pro">
+<meta property="og:description" content="QR check-in, fair matchmaking, live scores and a TV board for your pickleball club. Free for 14 days.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230E1311'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23D7F03C'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+:root{--ink:#0E1311;--ink2:#151C19;--line:rgba(237,242,236,.1);--fg:#EDF2EC;--mute:rgba(237,242,236,.62);--lime:#D7F03C;--court:#2F7A4F;--pink:#FF5FA2;--paper:#F4F6F1;--d:"Bricolage Grotesque",system-ui,sans-serif;--b:"DM Sans",system-ui,sans-serif;--e:cubic-bezier(.16,1,.3,1)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--fg);font:16px/1.6 var(--b);-webkit-font-smoothing:antialiased}
+a{color:inherit}h1,h2,h3{font-family:var(--d);font-weight:800;line-height:1;letter-spacing:-.03em;margin:0}
+.w{max-width:1180px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left))}
+.k{font-weight:700;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--lime)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:15px 22px;font:700 15px var(--b);text-decoration:none;cursor:pointer;transition:transform .2s var(--e),background .2s}
+.btn:hover{transform:translateY(-2px)}.btn.lime{background:var(--lime);color:var(--ink)}.btn.ghost{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 1px rgba(237,242,236,.22)}
+.btn.wa{background:#25D366;color:#06301A}
+:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+[hidden]{display:none!important}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);background:rgba(14,19,17,.72);border-bottom:1px solid var(--line)}
+.nav .w{display:flex;align-items:center;gap:22px;height:66px}
+.logo{display:flex;align-items:center;gap:10px;font:800 21px var(--d);letter-spacing:-.03em;text-decoration:none}
+.logo i{width:22px;height:22px;border-radius:50%;background:var(--lime);box-shadow:inset -4px -3px 0 rgba(0,0,0,.12);position:relative}
+.logo i::after{content:"";position:absolute;inset:6px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(0,0,0,.25) 1.2px,transparent 1.6px) 0 0/6px 6px}
+.nav nav{display:flex;gap:22px;margin-left:auto;font-weight:600;font-size:15px}.nav nav a{text-decoration:none;opacity:.75}.nav nav a:hover{opacity:1}
+@media(max-width:760px){.nav nav{display:none}.nav .btn{margin-left:auto}}
+
+/* hero */
+.hero{padding:84px 0 40px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto;height:620px;background:radial-gradient(600px 300px at 75% 30%,rgba(215,240,60,.13),transparent 70%),radial-gradient(500px 300px at 10% 0%,rgba(47,122,79,.25),transparent 70%);pointer-events:none}
+.hero .w{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:56px;align-items:center}
+.hero h1{font-size:clamp(46px,7vw,88px)}.hero h1 em{font-style:normal;color:var(--lime)}
+.hero p.l{font-size:19px;color:var(--mute);max-width:46ch;margin:22px 0 30px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px}
+.proof{display:flex;align-items:center;gap:12px;margin-top:28px;color:var(--mute);font-size:14px}
+.proof img{width:34px;height:34px}
+@media(max-width:900px){.hero .w{grid-template-columns:1fr}}
+
+/* live board mock */
+.board{border-radius:26px;background:linear-gradient(180deg,#18211D,#111714);border:1px solid var(--line);padding:18px;box-shadow:0 40px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04);transform:perspective(1400px) rotateY(-8deg) rotateX(3deg);transition:transform .8s var(--e)}
+.board:hover{transform:none}
+.bt{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-weight:700}
+.bt .dot{width:8px;height:8px;border-radius:50%;background:#7BD9A0;animation:p 1.8s infinite}@keyframes p{70%{box-shadow:0 0 0 8px rgba(123,217,160,0)}0%{box-shadow:0 0 0 0 rgba(123,217,160,.6)}}
+.bt small{margin-left:auto;color:var(--mute);font-weight:600}
+.courts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ct{border-radius:16px;background:var(--court);padding:12px;position:relative;overflow:hidden;min-height:132px}
+.ct::before{content:"";position:absolute;inset:10px;border:1.5px solid rgba(255,255,255,.22);border-radius:6px}
+.ct::after{content:"";position:absolute;left:10px;right:10px;top:50%;border-top:1.5px solid rgba(255,255,255,.22)}
+.ct>*{position:relative;z-index:1}
+.ct b{display:block;font-size:11px;letter-spacing:.18em;opacity:.7}
+.ct .t{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:13px;margin-top:8px}
+.ct .t span:last-child{font:800 26px var(--d)}
+.ct .t.win span:last-child{color:var(--lime)}
+.q{margin-top:12px;display:grid;gap:6px}
+.q div{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:rgba(237,242,236,.05);font-size:14px;font-weight:600}
+.q div i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:700 11px var(--b);font-style:normal;background:rgba(215,240,60,.15);color:var(--lime)}
+.q div em{margin-left:auto;font-style:normal;font-size:12px;color:var(--mute)}
+@media(max-width:520px){.courts{grid-template-columns:repeat(2,minmax(0,1fr))}.courts .ct:nth-child(3){display:none}.board{transform:none}}
+
+section{padding:96px 0}
+.sh{max-width:720px;margin-bottom:44px}.sh h2{font-size:clamp(36px,5vw,60px);margin-top:12px}.sh p{color:var(--mute);font-size:18px;margin:16px 0 0}
+
+/* features */
+.feat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.f{padding:26px;border-radius:22px;background:var(--ink2);border:1px solid var(--line);transition:border-color .3s,transform .3s var(--e)}
+.f:hover{border-color:rgba(215,240,60,.35);transform:translateY(-3px)}
+.f svg{width:28px;height:28px;color:var(--lime)}.f h3{font-size:22px;margin:18px 0 8px;letter-spacing:-.02em}.f p{margin:0;color:var(--mute);font-size:15px}
+@media(max-width:900px){.feat{grid-template-columns:1fr 1fr}}@media(max-width:560px){.feat{grid-template-columns:1fr}}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;counter-reset:s}
+.st{padding:28px;border-radius:22px;border:1px solid var(--line);position:relative}
+.st::before{counter-increment:s;content:"0" counter(s);font:800 54px var(--d);color:rgba(215,240,60,.18);position:absolute;right:20px;top:12px}
+.st h3{font-size:22px;margin-bottom:10px}.st p{margin:0;color:var(--mute)}
+.st.sec{background:linear-gradient(160deg,rgba(37,211,102,.12),transparent 60%)}
+@media(max-width:860px){.steps{grid-template-columns:1fr}}
+
+/* pricing */
+.pricing{background:var(--paper);color:var(--ink);border-radius:36px;margin:0 max(8px,1vw)}
+.pricing .sh p{color:#4A5550}.pricing .k{color:var(--court)}
+.bill{display:inline-flex;padding:5px;border-radius:999px;background:#E3E8E0;margin-bottom:26px}
+.bill button{border:0;background:transparent;font:700 14px var(--b);padding:10px 16px;border-radius:999px;cursor:pointer;color:var(--ink)}
+.bill button[aria-pressed=true]{background:var(--ink);color:var(--fg)}
+.bill small{color:var(--court);font-weight:700}
+.found{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 20px;border-radius:18px;background:var(--ink);color:var(--fg);margin-bottom:22px}
+.found b{color:var(--lime)}.found .bar{flex:1;min-width:160px;height:8px;border-radius:9px;background:rgba(237,242,236,.12);overflow:hidden}.found .bar i{display:block;height:100%;background:var(--lime);border-radius:9px}
+.plans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pl{padding:26px 22px;border-radius:24px;background:#fff;border:1px solid #E1E6DE;display:flex;flex-direction:column;gap:14px;position:relative}
+.pl h3{font-size:22px}.pl .pr{font:800 40px/1 var(--d);letter-spacing:-.03em}.pl .pr small{font:600 14px var(--b);color:#5A6560;letter-spacing:0}
+.pl .was{font-size:13px;color:#5A6560;min-height:1.2em}.pl .was s{opacity:.7}
+.pl ul{list-style:none;padding:0;margin:0;display:grid;gap:8px;font-size:15px}
+.pl li{display:flex;gap:10px}.pl li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;background:var(--court) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12l4 4 8-8' fill='none' stroke='white' stroke-width='3'/%3E%3C/svg%3E") center/12px no-repeat}
+.pl .btn{margin-top:auto}
+.pl.hot{background:var(--ink);color:var(--fg);border-color:var(--ink);transform:translateY(-8px);box-shadow:0 30px 60px rgba(14,19,17,.25)}
+.pl.hot .pr small,.pl.hot .was{color:var(--mute)}.pl.hot li::before{background-color:#556B1F}
+.pl .tag{position:absolute;top:-11px;left:22px;background:var(--lime);color:var(--ink);font:700 11px var(--b);letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.pl.trial{background:transparent;border-style:dashed;border-color:#C9D1C4}
+.pl .btn.dark{background:var(--ink);color:var(--fg)}
+@media(max-width:980px){.plans{grid-template-columns:1fr 1fr}.pl.hot{transform:none}}@media(max-width:560px){.plans{grid-template-columns:1fr}}
+.guar{margin-top:22px;color:#4A5550;font-size:14px;text-align:center}
+
+/* signup */
+.su{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:40px;align-items:start}
+.form{padding:clamp(22px,4vw,40px);border-radius:28px;background:var(--ink2);border:1px solid var(--line);display:grid;gap:18px}
+.form h3{font-size:28px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+label{display:grid;gap:7px;font-weight:700;font-size:14px}
+label small{font-weight:500;color:var(--mute)}
+input,select{font:500 16px var(--b);padding:14px 15px;border-radius:13px;border:1px solid rgba(237,242,236,.16);background:rgba(0,0,0,.25);color:var(--fg);width:100%}
+input:focus,select:focus{outline:none;border-color:var(--lime)}
+.slug{display:flex;align-items:center;border-radius:13px;border:1px solid rgba(237,242,236,.16);background:rgba(0,0,0,.25);overflow:hidden}
+.slug span{padding:0 0 0 15px;color:var(--mute);white-space:nowrap;font-size:15px}.slug input{border:0;background:transparent;padding-left:2px}
+.av{font-size:13px;font-weight:700;min-height:1.2em}.av.ok{color:#7BD9A0}.av.no{color:#FF9CC5}
+.sw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.sw button{width:34px;height:34px;border-radius:50%;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 2px rgba(0,0,0,.15)}
+.sw button[aria-pressed=true]{border-color:var(--fg);transform:scale(1.08)}
+.sw input[type=color]{width:38px;height:38px;padding:0;border:0;background:none;border-radius:50%}
+.drop{display:flex;align-items:center;gap:14px;padding:12px;border-radius:14px;border:1px dashed rgba(237,242,236,.25);cursor:pointer}
+.drop img{width:48px;height:48px;border-radius:50%;object-fit:cover;background:rgba(237,242,236,.06)}
+.err{color:#FF9CC5;font-weight:700;margin:0;min-height:1.3em}
+.fine{font-size:13px;color:var(--mute);margin:0}
+/* preview */
+.pv{position:sticky;top:90px;display:grid;gap:14px}
+.phone{width:min(300px,100%);margin:0 auto;border-radius:38px;border:8px solid #222A26;background:#FFF6EA;color:#2A1B10;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.45)}
+.ph-top{display:flex;align-items:center;gap:10px;padding:16px;border-bottom:1px solid #EFE2D2;font:700 15px var(--b)}
+.ph-top img{width:30px;height:30px;border-radius:50%}
+.ph-b{padding:18px 16px 22px;display:grid;gap:12px}
+.ph-b h4{margin:0;font:800 26px/1.05 var(--d);letter-spacing:-.02em}
+.ph-b .pin{display:flex;gap:6px}.ph-b .pin i{width:40px;height:50px;border-radius:12px;background:#fff;border:2px solid #EFE2D2;display:grid;place-items:center;font:800 22px var(--d);font-style:normal}
+.ph-b .go{border-radius:999px;padding:13px;text-align:center;font-weight:700;color:#fff}
+.ph-b .nx{border-radius:14px;padding:12px;font-weight:700;font-size:14px}
+.pv p{text-align:center;color:var(--mute);font-size:13px;margin:0}
+@media(max-width:900px){.su{grid-template-columns:1fr}.pv{position:static;order:-1}}
+
+/* done */
+.done{padding:clamp(22px,4vw,40px);border-radius:28px;background:var(--ink2);border:1px solid rgba(215,240,60,.35);display:grid;gap:18px}
+.done h3{font-size:clamp(28px,4vw,40px)}
+.links{display:grid;gap:8px}
+.links a{display:flex;justify-content:space-between;gap:10px;padding:14px 16px;border-radius:14px;background:rgba(237,242,236,.05);text-decoration:none;font-weight:700;overflow-wrap:anywhere}
+.links a span{color:var(--mute);font-weight:500}
+.next{padding:20px;border-radius:20px;background:linear-gradient(150deg,rgba(37,211,102,.16),rgba(37,211,102,.03));border:1px solid rgba(37,211,102,.3);display:grid;gap:12px}
+.next b{font:800 20px var(--d)}
+
+/* faq */
+details{border-top:1px solid var(--line);padding:18px 0}details:last-child{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font:700 19px var(--d);letter-spacing:-.01em;list-style:none;display:flex;justify-content:space-between;gap:20px}
+summary::after{content:"+";color:var(--lime);font-size:24px;line-height:1}details[open] summary::after{content:"–"}
+details p{color:var(--mute);margin:10px 0 0;max-width:70ch}
+
+footer{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+
+/* owner */
+.own{padding:40px 0 80px}
+.own table{width:100%;border-collapse:collapse;font-size:14px}
+.own th,.own td{text-align:left;padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.own th{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
+.pill{display:inline-block;padding:3px 9px;border-radius:999px;font-weight:700;font-size:12px}
+.pill.pending{background:rgba(255,95,162,.18);color:#FF9CC5}.pill.approved{background:rgba(127,211,255,.16);color:#9FDBFF}.pill.trial{background:rgba(215,240,60,.16);color:var(--lime)}
+.pill.active{background:rgba(123,217,160,.18);color:#7BD9A0}.pill.expired,.pill.lapsed,.pill.suspended{background:rgba(237,242,236,.08);color:var(--mute)}
+.acts{display:flex;flex-wrap:wrap;gap:6px}
+.acts button,.acts a,.acts select{font:700 12px var(--b);padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(237,242,236,.04);color:var(--fg);cursor:pointer;text-decoration:none;width:auto}
+.acts .go{background:#25D366;color:#06301A;border-color:#25D366}
+.acts .pay{background:var(--lime);color:var(--ink);border-color:var(--lime)}
+.ostats{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 26px}
+.ostats div{padding:14px 18px;border-radius:16px;background:var(--ink2);border:1px solid var(--line)}
+.ostats b{display:block;font:800 26px var(--d)}.ostats small{color:var(--mute)}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .8s var(--e),transform .8s var(--e)}.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.reveal{opacity:1;transform:none}.board{transform:none}}
+</style>
+</head>
+<body>
+<header class="nav"><div class="w"><a class="logo" href="/clubs"><i></i>Courtcall</a><nav><a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></nav><a class="btn lime" href="#start" style="padding:11px 18px">Start free trial</a></div></header>
+
+<main id="site">
+<section class="hero"><div class="w">
+  <div>
+    <div class="k">For pickleball clubs</div>
+    <h1>Open play, run like the <em>big clubs</em> do.</h1>
+    <p class="l">Players check in with a QR code. Courtcall picks fair games, tracks scores to 11 and calls the next match on your court TV. You just play host.</p>
+    <div class="ctas"><a class="btn lime" href="#start">Start your 14-day trial</a><a class="btn ghost" href="#features">See what’s inside</a></div>
+    <div class="proof"><img src="/assets/logo.svg" alt="">Built and battle-tested every week at Dinkin’ Donut, Doha.</div>
+  </div>
+  <div class="board" aria-hidden="true">
+    <div class="bt"><i class="dot"></i>Live · Thursday Open Play<small id="clock">8:42 PM</small></div>
+    <div class="courts">
+      <div class="ct"><b>COURT 1</b><div class="t"><span>Maya &amp; Rex</span><span id="s1">9</span></div><div class="t"><span>Jo &amp; Ken</span><span id="s2">7</span></div></div>
+      <div class="ct"><b>COURT 2</b><div class="t win"><span>Lia &amp; Sam</span><span>11</span></div><div class="t"><span>Ana &amp; Bo</span><span>6</span></div></div>
+      <div class="ct"><b>COURT 3</b><div class="t"><span>Noor &amp; Ty</span><span id="s3">4</span></div><div class="t"><span>Eli &amp; Ari</span><span id="s4">5</span></div></div>
+    </div>
+    <div class="q"><div><i>1</i>Carla &amp; Dev vs Omar &amp; Pia<em>Up next · Court 2</em></div><div><i>2</i>Rio, Hana, Tess, Marco<em>~6 min</em></div><div><i>3</i>Kai, Jun, Bea, Leo<em>~12 min</em></div></div>
+  </div>
+</div></section>
+
+<section id="features"><div class="w">
+  <div class="sh reveal"><div class="k">Everything on one link</div><h2>The whole night, handled.</h2><p>Players get a link and a QR. Hosts get a console. The venue gets a TV board. All three stay in sync, live.</p></div>
+  <div class="feat">
+    <div class="f reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg><h3>QR check-in</h3><p>Players scan, enter their 3-digit pass and join the queue. No app to download, no group-chat chaos.</p></div>
+    <div class="f reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h11M4 17h7M15 4l3 3-3 3M11 14l3 3-3 3"/></svg><h3>Fair matchmaking</h3><p>Balances skill levels, rotates partners and shares games evenly, so nobody sits out twice in a row.</p></div>
+    <div class="f reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg><h3>Live scores &amp; standings</h3><p>Games to 11, win by 2. Wins, losses and a nightly leaderboard update the second a score goes in.</p></div>
+    <div class="f reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/></svg><h3>TV board with announcer</h3><p>A court screen that calls the next match out loud, celebrates winners and shows who’s up next.</p></div>
+    <div class="f reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><h3>Host console</h3><p>PIN-protected. Autopilot fills courts for you; payments, passes and session controls in one place.</p></div>
+    <div class="f reveal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18M3 12h18"/></svg><h3>Your brand, not ours</h3><p>Your club name, logo and colours on every screen. Players see your club, on your own link.</p></div>
+  </div>
+</div></section>
+
+<section id="how"><div class="w">
+  <div class="sh reveal"><div class="k">Live in a day</div><h2>Three steps to your first night.</h2></div>
+  <div class="steps">
+    <div class="st reveal"><h3>Create your club</h3><p>Name, link, colours, logo and a host PIN. Two minutes, no card.</p></div>
+    <div class="st sec reveal"><h3>Verify on WhatsApp</h3><p>We activate every club personally. Send one message and get your 6-digit activation PIN. This keeps the platform fast and spam-free for real clubs.</p></div>
+    <div class="st reveal"><h3>Run your night</h3><p>Print the QR, open the TV board, press autopilot. Your 14 days start now.</p></div>
+  </div>
+</div></section>
+
+<section id="pricing" class="pricing"><div class="w">
+  <div class="sh reveal"><div class="k">Simple pricing in QAR</div><h2>Try it free. Keep it if your players love it.</h2><p>Every club starts with 14 days free. After that, pick a plan and pay on WhatsApp by Fawran or bank transfer. Cancel any time.</p></div>
+  <div class="bill" role="group" aria-label="Billing"><button type="button" aria-pressed="true" data-b="m">Monthly</button><button type="button" aria-pressed="false" data-b="y">Yearly <small>2 months free</small></button></div>
+  <div class="found" id="found"><span>🏅</span><span><b>Founding Club offer:</b> the first 10 clubs to subscribe keep <b>50% off for life</b>.</span><span class="bar"><i id="fbar" style="width:0"></i></span><span id="fleft">10 of 10 left</span></div>
+  <div class="plans" id="plans"></div>
+  <p class="guar">Your data stays yours: players, history and settings are kept for 60 days after a plan ends.</p>
+</div></section>
+
+<section id="start"><div class="w">
+  <div class="su">
+    <div>
+      <form class="form" id="f" novalidate>
+        <div><div class="k">Step 1 of 3</div><h3 style="margin-top:8px">Create your club</h3></div>
+        <div class="grid2">
+          <label>Club name<input name="name" maxlength="48" placeholder="e.g. Pearl Pickle Club" required></label>
+          <label>City<input name="city" maxlength="40" placeholder="e.g. Doha"></label>
+        </div>
+        <label>Your club link<div class="slug"><span id="host"></span><input name="slug" maxlength="32" placeholder="pearl-pickle" autocapitalize="off" spellcheck="false"></div><span class="av" id="av"></span></label>
+        <div class="grid2">
+          <label>Your name<input name="contact" maxlength="40" autocomplete="name" placeholder="Club organiser"></label>
+          <label>WhatsApp number <small>We verify this one</small><input name="whatsapp" type="tel" inputmode="tel" placeholder="e.g. 3076 3431" required></label>
+        </div>
+        <div class="grid2">
+          <label>Host PIN <small>At least 6 characters</small><input name="pin" type="password" minlength="6" autocomplete="new-password" required></label>
+          <label>Confirm PIN<input name="pin2" type="password" autocomplete="new-password" required></label>
+        </div>
+        <div class="grid2">
+          <label>Main colour<div class="sw" id="sw1"></div></label>
+          <label>Accent<div class="sw" id="sw2"></div></label>
+        </div>
+        <label>Logo <small>Optional · PNG, JPG or SVG</small><span class="drop" id="drop"><img id="lgv" alt=""><span id="lgt">Upload your logo, or we’ll make a monogram</span><input type="file" id="logo" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden></span></label>
+        <label>Plan you’re interested in<select name="plan"><option value="starter">Starter · 2 courts</option><option value="club" selected>Club · 6 courts</option><option value="venue">Venue · 12 courts</option></select></label>
+        <p class="err" id="err" role="alert"></p>
+        <button class="btn lime" id="go" type="submit">Create my club</button>
+        <p class="fine">Free for 14 days once activated. No card needed. One free trial per club and WhatsApp number.</p>
+      </form>
+      <div class="done" id="done" hidden>
+        <div><div class="k">Step 2 of 3 · Almost there</div><h3 style="margin-top:8px" id="dTitle">Your club is created.</h3></div>
+        <div class="next">
+          <b>Activate it on WhatsApp</b>
+          <span style="color:var(--mute)">Send us your request. We’ll reply with your 6-digit activation PIN, usually within minutes. Enter it on your host page to start the 14-day trial.</span>
+          <div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn wa" id="wa1" target="_blank" rel="noopener">Send request on WhatsApp</a><a class="btn ghost" id="wa2" target="_blank" rel="noopener">Use our 2nd number</a></div>
+          <small style="color:var(--mute)">Request code <b id="dReq"></b></small>
+        </div>
+        <div class="links" id="dLinks"></div>
+        <p class="fine">Save these links. Your host page asks for the PIN you just set.</p>
+      </div>
+    </div>
+    <div class="pv" aria-hidden="true">
+      <div class="phone">
+        <div class="ph-top"><img id="pvLogo" alt=""><span id="pvName">Your Club</span></div>
+        <div class="ph-b">
+          <small style="font-weight:700;letter-spacing:.18em;font-size:10px;opacity:.6" id="pvCity">LIVE QUEUE</small>
+          <h4>Welcome back, Maya.</h4>
+          <div class="pin"><i>4</i><i>2</i><i>7</i></div>
+          <div class="go" id="pvGo">Join the queue</div>
+          <div class="nx" id="pvNx">You’re up next on Court 2</div>
+        </div>
+      </div>
+      <p>Live preview: this is what your players see.</p>
+    </div>
+  </div>
+</div></section>
+
+<section id="faq"><div class="w" style="max-width:860px">
+  <div class="sh"><div class="k">Questions</div><h2>Good to know.</h2></div>
+  <details><summary>Why do you verify clubs on WhatsApp?</summary><p>Every trial is activated by a real person, so trials go to real clubs. One message from your number gets you a 6-digit PIN. It also means you’ll have a direct line to us from day one.</p></details>
+  <details><summary>What’s included in the free trial?</summary><p>The full product, for 14 days: QR check-in, matchmaking, scores, the TV board and host console, with your branding. Trials are capped at 2 courts and 20 players a night. Upgrade any time to lift the limits.</p></details>
+  <details><summary>How do I pay?</summary><p>Message us on WhatsApp with the plan you want. Pay by Fawran or bank transfer, and we switch your club on straight away. Yearly plans get 2 months free.</p></details>
+  <details><summary>Do my players need an app?</summary><p>No. Everything runs in the browser on your club link. Players scan a QR, and hosts use any phone, tablet or laptop.</p></details>
+  <details><summary>What happens when my trial ends?</summary><p>Your club pauses, and nothing is deleted. Choose a plan on WhatsApp and you’re back on, with every player and result where you left it.</p></details>
+</div></section>
+</main>
+
+<section class="own w" id="owner" hidden>
+  <div class="k">Owner · Courtcall</div><h2 style="font-size:44px;margin-top:8px">Clubs</h2>
+  <div class="ostats" id="ost"></div>
+  <div style="overflow-x:auto"><table><thead><tr><th>Club</th><th>Status</th><th>Contact</th><th>Request / PIN</th><th>Actions</th></tr></thead><tbody id="orows"></tbody></table></div>
+  <p class="fine" style="margin-top:16px">“Approve &amp; send PIN” marks the club approved and opens WhatsApp with their activation PIN. Only approve numbers you’ve checked.</p>
+</section>
+
+<footer><div class="w"><span>© <span id="yr"></span> Courtcall · Made in Doha by the team behind Dinkin’ Donut</span><span>Designed &amp; Developed by Drew Nolasco &amp; Angel Flores</span></div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const WA = ["97430763431", "97430723503"];
+$("yr").textContent = new Date().getFullYear();
+$("host").textContent = location.host + "/c/";
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const wa = (i, t) => `https://wa.me/${WA[i]}?text=${encodeURIComponent(t)}`;
+
+// reveal on scroll
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+document.querySelectorAll(".reveal").forEach((el, i) => { el.style.transitionDelay = (i % 3) * 80 + "ms"; io.observe(el); });
+
+// live board mock: scores tick
+let a = 9, b = 7, c = 4, d = 5;
+setInterval(() => {
+  const r = Math.random();
+  if (r < .25 && a < 11) a++; else if (r < .45 && b < 11) b++; else if (r < .7 && c < 11) c++; else if (d < 11) d++;
+  if (a >= 11 || b >= 11) { a = 0; b = 0; } if (c >= 11 || d >= 11) { c = 0; d = 0; }
+  $("s1").textContent = a; $("s2").textContent = b; $("s3").textContent = c; $("s4").textContent = d;
+}, 1600);
+
+// pricing
+const PLANS = [
+  { key: "starter", name: "Starter", m: 149, feats: ["2 courts", "Up to 40 players a night", "QR check-in & matchmaking", "TV board & host console"] },
+  { key: "club", name: "Club", m: 299, hot: true, feats: ["6 courts", "Up to 80 players a night", "Your logo & colours everywhere", "Payments & queue passes", "Priority WhatsApp support"] },
+  { key: "venue", name: "Venue", m: 549, feats: ["12 courts", "Up to 200 players a night", "Everything in Club", "Help setting up your first night"] },
+];
+let yearly = false, founding = 10;
+function drawPlans() {
+  const trial = `<div class="pl trial"><h3>Free trial</h3><div class="pr">0 <small>QAR · 14 days</small></div><div class="was">Activated on WhatsApp</div><ul><li>2 courts</li><li>Up to 20 players</li><li>Every feature, your branding</li></ul><a class="btn dark" href="#start">Start free</a></div>`;
+  $("plans").innerHTML = trial + PLANS.map(p => {
+    const price = yearly ? p.m * 10 : p.m, per = yearly ? "QAR / year" : "QAR / month";
+    const half = founding > 0 ? `Founding Club: <b>${Math.round(price / 2)}</b> ${yearly ? "/yr" : "/mo"} for life` : (yearly ? `<s>${p.m * 12}</s> billed yearly` : "&nbsp;");
+    const msg = `Hi Courtcall! I’m interested in the ${p.name} plan (${yearly ? "yearly" : "monthly"}).`;
+    return `<div class="pl ${p.hot ? "hot" : ""}">${p.hot ? '<span class="tag">Most popular</span>' : ""}<h3>${p.name}</h3><div class="pr">${price.toLocaleString()} <small>${per}</small></div><div class="was">${half}</div><ul>${p.feats.map(f => `<li>${f}</li>`).join("")}</ul><a class="btn ${p.hot ? "lime" : "dark"}" href="#start" data-plan="${p.key}">Start with a free trial</a><a href="${wa(0, msg)}" target="_blank" rel="noopener" style="text-align:center;font-size:13px;font-weight:700;opacity:.7">Or talk to us on WhatsApp</a></div>`;
+  }).join("");
+}
+document.querySelectorAll(".bill button").forEach(bt => bt.onclick = () => { yearly = bt.dataset.b === "y"; document.querySelectorAll(".bill button").forEach(x => x.setAttribute("aria-pressed", x === bt)); drawPlans(); });
+$("plans").addEventListener("click", e => { const p = e.target.closest("[data-plan]"); if (p) $("f").plan.value = p.dataset.plan; });
+drawPlans();
+fetch("/api/clubs?stats").then(r => r.json()).then(j => {
+  founding = j.founding; $("fleft").textContent = founding ? `${founding} of ${j.foundingTotal} left` : "All taken";
+  $("fbar").style.width = ((j.foundingTotal - founding) / j.foundingTotal * 100) + "%"; if (!founding) $("found").hidden = true; drawPlans();
+}).catch(() => {});
+
+// signup: swatches, slug check, logo, live preview
+const C1 = ["#FF5FA2", "#2F7A4F", "#1F4FD8", "#E4572E", "#7A3CF0", "#0E1311"], C2 = ["#D7F03C", "#FFD23F", "#7FD3FF", "#FFFFFF", "#FF9CC5", "#E8A95B"];
+let col = C1[1], acc = C2[0], logo = "", slugTouched = false;
+function swatches(el, list, get, set) {
+  el.innerHTML = list.map(c => `<button type="button" style="background:${c}" data-c="${c}" aria-label="${c}" aria-pressed="${c === get()}"></button>`).join("") + `<input type="color" value="${get()}" aria-label="Custom colour">`;
+  el.onclick = e => { const b = e.target.closest("button"); if (!b) return; set(b.dataset.c); el.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); preview(); };
+  el.querySelector("input").oninput = e => { set(e.target.value.toUpperCase()); el.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", false)); preview(); };
+}
+swatches($("sw1"), C1, () => col, v => col = v); swatches($("sw2"), C2, () => acc, v => acc = v);
+const F = $("f");
+const slugify = s => s.toLowerCase().normalize("NFKD").replace(/[^\w\s-]/g, "").trim().replace(/[\s_]+/g, "-").replace(/-+/g, "-").slice(0, 32);
+function mono() {
+  const n = F.name.value.trim() || "Your Club", ini = n.split(/\s+/).map(x => x[0]).join("").slice(0, 2).toUpperCase();
+  return "data:image/svg+xml," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="${col}"/><circle cx="50" cy="50" r="41" fill="none" stroke="${acc}" stroke-width="3"/><text x="50" y="62" text-anchor="middle" font-family="Arial Rounded MT Bold,sans-serif" font-weight="700" font-size="36" fill="#fff">${esc(ini)}</text></svg>`);
+}
+function preview() {
+  $("pvName").textContent = F.name.value.trim() || "Your Club";
+  $("pvCity").textContent = ((F.city.value.trim() || "Live") + " · queue").toUpperCase();
+  $("pvLogo").src = logo || mono(); if (!logo) $("lgv").src = mono();
+  $("pvGo").style.background = col; $("pvNx").style.background = acc + "33"; $("pvNx").style.color = "#2A1B10"; $("pvNx").style.borderLeft = `4px solid ${acc}`;
+}
+let chk;
+F.name.addEventListener("input", () => { if (!slugTouched) { F.slug.value = slugify(F.name.value); check(); } preview(); });
+F.city.addEventListener("input", preview);
+F.slug.addEventListener("input", () => { slugTouched = true; F.slug.value = slugify(F.slug.value); check(); });
+function check() {
+  clearTimeout(chk); const v = F.slug.value, av = $("av");
+  if (v.length < 3) { av.textContent = v ? "At least 3 characters" : ""; av.className = "av no"; return; }
+  chk = setTimeout(() => fetch("/api/clubs?available=" + encodeURIComponent(v)).then(r => r.json()).then(j => { av.textContent = j.ok ? `✓ ${location.host}/c/${j.slug} is yours` : "That link is taken. Try another."; av.className = "av " + (j.ok ? "ok" : "no"); }), 300);
+}
+$("drop").onclick = () => $("logo").click();
+$("logo").onchange = e => {
+  const file = e.target.files[0]; if (!file) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    if (file.type === "image/svg+xml") { if (rd.result.length > 200000) { $("err").textContent = "That SVG is too large."; return; } logo = rd.result; $("lgv").src = logo; $("lgt").textContent = file.name; preview(); return; }
+    const img = new Image(); img.onload = () => {
+      const s = 320, cv = document.createElement("canvas"); cv.width = cv.height = s; const x = cv.getContext("2d");
+      const k = Math.max(s / img.width, s / img.height), w = img.width * k, h = img.height * k; x.drawImage(img, (s - w) / 2, (s - h) / 2, w, h);
+      logo = cv.toDataURL("image/png"); if (logo.length > 270000) logo = cv.toDataURL("image/jpeg", .85);
+      $("lgv").src = logo; $("lgt").textContent = file.name; preview();
+    }; img.src = rd.result;
+  };
+  rd.readAsDataURL(file);
+};
+preview();
+
+F.addEventListener("submit", async e => {
+  e.preventDefault(); const er = $("err"), go = $("go"); er.textContent = "";
+  if (F.pin.value !== F.pin2.value) { er.textContent = "The two PINs don’t match."; return; }
+  const body = { create: { name: F.name.value, slug: F.slug.value, city: F.city.value, contact: F.contact.value, whatsapp: F.whatsapp.value, pin: F.pin.value, color: col, accent: acc, logo, plan: F.plan.value } };
+  go.disabled = true; go.textContent = "Creating your club…";
+  try {
+    const r = await fetch("/api/clubs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+    const j = await r.json(); if (!r.ok) throw new Error(j.error);
+    const base = location.origin + "/c/" + j.club.slug;
+    const msg = `Hi Courtcall! Please activate the 14-day trial for my club.\n\nClub: ${j.club.name}\nLink: ${base}\nRequest: ${j.request}`;
+    $("wa1").href = wa(0, msg); $("wa2").href = wa(1, msg); $("dReq").textContent = j.request;
+    $("dTitle").textContent = `${j.club.name} is created.`;
+    $("dLinks").innerHTML = [["Host console", "/host"], ["Player queue", ""], ["TV board", "/tv"]].map(([n, p]) => `<a href="${base + p}" target="_blank" rel="noopener">${n}<span>${esc((base + p).replace(/^https?:\/\//, ""))}</span></a>`).join("");
+    F.hidden = true; $("done").hidden = false; $("done").scrollIntoView({ behavior: "smooth", block: "start" });
+    try { localStorage.setItem("cc-last", j.club.slug); } catch {}
+  } catch (x) { er.textContent = x.message || "Couldn’t create the club. Try again."; }
+  go.disabled = false; go.textContent = "Create my club";
+});
+
+// Owner dashboard: /clubs?owner, needs the Dinkin' Donut host sign-in on this device
+if (/[?&]owner\b/.test(location.search)) {
+  let tok = ""; try { tok = localStorage.getItem("dd-host-token") || ""; } catch {}
+  $("site").hidden = true; $("owner").hidden = false;
+  const call = (body) => fetch("/api/clubs" + (body ? "" : "?all"), { method: body ? "POST" : "GET", headers: { "x-host-token": tok, "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined }).then(r => r.json());
+  const PH = { pending: "Waiting for WhatsApp", approved: "Approved · not activated", trial: "Trial", active: "Paid", expired: "Trial ended", lapsed: "Plan ended", suspended: "Suspended" };
+  const day = d => new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+  function draw(j) {
+    if (j.error) { $("orows").innerHTML = `<tr><td colspan="5">Sign in to the Dinkin’ Donut host console on this device first, then reload.</td></tr>`; return; }
+    const L = j.list, n = p => L.filter(c => c.access.phase === p).length;
+    const mrr = L.filter(c => c.access.phase === "active").reduce((s, c) => s + ({ starter: 149, club: 299, venue: 549 }[c.plan] || 0) * (c.founding ? .5 : 1), 0);
+    $("ost").innerHTML = [["Clubs", L.length], ["Waiting", n("pending")], ["On trial", n("trial")], ["Paying", n("active")], ["Monthly revenue", Math.round(mrr) + " QAR"], ["Founding left", j.founding]].map(([k, v]) => `<div><b>${v}</b><small>${k}</small></div>`).join("");
+    $("orows").innerHTML = L.map(c => {
+      const ph = c.access.phase, base = location.origin + "/c/" + c.slug;
+      const pinMsg = `Hi ${c.contact || ""}! Welcome to Courtcall 🎾\n\nYour activation PIN for ${c.name} is: ${c.code}\n\nOpen your host page, enter the PIN and your 14-day trial starts:\n${base}/host`;
+      const waC = "https://wa.me/" + String(c.whatsapp).replace(/\D/g, "") + "?text=" + encodeURIComponent(pinMsg);
+      const when = ph === "trial" ? `ends ${day(c.trialEnds)} · ${c.access.daysLeft}d` : ph === "active" ? `until ${day(c.paidUntil)}${c.founding ? " · founding" : ""}` : `since ${day(c.created)}`;
+      return `<tr><td><b>${esc(c.name)}</b><br><a href="${base}" target="_blank">/c/${c.slug}</a> · ${esc(c.city || "")}<br><small style="color:var(--mute)">Wants ${c.plan}</small></td>
+        <td><span class="pill ${ph}">${PH[ph] || ph}</span><br><small style="color:var(--mute)">${when}</small>${c.repeat ? '<br><small style="color:#FF9CC5">⚠ number had a trial before</small>' : ""}</td>
+        <td>${esc(c.contact || "")}<br><a href="https://wa.me/${String(c.whatsapp).replace(/\D/g, "")}" target="_blank">${esc(c.whatsapp)}</a></td>
+        <td><code>${c.request}</code><br>PIN <code>${c.code}</code></td>
+        <td><div class="acts">
+          ${!c.trialEnds && !c.paidUntil ? `<a class="go" href="${waC}" target="_blank" data-a="approve" data-s="${c.slug}">Approve &amp; send PIN</a>` : ""}
+          <select data-plan="${c.slug}">${["starter", "club", "venue"].map(p => `<option ${p === c.plan ? "selected" : ""}>${p}</option>`).join("")}</select>
+          <button class="pay" data-a="paid" data-m="1" data-s="${c.slug}">Paid 1 mo</button><button class="pay" data-a="paid" data-m="12" data-s="${c.slug}">Paid 1 yr</button>
+          <button data-a="extend" data-s="${c.slug}">+7 days trial</button>
+          <button data-a="pin" data-s="${c.slug}">New PIN</button>
+          <button data-a="${c.suspended ? "unsuspend" : "suspend"}" data-s="${c.slug}">${c.suspended ? "Unsuspend" : "Suspend"}</button>
+          <button data-a="delete" data-s="${c.slug}">Delete</button>
+        </div></td></tr>`;
+    }).join("") || `<tr><td colspan="5" style="color:var(--mute)">No clubs yet. Share ${location.host}/clubs to get your first one.</td></tr>`;
+  }
+  const load = () => call().then(draw);
+  $("orows").onclick = e => {
+    const b = e.target.closest("[data-a]"); if (!b) return;
+    const a = b.dataset.a, s = b.dataset.s;
+    if (a === "delete" && !confirm("Delete this club for good?")) { e.preventDefault(); return; }
+    const plan = document.querySelector(`select[data-plan="${s}"]`)?.value;
+    call({ slug: s, owner: a, months: b.dataset.m, plan }).then(load);
+  };
+  load();
+}
+</script>
+</body>
+</html>

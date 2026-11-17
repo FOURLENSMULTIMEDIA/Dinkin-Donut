@@ -51,4 +51,27 @@ function login(req, body) {
 
 const isHost = req => verifyToken(req.headers["x-host-token"]);
 
-module.exports = { login, isHost, verifyToken };
+// ---- Club hosts (Courtcall). Each club has its own PIN (stored as a salted scrypt hash) and its own
+// signing key, so a token from one club never opens another, and changing a club PIN signs its devices out.
+const hashPin = (pin, salt = crypto.randomBytes(12).toString("hex")) => salt + ":" + crypto.scryptSync(String(pin), salt, 32).toString("hex");
+const pinOk = (pin, stored) => { const [salt] = String(stored || "").split(":"); return !!salt && same(hashPin(pin, salt), stored); };
+const clubKey = club => crypto.createHash("sha256").update(["courtcall", club.slug, club.pinHash, process.env.SESSION_SECRET || PIN1].join("|")).digest();
+function clubToken(club) {
+  const payload = b64(JSON.stringify({ c: club.slug, exp: Date.now() + SESSION_DAYS * 864e5, n: crypto.randomBytes(9).toString("base64url") }));
+  return payload + "." + crypto.createHmac("sha256", clubKey(club)).update(payload).digest("base64url");
+}
+function clubVerify(club, token) {
+  if (!club || !token || typeof token !== "string") return false;
+  const [payload, mac] = token.split(".");
+  if (!payload || !mac || !same(mac, crypto.createHmac("sha256", clubKey(club)).update(payload).digest("base64url"))) return false;
+  try { const p = JSON.parse(Buffer.from(payload, "base64url").toString()); return p.c === club.slug && p.exp > Date.now(); } catch { return false; }
+}
+function clubLogin(req, body, club) {
+  const t = guard(req);
+  if (!pinOk(body.pin, club.pinHash)) { fail(req, t); throw err("That host PIN didn’t work. PINs are case-sensitive.", 401); }
+  tries.delete(ipOf(req));
+  return { token: clubToken(club), days: SESSION_DAYS, twoStep: false };
+}
+const isClubHost = (req, club) => clubVerify(club, req.headers["x-host-token"]);
+
+module.exports = { login, isHost, verifyToken, hashPin, clubLogin, isClubHost };

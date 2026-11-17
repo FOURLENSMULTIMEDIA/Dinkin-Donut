@@ -1,7 +1,8 @@
 const { fresh, apply, PUBLIC } = require("./_engine");
-const { load, save, withLock, hasDb, loadHall, addHall, clearHall } = require("./_store");
+const { load, save, withLock, hasDb, loadHall, addHall, clearHall, runAsClub } = require("./_store");
+const { getClub, access, publicClub, limitsOf } = require("./_clubs");
 const { sendPass, configured } = require("./_wa");
-const { login, isHost: hostOk } = require("./_auth");
+const { login: ddLogin, isHost: ddHost, clubLogin, isClubHost } = require("./_auth");
 
 // What the public pages may see: no payments, no Fawran details, and only players who checked in.
 function publicView(S) {
@@ -26,13 +27,27 @@ const crypto = require("crypto");
 
 module.exports = async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
+  const slug = req.query && req.query.club;
+  if (!slug) return handle(req, res, null);
+  const club = await getClub(slug);
+  if (!club) return res.status(404).json({ error: "This club link doesn’t exist.", club: null });
+  const acc = access(club);
+  if (!acc.ok) return res.status(402).json({ error: { pending: "This club isn’t activated yet.", approved: "This club isn’t activated yet.", suspended: "This club is paused." }[acc.phase] || "This club’s trial has ended.", locked: true, club: publicClub(club) });
+  return runAsClub(club.slug, () => handle(req, res, club));
+};
+
+async function handle(req, res, club) {
+  const hostOk = r => club ? isClubHost(r, club) : ddHost(r);
+  const login = (r, body) => club ? clubLogin(r, body, club) : ddLogin(r, body);
+  const tag = o => club ? { ...o, club: publicClub(club) } : o;
   try {
     if (req.method === "GET") {
       if (req.query && req.query.check !== undefined) return res.status(200).json({ ok: hostOk(req) });
       if (req.query && req.query.hall !== undefined) return res.status(200).json({ hall: await loadHall() });
       const S = (await load()) || fresh();
+      if (club && !S.__cc) S.courts = S.courts.slice(0, limitsOf(club).courts);
       const host = hostOk(req);
-      return res.status(200).json({ ...(host ? { ...S, waAuto: configured() && Boolean(process.env.WA_TEMPLATE), waFree: configured() } : publicView(S)), host, persistent: hasDb() });
+      return res.status(200).json(tag({ ...(host ? { ...S, waAuto: !club && configured() && Boolean(process.env.WA_TEMPLATE), waFree: !club && configured() } : publicView(S)), host, persistent: hasDb() }));
     }
     if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -49,16 +64,22 @@ module.exports = async (req, res) => {
     const out = await withLock(async () => {
       const S = (await load()) || fresh();
       if (a.type === "reset" && a.publish !== false) { const e = hallEntry(S); if (e) await addHall(e); }
+      if (club && !S.__cc) { const L = limitsOf(club); S.courts = S.courts.slice(0, L.courts); S.__cc = 1; }
       const { state, result } = apply(S, a);
+      if (club) {
+        const L = limitsOf(club);
+        if (state.courts.length > L.courts) throw Object.assign(new Error(`Your ${L.label} plan includes ${L.courts} courts. Upgrade on WhatsApp to add more.`), { code: 402 });
+        if (Object.keys(state.players).length > L.players && ["join", "add", "roster", "rosterOne"].includes(a.type)) throw Object.assign(new Error(`Your ${L.label} plan allows ${L.players} players a night. Upgrade on WhatsApp for more.`), { code: 402 });
+      }
       await save(state);
       return { state, result };
     });
     let result = out.result || {};
     if (!isHost && result.player) { const { pin, phone, pinFails, ...safe } = result.player; result = { player: safe }; }
     // Glaze Pass: try to send automatically; otherwise the console opens WhatsApp with the message ready
-    if (isHost && (a.type === "pass" || a.type === "newPin") && result.pin) result = { ...result, ...(await sendPass(result)) };
-    return res.status(200).json({ ...(isHost ? out.state : publicView(out.state)), host: isHost, persistent: hasDb(), result });
+    if (!club && isHost && (a.type === "pass" || a.type === "newPin") && result.pin) result = { ...result, ...(await sendPass(result)) };
+    return res.status(200).json(tag({ ...(isHost ? out.state : publicView(out.state)), host: isHost, persistent: hasDb(), result }));
   } catch (e) {
     return res.status(e.code || 400).json({ error: e.message || "Something went wrong." });
   }
-};
+}

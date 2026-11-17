@@ -56,7 +56,7 @@ window.DD = {
     const svg = el.querySelector("svg"); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "QR code to " + text);
     svg.querySelectorAll("path,rect").forEach(n => { if (n.getAttribute("fill") === "#000000") n.setAttribute("fill", "#3B2416"); if (n.getAttribute("fill") === "#ffffff") n.setAttribute("fill", "transparent"); });
   },
-  queueUrl: () => location.origin + "/queue",
+  queueUrl: () => location.origin + (window.CC ? window.CC.base : "/queue"),
   upNext: S => S && S.upNext ? S.upNext.teams.map(t => t.map(id => S.players[id]?.name || "?")) : null,
   qar: n => (Math.round(n * 100) / 100).toLocaleString("en", { maximumFractionDigits: 2 }) + " QAR",
 };
