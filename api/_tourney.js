@@ -5,7 +5,7 @@ const clean = (s, n = 40) => String(s ?? "").replace(/[<>]/g, "").replace(/\s+/g
 const err = (m, code = 400) => Object.assign(new Error(m), { code });
 
 function fresh() {
-  return { name: "Club Tournament", date: "", venue: "", status: "registration", target: 11, winBy: 2, divisions: [], nextId: 1, updatedAt: Date.now(), log: [] };
+  return { name: "Club Tournament", date: "", venue: "", status: "registration", target: 11, finalTarget: 15, winBy: 2, divisions: [], nextId: 1, updatedAt: Date.now(), log: [] };
 }
 
 // Standard seeding order for a bracket of size n (1 v n, 2 v n-1 … arranged so top seeds meet last)
@@ -90,6 +90,7 @@ const actions = {
     if (a.venue !== undefined) S.venue = clean(a.venue, 60);
     if (a.target) S.target = [7, 11, 15, 21].includes(Number(a.target)) ? Number(a.target) : 11;
     if (a.winBy) S.winBy = Number(a.winBy) === 1 ? 1 : 2;
+    if (a.finalTarget) S.finalTarget = [11, 15, 21].includes(Number(a.finalTarget)) ? Number(a.finalTarget) : 15;
     if (a.status && ["registration", "closed", "live", "done"].includes(a.status)) S.status = a.status;
   },
   addDivision(S, a) {
@@ -135,7 +136,8 @@ const actions = {
     const sa = Math.round(Number(a.sa)), sb = Math.round(Number(a.sb));
     if (!Number.isFinite(sa) || !Number.isFinite(sb) || sa < 0 || sb < 0 || sa === sb) throw err("Enter a final score with a winner.");
     const hi = Math.max(sa, sb), lo = Math.min(sa, sb);
-    if (!a.force && (hi < S.target || hi - lo < S.winBy)) throw err(`Games go to ${S.target}, win by ${S.winBy}. Check the score.`);
+    const isFinal = d.format === "elim" && m.round === d.rounds, goal = isFinal ? (S.finalTarget || 15) : S.target;
+    if (!a.force && (hi < goal || hi - lo < S.winBy)) throw err(`${isFinal ? "The final goes" : "Games go"} to ${goal}, win by ${S.winBy}. Check the score.`);
     const nextWinner = sa > sb ? m.a : m.b;
     if (m.winner && m.winner !== nextWinner) unadvance(d, m);
     m.sa = sa; m.sb = sb; m.winner = nextWinner; m.at = Date.now();

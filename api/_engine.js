@@ -149,7 +149,14 @@ function previewNext(S) {
 
 const actions = {
   // public
-  join: (S, a) => ({ player: addPlayer(S, a.name, a.level, false, a.pin) }),
+  join: (S, a) => {
+    const player = addPlayer(S, a.name, a.level, false, a.pin);
+    const p = S.players[player.id];
+    if (a.g === "m" || a.g === "f") p.g = a.g;
+    const req = clean(a.partnerReq || "").slice(0, 40);
+    if (req && !p.partner) { p.partnerReq = req; log(S, `${p.name} asked to play with ${req}`); }
+    return { player };
+  },
   leave: (S, a) => {
     const p = S.players[a.id]; if (!p) return;
     S.queue = S.queue.filter(id => id !== p.id); S.done = (S.done || []).filter(id => id !== p.id);
@@ -174,6 +181,19 @@ const actions = {
   },
   newPin: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.pin = genPin(S); p.pinFails = 0; return { id: p.id, name: p.name, pin: p.pin, phone: p.phone || "", amount: (S.pay[p.id]?.items || []).reduce((x, i) => x + i.amt, 0) }; },
   rosterOne: (S, a) => { const n = clean(a.name); if (n.length < 2) throw new Error("Name is too short."); const p = findByName(S, n) || newPlayer(S, n); const lv = M.normLevel(a.level); if (lv) p.level = lv; return { id: p.id }; },
+  setGender: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.g = a.g === "m" || a.g === "f" ? a.g : ""; },
+  setPartner: (S, a) => {
+    const p = S.players[a.id]; if (!p) throw new Error("Player not found.");
+    const unlink = x => { const o = x && x.partner && S.players[x.partner]; if (o && o.partner === x.id) o.partner = null; if (x) x.partner = null; };
+    if (!a.partner) { unlink(p); p.partnerReq = ""; return; }
+    let q = S.players[a.partner] || Object.values(S.players).find(x => x.name.toLowerCase() === String(a.partner).trim().toLowerCase());
+    if (!q) throw new Error("Couldn’t find that partner on tonight’s list. Add them first.");
+    if (q.id === p.id) throw new Error("Pick a different player.");
+    if (busy(S).has(p.id) || busy(S).has(q.id)) throw new Error("Wait until both are off court.");
+    unlink(p); unlink(q);
+    p.partner = q.id; q.partner = p.id; p.partnerReq = ""; q.partnerReq = "";
+    log(S, `${p.name} & ${q.name} will play as fixed partners`);
+  },
   setLevel: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.level = M.normLevel(a.level) || null; },
   courtLevel: (S, a) => { const c = court(S, a.court); c.level = ["beginner", "intermediate", "advanced"].includes(a.level) ? a.level : "any"; },
   // Roster: names allowed to check in. One per line or comma separated.
@@ -280,6 +300,7 @@ const actions = {
   removePlayer: (S, a) => {
     if (busy(S).has(a.id)) throw new Error("Finish or cancel their game first.");
     S.queue = S.queue.filter(id => id !== a.id); S.bench = S.bench.filter(id => id !== a.id);
+    const pp = S.players[a.id] && S.players[a.id].partner && S.players[S.players[a.id].partner]; if (pp) pp.partner = null;
     delete S.players[a.id]; delete S.pay[a.id];
   },
   settings: (S, a) => {
@@ -290,7 +311,8 @@ const actions = {
     if (a.sessionEnd !== undefined) S.sessionEnd = Math.max(0, Math.min(1800, parseInt(a.sessionEnd, 10) || 1440));
     if (a.target) S.target = [11, 15, 21].includes(Number(a.target)) ? Number(a.target) : 11;
     if (a.gameCap !== undefined) S.gameCap = Math.max(0, Math.min(40, Number(a.gameCap) || 0));
-    if (a.match) S.match = ["order", "smart", "levels"].includes(a.match) ? a.match : "smart";
+    if (a.match) S.match = ["order", "smart", "levels", "record", "mix"].includes(a.match) ? a.match : "smart";
+    if (typeof a.mixed === "boolean") S.mixed = a.mixed;
     if (a.rotation) S.rotation = a.rotation === "all" ? "all" : "winstay";
     if (a.maxWins) S.maxWins = Math.min(5, Math.max(1, Number(a.maxWins)));
     if (typeof a.nightTitle === "string") S.nightTitle = clean(a.nightTitle) || S.nightTitle;
@@ -298,8 +320,8 @@ const actions = {
   // End session: keep the roster names (regulars), clear everything else.
   reset: (S, a) => {
     const n = fresh();
-    if (!a.clearRoster) Object.values(S.players).forEach(p => { n.players[p.id] = { id: p.id, name: p.name, level: p.level, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false }; });
-    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.requirePin = S.requirePin !== false; n.autopilot = S.autopilot !== false; n.gameCap = 0; n.target = S.target || 11; n.gameLimit = S.gameLimit ?? "auto"; n.sessionEnd = S.sessionEnd || 1440;
+    if (!a.clearRoster) Object.values(S.players).forEach(p => { n.players[p.id] = { id: p.id, name: p.name, level: p.level, g: p.g || "", w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false }; });
+    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.mixed = !!S.mixed; n.requirePin = S.requirePin !== false; n.autopilot = S.autopilot !== false; n.gameCap = 0; n.target = S.target || 11; n.gameLimit = S.gameLimit ?? "auto"; n.sessionEnd = S.sessionEnd || 1440;
     n.courts = S.courts.map(c => ({ id: c.id, teams: null, start: null, stayers: null, streak: 0, level: c.level || "any" }));
     return n;
   },

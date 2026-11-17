@@ -75,6 +75,8 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
 .log{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px;color:var(--muted);max-height:300px;overflow:auto}
 .sprinkle{position:fixed;top:-20px;width:6px;height:16px;border-radius:4px;pointer-events:none;z-index:99;animation:fall 1.6s ease-in forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(540deg)}}
+.preq{display:grid;gap:6px;margin-top:14px;font-weight:700;font-size:14px}.preq span{font-weight:500;opacity:.7}
+.preq input{font:500 16px var(--body);padding:12px 14px;border-radius:14px;border:2px solid rgba(255,246,234,.18);background:rgba(255,246,234,.06);color:inherit}
 </style>
 </head>
 <body>
@@ -103,6 +105,12 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
         <label><input type="radio" name="level" value="intermediate" checked><span data-ic="ring">Intermediate</span></label>
         <label><input type="radio" name="level" value="advanced"><span data-ic="flame">Advanced</span></label>
       </fieldset>
+      <fieldset class="levels" id="gField" hidden>
+        <legend>Mixed doubles tonight <span>(each team is one man + one woman)</span></legend>
+        <label><input type="radio" name="g" value="m"><span>Man</span></label>
+        <label><input type="radio" name="g" value="f"><span>Woman</span></label>
+      </fieldset>
+      <label class="preq">Playing with a partner? <span>(optional, the host confirms)</span><input id="partnerReq" maxlength="40" placeholder="Partner’s name"></label>
     </form>
     <p class="err" id="err" hidden></p>
   </section>
@@ -228,6 +236,7 @@ function renderMe() {
 
 let lastRes = null;
 function render() {
+  if ($("gField")) $("gField").hidden = !(S && S.mixed && S.format === 2);
   { const g = $("gcPromo"); let member = false; try { member = localStorage.getItem("dd-gc") === "1"; } catch {}
     if (g) { g.hidden = member || !meId; if (window.CLUB && CLUB.loyaltyFormUrl) { g.href = CLUB.loyaltyFormUrl; g.target = "_blank"; g.rel = "noopener"; g.onclick = () => { try { localStorage.setItem("dd-gc", "1"); } catch {} }; } } }
   if (S.lastResult && lastRes !== null && S.lastResult.t !== lastRes && meId && S.lastResult.w.includes(meId)) { celebrate({ ...S.lastResult, wn: ["You"] }, { hold: 3000 }); buzz(); }
@@ -261,7 +270,8 @@ document.addEventListener("submit", async e => {
   try {
     const lvl = (document.querySelector("input[name=level]:checked") || {}).value;
     const pin = [...document.querySelectorAll(".pd")].map(i => i.value).join("");
-    const st = await DD.send({ type: "join", name: $("name").value, level: lvl, pin });
+    const g = (document.querySelector("input[name=g]:checked") || {}).value || "";
+    const st = await DD.send({ type: "join", name: $("name").value, level: lvl, pin, g, partnerReq: $("partnerReq").value });
     try { localStorage.setItem("dd-pin", pin); } catch {}
     try { localStorage.setItem("dd-name", $("name").value); } catch {}
     buzz.prime = true; try { (window.__ac || (window.__ac = new (window.AudioContext || window.webkitAudioContext)())).resume(); } catch {}

@@ -132,7 +132,7 @@ function render() {
   const st = ST[S.status] || ST.registration; $("tSt").className = "st " + st[1]; $("tSt").innerHTML = `<i></i>${st[0]}`;
   if (S.date) { $("tDate").hidden = false; $("tDate").textContent = S.date; } else $("tDate").hidden = true;
   if (S.venue) { $("tVen").hidden = false; $("tVen").textContent = S.venue; } else $("tVen").hidden = true;
-  $("tFmt").textContent = `Games to ${S.target}, win by ${S.winBy}`;
+  $("tFmt").textContent = `Games to ${S.target} · Final to ${S.finalTarget || 15} · Win by ${S.winBy}`;
   const open = S.status === "registration" && S.divisions.some(d => !d.matches.length);
   $("register").hidden = !open || TV; $("regLink").hidden = !open;
   $("rDiv").innerHTML = S.divisions.filter(d => !d.matches.length).map(d => `<option value="${d.id}">${esc(d.name)} · ${d.teams.length}/${d.cap} teams</option>`).join("");
@@ -167,7 +167,7 @@ function match(d, m, final) {
   const A = nameOf(d, m.a), B = nameOf(d, m.b), done = !!m.winner;
   const row = (id, n, sc) => `<div class="tm ${!n ? "tbd" : done ? (m.winner === id ? "w" : "l") : ""}"><span>${n ? esc(n) : m.bye && !n ? "Bye" : "TBD"}</span><b>${sc ?? ""}</b></div>`;
   let h = `<div class="m ${done ? "done" : ""} ${final ? "final" : ""}">${row(m.a, A, m.bye ? "" : m.sa)}${row(m.b, B, m.bye ? "" : m.sb)}`;
-  if (m.court || (!done && A && B)) h += `<div class="info"><span>${esc(m.label)}</span><span>${m.court ? "Court " + esc(m.court) : "Up soon"}</span></div>`;
+  if (m.court || (!done && A && B)) h += `<div class="info"><span>${esc(m.label)}${final ? ` · to ${S.finalTarget || 15}` : ""}</span><span>${m.court ? "Court " + esc(m.court) : "Up soon"}</span></div>`;
   if (S.host && !TV && A && B && !m.bye) h += `<div class="hx" data-m="${m.id}"><input inputmode="numeric" class="a" value="${m.sa ?? ""}" aria-label="${esc(A)} score"><span>–</span><input inputmode="numeric" class="b" value="${m.sb ?? ""}" aria-label="${esc(B)} score"><button data-act="score">${done ? "Update" : "Save"}</button>${done ? `<button class="g" data-act="clear">Clear</button>` : ""}<input class="c" placeholder="Court" value="${esc(m.court)}" data-act="court"></div>`;
   return h + `</div>`;
 }
@@ -176,7 +176,8 @@ function hostbar() {
   const d = S.divisions.find(x => x.id === cur);
   hb.innerHTML = `<b>Host</b>
     <input id="hName" value="${esc(S.name)}" aria-label="Tournament name" style="min-width:180px"><input id="hDate" value="${esc(S.date)}" placeholder="Date, e.g. Sat 14 Dec · 4 PM"><input id="hVen" value="${esc(S.venue)}" placeholder="Venue">
-    <select id="hTarget">${[7, 11, 15, 21].map(n => `<option ${n === S.target ? "selected" : ""}>${n}</option>`).join("")}</select>
+    <label style="font-size:13px;opacity:.8">Games to</label><select id="hTarget">${[7, 11, 15, 21].map(n => `<option ${n === S.target ? "selected" : ""}>${n}</option>`).join("")}</select>
+    <label style="font-size:13px;opacity:.8">Final to</label><select id="hFinal">${[11, 15, 21].map(n => `<option ${n === (S.finalTarget || 15) ? "selected" : ""}>${n}</option>`).join("")}</select>
     <select id="hStatus">${Object.keys(ST).map(k => `<option value="${k}" ${k === S.status ? "selected" : ""}>${ST[k][0]}</option>`).join("")}</select>
     <button class="chip" data-h="save">Save</button>
     <span style="flex-basis:100%"></span>
@@ -199,7 +200,7 @@ document.addEventListener("click", e => {
   const h = e.target.closest("[data-h]");
   if (h) {
     const k = h.dataset.h, v = id => ($(id) || {}).value;
-    if (k === "save") act({ type: "setup", name: v("hName"), date: v("hDate"), venue: v("hVen"), target: v("hTarget"), status: v("hStatus") }, "Saved");
+    if (k === "save") act({ type: "setup", name: v("hName"), date: v("hDate"), venue: v("hVen"), target: v("hTarget"), finalTarget: v("hFinal"), status: v("hStatus") }, "Saved");
     if (k === "addDiv") act({ type: "addDivision", name: v("hDiv"), format: v("hFmt") });
     if (k === "addTeam") act({ type: "addTeam", div: cur, p1: v("hP1"), p2: v("hP2") });
     if (k === "shuffle") act({ type: "shuffle", div: cur }, "Seeds shuffled");

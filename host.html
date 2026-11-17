@@ -160,6 +160,9 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .awards div{display:grid;grid-template-columns:1fr auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
 .awards span{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .awards b{font:700 22px var(--display)}.awards small{align-self:center;font-weight:700;color:var(--muted)}
+.gchip,.ptchip{font:700 11px var(--body);border-radius:999px;padding:4px 8px;border:1px dashed var(--line);background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap}
+.gchip.m{border-style:solid;border-color:#5B8DEF;color:#5B8DEF}.gchip.f{border-style:solid;border-color:var(--glaze);color:var(--glaze)}
+.ptchip.on{border-style:solid;border-color:var(--court);background:var(--court);color:#fff}.ptchip.req{border-style:solid;border-color:#F5C542;color:#B8860B;background:rgba(245,197,66,.12)}
 </style>
 </head>
 <body>
@@ -200,7 +203,8 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
     <label for="sessionEnd">Ends</label><input id="sessionEnd" type="time" style="width:110px">
     <label for="target">Game to</label><select id="target"><option value="11">11 points</option><option value="15">15 points</option><option value="21">21 points</option></select>
     <label class="row muted" style="gap:6px"><input type="checkbox" id="requirePin"> PIN to join</label>
-    <label for="match">Matching</label><select id="match"><option value="smart">Smart match</option><option value="levels">Level courts</option><option value="order">Queue order</option></select>
+    <label for="match">Matching</label><select id="match"><option value="smart">Smart match</option><option value="record">Winners vs Winners</option><option value="mix">Winner + Loser teams</option><option value="levels">Level courts</option><option value="order">Queue order</option></select>
+    <label class="row muted" style="gap:6px" title="Every team is one man and one woman"><input type="checkbox" id="mixed"> Mixed doubles</label>
     <label for="rotation">After a game</label><select id="rotation"><option value="winstay">Winners stay</option><option value="all">Everyone rotates</option></select>
     <label for="maxWins">Max wins</label><select id="maxWins"><option>1</option><option>2</option><option>3</option></select>
     <span class="sp"></span>
@@ -388,7 +392,7 @@ function render() {
   if (document.activeElement !== $("gameLimit")) $("gameLimit").value = String(S.gameLimit ?? "auto");
   if (document.activeElement !== $("sessionEnd")) { const m = (S.sessionEnd || 1440) % 1440; $("sessionEnd").value = String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); }
   $("shareChip").textContent = S.limitNow ? `${S.gameLimit === "auto" ? "Auto: " : ""}${S.limitNow} games each` : (S.gameLimit === "auto" ? "Auto: waiting for players" : "");
-  $("autopilot").checked = S.autopilot !== false; if (document.activeElement !== $("target")) $("target").value = String(S.target || 11);
+  $("autopilot").checked = S.autopilot !== false; $("mixed").checked = !!S.mixed; if (document.activeElement !== $("target")) $("target").value = String(S.target || 11);
   $("fillAll").textContent = S.autopilot !== false ? "Autopilot on" : "Fill open courts"; $("fillAll").disabled = S.autopilot !== false;
   $("gpNames").innerHTML = Object.values(S.players).map(p => `<option value="${DD.esc(p.name)}">`).join("");
   if (!$("gpAmt").value && document.activeElement !== $("gpAmt") && S.fee) $("gpAmt").value = S.fee;
@@ -451,7 +455,7 @@ function renderRoster() {
     (f === "all" || (f === "in" && p.in) || (f === "out" && !p.in) || (f === "unpaid" && payOf(p.id).bal > 0)));
   $("roster").innerHTML = rows.length ? rows.map(p => {
     const [cls, label] = where(p.id), pay = payOf(p.id), active = cls === "court" || cls === "queue";
-    return `<li><button class="lvchip ${p.level || "none"}" data-x="lvl" data-id="${p.id}" title="Tap to change level">${p.level ? LVL[p.level].short : "Set level"}</button><span class="nm">${DD.esc(p.name)}</span><span class="pill ${cls}">${label}</span><span class="pill ${pay.status}">${STATUS[pay.status]}${pay.bal > 0 && pay.paid ? " · " + money(pay.bal) + " left" : ""}</span>
+    return `<li><button class="lvchip ${p.level || "none"}" data-x="lvl" data-id="${p.id}" title="Tap to change level">${p.level ? LVL[p.level].short : "Set level"}</button><span class="nm">${DD.esc(p.name)}</span><button class="gchip ${p.g || ""}" data-x="g" data-id="${p.id}" title="Tap to set man / woman (for mixed doubles)">${p.g === "m" ? "M" : p.g === "f" ? "F" : "M/F"}</button>${(() => { const q = p.partner && S.players[p.partner]; if (q && q.partner === p.id) return `<button class="ptchip on" data-x="partner" data-id="${p.id}" title="Fixed partner. Tap to unlink">🤝 ${DD.esc(q.name)}</button>`; if (p.partnerReq) return `<button class="ptchip req" data-x="partner" data-id="${p.id}" data-req="${DD.esc(p.partnerReq)}" title="Partner request. Tap to link">Wants ${DD.esc(p.partnerReq)} · Link</button>`; return `<button class="ptchip" data-x="partner" data-id="${p.id}" title="Set a fixed partner">+ Partner</button>`; })()}<span class="pill ${cls}">${label}</span><span class="pill ${pay.status}">${STATUS[pay.status]}${pay.bal > 0 && pay.paid ? " · " + money(pay.bal) + " left" : ""}</span>
       ${p.pin ? `<span class="pinchip" title="Glaze Pass PIN">PIN ${p.pin}</span><button class="ib" title="Resend PIN on WhatsApp" aria-label="Resend PIN to ${DD.esc(p.name)}" data-x="resend" data-id="${p.id}">${DD.icon("repeat", 14)}</button>` : ""}
       ${active ? "" : `<button class="btn lime sm" data-x="checkin" data-id="${p.id}">Check in</button>`}
       ${active ? "" : `<button class="ib" title="Remove from list" aria-label="Remove ${DD.esc(p.name)} from list" data-x="remove" data-id="${p.id}">×</button>`}</li>`;
@@ -485,6 +489,14 @@ document.addEventListener("click", e => {
   const b = e.target.closest("[data-x]"); if (!b) return;
   const id = b.dataset.id, nm = S.players[id]?.name;
   if (b.dataset.x === "lvl") { const cur = S.players[id].level || null; act({ type: "setLevel", id, level: LV_ORDER[(LV_ORDER.indexOf(cur) + 1) % 4] || "" }); }
+  if (b.dataset.x === "g") { const order = ["", "m", "f"], cur = S.players[id].g || ""; act({ type: "setGender", id, g: order[(order.indexOf(cur) + 1) % 3] }); }
+  if (b.dataset.x === "partner") {
+    const p = S.players[id], q = p.partner && S.players[p.partner];
+    if (q && q.partner === id) { if (confirm(`Unlink ${p.name} and ${q.name}?`)) act({ type: "setPartner", id, partner: "" }, "Partners unlinked"); return; }
+    const others = Object.values(S.players).filter(x => x.id !== id).map(x => x.name).sort();
+    const pick = prompt(`Fixed partner for ${p.name}? Type their name exactly:\n\n${others.join(", ")}`, b.dataset.req || "");
+    if (pick) act({ type: "setPartner", id, partner: pick.trim() }, `${p.name} will always play with ${pick.trim()}`);
+  }
   if (b.dataset.x === "checkin") act({ type: "add", name: nm }, `${nm} checked in`);
   if (b.dataset.x === "remove") act({ type: "removePlayer", id }, `${nm} removed`);
   if (b.dataset.x === "unpay") act({ type: "unpay", id, i: b.dataset.i }, "Payment removed");
@@ -625,6 +637,7 @@ function announceNew() {
   lastStarts = now;
 }
 document.addEventListener("click", e => { const b = e.target.closest("[data-call]"); if (!b) return; const c = S.courts.find(x => x.id === +b.dataset.call); if (c && c.teams) { Announcer.unlock(); Announcer.call(c.id, names(c.teams[0]), names(c.teams[1])); } });
+$("mixed").onchange = e => act({ type: "settings", mixed: e.target.checked }, e.target.checked ? "Mixed doubles on: every team is one man + one woman. Set M/F on each player." : "Mixed doubles off");
 $("autopilot").onchange = e => act({ type: "settings", autopilot: e.target.checked }, e.target.checked ? "Autopilot on: courts fill themselves" : "Autopilot off: start games by hand");
 $("gameLimit").onchange = e => act({ type: "settings", gameLimit: e.target.value }, e.target.value === "auto" ? "Games each: worked out from who’s here" : e.target.value === "0" ? "No game limit" : `Everyone gets ${e.target.value} games`);
 $("sessionEnd").onchange = e => { const [h, m] = e.target.value.split(":").map(Number); act({ type: "settings", sessionEnd: (h * 60 + m) || 1440 }, "End time saved"); };
