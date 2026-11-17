@@ -407,7 +407,51 @@ section.block{padding-block:80px 0}
       <a href="/dupr"><small>10</small>DUPR games</a>
       <a href="#contact"><small>11</small>Contact</a>
     </nav>
-    <div class="menu-foot"><span class="menu-theme"><small>Appearance</small><span data-theme-slot></span></span><a href="https://www.instagram.com/dinkindonutqa/" target="_blank" rel="noopener">Instagram @dinkindonutqa</a><a href="https://wa.me/97430763431" target="_blank" rel="noopener">WhatsApp +974 3076 3431</a></div>
+    <div class="menu-foot">
+      <a class="mf-card mf-live" href="/queue" id="mfLive">
+        <span class="mf-k"><i class="mf-dot"></i><span id="mfLiveK">Tonight</span></span>
+        <b id="mfLiveB">Courts are quiet.</b>
+        <small id="mfLiveS">Pre-registration for the First Serve is open.</small>
+        <span class="mf-go" aria-hidden="true">→</span>
+      </a>
+      <div class="mf-card">
+        <span class="mf-k">Say hi</span>
+        <div class="mf-chips">
+          <a href="https://www.instagram.com/dinkindonutqa/" target="_blank" rel="noopener"><span>@dinkindonutqa</span></a>
+          <a href="https://wa.me/97430763431" target="_blank" rel="noopener"><span>+974 3076 3431</span></a>
+          <a href="https://wa.me/97430723503" target="_blank" rel="noopener"><span>+974 3072 3503</span></a>
+        </div>
+      </div>
+      <div class="mf-card mf-crew">
+        <span class="mf-k"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2"/></svg><span id="mfCrewK">Crew only</span></span>
+        <div class="mf-crew-row">
+          <a class="mf-host" href="/host"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H4zM9 20h6M12 16v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>Host console</b><small id="mfHostS">PIN required</small></span></a>
+          <a class="mf-host" href="/tv" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span><b>TV board</b><small>For the court screen</small></span></a>
+        </div>
+        <span class="menu-theme"><small>Appearance</small><span data-theme-slot></span></span>
+      </div>
+      <div class="mf-base"><span>© <span data-yr></span> Dinkin’ Donut Pickleball Club · Doha</span><span>Designed &amp; Developed by Drew Nolasco &amp; Angel Flores</span></div>
+    </div>
+    <script>
+    (function(){
+      var y=document.querySelector("[data-yr]"); if(y) y.textContent=new Date().getFullYear();
+      try{ if(localStorage.getItem("dd-host-token")){ document.getElementById("mfHostS").textContent="Signed in on this device"; document.querySelector(".mf-crew").classList.add("signed"); document.getElementById("mfCrewK").textContent="Crew · signed in"; } }catch(e){}
+      function live(){
+        Promise.all([fetch("/api/queue",{cache:"no-store"}).then(function(r){return r.json()}).catch(function(){return null}),fetch("/api/founders").then(function(r){return r.json()}).catch(function(){return null})]).then(function(a){
+          var S=a[0],F=a[1],el=document.getElementById("mfLive");
+          var on=S&&S.courts?S.courts.filter(function(c){return c.teams}).length:0, wait=S&&S.queue?S.queue.length:0, n=S&&S.players?Object.keys(S.players).length:0;
+          if(on||n){ el.classList.add("is-live"); document.getElementById("mfLiveK").textContent="Live now";
+            document.getElementById("mfLiveB").textContent=on+" of "+S.courts.length+" courts playing";
+            document.getElementById("mfLiveS").textContent=(wait?wait+" Dinker"+(wait==1?"":"s")+" in the queue. ":"")+"Tap to join."; }
+          else if(F&&F.cap!=null){ el.href="/first-serve"; document.getElementById("mfLiveK").textContent="Opening soon";
+            document.getElementById("mfLiveB").textContent=F.left?F.left+" of "+F.cap+" founding spots left":"First Serve is full";
+            document.getElementById("mfLiveS").textContent=F.left?"Reserve yours and get a 1-of-1 sticker.":"Join the waitlist."; }
+        });
+      }
+      var m=document.getElementById("menuBtn")||document.querySelector("[aria-controls=menu],.menubtn");
+      live(); if(m) m.addEventListener("click",live);
+    })();
+    </script>
   </div>
 </div>
 
