@@ -1,0 +1,173 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Courtcall · Commercial</title>
+<style>
+@font-face{font-family:Brico;font-weight:800;src:url(../assets/fonts/bricolage-800.woff2)}
+@font-face{font-family:"DM Sans";font-weight:500;src:url(../assets/fonts/dm-sans-500.woff2)}
+@font-face{font-family:"DM Sans";font-weight:700;src:url(../assets/fonts/dm-sans-700.woff2)}
+:root{--ink:#0E1311;--ink2:#161E1A;--fg:#EDF2EC;--lime:#D7F03C;--court:#2F7A4F;--mute:rgba(237,242,236,.6)}
+*{margin:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink)}
+#v{position:fixed;inset:0;overflow:hidden;background:var(--ink);color:var(--fg);font-family:"DM Sans"}
+.l{position:absolute;inset:0;display:grid;place-items:center;opacity:0}
+.h{font-family:Brico;font-weight:800;letter-spacing:-.035em;line-height:.95;text-align:center}
+.k{font-weight:700;letter-spacing:.3em;text-transform:uppercase;font-size:2.4vmin;color:var(--lime);text-align:center}
+#glow{position:absolute;inset:0;background:radial-gradient(60vmin 40vmin at 70% 30%,rgba(215,240,60,.12),transparent 70%),radial-gradient(60vmin 50vmin at 20% 90%,rgba(47,122,79,.25),transparent 70%)}
+#grain{position:absolute;inset:-50%;opacity:.06;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* chat chaos */
+.bub{position:absolute;padding:1.6vmin 2.4vmin;border-radius:2.6vmin;background:#1F2A25;font-weight:500;font-size:2.9vmin;white-space:nowrap;box-shadow:0 1vmin 3vmin rgba(0,0,0,.35)}
+.bub.me{background:#2F5D44}
+.bub b{display:block;font-size:1.8vmin;color:var(--lime);margin-bottom:.4vmin}
+/* logo */
+.ball{width:16vmin;height:16vmin;border-radius:50%;background:var(--lime);position:relative;box-shadow:inset -2vmin -1.6vmin 0 rgba(0,0,0,.12)}
+.ball::after{content:"";position:absolute;inset:22%;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(0,0,0,.28) .55vmin,transparent .7vmin) 0 0/3.4vmin 3.4vmin}
+/* phone */
+.phone{width:34vmin;height:66vmin;border-radius:5.4vmin;background:#FFF;border:1.2vmin solid #222B27;position:relative;overflow:hidden;color:#16201B;box-shadow:0 4vmin 8vmin rgba(0,0,0,.5)}
+.ptop{display:flex;align-items:center;gap:1.4vmin;padding:2.4vmin;font-weight:700;font-size:2.4vmin;border-bottom:.2vmin solid #E8ECE6}
+.ptop i{width:4.4vmin;height:4.4vmin;border-radius:50%;display:grid;place-items:center;color:#fff;font-style:normal;font-size:1.8vmin;font-weight:700}
+.pb{padding:3vmin 2.6vmin;display:grid;gap:2vmin}
+.pb h4{font-family:Brico;font-size:4.4vmin;line-height:1;letter-spacing:-.03em}
+.pin{display:flex;gap:1.2vmin}.pin i{width:6.4vmin;height:8vmin;border-radius:1.8vmin;border:.4vmin solid #E1E6DE;display:grid;place-items:center;font:800 4vmin Brico;font-style:normal}
+.btn{border-radius:99vmin;padding:2vmin;text-align:center;font-weight:700;font-size:2.4vmin;color:#fff}
+.ok{display:flex;align-items:center;gap:1.4vmin;padding:2vmin;border-radius:2vmin;background:#EAF7EF;color:#1D5E3A;font-weight:700;font-size:2.3vmin}
+.qr{width:30vmin;height:30vmin;border-radius:2vmin;background:#fff;padding:2vmin;display:grid;grid-template-columns:repeat(11,1fr);gap:.25vmin}
+.qr i{background:#0E1311;border-radius:.2vmin}
+.scan{position:absolute;left:0;right:0;height:.6vmin;background:var(--lime);box-shadow:0 0 3vmin var(--lime)}
+/* players + court */
+.chip{position:absolute;display:flex;align-items:center;gap:1.2vmin;padding:1.2vmin 2vmin 1.2vmin 1.2vmin;border-radius:99vmin;background:#1F2A25;font-weight:700;font-size:2.6vmin}
+.chip i{width:4.2vmin;height:4.2vmin;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:1.8vmin;color:#0E1311}
+.court{width:64vmin;height:38vmin;border-radius:2vmin;background:var(--court);position:relative;box-shadow:0 3vmin 6vmin rgba(0,0,0,.4)}
+.court::before{content:"";position:absolute;inset:2.4vmin;border:.4vmin solid rgba(255,255,255,.55);border-radius:.6vmin}
+.court::after{content:"";position:absolute;top:2.4vmin;bottom:2.4vmin;left:50%;border-left:.5vmin solid rgba(255,255,255,.75)}
+/* tv */
+.tv{width:86vmin;padding:3vmin;border-radius:3vmin;background:linear-gradient(180deg,#18211D,#101613);border:.2vmin solid rgba(237,242,236,.1);box-shadow:0 5vmin 10vmin rgba(0,0,0,.5)}
+.tvh{display:flex;align-items:center;gap:1.4vmin;font-weight:700;font-size:2.4vmin;margin-bottom:2vmin}.tvh .d{width:1.4vmin;height:1.4vmin;border-radius:50%;background:#7BD9A0}
+.tvc{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6vmin}
+.ct{border-radius:2vmin;background:var(--court);padding:1.8vmin;min-height:20vmin}
+.ct b{font-size:1.6vmin;letter-spacing:.2em;opacity:.7}
+.ct .r{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:2vmin;margin-top:1.4vmin}
+.ct .r span:last-child{font:800 4.6vmin Brico}
+.call{margin-top:2vmin;padding:1.8vmin 2.2vmin;border-radius:2vmin;background:rgba(215,240,60,.12);color:var(--lime);font-weight:700;font-size:2.4vmin;display:flex;gap:1.4vmin;align-items:center}
+.wave{display:flex;gap:.5vmin;align-items:center}.wave i{width:.6vmin;border-radius:.4vmin;background:var(--lime)}
+@media (orientation:portrait){#s1>div,#s2>div,#s3>div,#s4>div,#s7>div,#s8>div{zoom:1.32}#s4 .phone{width:30vmin;height:58vmin}}
+</style></head><body><div id="v"><div id="glow"></div>
+
+<!-- S1 chaos -->
+<div class="l" id="s1"><div class="h" id="t1" style="font-size:9vmin;position:relative;z-index:2"></div></div>
+<div class="l" id="chat" style="place-items:stretch"></div>
+<!-- S2 better way -->
+<div class="l" id="s2"><div class="h" style="font-size:10vmin;max-width:84vmin">There’s a <span style="color:var(--lime)">better</span> way.</div></div>
+<!-- S3 logo -->
+<div class="l" id="s3"><div style="display:grid;justify-items:center;gap:4vmin"><div class="ball" id="ball"></div><div class="h" id="word" style="font-size:15vmin">Courtcall</div><div class="k" id="tag3">Open play, handled</div></div></div>
+<!-- S4 scan -->
+<div class="l" id="s4"><div style="display:grid;justify-items:center;gap:4vmin">
+  <div style="display:flex;gap:6vmin;align-items:center">
+    <div style="position:relative" id="qrw"><div class="qr" id="qr"></div><div class="scan" id="scan"></div></div>
+    <div class="phone" id="ph4"><div class="ptop"><i style="background:#1F4FD8">PP</i>Pearl Pickle Club</div>
+      <div class="pb"><small style="font-weight:700;letter-spacing:.2em;font-size:1.5vmin;opacity:.55">LIVE QUEUE</small><h4>Hi Maya.</h4><div class="pin"><i id="p1"></i><i id="p2"></i><i id="p3"></i></div>
+      <div class="btn" style="background:#1F4FD8">Join the queue</div><div class="ok" id="ok4">✓ You’re in · #7 in the queue</div></div></div>
+  </div>
+  <div class="h" style="font-size:7.4vmin" id="t4">Scan. Join. <span style="color:var(--lime)">Play.</span></div>
+</div></div>
+<!-- S5 matchmaking -->
+<div class="l" id="s5"><div style="display:grid;justify-items:center;gap:5vmin"><div class="court" id="court5"></div><div class="h" style="font-size:7.4vmin" id="t5">Fair games. <span style="color:var(--lime)">Every time.</span></div></div></div>
+<div class="l" id="chips" style="place-items:stretch"></div>
+<!-- S6 tv -->
+<div class="l" id="s6"><div style="display:grid;justify-items:center;gap:4vmin"><div class="tv" id="tv">
+  <div class="tvh"><i class="d"></i>Live · Thursday Open Play<span style="margin-left:auto;opacity:.6">8:42 PM</span></div>
+  <div class="tvc">
+    <div class="ct"><b>COURT 1</b><div class="r"><span>Maya &amp; Rex</span><span id="a1">9</span></div><div class="r"><span>Jo &amp; Ken</span><span id="a2">7</span></div></div>
+    <div class="ct"><b>COURT 2</b><div class="r"><span>Lia &amp; Sam</span><span id="b1">10</span></div><div class="r"><span>Ana &amp; Bo</span><span id="b2">6</span></div></div>
+    <div class="ct"><b>COURT 3</b><div class="r"><span>Noor &amp; Ty</span><span id="c1">4</span></div><div class="r"><span>Eli &amp; Ari</span><span id="c2">5</span></div></div>
+  </div>
+  <div class="call" id="call"><span class="wave" id="wave"></span><span id="callt">Court 2 · Carla &amp; Dev vs Omar &amp; Pia, you’re up.</span></div>
+</div><div class="h" style="font-size:7.4vmin" id="t6">Your courts call <span style="color:var(--lime)">themselves.</span></div></div></div>
+<!-- S7 brands -->
+<div class="l" id="s7"><div style="display:grid;justify-items:center;gap:4vmin">
+  <div class="phone" id="ph7" style="height:52vmin"><div class="ptop"><i id="mono7">MD</i><span id="n7">Manila Dinkers</span></div>
+    <div class="pb"><small style="font-weight:700;letter-spacing:.2em;font-size:1.5vmin;opacity:.55">LIVE QUEUE</small><h4>You’re up next.</h4><div class="btn" id="b7">Court 2 · Go</div><div class="ok" id="ok7" style="background:#F2F5EF;color:#16201B">3 courts live · 12 waiting</div></div></div>
+  <div class="h" style="font-size:7.4vmin" id="t7">Your club. <span id="c7">Your colours.</span></div>
+</div></div>
+<!-- S8 end -->
+<div class="l" id="s8"><div style="display:grid;justify-items:center;gap:3vmin;padding:0 6vmin">
+  <div style="display:flex;align-items:center;gap:2.6vmin"><div class="ball" style="width:9vmin;height:9vmin"></div><div class="h" style="font-size:10vmin">Courtcall</div></div>
+  <div class="h" style="font-size:5.6vmin;max-width:80vmin;color:var(--mute)" id="t8">Open play, run like the <span style="color:var(--lime)">big clubs</span> do.</div>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:1.6vmin;margin-top:2vmin" id="e8">
+    <span style="padding:1.6vmin 3vmin;border-radius:99vmin;background:var(--lime);color:var(--ink);font-weight:700;font-size:2.8vmin">dinkindonut.asia/clubs</span>
+    <span style="padding:1.6vmin 3vmin;border-radius:99vmin;border:.3vmin solid rgba(237,242,236,.25);font-weight:700;font-size:2.8vmin">Message us on WhatsApp</span>
+  </div>
+  <div class="k" style="color:var(--mute);margin-top:2vmin;font-size:1.9vmin" id="f8">For pickleball clubs everywhere · Live in 2 minutes · No app to install</div>
+</div></div>
+<div id="grain"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),r=(t,a,b)=>cl((t-a)/(b-a));
+const eo=x=>1-Math.pow(1-x,4),eio=x=>x<.5?8*x**4:1-Math.pow(-2*x+2,4)/2,back=x=>{const c=1.7,d=c+1;return 1+d*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const win=(el,a,b,t,f=.35)=>{const v=t<a||t>b?0:Math.min(r(t,a,a+f),1-r(t,b-f,b));el.style.opacity=eo(v);return v};
+// chat bubbles
+const MSG=[["Rex","who’s next on court 2??"],["Maya","been waiting 30 mins 😩"],["Jo","is court 3 free?"],["Ken","I thought I was next"],["Ana","same 4 people again…"],["Bo","who has the list?"],["Lia","can someone write the scores"],["Sam","wait, who won?"],["Noor","I’ll be late, save me a spot"],["Ty","are we doing kings court?"],["Eli","court 1 has been on 25 mins"],["Pia","who’s hosting tonight"]];
+$("chat").innerHTML=MSG.map((m,i)=>`<div class="bub ${i%3==1?"me":""}" id="m${i}"><b>${m[0]}</b>${m[1]}</div>`).join("");
+const pos=MSG.map((_,i)=>[8+((i*37)%62),10+((i*53)%74),((i*29)%14)-7]);
+// qr
+let q="";for(let i=0;i<121;i++){const x=i%11,y=Math.floor(i/11),f=(x<3&&y<3)||(x>7&&y<3)||(x<3&&y>7);q+=`<i style="opacity:${f||((i*7+3)%5<2)?1:0}"></i>`}$("qr").innerHTML=q;
+// chips
+const PL=[["MY","Maya","#D7F03C"],["RX","Rex","#7FD3FF"],["JO","Jo","#FF9CC5"],["KN","Ken","#FFD23F"]];
+$("chips").innerHTML=PL.map((p,i)=>`<div class="chip" id="h${i}"><i style="background:${p[2]}">${p[0]}</i>${p[1]}<span style="font-size:1.8vmin;opacity:.6;margin-left:.6vmin">${["3.5","3.0","3.5","3.0"][i]}</span></div>`).join("");
+$("wave").innerHTML=Array.from({length:6},()=>"<i></i>").join("");
+const BR=[["MD","Manila Dinkers","#1F4FD8"],["LP","London Pickle Co.","#E4572E"],["DS","Dubai Smash Club","#7A3CF0"],["DD","Dinkin’ Donut","#FF5FA2"]];
+const tw=(s,u)=>s.slice(0,Math.floor(s.length*u));
+
+function seek(t){
+  // S1: typed lines 0-4.4
+  const s1=$("s1");s1.style.opacity=t<4.6?1-r(t,4.2,4.6):0;
+  const L1=["8:00 PM. Open play.","40 players. 3 courts.","1 group chat."];
+  const li=t<1.4?0:t<2.8?1:2,lu=r(t,[0.1,1.5,2.9][li],[0.9,2.3,3.5][li]);
+  $("t1").innerHTML=tw(L1[li],lu)+'<span style="opacity:'+(Math.floor(t*3)%2)+';color:#D7F03C">|</span>';
+  // chat flood 3.0-6.4
+  const ch=$("chat");ch.style.opacity=t>3&&t<6.6?1:0;
+  MSG.forEach((m,i)=>{const e=$("m"+i),a=3.1+i*.2,u=back(r(t,a,a+.45)),sh=t>5.6?eio(r(t,5.6,6.3)):0;
+    e.style.left=pos[i][0]+"%";e.style.top=pos[i][1]+"%";e.style.opacity=t<a?0:cl(u)*(1-sh);
+    e.style.transform=`scale(${cl(u,0,1.2)*(1-sh*.4)}) rotate(${pos[i][2]*(1+sh*3)}deg) translate(${sh*(pos[i][0]-40)*1.5}vmin,${sh*30}vmin)`;e.style.filter=`blur(${sh*6}px)`});
+  // S2 6.2-8.8
+  const v2=win($("s2"),6.3,8.9,t,.4);$("s2").style.transform=`scale(${1.06-.06*eo(r(t,6.3,7.2))})`;
+  // S3 logo 8.8-12.6
+  win($("s3"),8.8,12.8,t,.3);
+  const bu=r(t,8.9,9.9);let by=bu<.6?-70+70*(bu/.6)**2:-8*Math.sin((bu-.6)/.4*Math.PI);
+  $("ball").style.transform=`translateY(${by}vmin) rotate(${t*200}deg)`;
+  const wu=eo(r(t,9.8,10.6));$("word").style.opacity=wu;$("word").style.transform=`translateY(${(1-wu)*4}vmin)`;$("word").style.letterSpacing=(-.035-(1-wu)*.05)+"em";
+  $("tag3").style.opacity=eo(r(t,10.5,11.2));
+  // S4 scan 12.6-17.4
+  win($("s4"),12.6,17.6,t);
+  $("scan").style.top=(8+84*(.5-.5*Math.cos((t-12.6)*3.2)))+"%";$("scan").style.opacity=t<14.6?1:0;
+  const pu=eo(r(t,12.8,13.6));$("ph4").style.transform=`translateY(${(1-pu)*20}vmin)`;
+  ["4","2","7"].forEach((d,i)=>{$("p"+(i+1)).textContent=t>14+i*.25?d:""});
+  const ok=back(r(t,15,15.6));$("ok4").style.transform=`scale(${cl(ok,0,1.2)})`;$("ok4").style.opacity=cl(ok*2);
+  $("t4").style.opacity=eo(r(t,13.2,13.9));
+  // S5 matchmaking 17.4-21.8
+  win($("s5"),17.4,22,t);$("chips").style.opacity=t>17.4&&t<22?1-r(t,21.6,22):0;
+  const cz=eo(r(t,17.4,18.2));$("court5").style.transform=`perspective(80vmin) rotateX(${(1-cz)*30+18}deg) scale(${.9+.1*cz})`;
+  const W=innerWidth,H=innerHeight,cx=W/2,cy=H/2-H*.06,vm=Math.min(W,H)/100;
+  const start=[[-.1,.2],[1.1,.25],[-.1,.75],[1.1,.8]],end=[[-18,-8],[-18,8],[18,-8],[18,8]];
+  PL.forEach((p,i)=>{const e=$("h"+i),u=eio(r(t,18+i*.18,19.4+i*.18));const x=start[i][0]*W*(1-u)+(cx+end[i][0]*vm)*u,y=start[i][1]*H*(1-u)+(cy+end[i][1]*vm)*u;
+    e.style.left=x+"px";e.style.top=y+"px";e.style.transform="translate(-50%,-50%)"});
+  $("t5").style.opacity=eo(r(t,19.8,20.5));
+  // S6 tv 21.8-26.4
+  win($("s6"),21.8,26.6,t);const tu=eo(r(t,21.8,22.8));$("tv").style.transform=`perspective(120vmin) rotateX(${(1-tu)*16}deg) translateY(${(1-tu)*8}vmin)`;
+  const k=Math.floor(r(t,22,25.5)*6);$("a1").textContent=9+Math.min(2,k>>1);$("a2").textContent=7+(k>3?1:0);$("b1").textContent=k>1?11:10;$("c1").textContent=4+Math.min(3,k);$("c2").textContent=5+(k>2?2:k>0?1:0);
+  $("b1").style.color=k>1?"#D7F03C":"";
+  [...$("wave").children].forEach((w,i)=>w.style.height=(1+Math.abs(Math.sin(t*9+i*1.3))*2.6)+"vmin");
+  $("call").style.opacity=eo(r(t,23.2,23.7));$("callt").innerHTML=tw("Court 2 · Carla & Dev vs Omar & Pia, you’re up.",r(t,23.4,25)).replace(/&(?!amp)/g,"&amp;");
+  $("t6").style.opacity=eo(r(t,22.6,23.3));
+  // S7 brands 26.4-30.6
+  win($("s7"),26.4,30.8,t);const bi=Math.min(3,Math.floor(r(t,26.6,30.2)*4)),b=BR[bi];
+  $("mono7").textContent=b[0];$("mono7").style.background=b[2];$("n7").textContent=b[1];$("b7").style.background=b[2];$("c7").style.color=b[2];
+  const pp=r(t,26.6+bi*.9,26.9+bi*.9);$("ph7").style.transform=`rotateY(${(1-eo(pp))*25}deg)`;
+  // S8 end 30.6-36
+  const e8=eo(r(t,30.6,31.4));$("s8").style.opacity=e8;$("s8").style.transform=`scale(${.96+.04*e8})`;
+  $("t8").style.opacity=eo(r(t,31.2,31.9));$("e8").style.opacity=eo(r(t,31.8,32.5));$("f8").style.opacity=eo(r(t,32.4,33));
+  $("glow").style.transform=`translate(${Math.sin(t*.4)*4}vmin,${Math.cos(t*.3)*3}vmin)`;
+  $("grain").style.transform=`translate(${(Math.floor(t*24)*37)%40-20}px,${(Math.floor(t*24)*53)%40-20}px)`;
+}
+window.seek=seek;seek(0);
+if(!/[?&]render/.test(location.search)){const t0=performance.now();(function f(){seek(((performance.now()-t0)/1000)%36);requestAnimationFrame(f)})()}
+</script></body></html>

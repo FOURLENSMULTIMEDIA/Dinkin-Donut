@@ -3,7 +3,6 @@
 //   GET  ?available=x           is this link free?
 //   GET  ?stats                 founding spots left
 //   POST {create:{...}}         sign up (club starts LOCKED until the owner approves it on WhatsApp)
-//   POST {slug, code}           enter the activation PIN the owner sent on WhatsApp → 14-day trial starts
 //   Owner (Dinkin' Donut host token): GET ?all, POST {slug, owner: "approve"|"paid"|"extend"|"suspend"|"unsuspend"|"pin"|"delete", months, plan}
 const crypto = require("crypto");
 const { isHost: isOwner, hashPin } = require("./_auth");
@@ -35,7 +34,7 @@ module.exports = async (req, res) => {
         const s = slugify(q.available);
         return res.json({ slug: s, ok: s.length >= 3 && !RESERVED.has(s) && !(await getClub(s)) });
       }
-      if (q.stats !== undefined) return res.json({ founding: await foundingLeft(), foundingTotal: FOUNDING_SPOTS, plans: PLANS, trialDays: TRIAL_DAYS, sales: SALES });
+      if (q.stats !== undefined) return res.json({ founding: await foundingLeft(), foundingTotal: FOUNDING_SPOTS, plans: PLANS, sales: SALES });
       const c = await getClub(q.slug);
       return c ? res.json(publicClub(c)) : res.status(404).json({ error: "Club not found." });
     }
@@ -50,7 +49,7 @@ module.exports = async (req, res) => {
       if (name.length < 3) return res.status(400).json({ error: "Please add your club name." });
       if (slug.length < 3 || RESERVED.has(slug)) return res.status(400).json({ error: "Please choose another club link." });
       if (await getClub(slug)) return res.status(409).json({ error: "That club link is taken. Try another." });
-      if (wa.length < 8) return res.status(400).json({ error: "Please add the WhatsApp number we should verify." });
+      if (wa.length < 8) return res.status(400).json({ error: "Please add your WhatsApp number with its country code." });
       if (String(f.pin || "").length < 6) return res.status(400).json({ error: "Host PIN must be at least 6 characters." });
       const logo = String(f.logo || "");
       if (logo && (!/^data:image\/(png|jpeg|webp|svg\+xml);base64,/.test(logo) || logo.length > 280000)) return res.status(400).json({ error: "Logo must be a PNG, JPG, WebP or SVG under 200 KB." });

@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <title>Courtcall · Open play, run like a pro</title>
-<meta name="description" content="Courtcall runs your pickleball open play: QR check-in, fair matchmaking, live scores, a TV board and a host console, in your club's colours. 14-day free trial.">
+<meta name="description" content="Courtcall runs your pickleball open play: QR check-in, fair matchmaking, live scores, a TV board and a host console, in your club's colours.">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0E1311">
 <meta property="og:title" content="Courtcall · Open play, run like a pro">
-<meta property="og:description" content="QR check-in, fair matchmaking, live scores and a TV board for your pickleball club. Free for 14 days.">
+<meta property="og:description" content="QR check-in, fair matchmaking, live scores and a TV board for your pickleball club.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230E1311'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23D7F03C'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
@@ -32,6 +32,21 @@ a{color:inherit}h1,h2,h3{font-family:var(--d);font-weight:800;line-height:1;lett
 .nav nav{display:flex;gap:22px;margin-left:auto;font-weight:600;font-size:15px}.nav nav a{text-decoration:none;opacity:.75}.nav nav a:hover{opacity:1}
 @media(max-width:760px){.nav nav{display:none}.nav .btn{margin-left:auto}}
 
+.topbar{background:#0A0E0C;border-bottom:1px solid var(--line);font-size:13px}
+.topbar .w{display:flex;justify-content:space-between;align-items:center;height:38px;color:var(--mute)}
+.topbar a{text-decoration:none;font-weight:700;color:var(--fg);display:inline-flex;gap:8px;align-items:center;transition:color .2s}.topbar a:hover{color:var(--lime)}
+.topbar a span{transition:transform .3s var(--e)}.topbar a:hover span{transform:translateX(-4px)}
+@media(max-width:560px){.topbar .w>span{display:none}}
+.pl-i{width:0;height:0;border-left:9px solid currentColor;border-top:6px solid transparent;border-bottom:6px solid transparent;margin-right:2px}
+.marq{overflow:hidden;border-block:1px solid var(--line);padding:18px 0;background:#0B100E}
+.mq{display:flex;gap:28px;width:max-content;animation:mq 38s linear infinite;font:800 clamp(22px,3vw,34px) var(--d);letter-spacing:-.02em;color:rgba(237,242,236,.85)}
+.mq i{width:12px;height:12px;border-radius:50%;background:var(--lime);align-self:center}
+@keyframes mq{to{transform:translateX(-50%)}}
+.film-s{padding-bottom:40px}
+.film{border-radius:28px;overflow:hidden;border:1px solid var(--line);box-shadow:0 50px 100px rgba(0,0,0,.5);background:#000}
+.film video{display:block;width:100%;aspect-ratio:16/9}
+.f{position:relative;overflow:hidden}.f::before{content:"";position:absolute;inset:0;background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(215,240,60,.10),transparent 60%);opacity:0;transition:opacity .3s}.f:hover::before{opacity:1}
+footer .back{font-weight:700;text-decoration:none;color:var(--fg)}footer .back:hover{color:var(--lime)}
 /* hero */
 .hero{padding:84px 0 40px;position:relative;overflow:hidden}
 .hero::before{content:"";position:absolute;inset:-20% -10% auto;height:620px;background:radial-gradient(600px 300px at 75% 30%,rgba(215,240,60,.13),transparent 70%),radial-gradient(500px 300px at 10% 0%,rgba(47,122,79,.25),transparent 70%);pointer-events:none}
@@ -85,13 +100,13 @@ section{padding:96px 0}
 /* pricing */
 .pricing{background:var(--paper);color:var(--ink);border-radius:36px;margin:0 max(8px,1vw)}
 .pricing .sh p{color:#4A5550}.pricing .k{color:var(--court)}
-.bill{display:inline-flex;padding:5px;border-radius:999px;background:#E3E8E0;margin-bottom:26px}
+.pbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:26px}.bill{display:inline-flex;padding:5px;border-radius:999px;background:#E3E8E0}.cur{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:#4A5550}.cur select{width:auto;background:#fff;color:var(--ink);border:1px solid #D5DCD1;padding:10px 14px;border-radius:999px;font-weight:700}
 .bill button{border:0;background:transparent;font:700 14px var(--b);padding:10px 16px;border-radius:999px;cursor:pointer;color:var(--ink)}
 .bill button[aria-pressed=true]{background:var(--ink);color:var(--fg)}
 .bill small{color:var(--court);font-weight:700}
 .found{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:16px 20px;border-radius:18px;background:var(--ink);color:var(--fg);margin-bottom:22px}
 .found b{color:var(--lime)}.found .bar{flex:1;min-width:160px;height:8px;border-radius:9px;background:rgba(237,242,236,.12);overflow:hidden}.found .bar i{display:block;height:100%;background:var(--lime);border-radius:9px}
-.plans{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;max-width:1040px}
 .pl{padding:26px 22px;border-radius:24px;background:#fff;border:1px solid #E1E6DE;display:flex;flex-direction:column;gap:14px;position:relative}
 .pl h3{font-size:22px}.pl .pr{font:800 40px/1 var(--d);letter-spacing:-.03em}.pl .pr small{font:600 14px var(--b);color:#5A6560;letter-spacing:0}
 .pl .was{font-size:13px;color:#5A6560;min-height:1.2em}.pl .was s{opacity:.7}
@@ -103,7 +118,7 @@ section{padding:96px 0}
 .pl .tag{position:absolute;top:-11px;left:22px;background:var(--lime);color:var(--ink);font:700 11px var(--b);letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:999px}
 .pl.trial{background:transparent;border-style:dashed;border-color:#C9D1C4}
 .pl .btn.dark{background:var(--ink);color:var(--fg)}
-@media(max-width:980px){.plans{grid-template-columns:1fr 1fr}.pl.hot{transform:none}}@media(max-width:560px){.plans{grid-template-columns:1fr}}
+@media(max-width:900px){.plans{grid-template-columns:1fr}.pl.hot{transform:none}}@media(max-width:560px){.plans{grid-template-columns:1fr}}
 .guar{margin-top:22px;color:#4A5550;font-size:14px;text-align:center}
 
 /* signup */
@@ -177,15 +192,16 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
 </style>
 </head>
 <body>
-<header class="nav"><div class="w"><a class="logo" href="/clubs"><i></i>Courtcall</a><nav><a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></nav><a class="btn lime" href="#start" style="padding:11px 18px">Start free trial</a></div></header>
+<div class="topbar"><div class="w"><a href="/"><span aria-hidden="true">←</span> Back to Dinkin’ Donut</a><span>A Dinkin’ Donut company · For clubs worldwide</span></div></div>
+<header class="nav"><div class="w"><a class="logo" href="/clubs"><i></i>Courtcall</a><nav><a href="#film">Film</a><a href="#features">Features</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></nav><a class="btn lime" href="#start" style="padding:11px 18px">Get started</a></div></header>
 
 <main id="site">
 <section class="hero"><div class="w">
   <div>
-    <div class="k">For pickleball clubs</div>
+    <div class="k">For pickleball clubs, worldwide</div>
     <h1>Open play, run like the <em>big clubs</em> do.</h1>
     <p class="l">Players check in with a QR code. Courtcall picks fair games, tracks scores to 11 and calls the next match on your court TV. You just play host.</p>
-    <div class="ctas"><a class="btn lime" href="#start">Start your 14-day trial</a><a class="btn ghost" href="#features">See what’s inside</a></div>
+    <div class="ctas"><a class="btn lime" href="#start">Get your club on Courtcall</a><button class="btn ghost" type="button" id="playFilm"><span class="pl-i" aria-hidden="true"></span>Watch the film · 36s</button></div>
     <div class="proof"><img src="/assets/logo.svg" alt="">Built and battle-tested every week at Dinkin’ Donut, Doha.</div>
   </div>
   <div class="board" aria-hidden="true">
@@ -197,6 +213,12 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
     </div>
     <div class="q"><div><i>1</i>Carla &amp; Dev vs Omar &amp; Pia<em>Up next · Court 2</em></div><div><i>2</i>Rio, Hana, Tess, Marco<em>~6 min</em></div><div><i>3</i>Kai, Jun, Bea, Leo<em>~12 min</em></div></div>
   </div>
+</div></section>
+
+<div class="marq" aria-hidden="true"><div class="mq"><span>QR check-in</span><i></i><span>Fair matchmaking</span><i></i><span>Live scores to 11</span><i></i><span>Court announcer</span><i></i><span>Host console</span><i></i><span>Your colours</span><i></i><span>No app to install</span><i></i><span>Built in Doha</span><i></i><span>QR check-in</span><i></i><span>Fair matchmaking</span><i></i><span>Live scores to 11</span><i></i><span>Court announcer</span><i></i><span>Host console</span><i></i><span>Your colours</span><i></i><span>No app to install</span><i></i><span>Built in Doha</span><i></i></div></div>
+<section id="film" class="film-s"><div class="w">
+  <div class="sh reveal"><div class="k">The film</div><h2>From group-chat chaos to a night that runs itself.</h2></div>
+  <div class="film reveal"><video id="filmV" controls playsinline preload="metadata" poster="/assets/video/courtcall-poster.jpg"><source src="/assets/video/courtcall-16x9.mp4" type="video/mp4"></video></div>
 </div></section>
 
 <section id="features"><div class="w">
@@ -214,33 +236,33 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
 <section id="how"><div class="w">
   <div class="sh reveal"><div class="k">Live in a day</div><h2>Three steps to your first night.</h2></div>
   <div class="steps">
-    <div class="st reveal"><h3>Create your club</h3><p>Name, link, colours, logo and a host PIN. Two minutes, no card.</p></div>
-    <div class="st sec reveal"><h3>Verify on WhatsApp</h3><p>We activate every club personally. Send one message and get your 6-digit activation PIN. This keeps the platform fast and spam-free for real clubs.</p></div>
-    <div class="st reveal"><h3>Run your night</h3><p>Print the QR, open the TV board, press autopilot. Your 14 days start now.</p></div>
+    <div class="st reveal"><h3>Create your club</h3><p>Name, link, colours, logo and a host PIN. Two minutes, no payment yet.</p></div>
+    <div class="st sec reveal"><h3>Choose a plan on WhatsApp</h3><p>We switch on every club personally, so Courtcall stays fast and spam-free for real clubs. Pay by Fawran or bank transfer, and you’re live in minutes.</p></div>
+    <div class="st reveal"><h3>Run your night</h3><p>Print the QR, open the TV board, press autopilot. That’s it.</p></div>
   </div>
 </div></section>
 
 <section id="pricing" class="pricing"><div class="w">
-  <div class="sh reveal"><div class="k">Simple pricing in QAR</div><h2>Try it free. Keep it if your players love it.</h2><p>Every club starts with 14 days free. After that, pick a plan and pay on WhatsApp by Fawran or bank transfer. Cancel any time.</p></div>
-  <div class="bill" role="group" aria-label="Billing"><button type="button" aria-pressed="true" data-b="m">Monthly</button><button type="button" aria-pressed="false" data-b="y">Yearly <small>2 months free</small></button></div>
+  <div class="sh reveal"><div class="k">Simple pricing · Worldwide</div><h2>Simple, honest pricing.</h2><p>One flat monthly price per club, wherever you play. No setup fees, no contracts, cancel any time.</p></div>
+  <div class="pbar"><div class="bill" role="group" aria-label="Billing"><button type="button" aria-pressed="true" data-b="m">Monthly</button><button type="button" aria-pressed="false" data-b="y">Yearly <small>2 months free</small></button></div><label class="cur">Currency <select id="cur"></select></label></div>
   <div class="found" id="found"><span>🏅</span><span><b>Founding Club offer:</b> the first 10 clubs to subscribe keep <b>50% off for life</b>.</span><span class="bar"><i id="fbar" style="width:0"></i></span><span id="fleft">10 of 10 left</span></div>
   <div class="plans" id="plans"></div>
-  <p class="guar">Your data stays yours: players, history and settings are kept for 60 days after a plan ends.</p>
+  <p class="guar" id="curNote"></p><p class="guar">Pay in Qatar by Fawran or bank transfer. Anywhere else by international bank transfer: we send the details on WhatsApp. Your data stays yours for 60 days after a plan ends.</p>
 </div></section>
 
 <section id="start"><div class="w">
   <div class="su">
     <div>
       <form class="form" id="f" novalidate>
-        <div><div class="k">Step 1 of 3</div><h3 style="margin-top:8px">Create your club</h3></div>
+        <div><div class="k">Step 1 of 2</div><h3 style="margin-top:8px">Create your club</h3></div>
         <div class="grid2">
           <label>Club name<input name="name" maxlength="48" placeholder="e.g. Pearl Pickle Club" required></label>
-          <label>City<input name="city" maxlength="40" placeholder="e.g. Doha"></label>
+          <label>City &amp; country<input name="city" maxlength="40" placeholder="e.g. Manila, Philippines"></label>
         </div>
         <label>Your club link<div class="slug"><span id="host"></span><input name="slug" maxlength="32" placeholder="pearl-pickle" autocapitalize="off" spellcheck="false"></div><span class="av" id="av"></span></label>
         <div class="grid2">
           <label>Your name<input name="contact" maxlength="40" autocomplete="name" placeholder="Club organiser"></label>
-          <label>WhatsApp number <small>We verify this one</small><input name="whatsapp" type="tel" inputmode="tel" placeholder="e.g. 3076 3431" required></label>
+          <label>WhatsApp number <small>We’ll contact you here</small><input name="whatsapp" type="tel" inputmode="tel" placeholder="With country code, e.g. +63 917 123 4567" required></label>
         </div>
         <div class="grid2">
           <label>Host PIN <small>At least 6 characters</small><input name="pin" type="password" minlength="6" autocomplete="new-password" required></label>
@@ -254,18 +276,18 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
         <label>Plan you’re interested in<select name="plan"><option value="starter">Starter · 2 courts</option><option value="club" selected>Club · 6 courts</option><option value="venue">Venue · 12 courts</option></select></label>
         <p class="err" id="err" role="alert"></p>
         <button class="btn lime" id="go" type="submit">Create my club</button>
-        <p class="fine">Free for 14 days once activated. No card needed. One free trial per club and WhatsApp number.</p>
+        <p class="fine">No payment now. Your club goes live once you choose a plan with us on WhatsApp.</p>
       </form>
       <div class="done" id="done" hidden>
-        <div><div class="k">Step 2 of 3 · Almost there</div><h3 style="margin-top:8px" id="dTitle">Your club is created.</h3></div>
+        <div><div class="k">Step 2 of 2 · Almost there</div><h3 style="margin-top:8px" id="dTitle">Your club is created.</h3></div>
         <div class="next">
-          <b>Activate it on WhatsApp</b>
-          <span style="color:var(--mute)">Send us your request. We’ll reply with your 6-digit activation PIN, usually within minutes. Enter it on your host page to start the 14-day trial.</span>
-          <div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn wa" id="wa1" target="_blank" rel="noopener">Send request on WhatsApp</a><a class="btn ghost" id="wa2" target="_blank" rel="noopener">Use our 2nd number</a></div>
+          <b>Switch it on via WhatsApp</b>
+          <span style="color:var(--mute)">Send us your request with the plan you chose. Pay by Fawran or bank transfer, and we switch your club on, usually within minutes.</span>
+          <div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn wa" id="wa1" target="_blank" rel="noopener">Choose my plan on WhatsApp</a><a class="btn ghost" id="wa2" target="_blank" rel="noopener">Use our 2nd number</a></div>
           <small style="color:var(--mute)">Request code <b id="dReq"></b></small>
         </div>
         <div class="links" id="dLinks"></div>
-        <p class="fine">Save these links. Your host page asks for the PIN you just set.</p>
+        <p class="fine">Save these links. They go live the moment we switch your club on. Your host page asks for the PIN you just set.</p>
       </div>
     </div>
     <div class="pv" aria-hidden="true">
@@ -286,22 +308,23 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
 
 <section id="faq"><div class="w" style="max-width:860px">
   <div class="sh"><div class="k">Questions</div><h2>Good to know.</h2></div>
-  <details><summary>Why do you verify clubs on WhatsApp?</summary><p>Every trial is activated by a real person, so trials go to real clubs. One message from your number gets you a 6-digit PIN. It also means you’ll have a direct line to us from day one.</p></details>
-  <details><summary>What’s included in the free trial?</summary><p>The full product, for 14 days: QR check-in, matchmaking, scores, the TV board and host console, with your branding. Trials are capped at 2 courts and 20 players a night. Upgrade any time to lift the limits.</p></details>
-  <details><summary>How do I pay?</summary><p>Message us on WhatsApp with the plan you want. Pay by Fawran or bank transfer, and we switch your club on straight away. Yearly plans get 2 months free.</p></details>
+  <details><summary>Can I see it before I pay?</summary><p>Yes. Watch the film above, come and see it running live at a Dinkin’ Donut open play in Doha, or message us for a guided demo on WhatsApp.</p></details>
+  <details><summary>Why do you switch clubs on personally?</summary><p>Every club on Courtcall is set up by a real person, so the platform stays fast and spam-free. It also means you have a direct line to us on WhatsApp from day one.</p></details>
+  <details><summary>How do I pay?</summary><p>Message us on WhatsApp with the plan you want. In Qatar, pay by Fawran or bank transfer. Anywhere else, pay by international bank transfer; we send the details on WhatsApp. We switch your club on as soon as payment lands. Yearly plans get 2 months free.</p></details>
+  <details><summary>Does it work in my country?</summary><p>Yes. Courtcall runs in any modern browser, on any phone, tablet, laptop or TV, anywhere in the world. Your players need nothing but their phone camera. We support clubs on WhatsApp in English.</p></details>
   <details><summary>Do my players need an app?</summary><p>No. Everything runs in the browser on your club link. Players scan a QR, and hosts use any phone, tablet or laptop.</p></details>
-  <details><summary>What happens when my trial ends?</summary><p>Your club pauses, and nothing is deleted. Choose a plan on WhatsApp and you’re back on, with every player and result where you left it.</p></details>
+  <details><summary>What if I stop paying?</summary><p>Your club pauses, and nothing is deleted for 60 days. Renew on WhatsApp and you’re back on, with every player and result where you left it.</p></details>
 </div></section>
 </main>
 
 <section class="own w" id="owner" hidden>
   <div class="k">Owner · Courtcall</div><h2 style="font-size:44px;margin-top:8px">Clubs</h2>
   <div class="ostats" id="ost"></div>
-  <div style="overflow-x:auto"><table><thead><tr><th>Club</th><th>Status</th><th>Contact</th><th>Request / PIN</th><th>Actions</th></tr></thead><tbody id="orows"></tbody></table></div>
-  <p class="fine" style="margin-top:16px">“Approve &amp; send PIN” marks the club approved and opens WhatsApp with their activation PIN. Only approve numbers you’ve checked.</p>
+  <div style="overflow-x:auto"><table><thead><tr><th>Club</th><th>Status</th><th>Contact</th><th>Request</th><th>Actions</th></tr></thead><tbody id="orows"></tbody></table></div>
+  <p class="fine" style="margin-top:16px">When a club pays, pick their plan and press “Paid 1 mo” or “Paid 1 yr”. They go live at once. Then press “Send welcome” to WhatsApp them their links.</p>
 </section>
 
-<footer><div class="w"><span>© <span id="yr"></span> Courtcall · Made in Doha by the team behind Dinkin’ Donut</span><span>Designed &amp; Developed by Drew Nolasco &amp; Angel Flores</span></div></footer>
+<footer><div class="w"><span>© <span id="yr"></span> Courtcall · Made in Doha by the team behind <a href="/">Dinkin’ Donut</a></span><a class="back" href="/">← Back to Dinkin’ Donut</a><span>Designed &amp; Developed by Drew Nolasco &amp; Angel Flores</span></div></footer>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -315,6 +338,8 @@ const wa = (i, t) => `https://wa.me/${WA[i]}?text=${encodeURIComponent(t)}`;
 const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
 document.querySelectorAll(".reveal").forEach((el, i) => { el.style.transitionDelay = (i % 3) * 80 + "ms"; io.observe(el); });
 
+document.getElementById("playFilm").onclick = () => { const v = $("filmV"); v.scrollIntoView({ behavior: "smooth", block: "center" }); setTimeout(() => { v.muted = false; v.play().catch(() => {}); }, 600); };
+document.querySelectorAll(".f").forEach(el => el.addEventListener("pointermove", e => { const r = el.getBoundingClientRect(); el.style.setProperty("--mx", (e.clientX - r.left) + "px"); el.style.setProperty("--my", (e.clientY - r.top) + "px"); }));
 // live board mock: scores tick
 let a = 9, b = 7, c = 4, d = 5;
 setInterval(() => {
@@ -330,15 +355,23 @@ const PLANS = [
   { key: "club", name: "Club", m: 299, hot: true, feats: ["6 courts", "Up to 80 players a night", "Your logo & colours everywhere", "Payments & queue passes", "Priority WhatsApp support"] },
   { key: "venue", name: "Venue", m: 549, feats: ["12 courts", "Up to 200 players a night", "Everything in Club", "Help setting up your first night"] },
 ];
+// Prices are set in QAR; other currencies are shown as rounded estimates.
+const CUR = { QAR: [1, "QAR ", ""], USD: [.2747, "$", ""], EUR: [.253, "€", ""], GBP: [.216, "£", ""], AED: [1.009, "AED ", ""], SAR: [1.03, "SAR ", ""], PHP: [15.9, "₱", ""], SGD: [.37, "S$", ""], AUD: [.42, "A$", ""], CAD: [.38, "C$", ""], INR: [23, "₹", ""] };
+const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || "");
+let cur = /Qatar/.test(tz) ? "QAR" : /Manila/.test(tz) ? "PHP" : /London/.test(tz) ? "GBP" : /Dubai/.test(tz) ? "AED" : /Riyadh/.test(tz) ? "SAR" : /Singapore/.test(tz) ? "SGD" : /Australia/.test(tz) ? "AUD" : /Toronto|Vancouver/.test(tz) ? "CAD" : /Kolkata|Calcutta/.test(tz) ? "INR" : /^Europe/.test(tz) ? "EUR" : /^America/.test(tz) ? "USD" : "QAR";
+try { cur = localStorage.getItem("cc-cur") || cur; } catch {}
+const money = q => { const [k, sym] = CUR[cur]; let v = q * k; v = v >= 1000 ? Math.round(v / 10) * 10 : v >= 100 ? Math.round(v) : Math.round(v); return sym + v.toLocaleString(); };
+$("cur").innerHTML = Object.keys(CUR).map(c => `<option ${c === cur ? "selected" : ""}>${c}</option>`).join("");
+$("cur").onchange = e => { cur = e.target.value; try { localStorage.setItem("cc-cur", cur); } catch {} drawPlans(); };
 let yearly = false, founding = 10;
 function drawPlans() {
-  const trial = `<div class="pl trial"><h3>Free trial</h3><div class="pr">0 <small>QAR · 14 days</small></div><div class="was">Activated on WhatsApp</div><ul><li>2 courts</li><li>Up to 20 players</li><li>Every feature, your branding</li></ul><a class="btn dark" href="#start">Start free</a></div>`;
-  $("plans").innerHTML = trial + PLANS.map(p => {
-    const price = yearly ? p.m * 10 : p.m, per = yearly ? "QAR / year" : "QAR / month";
-    const half = founding > 0 ? `Founding Club: <b>${Math.round(price / 2)}</b> ${yearly ? "/yr" : "/mo"} for life` : (yearly ? `<s>${p.m * 12}</s> billed yearly` : "&nbsp;");
-    const msg = `Hi Courtcall! I’m interested in the ${p.name} plan (${yearly ? "yearly" : "monthly"}).`;
-    return `<div class="pl ${p.hot ? "hot" : ""}">${p.hot ? '<span class="tag">Most popular</span>' : ""}<h3>${p.name}</h3><div class="pr">${price.toLocaleString()} <small>${per}</small></div><div class="was">${half}</div><ul>${p.feats.map(f => `<li>${f}</li>`).join("")}</ul><a class="btn ${p.hot ? "lime" : "dark"}" href="#start" data-plan="${p.key}">Start with a free trial</a><a href="${wa(0, msg)}" target="_blank" rel="noopener" style="text-align:center;font-size:13px;font-weight:700;opacity:.7">Or talk to us on WhatsApp</a></div>`;
+  $("plans").innerHTML = PLANS.map(p => {
+    const price = yearly ? p.m * 10 : p.m, per = yearly ? "/ year" : "/ month";
+    const half = founding > 0 ? `Founding Club: <b>${money(price / 2)}</b> ${yearly ? "/yr" : "/mo"} for life` : (yearly ? `<s>${money(p.m * 12)}</s> billed yearly` : "&nbsp;");
+    const msg = `Hi Courtcall! I’m interested in the ${p.name} plan (${yearly ? "yearly" : "monthly"}, ${cur}).`;
+    return `<div class="pl ${p.hot ? "hot" : ""}">${p.hot ? '<span class="tag">Most popular</span>' : ""}<h3>${p.name}</h3><div class="pr">${money(price)} <small>${per}</small></div><div class="was">${half}</div><ul>${p.feats.map(f => `<li>${f}</li>`).join("")}</ul><a class="btn ${p.hot ? "lime" : "dark"}" href="#start" data-plan="${p.key}">Get started</a><a href="${wa(0, msg)}" target="_blank" rel="noopener" style="text-align:center;font-size:13px;font-weight:700;opacity:.7">Or talk to us on WhatsApp</a></div>`;
   }).join("");
+  $("curNote").textContent = cur === "QAR" ? "Prices in Qatari riyal (QAR)." : `Prices shown in ${cur} are estimates. Plans are billed in QAR or USD at the day’s rate.`;
 }
 document.querySelectorAll(".bill button").forEach(bt => bt.onclick = () => { yearly = bt.dataset.b === "y"; document.querySelectorAll(".bill button").forEach(x => x.setAttribute("aria-pressed", x === bt)); drawPlans(); });
 $("plans").addEventListener("click", e => { const p = e.target.closest("[data-plan]"); if (p) $("f").plan.value = p.dataset.plan; });
@@ -404,7 +437,7 @@ F.addEventListener("submit", async e => {
     const r = await fetch("/api/clubs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const j = await r.json(); if (!r.ok) throw new Error(j.error);
     const base = location.origin + "/c/" + j.club.slug;
-    const msg = `Hi Courtcall! Please activate the 14-day trial for my club.\n\nClub: ${j.club.name}\nLink: ${base}\nRequest: ${j.request}`;
+    const msg = `Hi Courtcall! I’d like to switch on my club.\n\nClub: ${j.club.name}\nLink: ${base}\nPlan: ${F.plan.value[0].toUpperCase() + F.plan.value.slice(1)}\nRequest: ${j.request}`;
     $("wa1").href = wa(0, msg); $("wa2").href = wa(1, msg); $("dReq").textContent = j.request;
     $("dTitle").textContent = `${j.club.name} is created.`;
     $("dLinks").innerHTML = [["Host console", "/host"], ["Player queue", ""], ["TV board", "/tv"]].map(([n, p]) => `<a href="${base + p}" target="_blank" rel="noopener">${n}<span>${esc((base + p).replace(/^https?:\/\//, ""))}</span></a>`).join("");
@@ -419,29 +452,27 @@ if (/[?&]owner\b/.test(location.search)) {
   let tok = ""; try { tok = localStorage.getItem("dd-host-token") || ""; } catch {}
   $("site").hidden = true; $("owner").hidden = false;
   const call = (body) => fetch("/api/clubs" + (body ? "" : "?all"), { method: body ? "POST" : "GET", headers: { "x-host-token": tok, "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined }).then(r => r.json());
-  const PH = { pending: "Waiting for WhatsApp", approved: "Approved · not activated", trial: "Trial", active: "Paid", expired: "Trial ended", lapsed: "Plan ended", suspended: "Suspended" };
+  const PH = { pending: "Waiting for payment", active: "Paid", lapsed: "Plan ended", suspended: "Suspended" };
   const day = d => new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
   function draw(j) {
     if (j.error) { $("orows").innerHTML = `<tr><td colspan="5">Sign in to the Dinkin’ Donut host console on this device first, then reload.</td></tr>`; return; }
     const L = j.list, n = p => L.filter(c => c.access.phase === p).length;
     const mrr = L.filter(c => c.access.phase === "active").reduce((s, c) => s + ({ starter: 149, club: 299, venue: 549 }[c.plan] || 0) * (c.founding ? .5 : 1), 0);
-    $("ost").innerHTML = [["Clubs", L.length], ["Waiting", n("pending")], ["On trial", n("trial")], ["Paying", n("active")], ["Monthly revenue", Math.round(mrr) + " QAR"], ["Founding left", j.founding]].map(([k, v]) => `<div><b>${v}</b><small>${k}</small></div>`).join("");
+    $("ost").innerHTML = [["Clubs", L.length], ["Waiting for payment", n("pending")], ["Paying", n("active")], ["Monthly revenue", Math.round(mrr) + " QAR"], ["Founding left", j.founding]].map(([k, v]) => `<div><b>${v}</b><small>${k}</small></div>`).join("");
     $("orows").innerHTML = L.map(c => {
       const ph = c.access.phase, base = location.origin + "/c/" + c.slug;
-      const pinMsg = `Hi ${c.contact || ""}! Welcome to Courtcall 🎾\n\nYour activation PIN for ${c.name} is: ${c.code}\n\nOpen your host page, enter the PIN and your 14-day trial starts:\n${base}/host`;
+      const pinMsg = `Hi ${c.contact || ""}! Welcome to Courtcall.\n\n${c.name} is now live.\n\nHost console: ${base}/host\nPlayers: ${base}\nTV board: ${base}/tv\n\nSign in with the host PIN you chose. See you on court!`;
       const waC = "https://wa.me/" + String(c.whatsapp).replace(/\D/g, "") + "?text=" + encodeURIComponent(pinMsg);
-      const when = ph === "trial" ? `ends ${day(c.trialEnds)} · ${c.access.daysLeft}d` : ph === "active" ? `until ${day(c.paidUntil)}${c.founding ? " · founding" : ""}` : `since ${day(c.created)}`;
+      const when = ph === "active" ? `until ${day(c.paidUntil)}${c.founding ? " · founding" : ""}` : `since ${day(c.created)}`;
       return `<tr><td><b>${esc(c.name)}</b><br><a href="${base}" target="_blank">/c/${c.slug}</a> · ${esc(c.city || "")}<br><small style="color:var(--mute)">Wants ${c.plan}</small></td>
-        <td><span class="pill ${ph}">${PH[ph] || ph}</span><br><small style="color:var(--mute)">${when}</small>${c.repeat ? '<br><small style="color:#FF9CC5">⚠ number had a trial before</small>' : ""}</td>
+        <td><span class="pill ${ph}">${PH[ph] || ph}</span><br><small style="color:var(--mute)">${when}</small></td>
         <td>${esc(c.contact || "")}<br><a href="https://wa.me/${String(c.whatsapp).replace(/\D/g, "")}" target="_blank">${esc(c.whatsapp)}</a></td>
-        <td><code>${c.request}</code><br>PIN <code>${c.code}</code></td>
+        <td><code>${c.request}</code></td>
         <td><div class="acts">
-          ${!c.trialEnds && !c.paidUntil ? `<a class="go" href="${waC}" target="_blank" data-a="approve" data-s="${c.slug}">Approve &amp; send PIN</a>` : ""}
+          ${ph === "active" ? `<a class="go" href="${waC}" target="_blank">Send welcome</a>` : ""}
           <select data-plan="${c.slug}">${["starter", "club", "venue"].map(p => `<option ${p === c.plan ? "selected" : ""}>${p}</option>`).join("")}</select>
           <button class="pay" data-a="paid" data-m="1" data-s="${c.slug}">Paid 1 mo</button><button class="pay" data-a="paid" data-m="12" data-s="${c.slug}">Paid 1 yr</button>
-          <button data-a="extend" data-s="${c.slug}">+7 days trial</button>
-          <button data-a="pin" data-s="${c.slug}">New PIN</button>
-          <button data-a="${c.suspended ? "unsuspend" : "suspend"}" data-s="${c.slug}">${c.suspended ? "Unsuspend" : "Suspend"}</button>
+                    <button data-a="${c.suspended ? "unsuspend" : "suspend"}" data-s="${c.slug}">${c.suspended ? "Unsuspend" : "Suspend"}</button>
           <button data-a="delete" data-s="${c.slug}">Delete</button>
         </div></td></tr>`;
     }).join("") || `<tr><td colspan="5" style="color:var(--mute)">No clubs yet. Share ${location.host}/clubs to get your first one.</td></tr>`;

@@ -1,5 +1,5 @@
 // Courtcall tenant layer. On /c/<club>, /c/<club>/host and /c/<club>/tv the same app runs for another club:
-// its own data, PIN, name, logo and colours, plus the trial / activation / plan screens.
+// its own data, PIN, name, logo and colours, plus the activation / plan screens.
 (function () {
   var m = location.pathname.match(/^\/c\/([a-z0-9-]{3,32})(?:\/(host|tv))?\/?$/);
   if (!m) return;
@@ -63,15 +63,15 @@
     if (!window.CC.mo) { window.CC.mo = new MutationObserver(function (ms) { ms.forEach(function (x) { x.addedNodes.forEach(function (n) { if (n.nodeType === 1) swapText(n); else if (n.nodeType === 3 && n.parentNode) swapText(n.parentNode); }); }); }); window.CC.mo.observe(document.body, { childList: true, subtree: true }); }
     // trial / plan badge
     var a = c.access || {}, old = document.getElementById("cc-badge"); if (old) old.remove();
-    if (a.phase === "trial" && page === "host") {
+    if (a.phase === "active" && page === "host" && a.daysLeft <= 5) {
       var b = document.createElement("div"); b.id = "cc-badge";
-      b.innerHTML = "<span>Free trial · <b>" + a.daysLeft + " day" + (a.daysLeft === 1 ? "" : "s") + " left</b> · " + c.limits.courts + " courts, " + c.limits.players + " players</span>" + (page === "host" ? '<a href="' + waUrl(0, upgradeMsg(c)) + '" target="_blank" rel="noopener">Upgrade</a>' : "");
+      b.innerHTML = "<span>" + c.limits.label + " plan · <b>renews in " + a.daysLeft + " day" + (a.daysLeft === 1 ? "" : "s") + "</b></span>" + '<a href="' + waUrl(0, upgradeMsg(c)) + '" target="_blank" rel="noopener">Renew</a>';
       document.body.appendChild(b);
     }
-    if (!document.getElementById("cc-pow")) { var p = document.createElement("a"); p.id = "cc-pow"; p.href = "/clubs"; p.target = "_blank"; p.textContent = "Powered by Courtcall"; if (!(a.phase === "trial" && page === "host")) document.body.appendChild(p); }
+    if (!document.getElementById("cc-pow")) { var p = document.createElement("a"); p.id = "cc-pow"; p.href = "/clubs"; p.target = "_blank"; p.textContent = "Powered by Courtcall"; document.body.appendChild(p); }
   }
   function waUrl(i, text) { return "https://wa.me/" + WA[i] + "?text=" + encodeURIComponent(text); }
-  function upgradeMsg(c) { return "Hi Courtcall! I’d like to subscribe.\n\nClub: " + c.name + "\nLink: " + location.origin + BASE + "\nPlan: " + (c.plan ? c.plan[0].toUpperCase() + c.plan.slice(1) : "Club") + "\nRequest: " + (c.request || ""); }
+  function upgradeMsg(c) { return "Hi Courtcall! I’d like to switch on my club.\n\nClub: " + c.name + "\nLink: " + location.origin + BASE + "\nPlan: " + (c.plan ? c.plan[0].toUpperCase() + c.plan.slice(1) : "Club") + "\nRequest: " + (c.request || ""); }
   function toast(msg) {
     if (!msg) return; var t = document.createElement("div");
     t.style.cssText = "position:fixed;left:50%;top:20px;transform:translateX(-50%);z-index:9999;max-width:min(92vw,520px);padding:14px 18px;border-radius:16px;background:#1A110B;color:#FFF6EA;font:600 15px 'DM Sans',system-ui,sans-serif;box-shadow:0 18px 40px rgba(0,0,0,.3)";
@@ -83,25 +83,19 @@
     if (!c || document.getElementById("cc-lock")) return;
     brand(c);
     var a = c.access || {}, host = page === "host", esc = function (x) { return String(x || "").replace(/[&<>"]/g, function (k) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[k]; }); };
-    var req = "Hi Courtcall! Please activate the 14-day trial for my club.\n\nClub: " + c.name + "\nLink: " + location.origin + BASE + "\nRequest: " + (c.request || "");
+    var plans = '<div class="plans"><a href="' + waUrl(0, upgradeMsg(Object.assign({}, c, { plan: "starter" }))) + '" target="_blank" rel="noopener"><b>Starter</b><em>149 QAR/mo · ≈ $41</em><small>2 courts · 40 players</small></a>' +
+      '<a class="hot" href="' + waUrl(0, upgradeMsg(Object.assign({}, c, { plan: "club" }))) + '" target="_blank" rel="noopener"><i>Most popular</i><b>Club</b><em>299 QAR/mo · ≈ $82</em><small>6 courts · 80 players</small></a>' +
+      '<a href="' + waUrl(0, upgradeMsg(Object.assign({}, c, { plan: "venue" }))) + '" target="_blank" rel="noopener"><b>Venue</b><em>549 QAR/mo · ≈ $151</em><small>12 courts · 200 players</small></a></div>' +
+      '<p class="fine">Tap a plan to message us on WhatsApp (or use <a href="' + waUrl(1, upgradeMsg(c)) + '" target="_blank" rel="noopener">our 2nd number</a>). Pay by Fawran, bank transfer or international transfer, and we switch you on within minutes. Yearly plans get 2 months free; the first 10 clubs keep 50% off for life.</p>' +
+      '<p class="fine">Request code <b>' + esc(c.request) + '</b></p>';
     var body;
-    if (a.phase === "pending" || a.phase === "approved") {
-      body = host ?
-        '<span class="k">Step ' + (a.phase === "approved" ? "2" : "1") + ' of 2 · Activate your club</span><h1>Let’s switch on ' + esc(c.name) + '.</h1>' +
-        '<p>To keep every trial genuine, we activate each club personally on WhatsApp. Send the request, and we’ll reply with your 6-digit activation PIN.</p>' +
-        '<div class="row"><a class="b pri" href="' + waUrl(0, req) + '" target="_blank" rel="noopener">Request on WhatsApp</a><a class="b" href="' + waUrl(1, req) + '" target="_blank" rel="noopener">Use our 2nd number</a></div>' +
-        '<form id="ccAct"><label>Activation PIN from WhatsApp</label><div class="code"><input inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="••••••" required><button class="b pri" type="submit">Activate</button></div><p class="err" id="ccErr"></p></form>' +
-        '<p class="fine">Request code <b>' + esc(c.request) + '</b> · One free trial per club and WhatsApp number.</p>'
-        : '<span class="k">Coming soon</span><h1>' + esc(c.name) + ' is getting ready.</h1><p>The live queue opens as soon as the club is activated. Check back on game night.</p><p class="fine"><a href="' + BASE + '/host">Club owner? Activate here</a></p>';
-    } else if (a.phase === "suspended") {
+    if (a.phase === "suspended") {
       body = '<span class="k">Paused</span><h1>This club is paused.</h1><p>Please contact Courtcall on WhatsApp to restore access.</p><div class="row"><a class="b pri" href="' + waUrl(0, "Hi Courtcall, about club " + c.name + " (" + BASE + ")") + '" target="_blank" rel="noopener">Message us</a></div>';
+    } else if (a.phase === "pending") {
+      body = host ? '<span class="k">One step left</span><h1>Let’s switch on ' + esc(c.name) + '.</h1><p>Your club is set up and waiting. Choose a plan and we’ll activate it personally on WhatsApp, so every club on Courtcall is a real one.</p>' + plans
+        : '<span class="k">Coming soon</span><h1>' + esc(c.name) + ' is getting ready.</h1><p>The live queue opens as soon as the club is switched on. Check back on game night.</p>';
     } else {
-      body = host ?
-        '<span class="k">Your free trial has ended</span><h1>Keep your nights running.</h1><p>Your players, settings and history are saved. Choose a plan and pay on WhatsApp (Fawran or bank transfer). We switch you back on within minutes.</p>' +
-        '<div class="plans"><a href="' + waUrl(0, upgradeMsg(Object.assign({}, c, { plan: "starter" }))) + '" target="_blank" rel="noopener"><b>Starter</b><em>149 QAR/mo</em><small>2 courts · 40 players</small></a>' +
-        '<a class="hot" href="' + waUrl(0, upgradeMsg(Object.assign({}, c, { plan: "club" }))) + '" target="_blank" rel="noopener"><i>Most popular</i><b>Club</b><em>299 QAR/mo</em><small>6 courts · 80 players</small></a>' +
-        '<a href="' + waUrl(0, upgradeMsg(Object.assign({}, c, { plan: "venue" }))) + '" target="_blank" rel="noopener"><b>Venue</b><em>549 QAR/mo</em><small>12 courts · 200 players</small></a></div>' +
-        '<p class="fine">Pay yearly and get 2 months free. The first 10 clubs to subscribe keep 50% off for life.</p>'
+      body = host ? '<span class="k">Your plan has ended</span><h1>Keep your nights running.</h1><p>Your players, settings and history are saved. Renew on WhatsApp and we’ll switch you back on within minutes.</p>' + plans
         : '<span class="k">Paused</span><h1>' + esc(c.name) + '’s live queue is paused.</h1><p>Please check with the club host.</p>';
     }
     var d = document.createElement("div"); d.id = "cc-lock";
@@ -119,7 +113,7 @@
       '#cc-lock .plans b{font:700 20px Fredoka,system-ui}#cc-lock .plans em{font-style:normal;font-weight:700;color:' + c.accent + '}#cc-lock .plans small{opacity:.6}' +
       '@media(max-width:560px){#cc-lock .plans{grid-template-columns:1fr}}</style>' +
       '<div class="in"><img class="lg" src="' + (c.logo || monogram(c)) + '" alt="">' + body + '<p class="fine">Powered by <a href="/clubs" target="_blank">Courtcall</a></p></div>';
-    document.body.appendChild(d); document.documentElement.style.overflow = "hidden";
+    d.querySelectorAll(".plans a").forEach(function (x) { x.setAttribute("data-noicon", ""); }); document.body.appendChild(d); document.documentElement.style.overflow = "hidden";
     var f = document.getElementById("ccAct");
     if (f) f.onsubmit = function (e) {
       e.preventDefault(); var v = f.querySelector("input").value.trim(), er = document.getElementById("ccErr"); er.textContent = "";

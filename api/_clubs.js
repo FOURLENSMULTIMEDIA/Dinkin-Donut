@@ -22,14 +22,13 @@ function access(c) {
   const now = Date.now();
   if (!c) return { ok: false, phase: "missing" };
   if (c.suspended) return { ok: false, phase: "suspended" };
-  if (!c.trialEnds && !c.paidUntil) return { ok: false, phase: c.approved ? "approved" : "pending" };
+  if (!c.paidUntil) return { ok: false, phase: "pending" };
   if (c.paidUntil && c.paidUntil > now) return { ok: true, phase: "active", daysLeft: Math.ceil((c.paidUntil - now) / 864e5) };
-  if (c.trialEnds > now) return { ok: true, phase: "trial", daysLeft: Math.ceil((c.trialEnds - now) / 864e5) };
   return { ok: false, phase: c.paidUntil ? "lapsed" : "expired", daysLeft: 0 };
 }
-// What each phase may use. The trial is real but capped, so clubs feel the value and upgrade.
+// What each plan may use.
 const LIMITS = { trial: { courts: 2, players: 20, label: "Trial" }, starter: { courts: 2, players: 40 }, club: { courts: 6, players: 80 }, venue: { courts: 12, players: 200 } };
-const limitsOf = c => { const a = access(c); return a.phase === "active" ? { ...LIMITS[c.plan] || LIMITS.club, label: PLANS[c.plan]?.name || "Club" } : LIMITS.trial; };
+const limitsOf = c => ({ ...(LIMITS[c.plan] || LIMITS.club), label: PLANS[c.plan]?.name || "Club" });
 const publicClub = c => c && ({ limits: limitsOf(c), founding: !!c.founding, request: c.request, slug: c.slug, name: c.name, short: c.short, city: c.city, color: c.color, accent: c.accent, logo: c.logo || "", plan: c.plan, access: access(c), sales: SALES });
 
 module.exports = { LIMITS, limitsOf, TRIAL_DAYS, SALES, PLANS, FOUNDING_SPOTS, slugify, RESERVED, getClub, saveClub, listClubs, access, publicClub };
