@@ -6,7 +6,7 @@
 //   Owner (Dinkin' Donut host token): GET ?all, POST {slug, owner: "approve"|"paid"|"extend"|"suspend"|"unsuspend"|"pin"|"delete", months, plan}
 const crypto = require("crypto");
 const { isHost: isOwner, hashPin } = require("./_auth");
-const { TRIAL_DAYS, PLANS, FOUNDING_SPOTS, SALES, slugify, RESERVED, getClub, saveClub, listClubs, access, publicClub } = require("./_clubs");
+const { recordPayment, listPayments, TRIAL_DAYS, PLANS, FOUNDING_SPOTS, SALES, slugify, RESERVED, getClub, saveClub, listClubs, access, publicClub } = require("./_clubs");
 const { getGlobal, setGlobal } = require("./_store");
 
 const clean = (s, n = 60) => String(s ?? "").replace(/[<>]/g, "").replace(/\s+/g, " ").trim().slice(0, n);
@@ -29,6 +29,16 @@ module.exports = async (req, res) => {
         if (!owner) return res.status(401).json({ error: "Owner only." });
         const list = (await listClubs()).map(c => ({ ...c, pinHash: undefined, access: access(c) })).sort((a, b) => b.created - a.created);
         return res.json({ list, founding: await foundingLeft() });
+      }
+      if (q.payments !== undefined) {
+        if (!owner) return res.status(401).json({ error: "Owner only." });
+        return res.json({ payments: await listPayments() });
+      }
+      if (q.backup !== undefined) {
+        if (!owner) return res.status(401).json({ error: "Owner only." });
+        res.setHeader("Content-Disposition", `attachment; filename="courtcall-backup-${new Date().toISOString().slice(0, 10)}.json"`);
+        const clubs = (await listClubs()).map(c => ({ ...c, pinHash: undefined }));
+        return res.json({ exportedAt: new Date().toISOString(), clubs, payments: await listPayments() });
       }
       if (q.available !== undefined) {
         const s = slugify(q.available);
@@ -107,6 +117,8 @@ module.exports = async (req, res) => {
         c.approved = true; if (!c.trialEnds) c.trialEnds = now;
         c.paidUntil = Math.max(now, c.paidUntil || 0) + months * 30 * day;
         c.log.push({ t: now, txt: `Paid ${months} month${months > 1 ? "s" : ""} · ${PLANS[c.plan].name}` });
+        const amt = Math.round(PLANS[c.plan].price * (months >= 12 ? 10 * Math.floor(months / 12) + (months % 12) : months) * (c.founding ? .5 : 1));
+        await recordPayment({ id: "man_" + now, club: c.slug, method: "manual (WhatsApp)", amount: amt, currency: "QAR", tax: 0, number: "", note: `${months} mo · ${PLANS[c.plan].name}` });
       }
       else if (act === "extend") { c.trialEnds = Math.max(now, c.trialEnds || now) + 7 * day; c.approved = true; c.log.push({ t: now, txt: "Trial extended 7 days" }); }
       else if (act === "suspend") { c.suspended = true; c.log.push({ t: now, txt: "Suspended" }); }

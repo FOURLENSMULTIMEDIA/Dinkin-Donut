@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Tournament · Dinkin' Donut</title>
+<meta name="description" content="Live brackets, registration and results.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1A110B">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="/css/style.css">
+<script src="/js/tenant.js"></script>
+<script src="/js/theme.js"></script>
+<style>
+body{background:#1A110B;color:#FFF6EA}
+.tn-nav{position:sticky;top:0;z-index:30;background:rgba(26,17,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,246,234,.08)}
+.tn-nav .wrap{display:flex;align-items:center;gap:14px;height:64px}
+.tn-nav .brand{color:#FFF6EA}
+.tn-nav .sp{margin-left:auto;display:flex;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font:700 13px var(--body);border:1px solid rgba(255,246,234,.18);color:#FFF6EA;background:transparent;text-decoration:none;cursor:pointer}
+.chip.gold{background:#F5C542;border-color:#F5C542;color:#1A110B}
+.hero{padding:56px 0 28px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end}
+.hero h1{font-size:clamp(44px,7vw,92px);line-height:.92;background:linear-gradient(100deg,#FFF1B3,#F5C542 40%,#E9B52C 60%,#FFF1B3);-webkit-background-clip:text;background-clip:text;color:transparent}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.meta span{padding:8px 14px;border-radius:999px;background:rgba(255,246,234,.06);font-weight:700;font-size:14px}
+.st{display:inline-flex;align-items:center;gap:8px}.st i{width:9px;height:9px;border-radius:50%;background:#F5C542}
+.st.live i{background:#7BD9A0;animation:pl 1.8s infinite}@keyframes pl{70%{box-shadow:0 0 0 8px rgba(123,217,160,0)}0%{box-shadow:0 0 0 0 rgba(123,217,160,.6)}}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 26px}
+.tabs button{font:700 15px var(--body);padding:11px 18px;border-radius:999px;border:1px solid rgba(255,246,234,.16);background:transparent;color:#FFF6EA;cursor:pointer}
+.tabs button[aria-selected=true]{background:#FFF6EA;color:#1A110B}
+.tabs small{opacity:.6;font-weight:500;margin-left:6px}
+/* champion */
+.champ{display:flex;align-items:center;gap:20px;padding:22px 26px;border-radius:24px;background:linear-gradient(120deg,rgba(245,197,66,.22),rgba(245,197,66,.05));border:1px solid rgba(245,197,66,.5);margin-bottom:26px;animation:cin .9s var(--ease-out) both}
+.champ img{width:72px;height:72px}.champ small{display:block;font-weight:700;font-size:12px;letter-spacing:.24em;color:#F5C542}.champ b{font:700 clamp(26px,4vw,40px) var(--display)}
+@keyframes cin{from{transform:scale(.94);opacity:0}}
+/* bracket */
+.br{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:28px;overflow-x:auto;padding:6px 2px 24px;scroll-snap-type:x mandatory}
+.col{display:flex;flex-direction:column;justify-content:space-around;gap:16px;scroll-snap-align:start;min-height:100%}
+.col h3{font:700 12px var(--body);letter-spacing:.22em;text-transform:uppercase;color:#F5C542;margin-bottom:4px}
+.m{position:relative;border-radius:16px;background:rgba(255,246,234,.05);border:1px solid rgba(255,246,234,.1);overflow:hidden}
+.m.done{border-color:rgba(255,246,234,.18)}.m.final{border-color:rgba(245,197,66,.6);box-shadow:0 0 0 4px rgba(245,197,66,.08)}
+.m .tm{display:flex;align-items:center;gap:10px;padding:11px 14px;font-weight:600}
+.m .tm+.tm{border-top:1px solid rgba(255,246,234,.07)}
+.m .tm span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.m .tm b{font:700 20px var(--display);min-width:26px;text-align:right}
+.m .tm.w{background:rgba(215,240,60,.1)}.m .tm.w b{color:#D7F03C}.m .tm.l{opacity:.55}
+.m .tm.tbd span{opacity:.4;font-style:italic}
+.m .info{display:flex;justify-content:space-between;padding:6px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.55;background:rgba(0,0,0,.2)}
+.m .hx{display:flex;gap:6px;padding:8px 10px;background:rgba(0,0,0,.25);align-items:center;flex-wrap:wrap}
+.m .hx input{width:54px;padding:7px 8px;border-radius:9px;border:1px solid rgba(255,246,234,.2);background:rgba(0,0,0,.3);color:#FFF6EA;font:700 15px var(--body);text-align:center}
+.m .hx input.c{width:64px;font-size:12px}
+.m .hx button{font:700 12px var(--body);padding:8px 10px;border-radius:9px;border:0;cursor:pointer;background:#D7F03C;color:#1A110B}
+.m .hx button.g{background:transparent;color:#FFF6EA;border:1px solid rgba(255,246,234,.2)}
+/* round robin */
+.rr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:24px}
+table.sd{width:100%;border-collapse:collapse;font-size:15px}
+.sd th,.sd td{padding:12px 10px;text-align:left;border-bottom:1px solid rgba(255,246,234,.08)}.sd th{font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.6}
+.sd tr:first-child td{color:#F5C542}
+.rrm{display:grid;gap:10px}
+@media (max-width:860px){.rr{grid-template-columns:1fr}.hero{grid-template-columns:1fr}}
+/* registration */
+.panel2{border-radius:28px;background:rgba(255,246,234,.04);border:1px solid rgba(255,246,234,.1);padding:clamp(20px,4vw,36px);margin:30px 0}
+.panel2 h2{font-size:clamp(28px,4vw,40px);margin-bottom:6px}
+.fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+.fgrid label{display:grid;gap:7px;font-weight:700;font-size:14px}
+.fgrid input,.fgrid select{font:500 16px var(--body);padding:13px 14px;border-radius:13px;border:1px solid rgba(255,246,234,.18);background:rgba(0,0,0,.25);color:#FFF6EA}
+.fgrid .full{grid-column:1/-1}
+@media (max-width:600px){.fgrid{grid-template-columns:1fr}}
+.err{color:#FF9CC5;font-weight:700;min-height:1.3em;margin:10px 0 0}
+.ok{color:#7BD9A0;font-weight:700}
+.empty{padding:40px 20px;text-align:center;border-radius:24px;border:1px dashed rgba(255,246,234,.18);opacity:.8}
+/* host */
+.hostbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:14px;border-radius:18px;background:rgba(215,240,60,.08);border:1px solid rgba(215,240,60,.3);margin-bottom:20px}
+.hostbar b{color:#D7F03C;margin-right:6px}
+.hostbar input,.hostbar select{font:600 14px var(--body);padding:9px 11px;border-radius:10px;border:1px solid rgba(255,246,234,.2);background:rgba(0,0,0,.3);color:#FFF6EA}
+.tlist{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.tlist span{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,246,234,.06);font-weight:600;font-size:14px}
+.tlist button{border:0;background:none;color:#FF9CC5;cursor:pointer;font-weight:700}
+body.tv .tn-nav,body.tv .panel2,body.tv .hostbar,body.tv footer{display:none!important}body.tv .hero{padding-top:24px}body.tv .m .tm{font-size:18px}
+</style>
+</head>
+<body>
+<header class="tn-nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a><div class="sp"><a class="chip" href="?tv" id="tvLink">TV view</a><a class="chip gold" href="#register" id="regLink">Register a team</a></div></div></header>
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow" style="color:#F5C542" id="eyb">Tournament</div>
+      <h1 id="tName">The Glaze Cup.</h1>
+      <div class="meta"><span class="st" id="tSt"><i></i>Registration open</span><span id="tDate" hidden></span><span id="tVen" hidden></span><span id="tFmt">Games to 11, win by 2</span></div>
+    </div>
+  </section>
+
+  <div class="hostbar" id="hostbar" hidden></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div id="board"></div>
+
+  <section class="panel2" id="register" hidden>
+    <div class="eyebrow" style="color:#F5C542">Registration</div>
+    <h2>Enter your team.</h2>
+    <p style="opacity:.75;margin:0">Doubles. Both players’ names and one WhatsApp number for the team. We’ll confirm your spot and send your first match time.</p>
+    <form id="rf" class="fgrid" novalidate>
+      <label class="full">Division<select name="div" id="rDiv"></select></label>
+      <label>Player 1<input name="p1" maxlength="40" autocomplete="name" required></label>
+      <label>Player 2<input name="p2" maxlength="40" required></label>
+      <label>Team name <small style="font-weight:500;opacity:.6">Optional</small><input name="team" maxlength="40" placeholder="e.g. Kitchen Kings"></label>
+      <label>WhatsApp<input name="phone" type="tel" inputmode="tel" placeholder="With country code" required></label>
+      <div class="full"><button class="btn lime" type="submit" id="rGo">Register our team</button><p class="err" id="rErr" role="alert"></p></div>
+    </form>
+  </section>
+</main>
+<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dinkin’ Donut Pickleball Club · Stay glazed.</span><span><a href="/">Home</a> · <a href="/queue">Live queue</a></span></div></footer>
+<script src="/js/common.js"></script>
+<script src="/js/celebrate.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const TV = /[?&]tv\b/.test(location.search); if (TV) document.body.classList.add("tv");
+let tok = ""; try { tok = localStorage.getItem("dd-host-token") || ""; } catch {}
+let S = null, cur = null, lastChamp = {}, busy = false;
+const ST = { registration: ["Registration open", ""], closed: ["Registration closed", ""], live: ["Live now", "live"], done: ["Final results", ""] };
+
+async function api(body) {
+  const r = await fetch("/api/tournament", { method: body ? "POST" : "GET", headers: { "Content-Type": "application/json", ...(tok ? { "x-host-token": tok } : {}) }, body: body ? JSON.stringify(body) : undefined, cache: "no-store" });
+  const j = await r.json(); if (!r.ok) throw Object.assign(new Error(j.error || "Something went wrong."), { j }); return j;
+}
+const nameOf = (d, id) => { const t = d.teams.find(x => x.id === id); return t ? t.name : null; };
+
+function render() {
+  if (!S) return;
+  $("tName").textContent = S.name; document.title = S.name + " · " + document.title.split(" · ").pop();
+  const st = ST[S.status] || ST.registration; $("tSt").className = "st " + st[1]; $("tSt").innerHTML = `<i></i>${st[0]}`;
+  if (S.date) { $("tDate").hidden = false; $("tDate").textContent = S.date; } else $("tDate").hidden = true;
+  if (S.venue) { $("tVen").hidden = false; $("tVen").textContent = S.venue; } else $("tVen").hidden = true;
+  $("tFmt").textContent = `Games to ${S.target}, win by ${S.winBy}`;
+  const open = S.status === "registration" && S.divisions.some(d => !d.matches.length);
+  $("register").hidden = !open || TV; $("regLink").hidden = !open;
+  $("rDiv").innerHTML = S.divisions.filter(d => !d.matches.length).map(d => `<option value="${d.id}">${esc(d.name)} · ${d.teams.length}/${d.cap} teams</option>`).join("");
+  if (!cur || !S.divisions.some(d => d.id === cur)) cur = S.divisions[0]?.id;
+  $("tabs").innerHTML = S.divisions.length > 1 ? S.divisions.map(d => `<button role="tab" aria-selected="${d.id === cur}" data-d="${d.id}">${esc(d.name)}<small>${d.teams.length} teams</small></button>`).join("") : "";
+  hostbar();
+  const d = S.divisions.find(x => x.id === cur);
+  if (!d) { $("board").innerHTML = `<div class="empty"><b style="font-family:var(--display);font-size:24px">The draw is coming.</b><br>Divisions and brackets appear here as soon as the host sets them up.</div>`; return; }
+  let h = "";
+  if (d.champion) {
+    h += `<div class="champ"><img src="/assets/donut-gold.svg" alt=""><div><small>${esc(d.name)} champions</small><b>${esc(nameOf(d, d.champion))}</b></div></div>`;
+    if (lastChamp[d.id] !== d.champion && lastChamp[d.id] !== undefined && window.celebrate) try {
+      const f = d.format === "elim" ? d.matches.find(m => m.round === d.rounds) : d.matches.filter(m => m.winner).sort((x, y) => (y.at || 0) - (x.at || 0))[0];
+      if (f) { const wA = f.winner === f.a; window.celebrate({ court: f.court || d.name, wn: [nameOf(d, f.winner)], ln: [nameOf(d, wA ? f.b : f.a)], ws: wA ? f.sa : f.sb, ls: wA ? f.sb : f.sa }); }
+    } catch {}
+  }
+  lastChamp[d.id] = d.champion || null;
+  if (!d.matches.length) {
+    h += `<div class="empty"><b style="font-family:var(--display);font-size:24px">${d.teams.length} team${d.teams.length === 1 ? "" : "s"} in.</b><br>${d.format === "rr" ? "Round robin: everyone plays everyone." : "Knockout bracket, seeded."} The draw opens when registration closes.</div>`;
+    if (S.host) h += `<div class="tlist">${d.teams.map(t => `<span>${esc(t.name)} <small style="opacity:.6">${esc(t.p1)} & ${esc(t.p2)} · ${esc(t.phone || "")}</small><button data-rm="${t.id}" title="Remove">×</button></span>`).join("")}</div>`;
+  } else if (d.format === "elim") {
+    h += `<div class="br">` + Array.from({ length: d.rounds }, (_, i) => i + 1).map(r => {
+      const ms = d.matches.filter(m => m.round === r).sort((a, b) => a.slot - b.slot);
+      return `<div class="col"><h3>${esc(ms[0].label)}</h3>${ms.map(m => match(d, m, r === d.rounds)).join("")}</div>`;
+    }).join("") + `</div>`;
+  } else {
+    h += `<div class="rr"><div><table class="sd"><thead><tr><th>#</th><th>Team</th><th>W</th><th>L</th><th>+/−</th></tr></thead><tbody>${d.standings.map((t, i) => `<tr><td>${i + 1}</td><td>${esc(t.name)}</td><td>${t.w}</td><td>${t.l}</td><td>${t.pf - t.pa > 0 ? "+" : ""}${t.pf - t.pa}</td></tr>`).join("")}</tbody></table></div><div class="rrm">${d.matches.map(m => match(d, m)).join("")}</div></div>`;
+  }
+  $("board").innerHTML = h;
+}
+function match(d, m, final) {
+  const A = nameOf(d, m.a), B = nameOf(d, m.b), done = !!m.winner;
+  const row = (id, n, sc) => `<div class="tm ${!n ? "tbd" : done ? (m.winner === id ? "w" : "l") : ""}"><span>${n ? esc(n) : m.bye && !n ? "Bye" : "TBD"}</span><b>${sc ?? ""}</b></div>`;
+  let h = `<div class="m ${done ? "done" : ""} ${final ? "final" : ""}">${row(m.a, A, m.bye ? "" : m.sa)}${row(m.b, B, m.bye ? "" : m.sb)}`;
+  if (m.court || (!done && A && B)) h += `<div class="info"><span>${esc(m.label)}</span><span>${m.court ? "Court " + esc(m.court) : "Up soon"}</span></div>`;
+  if (S.host && !TV && A && B && !m.bye) h += `<div class="hx" data-m="${m.id}"><input inputmode="numeric" class="a" value="${m.sa ?? ""}" aria-label="${esc(A)} score"><span>–</span><input inputmode="numeric" class="b" value="${m.sb ?? ""}" aria-label="${esc(B)} score"><button data-act="score">${done ? "Update" : "Save"}</button>${done ? `<button class="g" data-act="clear">Clear</button>` : ""}<input class="c" placeholder="Court" value="${esc(m.court)}" data-act="court"></div>`;
+  return h + `</div>`;
+}
+function hostbar() {
+  const hb = $("hostbar"); hb.hidden = !S.host || TV; if (hb.hidden) return;
+  const d = S.divisions.find(x => x.id === cur);
+  hb.innerHTML = `<b>Host</b>
+    <input id="hName" value="${esc(S.name)}" aria-label="Tournament name" style="min-width:180px"><input id="hDate" value="${esc(S.date)}" placeholder="Date, e.g. Sat 14 Dec · 4 PM"><input id="hVen" value="${esc(S.venue)}" placeholder="Venue">
+    <select id="hTarget">${[7, 11, 15, 21].map(n => `<option ${n === S.target ? "selected" : ""}>${n}</option>`).join("")}</select>
+    <select id="hStatus">${Object.keys(ST).map(k => `<option value="${k}" ${k === S.status ? "selected" : ""}>${ST[k][0]}</option>`).join("")}</select>
+    <button class="chip" data-h="save">Save</button>
+    <span style="flex-basis:100%"></span>
+    <input id="hDiv" placeholder="New division, e.g. Intermediate"><select id="hFmt"><option value="elim">Knockout</option><option value="rr">Round robin</option></select><button class="chip" data-h="addDiv">Add division</button>
+    ${d ? `<span style="flex-basis:100%"></span><span style="opacity:.8">${esc(d.name)}:</span>
+      ${!d.matches.length ? `<input id="hP1" placeholder="Player 1"><input id="hP2" placeholder="Player 2"><button class="chip" data-h="addTeam">Add team</button><button class="chip" data-h="shuffle">Shuffle seeds</button><button class="chip gold" data-h="generate">Generate ${d.format === "rr" ? "schedule" : "bracket"}</button>`
+        : `<button class="chip" data-h="resetBr">Reset bracket</button>`}
+      <button class="chip" data-h="rmDiv" style="color:#FF9CC5">Delete division</button>` : ""}`;
+}
+async function act(body, okMsg) {
+  if (busy) return; busy = true;
+  try { const j = await api(body); S = j; render(); if (okMsg) toast(okMsg); if (j.result && j.result.champion) toast(`🏆 ${j.result.champion} win it!`); }
+  catch (e) { toast(e.message); if (e.j && e.j.signin) { tok = ""; } }
+  busy = false;
+}
+function toast(t) { const d = document.createElement("div"); d.textContent = t; d.style.cssText = "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:99;padding:12px 18px;border-radius:14px;background:#FFF6EA;color:#1A110B;font-weight:700;box-shadow:0 14px 30px rgba(0,0,0,.35);max-width:92vw"; document.body.appendChild(d); setTimeout(() => d.remove(), 3400); }
+
+document.addEventListener("click", e => {
+  const tab = e.target.closest("[data-d]"); if (tab) { cur = Number(tab.dataset.d); render(); return; }
+  const h = e.target.closest("[data-h]");
+  if (h) {
+    const k = h.dataset.h, v = id => ($(id) || {}).value;
+    if (k === "save") act({ type: "setup", name: v("hName"), date: v("hDate"), venue: v("hVen"), target: v("hTarget"), status: v("hStatus") }, "Saved");
+    if (k === "addDiv") act({ type: "addDivision", name: v("hDiv"), format: v("hFmt") });
+    if (k === "addTeam") act({ type: "addTeam", div: cur, p1: v("hP1"), p2: v("hP2") });
+    if (k === "shuffle") act({ type: "shuffle", div: cur }, "Seeds shuffled");
+    if (k === "generate" && confirm("Generate the draw now? Registration for this division closes.")) act({ type: "generate", div: cur }, "Draw is live");
+    if (k === "resetBr" && confirm("Reset this bracket? All scores in this division will be cleared.")) act({ type: "resetBracket", div: cur });
+    if (k === "rmDiv" && confirm("Delete this division and its teams?")) act({ type: "removeDivision", div: cur });
+    return;
+  }
+  const rm = e.target.closest("[data-rm]"); if (rm && confirm("Remove this team?")) { act({ type: "removeTeam", div: cur, team: Number(rm.dataset.rm) }); return; }
+  const b = e.target.closest(".hx button"); if (b) {
+    const box = b.closest(".hx"), m = Number(box.dataset.m);
+    if (b.dataset.act === "clear") act({ type: "clearScore", div: cur, match: m });
+    else act({ type: "score", div: cur, match: m, sa: box.querySelector(".a").value, sb: box.querySelector(".b").value });
+  }
+});
+document.addEventListener("change", e => { const c = e.target.closest("input[data-act=court]"); if (c) act({ type: "court", div: cur, match: Number(c.closest(".hx").dataset.m), court: c.value }); });
+
+$("rf").addEventListener("submit", async e => {
+  e.preventDefault(); const f = new FormData(e.target), er = $("rErr"), go = $("rGo"); er.textContent = ""; er.className = "err";
+  go.disabled = true; go.textContent = "Registering…";
+  try { const j = await api({ type: "register", div: f.get("div"), p1: f.get("p1"), p2: f.get("p2"), team: f.get("team"), phone: f.get("phone") }); S = j; render(); e.target.reset(); er.className = "err ok"; er.textContent = `You’re in! ${j.result.team.name} is registered for ${j.result.team.div}.`; }
+  catch (x) { er.textContent = x.message; }
+  go.disabled = false; go.textContent = "Register our team";
+});
+
+async function load() { if (busy || document.activeElement?.closest?.(".hx,.hostbar,#rf")) return; try { S = await api(); render(); } catch (e) { if (e.j && e.j.upgrade) $("board").innerHTML = `<div class="empty">${esc(e.j.error)}</div>`; } }
+load(); setInterval(load, TV ? 4000 : 7000);
+if (window.CC) { $("tvLink").href = CC.base + "/tournament?tv"; }
+</script>
+<script src="/js/social.js" defer></script>
+</body>
+</html>

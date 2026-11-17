@@ -29,6 +29,17 @@ function access(c) {
 // What each plan may use.
 const LIMITS = { trial: { courts: 2, players: 20, label: "Trial" }, starter: { courts: 2, players: 40 }, club: { courts: 6, players: 80 }, venue: { courts: 12, players: 200 } };
 const limitsOf = c => ({ ...(LIMITS[c.plan] || LIMITS.club), label: PLANS[c.plan]?.name || "Club" });
-const publicClub = c => c && ({ limits: limitsOf(c), founding: !!c.founding, request: c.request, slug: c.slug, name: c.name, short: c.short, city: c.city, color: c.color, accent: c.accent, logo: c.logo || "", plan: c.plan, access: access(c), sales: SALES });
+const publicClub = c => c && ({ limits: limitsOf(c), founding: !!c.founding, request: c.request, billing: c.billing || "manual", cancelAtPeriodEnd: !!c.cancelAtPeriodEnd, paymentIssue: !!c.paymentIssue, slug: c.slug, name: c.name, short: c.short, city: c.city, color: c.color, accent: c.accent, logo: c.logo || "", plan: c.plan, access: access(c), sales: SALES });
 
-module.exports = { LIMITS, limitsOf, TRIAL_DAYS, SALES, PLANS, FOUNDING_SPOTS, slugify, RESERVED, getClub, saveClub, listClubs, access, publicClub };
+// Payments ledger: one record per payment (card invoices from Stripe, or manual Fawran/transfer).
+// Kept forever in the database; the owner can export it as CSV.
+async function recordPayment(p) {
+  const L = await getGlobal("payments", []);
+  if (p.id && L.some(x => x.id === p.id)) return false; // already recorded (webhooks can repeat)
+  L.unshift({ at: Date.now(), ...p });
+  await setGlobal("payments", L.slice(0, 5000));
+  return true;
+}
+async function listPayments() { return getGlobal("payments", []); }
+
+module.exports = { recordPayment, listPayments, LIMITS, limitsOf, TRIAL_DAYS, SALES, PLANS, FOUNDING_SPOTS, slugify, RESERVED, getClub, saveClub, listClubs, access, publicClub };
