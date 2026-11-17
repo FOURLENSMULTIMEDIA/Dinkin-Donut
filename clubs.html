@@ -448,6 +448,7 @@ F.addEventListener("submit", async e => {
 });
 
 // Owner dashboard: /clubs?owner, needs the Dinkin' Donut host sign-in on this device
+if (location.hash === "#film") setTimeout(() => document.getElementById("playFilm").click(), 400);
 if (/[?&]owner\b/.test(location.search)) {
   let tok = ""; try { tok = localStorage.getItem("dd-host-token") || ""; } catch {}
   $("site").hidden = true; $("owner").hidden = false;

@@ -690,6 +690,37 @@ section.block{padding-block:80px 0}
     <a class="merchband" href="/merch"><img src="/assets/logo.svg" alt=""><span><span class="eyebrow" style="color:#fff">Drop 01 · Pre-order</span><b>The Glaze Jersey is here.</b>Your name and number on the back. Three colourways, plus the new Court Polo.</span><span class="btn">Build yours →</span></a>
   </section>
 
+  <section class="block wrap" id="courtcall">
+    <a class="ccb" href="/clubs#film">
+      <div class="ccb-copy">
+        <span class="ccb-k"><i></i>Courtcall · For clubs worldwide</span>
+        <h2>Run a club? <em>Run it like ours.</em></h2>
+        <p>The queue, matchmaking, live scores and TV board you see at Dinkin’ Donut, now in your club’s name and colours. Live in 2 minutes. No app to install.</p>
+        <ul><li>QR check-in</li><li>Fair games</li><li>Court announcer</li><li>Your branding</li></ul>
+        <span class="ccb-cta">Discover Courtcall <b aria-hidden="true">→</b></span>
+      </div>
+      <div class="ccb-film"><img src="/assets/video/courtcall-poster.jpg" alt="Courtcall film" loading="lazy"><span class="ccb-play" aria-hidden="true"></span><small>Watch the 36s film</small></div>
+    </a>
+  </section>
+  <style>
+  .ccb{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(24px,4vw,56px);align-items:center;padding:clamp(24px,4.5vw,56px);border-radius:32px;background:radial-gradient(700px 360px at 85% 0%,rgba(215,240,60,.14),transparent 70%),#0E1311;color:#EDF2EC;text-decoration:none;overflow:hidden;position:relative}
+  .ccb-k{display:inline-flex;align-items:center;gap:10px;font:700 12px var(--body);letter-spacing:.22em;text-transform:uppercase;color:#D7F03C}
+  .ccb-k i{width:14px;height:14px;border-radius:50%;background:#D7F03C}
+  .ccb h2{font-size:clamp(34px,4.6vw,58px);line-height:1;margin:14px 0 16px;letter-spacing:-.02em}.ccb h2 em{font-style:normal;color:#D7F03C;display:block}
+  .ccb p{color:rgba(237,242,236,.7);max-width:46ch;margin:0 0 20px;font-size:17px}
+  .ccb ul{list-style:none;padding:0;margin:0 0 26px;display:flex;flex-wrap:wrap;gap:8px}
+  .ccb li{font:700 13px var(--body);padding:8px 14px;border-radius:999px;border:1px solid rgba(237,242,236,.16);background:rgba(237,242,236,.04)}
+  .ccb-cta{display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 24px;border-radius:999px;background:#D7F03C;color:#0E1311;font:700 15px var(--body)}
+  .ccb-cta b{transition:transform .3s var(--ease-out)}.ccb:hover .ccb-cta b{transform:translateX(4px)}
+  .ccb-film{position:relative;border-radius:22px;overflow:hidden;aspect-ratio:16/9;background:#151C19;box-shadow:0 30px 60px rgba(0,0,0,.45);transform:perspective(1200px) rotateY(-6deg);transition:transform .8s var(--ease-out)}
+  .ccb:hover .ccb-film{transform:none}
+  .ccb-film img{width:100%;height:100%;object-fit:cover;display:block}
+  .ccb-play{position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:#D7F03C;box-shadow:0 0 0 12px rgba(215,240,60,.18);transition:transform .3s var(--ease-out)}
+  .ccb-play::after{content:"";position:absolute;left:31px;top:24px;border-left:20px solid #0E1311;border-top:14px solid transparent;border-bottom:14px solid transparent}
+  .ccb:hover .ccb-play{transform:scale(1.08)}
+  .ccb-film small{position:absolute;left:16px;bottom:14px;font:700 12px var(--body);letter-spacing:.08em;color:#EDF2EC;background:rgba(14,19,17,.7);padding:6px 10px;border-radius:999px}
+  @media (max-width:860px){.ccb{grid-template-columns:1fr}.ccb-film{transform:none;order:-1}}
+  </style>
   <section class="block wrap" id="contact">
     <div class="sec-h"><div><div class="eyebrow">Get in touch</div><h2>Slide into our DMs</h2></div><p>Questions about nights, the venue, DUPR games or merch? Message the crew. We reply fastest on WhatsApp.</p></div>
     <div data-contact="big"></div>
