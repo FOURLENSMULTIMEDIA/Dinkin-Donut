@@ -281,15 +281,21 @@
 <script src="/js/contact.js"></script>
 <script src="/js/merch.js"></script>
 <script src="/js/jersey.js"></script>
+<script src="/js/mockup.js"></script>
 <script>
 const $ = id => document.getElementById(id), C = window.CLUB, J = window.Jersey;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const money = n => `${n.toLocaleString("en")} ${C.currency || "QAR"}`;
 const WA = (C.whatsappNumber || "97430763431").replace(/\D/g, "");
+// Photo mockups, with the same 1-of-1 code the vector design generates for this name
+function photo(kind, o, ways, vec) {
+  const code = (vec({ ...o, side: "back" }).match(/DD-[0-9A-F]{4}/) || ["DD-0000"])[0];
+  return window.Mockup ? Mockup.render(kind, { ...o, code }, ways) : vec(o);
+}
 const PRODUCTS = {
-  jersey: { ...window.JERSEY, ways: J.WAYS, draw: o => J.render(o), defWay: "glaze" },
-  pro: { ...window.PRO, ways: J.PRO_WAYS, draw: o => J.renderPro(o), defWay: "bughaw" },
-  polo: { ...window.POLO, ways: J.POLO_WAYS, draw: o => J.renderPolo(o), defWay: "clubhouse" },
+  jersey: { ...window.JERSEY, ways: J.WAYS, draw: o => photo("tee", o, J.WAYS, J.render), defWay: "glaze" },
+  pro: { ...window.PRO, ways: J.PRO_WAYS, draw: o => photo("polo", { ...o, tag: "MABUHAY" }, J.PRO_WAYS, J.renderPro), defWay: "bughaw" },
+  polo: { ...window.POLO, ways: J.POLO_WAYS, draw: o => photo("polo", o, J.POLO_WAYS, J.renderPolo), defWay: "clubhouse" },
 };
 const st = { p: "jersey", side: "front", qty: 1, jersey: { way: "glaze", print: "full", name: "", num: "", fit: 0, size: "M" }, pro: { way: "bughaw", print: "full", name: "", num: "", fit: 0, size: "M" }, polo: { way: "clubhouse", print: "name", name: "", num: "", fit: 0, size: "M" } };
 const cur = () => st[st.p], P = () => PRODUCTS[st.p];
