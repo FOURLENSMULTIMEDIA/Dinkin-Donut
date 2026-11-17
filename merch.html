@@ -184,6 +184,10 @@
 .payrow .btn{color:#FFF6EA;padding:6px 12px}
 .paysteps{margin:4px 0 0;padding-left:18px;display:grid;gap:4px;font-size:13px;opacity:.9}
 .paid{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14px}
+.seg.ed .gold{border-color:#E9B52C}.seg.ed .gold[aria-pressed=true]{background:linear-gradient(100deg,#C9962A,#FFF1B3 35%,#E9B52C 60%,#FFE9A0);color:#3B2416;border-color:#E9B52C}
+.seg.ed button:disabled{opacity:.45;cursor:not-allowed}.edleft{color:#B8841F;font-weight:700;letter-spacing:.06em}
+.oneofone.gold{background:linear-gradient(120deg,rgba(245,197,66,.18),rgba(245,197,66,.05));border:1px solid rgba(233,181,44,.5)}
+.oneofone.gold b{background:linear-gradient(100deg,#C9962A,#FFE9A0 40%,#E9B52C 70%);color:#3B2416}
 </style>
 </head>
 <body>
@@ -223,6 +227,7 @@
       <div><h3 id="pName"></h3><div class="price tabnum" id="pPrice"></div></div>
       <p class="lead" id="pLead"></p>
       <div class="opt"><span class="lbl">Colourway <span id="wayName"></span></span><div class="ways" id="ways"></div></div>
+      <div class="opt"><span class="lbl">Edition <span id="edLeft" class="edleft"></span></span><div class="seg ed" id="eds"><button type="button" data-ed="0" aria-pressed="true">Standard</button><button type="button" data-ed="1" aria-pressed="false" class="gold">The 20 · numbered</button></div></div>
       <div class="opt"><span class="lbl" id="printLbl">Back print</span><div class="seg" id="prints" role="group" aria-labelledby="printLbl"></div></div>
       <div class="fields" id="fields">
         <div class="opt"><label for="nm">Name</label><input id="nm" maxlength="12" placeholder="e.g. ANGEL" autocomplete="nickname"></div>
@@ -297,18 +302,22 @@ const PRODUCTS = {
   pro: { ...window.PRO, ways: J.PRO_WAYS, draw: o => photo("polo", { ...o, tag: "MABUHAY" }, J.PRO_WAYS, J.renderPro), defWay: "bughaw" },
   polo: { ...window.POLO, ways: J.POLO_WAYS, draw: o => photo("polo", o, J.POLO_WAYS, J.renderPolo), defWay: "clubhouse" },
 };
+const ED = window.EDITION || { name: "The 20", cap: 20, extra: 60 }; let edLeft = ED.cap;
+const unit = l => PRODUCTS[l.p].price + (l.edition ? ED.extra : 0);
 const st = { p: "jersey", side: "front", qty: 1, jersey: { way: "glaze", print: "full", name: "", num: "", fit: 0, size: "M" }, pro: { way: "bughaw", print: "full", name: "", num: "", fit: 0, size: "M" }, polo: { way: "clubhouse", print: "name", name: "", num: "", fit: 0, size: "M" } };
 const cur = () => st[st.p], P = () => PRODUCTS[st.p];
 
 function draw(animate) {
   const o = cur(), spin = $("spin");
-  const paint = () => { spin.innerHTML = P().draw({ way: o.way, side: st.side, name: o.name, num: o.num, print: o.print }); };
+  const paint = () => { spin.innerHTML = P().draw({ way: o.way, side: st.side, name: o.name, num: o.num, print: o.print, edition: !!o.edition }); };
   if (animate) { spin.classList.add("out"); setTimeout(() => { paint(); spin.classList.remove("out"); }, 330); } else paint();
   document.querySelectorAll("[data-side]").forEach(b => b.setAttribute("aria-pressed", b.dataset.side === st.side));
 }
 function renderPanel() {
   const p = P(), o = cur();
-  $("pName").textContent = p.name; $("pPrice").textContent = money(p.price); $("leadTime").textContent = p.leadTime;
+  $("pName").textContent = p.name; $("pPrice").textContent = money(p.price + (o.edition ? ED.extra : 0));
+  document.querySelectorAll("[data-ed]").forEach(b => { b.setAttribute("aria-pressed", String(!!o.edition) === String(b.dataset.ed === "1")); if (b.dataset.ed === "1") { b.disabled = edLeft <= 0 && !o.edition; b.textContent = edLeft <= 0 && !o.edition ? "The 20 · sold out" : `The 20 · numbered · +${ED.extra} QAR`; } });
+  $("edLeft").textContent = edLeft > 0 ? `${edLeft} of ${ED.cap} left` : "Sold out"; $("leadTime").textContent = p.leadTime;
   $("pLead").textContent = st.p === "pro" ? "A Filipino-inspired pickleball polo. Curved yoke with gold piping, a banig weave generated from your name and a sun-and-stars signature under the collar." : st.p === "jersey" ? "Our pickleball tee. Glaze-dipped yoke, a quiet crest on the chest and your name across the back." : "Built for court, sharp enough for the clubhouse. Quarter zip, contrast yoke with glaze piping, mesh side panels and a tapered cut.";
   $("ways").innerHTML = Object.entries(p.ways).map(([k, w]) => `<button class="way" type="button" data-way="${k}" aria-pressed="${o.way === k}">${p.draw({ way: k, side: "front" })}<b>${w.label}</b><small>${w.note}</small></button>`).join("");
   $("wayName").textContent = p.ways[o.way].label;
@@ -326,9 +335,11 @@ function renderPanel() {
   $("chart").innerHTML = `<table><caption>Approximate chest width laid flat, in cm. Between sizes? Go one up for a relaxed fit.</caption><tr><th>Size</th>${Object.keys(p.sizeChart).map(k => `<th>${k}</th>`).join("")}</tr><tr><td><b>Chest</b></td>${Object.values(p.sizeChart).map(v => `<td>${v}</td>`).join("")}</tr></table>`;
 }
 function oneOf() { const o = cur(), n = (o.name || "").trim(); const el = $("oneOf");
-  if (!n || o.print === "plain") { el.innerHTML = "<b>1 OF 1</b><span>Add a name and the pattern on your shirt is generated from it, with its own numbered tag.</span>"; return; }
+  if (o.edition) { el.className = "oneofone gold"; el.innerHTML = `<b>THE 20 · Nº __ / ${ED.cap}</b><span>Only ${ED.cap} will ever be made. Gold Kitchen Line, gold ball and a numbered hem tag. Your number is reserved the moment you send your order. ${edLeft} left.</span>`; return; }
+  el.className = "oneofone";
+  if (!n || o.print === "plain") { el.innerHTML = "<b>Your code</b><span>Add a name and the ball on your Kitchen Line lands in a spot set by your name, with your own shirt code on the hem.</span>"; return; }
   const svg = P().draw({ way: o.way, side: "back", name: n, num: o.num, print: o.print }), code = (svg.match(/DD-[0-9A-F]{4}/) || [""])[0];
-  el.innerHTML = `<b>1 OF 1 · ${code}</b><span>This pattern is generated from “${n.replace(/[<>&]/g, "")}”. No other shirt will have it.</span>`; }
+  el.innerHTML = `<b>${code}</b><span>The ball on your Kitchen Line sits where “${n.replace(/[<>&]/g, "")}” puts it. Want it truly one of a kind? Choose The 20.</span>`; }
 function all(animate) { renderPanel(); draw(animate); oneOf(); }
 
 document.addEventListener("click", e => {
@@ -338,6 +349,7 @@ document.addEventListener("click", e => {
   else if (d.side) { if (st.side !== d.side) { st.side = d.side; draw(true); } }
   else if (d.way) { o.way = d.way; all(false); }
   else if (d.print) { o.print = d.print; if (st.side !== "back") { st.side = "back"; renderPanel(); draw(true); } else all(false); }
+  else if (d.ed !== undefined) { o.edition = d.ed === "1"; if (o.edition && o.print === "plain") o.print = (P().prints.find(x => x[0] !== "plain") || ["name"])[0]; st.side = "back"; all(true); }
   else if (d.fit !== undefined) { o.fit = +d.fit; renderPanel(); }
   else if (d.size) { o.size = d.size; renderPanel(); }
 });
@@ -360,25 +372,26 @@ function addLine() {
   const o = cur();
   if (o.print !== "plain" && !o.name.trim()) { $("nm").focus(); $("hint").textContent = "Add a name, or choose " + ((st.p === "jersey" || st.p === "pro") ? "“Plain back”." : "“No name”."); return null; }
   if ((st.p === "jersey" || st.p === "pro") && o.print === "full" && o.num === "") { $("no").focus(); $("hint").textContent = "Add your jersey number, or choose “Name only”."; return null; }
-  const line = { p: st.p, way: o.way, print: o.print, name: o.print === "plain" ? "" : o.name.trim().toUpperCase(), num: (st.p === "jersey" || st.p === "pro") && o.print === "full" ? o.num : "", fit: o.fit, size: o.size, qty: st.qty };
+  if (o.edition && !o.name.trim()) { $("nm").focus(); $("hint").textContent = "The 20 needs a name on the back."; return null; }
+  const line = { edition: !!o.edition, p: st.p, way: o.way, print: o.print, name: o.print === "plain" ? "" : o.name.trim().toUpperCase(), num: (st.p === "jersey" || st.p === "pro") && o.print === "full" ? o.num : "", fit: o.fit, size: o.size, qty: o.edition ? 1 : st.qty };
   const key = l => JSON.stringify({ ...l, qty: 0 }), ex = bag.find(l => key(l) === key(line));
-  ex ? ex.qty += line.qty : bag.push(line); saveBag(); renderBag(); return line;
+  ex ? (line.edition ? 0 : ex.qty += line.qty) : bag.push(line); saveBag(); renderBag(); return line;
 }
 function renderBag() {
   $("cnt").textContent = bag.reduce((a, l) => a + l.qty, 0);
-  $("lines").innerHTML = bag.length ? bag.map((l, i) => `<div class="line">${PRODUCTS[l.p].draw({ way: l.way, side: "back", name: l.name, num: l.num, print: l.print })}<div><b>${esc(PRODUCTS[l.p].name)}</b><br><small>${esc(describe(l))}</small><br><small>${money(PRODUCTS[l.p].price)}</small></div><div class="lq"><button data-q="${i}" data-d="-1" aria-label="One less">–</button><b class="tabnum">${l.qty}</b><button data-q="${i}" data-d="1" aria-label="One more">+</button></div></div>`).join("") : '<p class="empty">Your bag is empty.</p>';
-  $("total").textContent = money(bag.reduce((a, l) => a + l.qty * PRODUCTS[l.p].price, 0));
+  $("lines").innerHTML = bag.length ? bag.map((l, i) => `<div class="line">${PRODUCTS[l.p].draw({ way: l.way, side: "back", name: l.name, num: l.num, print: l.print, edition: l.edition, edNo: l.edNo })}<div><b>${esc(PRODUCTS[l.p].name)}</b><br><small>${esc(describe(l))}</small><br><small>${money(PRODUCTS[l.p].price)}</small></div><div class="lq"><button data-q="${i}" data-d="-1" aria-label="One less">–</button><b class="tabnum">${l.qty}</b><button data-q="${i}" data-d="1" aria-label="One more">+</button></div></div>`).join("") : '<p class="empty">Your bag is empty.</p>';
+  $("total").textContent = money(bag.reduce((a, l) => a + l.qty * unit(l), 0));
   $("order").hidden = !bag.length;
 }
 // Order reference: stays the same for this bag until the order is sent
 function orderRef() { let r = ""; try { r = localStorage.getItem("dd-ref") || ""; } catch {} if (!r) { const d = new Date(); r = `DD-${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}-${Math.floor(1000 + Math.random() * 9000)}`; try { localStorage.setItem("dd-ref", r); } catch {} } return r; }
 const FAWRAN = C.shopFawran || "+974 3020 3100";
-const bagTotal = lines => lines.reduce((a, l) => a + l.qty * PRODUCTS[l.p].price, 0);
+const bagTotal = lines => lines.reduce((a, l) => a + l.qty * unit(l), 0);
 // Plain text with WhatsApp bold; no emoji (they can arrive garbled through links)
 const orderText = (lines, who) => {
   const ref = orderRef(), items = lines.map(l => { const p = PRODUCTS[l.p], w = p.ways[l.way];
     const back = l.print === "plain" ? ((l.p === "jersey" || l.p === "pro") ? "Plain back" : "No name") : ((l.p === "jersey" || l.p === "pro") && l.print === "full" ? `Back: ${l.name} · No. ${l.num}` : `Name: ${l.name}`);
-    return `${l.qty} × ${p.name} - ${money(l.qty * p.price)}\n   ${w.label} · ${p.fits[l.fit]} · Size ${l.size}\n   ${back}`; }).join("\n\n");
+    return `${l.qty} × ${p.name}${l.edition ? ` · *THE 20 · Nº ${String(l.edNo || "__").padStart(2, "0")} / ${ED.cap}*` : ""} - ${money(l.qty * unit(l))}\n   ${w.label} · ${p.fits[l.fit]} · Size ${l.size}\n   ${back}`; }).join("\n\n");
   return [`*Dinkin' Donut · Shop order*`, `Order ref: *${ref}*`, `Name: ${who || "-"}`, "", items, "", `*Total: ${money(bagTotal(lines))}*`, "",
     `Payment: Fawran to ${FAWRAN}`, `Transfer note: ${ref}`, `Receipt: attached below`, "",
     `We start making your order once payment is confirmed. Ready in about 3 weeks, pick-up at open play.`].join("\n");
@@ -396,8 +409,44 @@ $("close").onclick = () => $("drawer").hidden = true;
 $("drawer").onclick = e => { if (e.target.id === "drawer") $("drawer").hidden = true; };
 document.addEventListener("keydown", e => { if (e.key === "Escape") $("drawer").hidden = true; });
 try { $("buyer").value = localStorage.getItem("dd-name") || ""; } catch {}
-$("order").onsubmit = e => { e.preventDefault(); openWA(orderText(bag, $("buyer").value.trim())); setTimeout(() => { try { localStorage.removeItem("dd-ref"); } catch {} }, 2000); };
-$("alt").onclick = e => { if (bag.length) { e.preventDefault(); openWA(orderText(bag, $("buyer").value.trim()), "97430723503"); } };
+// The 20: claim a number for each edition shirt before the order goes out
+async function claimEditions() {
+  for (const l of bag.filter(x => x.edition && !x.edNo)) {
+    const r = await fetch("/api/edition", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ claim: { name: l.name, ref: orderRef(), product: l.p, way: l.way } }) });
+    const j = await r.json();
+    if (!r.ok) { l.edition = false; saveBag(); renderBag(); throw new Error(j.error || "Couldn’t reserve a number."); }
+    l.edNo = j.no; saveBag(); renderBag();
+  }
+  refreshEd();
+// Owner: /merch?host shows who holds each of The 20 (needs the host console sign-in on this device)
+if (/[?&]host\b/.test(location.search)) {
+  let tok = ""; try { tok = localStorage.getItem("dd-host-token") || ""; } catch {}
+  const box = document.createElement("section"); box.className = "wrap"; box.id = "edHost"; box.style.cssText = "margin:40px auto;padding:24px;border-radius:24px;background:var(--surface);border:1px solid var(--line)";
+  document.querySelector("main")?.prepend(box);
+  const call = b => fetch("/api/edition" + (b ? "" : "?list"), { method: b ? "POST" : "GET", headers: { "Content-Type": "application/json", "x-host-token": tok }, body: b ? JSON.stringify(b) : undefined }).then(r => r.json());
+  const draw = j => {
+    if (j.error) { box.innerHTML = "<b>Sign in to the host console on this device first.</b>"; return; }
+    const by = Object.fromEntries(j.list.map(e => [e.no, e]));
+    box.innerHTML = `<h2 style="margin-bottom:6px">The 20 · ${j.list.length} of ${j.cap} taken</h2><p class="note">Unpaid holds go back on sale after 48 hours. Mark each one paid when the Fawran payment lands.</p><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-top:14px">` +
+      Array.from({ length: j.cap }, (_, i) => { const n = i + 1, e = by[n];
+        return `<div style="padding:12px;border-radius:14px;border:1px solid ${e ? (e.paid ? "#2F7A4F" : "#E9B52C") : "var(--line)"};background:${e && e.paid ? "rgba(47,122,79,.08)" : "transparent"}"><b>Nº ${String(n).padStart(2, "0")}</b> ${e ? `· ${esc(e.name)}<br><small>${esc(e.product)} · ${esc(e.way)} · ref ${esc(e.ref)}</small><br><small>${e.paid ? "✓ Paid" : "Held, awaiting payment"}</small><div style="display:flex;gap:6px;margin-top:6px">${e.paid ? "" : `<button class="btn sm lime" data-edpaid="${n}">Mark paid</button>`}<button class="btn sm ghost" data-edrel="${n}">Release</button></div>` : "<small> · available</small>"}</div>`; }).join("") + "</div>";
+  };
+  call().then(draw);
+  box.addEventListener("click", e => { const p = e.target.dataset.edpaid, r = e.target.dataset.edrel; if (p) call({ paid: +p }).then(() => call().then(draw)); if (r && confirm(`Release Nº ${r}? It goes back on sale.`)) call({ release: +r }).then(() => call().then(draw)); });
+}
+}
+async function sendOrder(num) {
+  const w = window.open("", "_blank");
+  try { await claimEditions(); }
+  catch (x) { if (w) w.close(); alert(x.message + " Your shirt was switched to the standard edition. Check your bag and send again."); return; }
+  const url = `https://wa.me/${num || WA}?text=${encodeURIComponent(orderText(bag, $("buyer").value.trim()))}`;
+  if (w) w.location.href = url; else location.href = url;
+  setTimeout(() => { try { localStorage.removeItem("dd-ref"); } catch {} }, 2000);
+}
+$("order").onsubmit = e => { e.preventDefault(); sendOrder(); };
+$("alt").onclick = e => { if (bag.length) { e.preventDefault(); sendOrder("97430723503"); } };
+function refreshEd() { fetch("/api/edition").then(r => r.json()).then(j => { edLeft = j.left; renderPanel(); oneOf(); }).catch(() => {}); }
+refreshEd();
 $("copy").onclick = () => navigator.clipboard?.writeText($("summary").textContent).catch(() => {});
 $("teamBtn").href = `https://wa.me/${WA}?text=${encodeURIComponent("Hi Dinkin' Donut! I'd like a team quote for Glaze Jerseys.\nTeam name:\nNumber of players:\nSizes:")}`;
 

@@ -84,3 +84,7 @@ window.MERCH = [
     blurb: "Insulated steel, keeps water cold through four hours of open play.",
     colors: [["Court", "#2F7A4F"], ["Cream", "#FFF6EA"]], sizes: [] },
 ];
+
+// The 20: the numbered 1-of-1 edition. Only 20 are ever made (the server hands out Nº 01-20).
+// "extra" is added to the shirt price, in QAR.
+window.EDITION = { name: "The 20", cap: 20, extra: 60 };
