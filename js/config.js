@@ -19,6 +19,8 @@ window.CLUB = {
 
   // The Glaze Cup tournament. Leave the date empty for "coming soon"; set it (Doha time) to show a countdown.
   tournament: { name: "The Glaze Cup", date: "", registerUrl: "" },   // e.g. date: "2026-12-18T19:00:00+03:00"
+  // The First Serve: our first open play. Pre-registered Dinkers get a numbered sticker. Leave date empty for "date announced soon".
+  firstServe: { date: "", venue: "" },   // e.g. date: "2026-12-05T20:00:00+03:00", venue: "Aspire Zone, Court 3"
 
   // DUPR-rated games are booked on Reclub
   reclubUrl: "",                       // your club page, e.g. "https://reclub.co/clubs/dinkin-donut"

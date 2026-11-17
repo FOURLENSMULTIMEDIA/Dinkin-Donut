@@ -387,7 +387,7 @@ section.block{padding-block:80px 0}
 <body>
 <nav class="nav"><div class="wrap">
   <a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a>
-  <ul class="navlinks"><li><a href="#live">Live courts</a></li><li><a href="/loyalty">Glaze Card</a></li><li><a href="#cup">Glaze Cup</a></li><li><a href="/merch">Shop</a></li><li><a href="/dupr">DUPR</a></li></ul>
+  <ul class="navlinks"><li><a href="/first-serve">First Serve</a></li><li><a href="#live">Live courts</a></li><li><a href="/loyalty">Glaze Card</a></li><li><a href="#cup">Glaze Cup</a></li><li><a href="/merch">Shop</a></li><li><a href="/dupr">DUPR</a></li></ul>
   <button class="menubtn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu"><span class="bars" aria-hidden="true"><i></i><i></i></span><span class="lbl">Menu</span></button>
   <a class="btn pink sm btn-join" href="/queue"><span class="jb" aria-hidden="true"><svg viewBox="0 0 24 24"><g transform="rotate(-35 12 12)"><rect x="7" y="2.5" width="10" height="12" rx="5" fill="#FF5FA2" stroke="#3B2416" stroke-width="1.6"/><rect x="10.6" y="14" width="2.8" height="7" rx="1.2" fill="#3B2416"/></g><g class="ball"><circle cx="19.5" cy="5" r="3.2" fill="#D7F03C" stroke="#3B2416" stroke-width="1.2"/><circle cx="18.8" cy="4.4" r=".6" fill="#3B2416"/><circle cx="20.4" cy="5.8" r=".6" fill="#3B2416"/></g></svg></span>Join the queue</a>
 </div></nav>
@@ -395,16 +395,17 @@ section.block{padding-block:80px 0}
   <div class="menu-in wrap">
     <div class="menu-top"><span class="eyebrow">Dinkin’ Donut · Doha</span><button class="menuclose" id="menuClose" type="button" aria-label="Close menu">Close</button></div>
     <nav class="menu-links" aria-label="Site">
-      <a href="/queue"><small>01</small>Join the queue</a>
-      <a href="#live"><small>02</small>Live courts</a>
-      <a href="#nights"><small>03</small>How a night runs</a>
-      <a href="#rules"><small>04</small>Kitchen rules</a>
-      <a href="#hall"><small>05</small>Hall of Glaze</a>
-      <a href="#cup"><small>06</small>The Glaze Cup</a>
-      <a href="/loyalty"><small>07</small>Glaze Card</a>
-      <a href="/merch"><small>08</small>Shop</a>
-      <a href="/dupr"><small>09</small>DUPR games</a>
-      <a href="#contact"><small>10</small>Contact</a>
+      <a href="/first-serve"><small>01</small>The First Serve</a>
+      <a href="/queue"><small>02</small>Join the queue</a>
+      <a href="#live"><small>03</small>Live courts</a>
+      <a href="#nights"><small>04</small>How a night runs</a>
+      <a href="#rules"><small>05</small>Kitchen rules</a>
+      <a href="#hall"><small>06</small>Hall of Glaze</a>
+      <a href="#cup"><small>07</small>The Glaze Cup</a>
+      <a href="/loyalty"><small>08</small>Glaze Card</a>
+      <a href="/merch"><small>09</small>Shop</a>
+      <a href="/dupr"><small>10</small>DUPR games</a>
+      <a href="#contact"><small>11</small>Contact</a>
     </nav>
     <div class="menu-foot"><span class="menu-theme"><small>Appearance</small><span data-theme-slot></span></span><a href="https://www.instagram.com/dinkindonutqa/" target="_blank" rel="noopener">Instagram @dinkindonutqa</a><a href="https://wa.me/97430763431" target="_blank" rel="noopener">WhatsApp +974 3076 3431</a></div>
   </div>
@@ -435,6 +436,22 @@ section.block{padding-block:80px 0}
   <h2 style="font-family:Fredoka,sans-serif;font-size:clamp(34px,6vw,64px);margin:.2em 0 .6em">Something sweet is coming.</h2>
   <video controls playsinline preload="metadata" poster="/assets/video/opening-soon-poster.jpg" style="width:100%;max-width:960px;border-radius:24px;box-shadow:0 24px 60px rgba(59,36,22,.25);background:#3B2416">
     <source src="/assets/video/opening-soon-16x9.mp4" type="video/mp4"></video>
+  <a class="fs-band" href="/first-serve">
+    <img src="/assets/logo.svg" alt="">
+    <span><small>Pre-registration is open</small><b>The First Serve. 48 numbered spots, each with a 1-of-1 sticker.</b></span>
+    <em data-fs-left>Reserve yours</em>
+  </a>
+  <style>
+  .fs-band{max-width:960px;margin:22px auto 0;display:flex;align-items:center;gap:16px;text-align:left;text-decoration:none;padding:14px 14px 14px 18px;border-radius:999px;background:var(--surface);border:1px solid var(--line);transition:transform .3s var(--ease-out,ease),box-shadow .3s}
+  .fs-band:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(59,36,22,.12)}
+  .fs-band img{width:44px;height:44px;flex:none}
+  .fs-band span{flex:1;min-width:0;display:grid;line-height:1.3}
+  .fs-band small{font-size:11px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--glaze)}
+  .fs-band b{font-family:var(--display);font-size:clamp(15px,2vw,19px)}
+  .fs-band em{font-style:normal;flex:none;background:var(--ball);color:var(--choco);font-weight:700;padding:12px 18px;border-radius:999px;font-size:14px;white-space:nowrap}
+  @media (max-width:600px){.fs-band{border-radius:24px;flex-wrap:wrap}.fs-band em{width:100%;text-align:center}}
+  </style>
+  <script>fetch("/api/founders").then(r=>r.json()).then(j=>{if(j&&j.cap!=null)document.querySelectorAll("[data-fs-left]").forEach(e=>e.textContent=j.left?`${j.left} of ${j.cap} left · Reserve`:"Join the waitlist")}).catch(()=>{})</script>
 </section>
 <section class="block wrap" aria-label="Dinkin’ Donut commercial">
     <div class="ad" id="ad">
