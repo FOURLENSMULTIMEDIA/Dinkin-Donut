@@ -4,12 +4,12 @@
 (function () {
   var IMG = {
     "tee-front": [882, 926], "tee-back": [896, 938],
-    "polo-front": [897, 1114], "polo-back": [885, 1108],
+    "polo-front": [991, 1174], "polo-back": [974, 1173],
   };
   // Print zones as fractions of the image (chest = wearer's left, so viewer's right)
   var ZONE = {
     tee: { chest: [0.62, 0.27, 0.11], name: 0.2, num: 0.3, numH: 0.22, tag: 0.86, mid: 0.5 },
-    polo: { chest: [0.66, 0.30, 0.1], name: 0.19, num: 0.3, numH: 0.2, tag: 0.88, mid: 0.5 },
+    polo: { chest: [0.69, 0.37, 0.1], badge: [0.355, 0.375], name: 0.165, num: 0.33, numH: 0.19, tag: 0.9, mid: 0.5 },
   };
   var uid = 0;
   var esc = function (s) { return String(s || "").replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
@@ -22,7 +22,10 @@
     var line = w.numLine || w.tipA || w.trim || w.sash || "#FF5FA2";
     var accent = w.sash2 && w.sash2 !== body ? w.sash2 : w.yoke || w.sash || w.tipA || w.trim || "#FF5FA2";
     if (Math.abs(lum(ink) - lum(body)) < 0.25) ink = lum(body) > 0.5 ? "#3B2416" : "#FFF6EA";
-    return { body: body, ink: ink, line: line, accent: accent };
+    var panel = w.sash || w.yoke || w.tipA || "#FFF6EA";
+    if (panel.toLowerCase() === body.toLowerCase()) panel = lum(body) > 0.5 ? "#3B2416" : "#FFF6EA";
+    var pipe = w.sash2 || w.pipe || w.tipB || w.numLine || accent;
+    return { body: body, ink: ink, line: line, accent: accent, panel: panel, pipe: pipe };
   }
 
   function render(kind, o, ways) {
@@ -40,15 +43,36 @@
     // everything blends inside one isolated group, then the shirt silhouette cuts it out (clean dyed edges)
     s += '<g mask="url(#' + id + 'm)" style="isolation:isolate"><rect width="' + W + '" height="' + H + '" fill="#fff"/>';
     s += '<image href="' + src + '" xlink:href="' + src + '" width="' + W + '" height="' + H + '"/>';
-    s += '<rect width="' + W + '" height="' + H + '" fill="' + c.body + '" style="mix-blend-mode:multiply"/>';
+    var P = function (pts) { return pts.map(function (v, i) { return (i % 2 ? v * H : v * W).toFixed(1); }).join(" "); };
+    s += '<g style="mix-blend-mode:multiply"><rect width="' + W + '" height="' + H + '" fill="' + c.body + '"/>';
+    if (kind === "polo") {
+      if (!back) {
+        // shoulders + sleeves + chest wings, with the collar and placket left in the body colour
+        s += '<path fill="' + c.panel + '" d="M' + P([.38, .02]) + ' L' + P([.1, .1]) + ' L' + P([-.06, .25]) + ' L' + P([-.02, .44]) + ' L' + P([.21, .52]) + ' L' + P([.215, .315]) + ' Q' + P([.34, .29]) + ' ' + P([.41, .15]) + ' Z"/>';
+        s += '<path fill="' + c.panel + '" d="M' + P([.64, .02]) + ' L' + P([.9, .1]) + ' L' + P([1.06, .25]) + ' L' + P([1.03, .46]) + ' L' + P([.815, .47]) + ' L' + P([.795, .315]) + ' Q' + P([.66, .29]) + ' ' + P([.6, .15]) + ' Z"/>';
+      } else {
+        s += '<path fill="' + c.panel + '" d="M' + P([.33, 0]) + ' L' + P([.08, .1]) + ' L' + P([-.06, .25]) + ' L' + P([-.02, .44]) + ' L' + P([.2, .52]) + ' L' + P([.2, .33]) + ' Q' + P([.5, .2]) + ' ' + P([.8, .33]) + ' L' + P([.8, .52]) + ' L' + P([1.02, .44]) + ' L' + P([1.06, .25]) + ' L' + P([.92, .1]) + ' L' + P([.68, 0]) + ' Z"/>';
+      }
+    }
+    s += '</g>';
+    if (kind === "polo") {
+      var sw = (W * 0.006).toFixed(1);
+      s += back ? '<path fill="none" stroke="' + c.pipe + '" stroke-width="' + sw + '" d="M' + P([.2, .335]) + ' Q' + P([.5, .205]) + ' ' + P([.8, .335]) + '"/>'
+        : '<path fill="none" stroke="' + c.pipe + '" stroke-width="' + sw + '" d="M' + P([.215, .32]) + ' Q' + P([.34, .295]) + ' ' + P([.412, .155]) + ' M' + P([.79, .32]) + ' Q' + P([.66, .295]) + ' ' + P([.598, .155]) + '"/>';
+      // tipped cuffs: two thin stripes on each sleeve end
+      [[[.0, .405], [.205, .455]], [[1.0, .405], [.795, .455]]].forEach(function (cf) {
+        [0, .014].forEach(function (dy) { s += '<path stroke="' + (dy ? c.pipe : c.body) + '" stroke-width="' + (W * 0.007).toFixed(1) + '" d="M' + P([cf[0][0], cf[0][1] + dy]) + ' L' + P([cf[1][0], cf[1][1] + dy]) + '"/>'; });
+      });
+    }
     // 3) the print, inside the shirt only
     s += '<g><g filter="url(#' + id + 'ink)">';
     // The Kitchen Line: one stripe at the height of the 7 ft non-volley line, front and back.
     // 1-of-1: a single pickleball sits on the line, at a spot set by the player's name.
     var r = rng(code + (o.name || "")), ly = H * (back ? 0.68 : 0.7), lh = H * 0.02, gold = "url(#" + id + "g)", line = o.edition ? gold : c.accent;
-    s += '<rect x="0" y="' + ly.toFixed(1) + '" width="' + W + '" height="' + lh.toFixed(1) + '" fill="' + line + '"/>';
-    s += '<rect x="0" y="' + (ly + lh * 1.7).toFixed(1) + '" width="' + W + '" height="' + (lh * 0.18).toFixed(1) + '" fill="' + c.ink + '" opacity=".55"/>';
-    s += '<text x="' + (W * (back ? 0.27 : 0.73)).toFixed(1) + '" y="' + (ly + lh * 0.72).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (lh * 0.62).toFixed(1) + '" letter-spacing="' + (lh * 0.22).toFixed(1) + '" fill="' + c.ink + '" opacity=".8">NON-VOLLEY · 7 FT</text>';
+    var kl = back || kind !== "polo";
+    if (kl) s += '<rect x="0" y="' + ly.toFixed(1) + '" width="' + W + '" height="' + lh.toFixed(1) + '" fill="' + line + '"/>';
+    if (kl) s += '<rect x="0" y="' + (ly + lh * 1.7).toFixed(1) + '" width="' + W + '" height="' + (lh * 0.18).toFixed(1) + '" fill="' + c.ink + '" opacity=".55"/>';
+    if (kl) s += '<text x="' + (W * (back ? 0.27 : 0.73)).toFixed(1) + '" y="' + (ly + lh * 0.72).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (lh * 0.62).toFixed(1) + '" letter-spacing="' + (lh * 0.22).toFixed(1) + '" fill="' + c.ink + '" opacity=".8">NON-VOLLEY · 7 FT</text>';
     if (back) {
       var bx = W * (0.5 + (r() - 0.5) * 0.36), br = lh * 1.05, holes = "";
       for (var k = 0; k < 6; k++) { var an = k * 60 + r() * 20, rr = br * 0.55; holes += '<circle cx="' + (Math.cos(an * Math.PI / 180) * rr).toFixed(1) + '" cy="' + (Math.sin(an * Math.PI / 180) * rr).toFixed(1) + '" r="' + (br * 0.13).toFixed(1) + '"/>'; }
@@ -57,12 +81,19 @@
     if (!back) {
       var cx = W * z.chest[0], cy = H * z.chest[1], cw = W * z.chest[2];
       s += '<image href="/assets/logo.svg" xlink:href="/assets/logo.svg" x="' + (cx - cw / 2).toFixed(1) + '" y="' + (cy - cw / 2).toFixed(1) + '" width="' + cw.toFixed(1) + '" height="' + cw.toFixed(1) + '"/>';
-      s += '<text x="' + cx.toFixed(1) + '" y="' + (cy + cw * 0.78).toFixed(1) + '" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (cw * 0.2).toFixed(1) + '" fill="' + c.ink + '" letter-spacing="1">DINKIN’ DONUT</text>';
+      if (kind !== "polo") s += '<text x="' + cx.toFixed(1) + '" y="' + (cy + cw * 0.78).toFixed(1) + '" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (cw * 0.2).toFixed(1) + '" fill="' + c.ink + '" letter-spacing="1">DINKIN’ DONUT</text>';
+      if (kind === "polo" && z.badge) {
+        var bx2 = W * z.badge[0], by2 = H * z.badge[1];
+        s += '<text x="' + bx2.toFixed(1) + '" y="' + by2.toFixed(1) + '" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (W * 0.026).toFixed(1) + '" fill="' + c.ink + '" letter-spacing="1">DINKIN’ DONUT</text>';
+        s += '<text x="' + bx2.toFixed(1) + '" y="' + (by2 + W * 0.03).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.015).toFixed(1) + '" fill="' + c.ink + '" opacity=".8" letter-spacing="3">PICKLEBALL CLUB</text>';
+        s += '<rect x="' + (bx2 - W * 0.07).toFixed(1) + '" y="' + (by2 + W * 0.044).toFixed(1) + '" width="' + (W * 0.14).toFixed(1) + '" height="' + (W * 0.004).toFixed(1) + '" fill="' + c.pipe + '"/>';
+      }
       if (o.edition) { var lw = W * 0.11, lx = W * 0.3, lyy = H * 0.86; s += '<g transform="translate(' + lx.toFixed(1) + " " + lyy.toFixed(1) + ')"><rect x="' + (-lw / 2) + '" y="' + (-lw * 0.2) + '" width="' + lw + '" height="' + lw * 0.4 + '" rx="' + lw * 0.06 + '" fill="' + gold + '"/><text y="' + (lw * 0.09).toFixed(1) + '" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (lw * 0.22).toFixed(1) + '" fill="#3B2416" letter-spacing="1">THE 20</text></g>'; }
-      if (o.print === "club" || o.tag) s += '<text x="' + cx.toFixed(1) + '" y="' + (cy + cw * 1.02).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (cw * 0.13).toFixed(1) + '" fill="' + c.ink + '" opacity=".75" letter-spacing="3">' + esc(o.tag || "DOHA") + "</text>";
+      if (o.print === "club" || o.tag) s += '<text x="' + cx.toFixed(1) + '" y="' + (cy + (kind === "polo" ? cw * 0.8 : cw * 1.02)).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (cw * 0.13).toFixed(1) + '" fill="' + c.ink + '" opacity=".75" letter-spacing="3">' + esc(o.tag || "DOHA") + "</text>";
     } else {
       var name = String(o.name || "").toUpperCase().slice(0, 12), num = String(o.num == null ? "" : o.num).slice(0, 2), mid = W * z.mid;
-      if (name) s += '<text x="' + mid + '" y="' + (H * z.name).toFixed(1) + '" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (W * (name.length > 8 ? 0.05 : 0.058)).toFixed(1) + '" fill="' + c.ink + '" letter-spacing="' + (W * 0.016).toFixed(1) + '">' + esc(name) + "</text>";
+      var nameInk = kind === "polo" ? (Math.abs(lum(c.panel) - lum(c.body)) > 0.3 ? c.body : (lum(c.panel) > 0.5 ? "#3B2416" : "#FFF6EA")) : c.ink;
+      if (name) s += '<text x="' + mid + '" y="' + (H * z.name).toFixed(1) + '" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (W * (name.length > 8 ? 0.05 : 0.058)).toFixed(1) + '" fill="' + nameInk + '" letter-spacing="' + (W * 0.016).toFixed(1) + '">' + esc(name) + "</text>";
       if (num) s += '<text x="' + mid + '" y="' + (H * (z.num + z.numH * 0.62)).toFixed(1) + '" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (H * z.numH).toFixed(1) + '" fill="' + c.ink + '" stroke="' + c.line + '" stroke-width="' + (W * 0.012).toFixed(1) + '" paint-order="stroke" stroke-linejoin="round">' + esc(num) + "</text>";
       if (!name && !num) s += '<image href="/assets/logo.svg" xlink:href="/assets/logo.svg" x="' + (mid - W * 0.14) + '" y="' + (H * 0.26) + '" width="' + W * 0.28 + '" height="' + W * 0.28 + '"/>';
       var ty = H * z.tag, tw = W * 0.26, th = H * 0.034;
