@@ -23,6 +23,10 @@
     serveThru: { lean: 6, tF: 18, tB: -14, kF: 20, kB: 18, sh: 80, el: 14, wr: 0, pd: 100, off: 40, oel: 80 },
     block: { lean: 16, tF: 28, tB: -16, kF: 44, kB: 38, sh: 58, el: 70, wr: 0, pd: 60, off: 30, oel: 70 },
     attackBack: { lean: 16, tF: 26, tB: -14, kF: 38, kB: 32, sh: 40, el: 110, wr: -20, pd: 70, off: 30, oel: 70 },
+    bhBack: { lean: 20, tF: 28, tB: -16, kF: 46, kB: 40, sh: 25, el: -95, wr: 0, pd: 150, off: 50, oel: 40 },
+    bhThru: { lean: 20, tF: 28, tB: -16, kF: 46, kB: 40, sh: 60, el: -25, wr: 0, pd: 120, off: 30, oel: 50 },
+    overBack: { lean: -6, tF: 14, tB: -16, kF: 14, kB: 16, sh: 165, el: 70, wr: 0, pd: 40, off: 140, oel: 10 },
+    overThru: { lean: 16, tF: 22, tB: -12, kF: 24, kB: 20, sh: 95, el: 10, wr: 20, pd: 20, off: 40, oel: 40 },
     attackThru: { lean: 20, tF: 26, tB: -14, kF: 38, kB: 32, sh: 75, el: 30, wr: 20, pd: 70, off: 30, oel: 70 },
   };
   function mixPose(a, b, t) { var o = {}; for (var k in a) o[k] = lerp(a[k], b[k] != null ? b[k] : a[k], t); return o; }
@@ -84,6 +88,13 @@
       for (var i = 1; i < 9; i++) line([X(-0.06), Y(nh * i / 9)], [X(0.06), Y(nh * i / 9)], 0.6, "rgba(255,255,255,.2)");
       line([X(0), Y(0)], [X(0), Y(36 / 12)], 2.4, "rgba(240,240,240,.8)");
       line([X(-0.25), Y(nh)], [X(0.25), Y(nh)], 3, "rgba(255,255,255,.95)");
+      if (sc.labels !== false && cam.z < 1.6) {
+        ctx.save(); ctx.globalAlpha = 0.55 * k; ctx.fillStyle = "#ECF0F6"; ctx.font = "600 10px ui-monospace, Menlo, monospace"; ctx.textAlign = "center";
+        ctx.fillText("NET", X(0), Y(36 / 12) - 10);
+        var xl = cam.x + (-0.3 * W) / S(), xr = cam.x + (0.3 * W) / S();
+        if (xl < -1) ctx.fillText("YOUR SIDE", X(xl), g + 34); if (xr > 1) ctx.fillText("THEIR SIDE", X(xr), g + 34);
+        ctx.restore();
+      }
     }
 
     function drawFigure(J, alpha, ghost) {
@@ -157,8 +168,35 @@
       ctx.restore();
     }
 
+    // top-down court map: 44 ft long (x, -22..22) × 20 ft wide (y, -10..10), net at x = 0
+    function drawMap(c, k) {
+      var pw = Math.min(W * 0.62, 340), ph = pw * 0.58, px = W * (c.pos ? c.pos[0] : 0.5) - pw / 2, py = H * (c.pos ? c.pos[1] : 0.2);
+      var mx = function (x) { return px + 14 + (x + 22) / 44 * (pw - 28); }, my = function (y) { return py + 12 + (y + 14) / 28 * (ph - 24); };
+      ctx.save(); ctx.globalAlpha = clamp(k * 4, 0, 1);
+      ctx.fillStyle = "rgba(10,11,13,.94)"; ctx.strokeStyle = "rgba(236,240,246,.3)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(px, py, pw, ph, 10); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = "rgba(215,240,60,.1)"; ctx.fillRect(mx(-7), my(-10), mx(7) - mx(-7), my(10) - my(-10));
+      ctx.strokeStyle = "rgba(236,240,246,.7)"; ctx.strokeRect(mx(-22), my(-10), mx(22) - mx(-22), my(10) - my(-10));
+      [-7, 7].forEach(function (x) { line([mx(x), my(-10)], [mx(x), my(10)], 1, "rgba(236,240,246,.6)"); });
+      line([mx(-22), my(0)], [mx(-7), my(0)], 1, "rgba(236,240,246,.6)"); line([mx(7), my(0)], [mx(22), my(0)], 1, "rgba(236,240,246,.6)");
+      line([mx(0), my(-11.2)], [mx(0), my(11.2)], 2.4, "#ECF0F6"); ctx.fillStyle = "#ECF0F6"; [-11.2, 11.2].forEach(function (y) { ctx.beginPath(); ctx.arc(mx(0), my(y), 3, 0, 7); ctx.fill(); });
+      ctx.fillStyle = "rgba(236,240,246,.5)"; ctx.font = "600 9px ui-monospace, Menlo, monospace"; ctx.fillText("TOP VIEW", px + 10, py + ph - 6);
+      (c.paths || []).forEach(function (pp, n) {
+        var prog = clamp((k - (pp.t0 || 0)) / ((pp.t1 || 1) - (pp.t0 || 0)), 0, 1); if (prog <= 0) return;
+        var pts = pp.pts.map(function (q) { return [mx(q[0]), my(q[1])]; }), segs = pts.length - 1, upto = prog * segs;
+        ctx.strokeStyle = pp.col || PINK; ctx.lineWidth = 2.2; if (pp.dash) ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]);
+        var end = pts[0];
+        for (var i2 = 1; i2 <= segs; i2++) { var f = clamp(upto - (i2 - 1), 0, 1); if (f <= 0) break; end = [lerp(pts[i2 - 1][0], pts[i2][0], f), lerp(pts[i2 - 1][1], pts[i2][1], f)]; ctx.lineTo(end[0], end[1]); }
+        ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = pp.col || PINK; ctx.beginPath(); ctx.arc(end[0], end[1], pp.ball ? 4 : 5, 0, 7); ctx.fill();
+        if (pp.label && prog > 0.2) { ctx.font = "700 9px ui-monospace, Menlo, monospace"; ctx.fillText(pp.label, end[0] + 7, end[1] - 6); }
+      });
+      (c.dots || []).forEach(function (d) { ctx.fillStyle = d.col || "#ECF0F6"; ctx.beginPath(); ctx.arc(mx(d.at[0]), my(d.at[1]), 5, 0, 7); ctx.fill(); if (d.label) { ctx.font = "700 9px ui-monospace, Menlo, monospace"; ctx.fillText(d.label, mx(d.at[0]) + 7, my(d.at[1]) + 3); } });
+      if (c.label) { ctx.fillStyle = "rgba(236,240,246,.9)"; ctx.font = "700 10px ui-monospace, Menlo, monospace"; ctx.fillText(c.label, px + 10, py - 8); }
+      ctx.restore();
+    }
     function drawCallout(c, k, J) {
       if (!c) return;
+      if (c.kind === "map") return drawMap(c, k);
       var anchor = c.at === "paddle" && J ? pt([(J.pBase[0] + J.pTip[0]) / 2, (J.pBase[1] + J.pTip[1]) / 2]) : c.at === "wrist" && J ? pt(J.wrist) : c.at === "shoulder" && J ? pt(J.shoulder) : pt(c.at || [0, 3]);
       var r = Math.min(W, H) * 0.12, cx = c.pos ? W * c.pos[0] : anchor[0] - r * 1.6, cy = c.pos ? H * c.pos[1] : anchor[1] - r * 1.4, a = clamp(k * 3, 0, 1);
       ctx.save(); ctx.globalAlpha = a;
@@ -212,6 +250,31 @@
       ctx.restore();
     }
 
+    function chip(sc, i, k) {
+      var tags = { dont: ["\u2717 DON\u2019T", "#FF4D86"], do: ["\u2713 DO", "#D7F03C"], why: ["WHY", "#ECF0F6"], rule: ["RULE", "#F2C14E"], tip: ["PRO TIP", "#8FD3FF"] };
+      var tg = tags[sc.tag], txt = String(i + 1).padStart(2, "0") + " / " + String(scenes.length).padStart(2, "0");
+      ctx.save(); ctx.globalAlpha = clamp(k * 5, 0, 1); ctx.font = "700 11px ui-monospace, Menlo, monospace";
+      var w1 = ctx.measureText(txt).width + 18, x = W - w1 - 14, y = 14;
+      if (tg) { var w2 = ctx.measureText(tg[0]).width + 18; x -= w2 + 6; ctx.fillStyle = tg[1]; ctx.beginPath(); ctx.roundRect(x + w1 + 6, y, w2, 24, 12); ctx.fill(); ctx.fillStyle = "#08090B"; ctx.fillText(tg[0], x + w1 + 15, y + 16); }
+      ctx.strokeStyle = "rgba(236,240,246,.3)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x, y, w1, 24, 12); ctx.stroke(); ctx.fillStyle = "rgba(236,240,246,.8)"; ctx.fillText(txt, x + 9, y + 16);
+      ctx.restore();
+    }
+    function tagAt(p, text, col, dx, dy) {
+      var x = p[0] + dx, y = p[1] + dy; ctx.save(); ctx.font = "700 10px ui-monospace, Menlo, monospace";
+      var w = ctx.measureText(text).width + 12; ctx.strokeStyle = col; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(x, y); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = "rgba(8,9,11,.9)"; ctx.beginPath(); ctx.roundRect(x - (dx < 0 ? w : 0), y - 10, w, 20, 4); ctx.fill(); ctx.strokeStyle = col; ctx.stroke();
+      ctx.fillStyle = col; ctx.fillText(text, x - (dx < 0 ? w : 0) + 6, y + 4); ctx.restore();
+    }
+    // the paddle's path between the two poses, drawn as it happens with an arrowhead
+    function swingPath(pa, pb, x, dir, prog, col) {
+      var pts = []; for (var i = 0; i <= 16; i++) { var J = skeleton(mixPose(pa, pb, ease(i / 16)), x, dir); pts.push(pt([(J.pBase[0] + J.pTip[0]) / 2, (J.pBase[1] + J.pTip[1]) / 2])); }
+      var n = Math.max(1, Math.round(16 * prog));
+      ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.globalAlpha = 0.9; ctx.beginPath();
+      for (var j = 0; j <= n; j++) j ? ctx.lineTo(pts[j][0], pts[j][1]) : ctx.moveTo(pts[j][0], pts[j][1]); ctx.stroke(); ctx.setLineDash([]);
+      var a = pts[n], b = pts[Math.max(0, n - 1)], ang = Math.atan2(a[1] - b[1], a[0] - b[0]);
+      ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(a[0] + Math.cos(ang) * 8, a[1] + Math.sin(ang) * 8); ctx.lineTo(a[0] + Math.cos(ang + 2.5) * 8, a[1] + Math.sin(ang + 2.5) * 8); ctx.lineTo(a[0] + Math.cos(ang - 2.5) * 8, a[1] + Math.sin(ang - 2.5) * 8); ctx.fill();
+      ctx.restore();
+    }
     function frame(time) {
       if (!lesson) return;
       var sc = scenes[0], acc = 0, i = 0;
@@ -229,12 +292,18 @@
         var J = skeleton(mixPose(pa, pb, ease(pk)), pl.x != null ? pl.x : -9, pl.dir || 1);
         if (pl.ghost) drawFigure(skeleton(pa, pl.x != null ? pl.x : -9, pl.dir || 1), 0.18, true);
         drawFigure(J, pl.dim ? 0.45 : 1);
+        if (pl.to && pl.to !== pl.from && pl.path !== false && !pl.dim) swingPath(pa, pb, pl.x != null ? pl.x : -9, pl.dir || 1, ease(pk), sc.tag === "dont" ? PINK : LIME);
+        var lbl = pl.label || ((sc.players || []).length > 1 ? (pl.dim ? "THEM" : "YOU") : "");
+        if (lbl && cam.z < 1.6) { var hp = pt(J.head); ctx.save(); ctx.font = "700 10px ui-monospace, Menlo, monospace"; ctx.textAlign = "center"; ctx.fillStyle = pl.dim ? "rgba(236,240,246,.55)" : LIME; ctx.fillText(lbl, hp[0], hp[1] - S() * 0.6 - 6); ctx.restore(); }
         if (n === 0) Jmain = J;
       });
+      if (Jmain && sc.joints) { var jt = { shoulder: ["SHOULDER", -1, -0.9], elbow: ["ELBOW", -1, 0.5], wrist: ["WRIST", 1, 0.9], knee: ["KNEES", -1, 0.2], paddle: ["PADDLE FACE", 1, -0.6] };
+        sc.joints.forEach(function (j) { var d = jt[j]; if (!d) return; var p = j === "knee" ? pt(Jmain.kneeF) : j === "paddle" ? pt([(Jmain.pBase[0] + Jmain.pTip[0]) / 2, (Jmain.pBase[1] + Jmain.pTip[1]) / 2]) : pt(Jmain[j]); ctx.globalAlpha = clamp(k * 4, 0, 1); tagAt(p, d[0], j === sc.focus ? LIME : "rgba(236,240,246,.85)", d[1] * Math.min(W, H) * 0.12, d[2] * S() * 0.8); ctx.globalAlpha = 1; }); }
       drawBall(sc.ball, k);
       drawHud(sc.hud, k);
       drawCallout(sc.callout, clamp((k - (sc.callout && sc.callout.t0 || 0.15)) / 0.85, 0, 1), Jmain);
       if (sc.note) { ctx.fillStyle = "rgba(236,240,246,.4)"; ctx.font = "500 10px ui-monospace, Menlo, monospace"; ctx.fillText(sc.note, W * 0.05, H * 0.975); }
+      chip(sc, i, k);
       drawCaption(sc.cap, k);
       if (onTick) onTick(t, total, i);
     }

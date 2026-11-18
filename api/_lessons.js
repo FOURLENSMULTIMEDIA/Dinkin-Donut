@@ -126,10 +126,170 @@ const LESSONS = [
   },
 ];
 
+
+// ---- lessons 9-14 ----
+const MAP = (paths, dots, label, pos) => ({ kind: "map", paths, dots, label, pos: pos || [0.5, 0.1], t0: 0 });
+LESSONS.push(
+  {
+    id: "scoring", title: "Calling the Score", level: "Foundation", mins: 2,
+    summary: "Doubles scoring made simple: three numbers, side-out scoring and where the server stands.",
+    keys: ["Doubles score has three numbers: serving team, receiving team, server (1 or 2).", "Only the serving team can score.", "A game starts at 0-0-2.", "Serving team's score even: the first server serves from the right side. Odd: from the left.", "Games are usually to 11, win by 2."],
+    drills: [["Call it out", "Play a practice game where the server must call the full score before every serve."], ["Where do I stand?", "Partner calls a random score; you walk to the correct serving side in 3 seconds."]],
+    mistakes: [["Calling only two numbers", "In doubles, the server number matters."], ["Wrong side", "Serving from the wrong side is a fault if caught before the next serve."], ["Receiving team 'scoring'", "Rally won by the receivers = side out or second server, never a point."]],
+    quiz: [["What does 4-2-1 mean?", ["Serving team 4, receiving 2, first server", "Serving 2, receiving 4", "4 games to 2"], 0], ["Can the receiving team win a point?", ["Yes, every rally", "No, only the serving team scores"], 1], ["What score does a game start at?", ["0-0-1", "0-0-2", "0-0"], 1]],
+    scenes: [
+      { dur: 4.5, cam: SIDE, tag: "rule", cap: "In doubles, the score has *three* numbers.", hud: [["SERVING TEAM", 4, ""], ["RECEIVING TEAM", 2, ""], ["SERVER", 1, ""]], players: [{ x: -21, from: "stand", label: "SERVER" }, opp("ready", 21)] },
+      { dur: 4.5, cam: SIDE, tag: "rule", cap: "Only the *serving* team scores. Win a rally while receiving, and you earn the serve.", players: [{ x: -21, from: "ready" }, opp("ready", 21)], hud: [["SERVING TEAM", 5, ""], ["RECEIVING TEAM", 2, ""], ["SERVER", 1, ""]] },
+      { dur: 4.5, cam: SIDE, tag: "why", cap: "The game starts at 0-0-*2.* The first serving team gets only one server.", hud: [["SERVING TEAM", 0, ""], ["RECEIVING TEAM", 0, ""], ["SERVER", 2, ""]], players: [{ x: -21, from: "stand" }, opp("ready", 21)] },
+      { dur: 5, cam: SIDE, tag: "rule", cap: "Your score *even?* The first server serves from the right. Odd: from the left.", players: [{ x: -21, from: "stand" }], callout: MAP([{ pts: [[-21, 5], [12, -5]], col: "#FF4D86", label: "SERVE", t0: 0.3, t1: 0.9 }], [{ at: [-21, 5], col: "#D7F03C", label: "EVEN" }, { at: [-21, -5], col: "rgba(236,240,246,.5)", label: "ODD" }], "WHERE THE FIRST SERVER STANDS") },
+      { dur: 4, cam: SIDE, tag: "tip", cap: "Call the *whole* score before every serve. Loud and clear.", players: [{ x: -21, from: "serveBack" }, opp("ready", 21)] },
+    ],
+  },
+  {
+    id: "shadow", title: "Moving as a Team", level: "Intermediate", mins: 2,
+    summary: "Shadow your partner: move together side to side and front to back, and own the middle.",
+    keys: ["Stay about 10 ft apart, like you're tied with a rope.", "Move together toward the side the ball goes to.", "Move up together, move back together.", "The middle: the forehand usually takes it; call 'mine' early."],
+    drills: [["Rope drill", "Hold a 10 ft rope with your partner and move to a coach's pointing. Keep it taut, never slack."], ["Middle calls", "Coach feeds down the middle; the forehand player calls and hits. 20 reps."]],
+    mistakes: [["Gap down the middle", "Both players stay wide: easy winner through the middle."], ["One up, one back", "Diagonal gap: the opponents hit to the open angle."]],
+    quiz: [["The ball goes to your partner's sideline. What do you do?", ["Stay where you are", "Shift toward it with your partner"], 1], ["Who usually takes a ball down the middle?", ["The forehand", "Whoever is taller", "Nobody"], 0]],
+    scenes: [
+      { dur: 5, cam: SIDE, tag: "dont", cap: "Two players standing still leave a *gap* in the middle.", players: [{ x: -8, from: "ready" }, opp("ready", 8)], callout: MAP([{ pts: [[7, 2], [-12, 0]], col: "#FF4D86", label: "WINNER", ball: true, t0: 0.3, t1: 0.9 }], [{ at: [-8, 7], label: "YOU" }, { at: [-8, -7], label: "PARTNER" }], "THE GAP") },
+      { dur: 5.5, cam: SIDE, tag: "do", cap: "Shadow each other. The ball goes *wide,* you both shift.", players: [{ x: -8, from: "ready" }, opp("dinkThru", 8)], callout: MAP([{ pts: [[-8, 7], [-8, 8.5]], col: "#D7F03C", label: "YOU", t0: 0.2, t1: 0.7 }, { pts: [[-8, -3], [-8, 1.5]], col: "#D7F03C", label: "PARTNER", t0: 0.2, t1: 0.7 }, { pts: [[7, 3], [-6, 9]], col: "#FF4D86", ball: true, t0: 0, t1: 0.5 }], [], "SHIFT TOGETHER") },
+      { dur: 5, cam: SIDE, tag: "do", cap: "Move *up* together and back together. About 10 feet apart.", players: [{ x: -8, from: "ready" }], hud: [["PARTNER SPACING", 10, "FT"]], callout: MAP([{ pts: [[-18, 5], [-8, 5]], col: "#D7F03C", t0: 0, t1: 0.7 }, { pts: [[-18, -5], [-8, -5]], col: "#D7F03C", t0: 0, t1: 0.7 }], [], "UP AS ONE", [0.5, 0.26]) },
+      { dur: 4.5, cam: SIDE, tag: "tip", cap: "Ball down the middle? The *forehand* takes it. Call 'mine' early.", players: [{ x: -8, from: "attackBack", to: "attackThru" }, opp("block", 8)] },
+    ],
+  },
+  {
+    id: "backhand", title: "The Backhand Dink", level: "Intermediate", mins: 2,
+    summary: "A calm, repeatable backhand dink: shoulder turn, set face, push from the shoulder.",
+    keys: ["Turn your shoulders so your paddle starts across your body.", "Paddle face slightly open and set before contact.", "Push from the shoulder; the elbow leads, the wrist stays quiet.", "Contact out in front of your body."],
+    drills: [["Backhand-only dinks", "Cross-court dinks hitting only backhands. 50 in a row into the kitchen."], ["Mirror check", "Shadow the swing in a mirror: no wrist flick, face stays set."]],
+    mistakes: [["Running around the backhand", "You leave the middle open."], ["Contact too late", "The ball beside your hip goes wide."], ["Wrist flick", "Same problem as the forehand: random height."]],
+    quiz: [["Where should backhand contact be?", ["Out in front", "Beside your hip", "Behind you"], 0], ["What leads the backhand dink?", ["The wrist", "The shoulder and elbow"], 1]],
+    scenes: [
+      { dur: 4.5, cam: CLOSE, tag: "do", cap: "Turn your *shoulders.* The paddle starts across your body.", players: [{ x: -8.5, from: "ready", to: "bhBack" }], joints: ["shoulder", "elbow"], focus: "shoulder" },
+      { dur: 4.5, cam: CLOSE, tag: "do", cap: "Set the paddle face, slightly *open,* before contact.", players: [{ x: -8.5, from: "bhBack" }], callout: { kind: "push", at: "paddle", label: "SET FACE", pos: [0.74, 0.3] } },
+      { dur: 4.5, cam: CLOSE, tag: "do", cap: "*Push* from the shoulder. The elbow leads, the wrist stays quiet.", players: [{ x: -8.5, from: "bhBack", to: "bhThru", ghost: true }], joints: ["elbow", "wrist"], focus: "elbow" },
+      { dur: 5, cam: SIDE, kitchen: "right", tag: "why", cap: "Contact *in front,* and the ball floats low into their kitchen.", players: [{ x: -7.6, from: "bhBack", to: "bhThru", t0: 0, t1: 0.3 }, opp("ready", 7.6)], ball: { from: [-6.6, 1.3], to: [4.4, 0], apex: 3.8, apexAt: 0.4, t0: 0.2, t1: 0.95, showApex: true, bounce: true } },
+    ],
+  },
+  {
+    id: "lob", title: "The Lob & the Overhead", level: "Advanced", mins: 2,
+    summary: "When a lob works, how high and how deep, and how to put away a lob that comes back at you.",
+    keys: ["Lob when opponents are leaning in at the kitchen line.", "Get it high enough to clear their reach and land deep.", "A short lob is a gift: they smash it.", "Overhead: turn sideways, point at the ball, hit down and through."],
+    drills: [["Deep lob target", "Towel 3 ft inside the baseline. 20 lobs from the kitchen line; count hits."], ["Point and smash", "Partner feeds lobs; point with your free hand, smash at their feet."]],
+    mistakes: [["Lobbing a player who's back", "They have time to set up."], ["Short lobs", "Easy overhead for them."], ["Backpedalling square to the net", "You fall over. Turn and shuffle."]],
+    quiz: [["Best time to lob?", ["When they lean in at the kitchen", "When they are at the baseline"], 0], ["On an overhead, what does your free hand do?", ["Points at the ball", "Stays in your pocket"], 0]],
+    scenes: [
+      { dur: 5, cam: SIDE, kitchen: "both", tag: "why", cap: "They're leaning *in* at the kitchen line.", players: [{ x: -7.6, from: "ready" }, opp("ready", 7.2)] },
+      { dur: 6, cam: WIDE, tag: "do", cap: "Lift it *high* over their reach, and land it deep.", players: [{ x: -7.6, from: "dropBack", to: "dropThru", t0: 0, t1: 0.25 }, { x: 7.2, dir: -1, from: "ready", to: "overBack", dim: true }], ball: { from: [-6.8, 1.8], to: [19, 0], apex: 16, apexAt: 0.5, t0: 0.15, t1: 0.95, showApex: true, bounce: true } },
+      { dur: 4.5, cam: NEAR, tag: "do", cap: "Lob coming at *you?* Turn sideways and point at the ball.", players: [{ x: -8, from: "ready", to: "overBack" }], joints: ["shoulder"] },
+      { dur: 4.5, cam: SIDE, kitchen: "right", tag: "do", cap: "Then hit *down* and through, at their feet.", players: [{ x: -8, from: "overBack", to: "overThru", t0: 0, t1: 0.3 }, opp("ready", 8)], ball: { from: [-7, 7.6], to: [8.5, 0], apex: 7.7, apexAt: 0.05, t0: 0.2, t1: 0.6, bounce: true } },
+    ],
+  },
+  {
+    id: "erne", title: "The Erne", level: "Advanced", mins: 2,
+    summary: "The legal way to volley right beside the net: go around the kitchen, not through it.",
+    keys: ["An Erne is a volley hit from outside the sideline, beside the kitchen.", "You must not touch the kitchen or its line before, during or after the volley.", "Best against dinks that go down your sideline.", "Jump over the kitchen corner or step around it; land outside the kitchen."],
+    drills: [["Footwork only", "Shadow the path: from the line, step outside the sideline, then volley. No ball, 20 reps."], ["Fed Ernes", "Partner dinks down the line; you Erne it. Start slow."]],
+    mistakes: [["Landing in the kitchen", "Fault, even if the volley wins."], ["Telegraphing", "Moving too early lets them hit cross-court."]],
+    quiz: [["Can you touch the kitchen during an Erne?", ["Yes, if you jump", "No, never"], 1], ["Where do you hit an Erne from?", ["Outside the sideline, beside the kitchen", "Inside the kitchen"], 0]],
+    scenes: [
+      { dur: 5, cam: SIDE, kitchen: "both", tag: "why", cap: "They keep dinking down *your* sideline.", players: [{ x: -7.6, from: "ready" }, { x: 7.6, dir: -1, from: "dinkBack", to: "dinkThru", dim: true }], callout: MAP([{ pts: [[6, 9], [-4, 9.5]], col: "#FF4D86", ball: true, label: "DINK", t0: 0.2, t1: 0.8 }], [{ at: [-8, 7], label: "YOU" }], "DOWN THE LINE") },
+      { dur: 5.5, cam: SIDE, tag: "do", cap: "Step *around* the kitchen, outside the sideline. Never through it.", players: [{ x: -7.6, from: "ready" }], callout: MAP([{ pts: [[-8, 7], [-8, 11], [-1, 11]], col: "#D7F03C", label: "ERNE PATH", t0: 0.1, t1: 0.8 }], [], "AROUND, NOT THROUGH", [0.5, 0.12]) },
+      { dur: 4.5, cam: SIDE, tag: "rule", cap: "Volley it from *outside* the court, right beside the net. Legal.", players: [{ x: -1.2, from: "block", to: "attackThru" }, opp("dinkThru", 7.6)], ball: { from: [6.8, 1], to: [-0.8, 3], apex: 3.5, apexAt: 0.6, t0: 0, t1: 0.5 } },
+      { dur: 4, cam: SIDE, tag: "dont", cap: "Touch the kitchen or its line at any point: *fault.*", players: [{ x: -4, from: "attackThru" }], kitchen: "left" },
+    ],
+  },
+  {
+    id: "atp", title: "Around the Post (ATP)", level: "Advanced", mins: 2,
+    summary: "When the ball pulls you wide, you can hit it around the net post. It doesn't have to go over the net.",
+    keys: ["A ball doesn't have to cross over the net; it can go around the post.", "It can travel below net height.", "Usually off a sharp, wide dink that bounces and pulls you outside the sideline.", "It must still land in the opponent's court."],
+    drills: [["Wide feeds", "Partner feeds very wide dinks; hit around the post into the court. 10 reps each side."], ["Recognise it", "Partner mixes wide and normal dinks; call 'ATP' only on the wide ones."]],
+    mistakes: [["Forcing it", "Only when the ball is well outside the sideline."], ["Aiming over the net", "If you're that wide, the post is your path."]],
+    quiz: [["Does an ATP have to go over the net?", ["Yes", "No, it can go around the post"], 1], ["Can an ATP be lower than the net?", ["Yes", "No"], 0]],
+    scenes: [
+      { dur: 5, cam: SIDE, tag: "why", cap: "A sharp, wide dink pulls you *outside* the sideline.", players: [{ x: -7.6, from: "ready" }, { x: 7.6, dir: -1, from: "dinkBack", to: "dinkThru", dim: true }], callout: MAP([{ pts: [[6, 4], [-4, 10.5], [-9, 13]], col: "#FF4D86", ball: true, label: "WIDE DINK", t0: 0.1, t1: 0.9 }], [], "PULLED WIDE") },
+      { dur: 5.5, cam: SIDE, tag: "rule", cap: "Hit it *around* the post. It doesn't have to go over the net.", players: [{ x: -7.6, from: "attackBack", to: "attackThru" }], callout: MAP([{ pts: [[-9, 13], [0, 12.4], [9, 5]], col: "#D7F03C", ball: true, label: "AROUND THE POST", t0: 0.15, t1: 0.9 }], [], "LEGAL", [0.5, 0.12]) },
+      { dur: 4.5, cam: SIDE, tag: "tip", cap: "It can even stay *below* net height. It just has to land in.", players: [{ x: -7.6, from: "attackThru" }, opp("ready", 7.6)], hud: [["NET HEIGHT, POST", 36, "IN"], ["ATP HEIGHT LIMIT", 0, "NONE"]] },
+    ],
+  }
+);
+
+// Visual teaching cues for lessons 1-8: DO / DON'T steps and body-part tags
+const CUES = {
+  dink: [["dont"], ["dont", ["wrist"], "wrist"], ["dont"], ["do", ["paddle"]], ["do", ["shoulder", "wrist"], "shoulder"], ["rule"], ["do"], ["why"], ["why"], ["do"]],
+  drop: [["why"], ["dont"], ["do", ["shoulder", "paddle"], "shoulder"], ["do"], ["tip"], ["why"]],
+  ready: [["dont"], ["do", ["knee"], "knee"], ["do", ["paddle"]], ["tip"]],
+  kitchen: [["rule"], ["rule"], ["rule"], ["do"], ["tip"]],
+  serve: [["rule", ["shoulder"]], ["rule"], ["tip"]],
+  twobounce: [["rule"], ["rule"], ["tip"]],
+  reset: [["why"], ["do", ["wrist", "paddle"], "wrist"], ["do"], ["tip"]],
+  speedup: [["do"], ["do"], ["dont"], ["tip"]],
+};
+LESSONS.forEach(l => (CUES[l.id] || []).forEach((c, i) => { const sc = l.scenes[i]; if (!sc) return; sc.tag = sc.tag || c[0]; if (c[1]) sc.joints = c[1]; if (c[2]) sc.focus = c[2]; }));
+
+// Coach Notes: for you and your team only (how to teach each lesson)
+const NOTES = {
+  dink: { cues: ["'Lift, don't flick.'", "'Peak on our side.'", "Grip: 'hold it like a tube of toothpaste you don't want to squeeze.'"], plan: ["5 min shadow swings, wrist held by the off hand", "10 min cross-court dinks, apex towel drill", "5 min dink game to 5, kitchen only"] },
+  drop: { cues: ["'Lift and follow.'", "'Peak on our side, drop into theirs.'"], plan: ["5 min drops from the transition zone", "10 min baseline drops with a step-in after each", "5 min 'drop and come in' points"] },
+  ready: { cues: ["'Paddle up, knees soft.'", "'Hop when they hit.'"], plan: ["5 min freeze drill", "5 min split-step timing to a feeder", "5 min fast volley exchanges"] },
+  kitchen: { cues: ["'Line is lava.'", "'Bounce, then you can go in.'"], plan: ["5 min volleys toes-behind-line, partner calls faults", "5 min dink, step in, recover"] },
+  serve: { cues: ["'Low to high, below the belly button.'", "'Deep beats hard.'"], plan: ["10 min deep-serve target", "5 min serve + return games"] },
+  twobounce: { cues: ["'Let it bounce, let it bounce.'", "'Return deep and run.'"], plan: ["10 min deep returns + run to the line"] },
+  reset: { cues: ["'Catch the ball with the paddle.'", "'No backswing.'"], plan: ["5 min catch drill", "10 min drive-and-reset from mid-court"] },
+  speedup: { cues: ["'Above the net: attack. Below: dink.'", "'Paddle up after.'"], plan: ["10 min above-or-below feeding", "5 min counter battles"] },
+  scoring: { cues: ["'Three numbers, every serve.'", "'Even right, odd left' (first server)."], plan: ["Play a full practice game calling every score"] },
+  shadow: { cues: ["'Rope between you.'", "'Forehand takes the middle.'"], plan: ["5 min rope drill", "10 min middle-ball feeds with calls"] },
+  backhand: { cues: ["'Turn, set, push.'", "'Elbow leads.'"], plan: ["10 min backhand-only cross-court dinks"] },
+  lob: { cues: ["'Lob the leaners.'", "'Point, then smash.'"], plan: ["5 min deep-lob targets", "10 min overhead feeds"] },
+  erne: { cues: ["'Around, not through.'", "'Land outside.'"], plan: ["5 min footwork shadow", "10 min fed Ernes, slow then live"] },
+  atp: { cues: ["'If you're past the post, go around it.'"], plan: ["10 min wide-feed ATPs each side"] },
+};
+LESSONS.forEach(l => { l.notes = NOTES[l.id] || null; });
+
 // Shots that involve the baseline use the wide camera automatically
 LESSONS.forEach(l => l.scenes.forEach(sc => { if (sc.cam === SIDE && (sc.players || []).some(p => Math.abs(p.x) > 12)) sc.cam = WIDE; }));
 
+
+// ---- HOME COURT: drills with just a paddle, a ball, a wall and some tape ----
+// timer: work seconds, rest seconds, rounds. levels: easier → harder versions.
+const HOME = [
+  { id: "wall-dink", title: "Wall Dinks", focus: "Dink touch", lesson: "dink", kit: "Paddle, ball, wall, tape", setup: "Tape a line on the wall at 34 in (net height). Stand about 6 ft away.", steps: ["Ready position, paddle up.", "Dink softly so the ball hits the wall just above the tape.", "Let it bounce once, then dink again. Push from the shoulder, no wrist."], goal: "30 in a row above the line", timer: [45, 15, 4], levels: ["One bounce between hits", "Alternate forehand and backhand", "No bounce: soft volleys above the line"] },
+  { id: "bump-ups", title: "Bump-Ups", focus: "Paddle control", lesson: "dink", kit: "Paddle, ball", setup: "Anywhere with a little headroom.", steps: ["Bounce the ball straight up off the paddle face, about head height.", "Keep the face level and the wrist quiet.", "Count every clean touch."], goal: "50 in a row", timer: [40, 20, 3], levels: ["Forehand face only", "Alternate faces every touch", "Lower bumps, 15 cm, as fast as you can"] },
+  { id: "dribble", title: "Paddle Dribble", focus: "Soft hands", lesson: "reset", kit: "Paddle, ball", setup: "Hard floor. Paddle at waist height.", steps: ["Dribble the ball down onto the floor with the paddle, like a basketball.", "Keep it below your knees.", "Absorb each bounce: the paddle 'catches' the ball."], goal: "60 seconds without a miss", timer: [45, 15, 3], levels: ["Standing", "In a low ready squat", "Walking forward and back"] },
+  { id: "chair-net", title: "Chair-Net Drops", focus: "Arc & apex", lesson: "drop", kit: "Paddle, ball, chair or rope, towel", setup: "Rope between two chairs at about 34 in. Towel target 7 ft past it.", steps: ["Stand 10 ft back from the rope.", "Drop the ball and lift it over the rope with an open face.", "Peak on your side; land on the towel."], goal: "7 of 10 on the towel", timer: [60, 20, 3], levels: ["From 10 ft", "From 15 ft", "Alternate forehand and backhand"] },
+  { id: "mirror", title: "Mirror Swings", focus: "Technique", lesson: "dink", kit: "Paddle, mirror", setup: "Stand side-on to a mirror.", steps: ["Shadow the dink: lift from the shoulder, face set.", "Watch the wrist: it should not hinge.", "Then shadow the backhand dink, elbow leading."], goal: "20 clean reps each side", timer: [40, 10, 4], levels: ["Slow motion", "Normal speed", "Eyes closed, then check"] },
+  { id: "wall-volley", title: "Wall Volley Battle", focus: "Fast hands", lesson: "speedup", kit: "Paddle, ball, wall", setup: "Stand about 6 ft from the wall.", steps: ["Volley the ball against the wall without letting it bounce.", "Paddle up between every hit, short punches.", "Stay in a low ready position."], goal: "100 touches total", timer: [30, 15, 5], levels: ["Forehand only", "Backhand only", "Alternate, closer to the wall"] },
+  { id: "shuffle", title: "Split-Step Shuffle", focus: "Footwork", lesson: "ready", kit: "Tape", setup: "Two tape lines 10 ft apart on the floor.", steps: ["Shuffle sideways between the lines, never crossing your feet.", "Split-step (small hop) each time you reach a line.", "Paddle up the whole time."], goal: "12 lines in 30 seconds", timer: [30, 20, 5], levels: ["Shuffle only", "Add a shadow dink at each line", "Add forward-back steps"] },
+  { id: "kitchen-feet", title: "Kitchen-Line Feet", focus: "Kitchen discipline", lesson: "kitchen", kit: "Tape, paddle", setup: "Tape a line on the floor: your kitchen line.", steps: ["Toes just behind the line, ready position.", "Shadow volleys left, right and high.", "Lean, don't step: if a toe touches the tape, start over."], goal: "60 seconds clean", timer: [45, 15, 3], levels: ["Shadow volleys", "With wall volleys", "Add a reach-and-recover lunge"] },
+  { id: "reaction", title: "Reaction Catch", focus: "Reflexes", lesson: "reset", kit: "Paddle, ball, a helper", setup: "A helper holds the ball at shoulder height, an arm's length away.", steps: ["Helper drops the ball without warning.", "Catch it softly on the paddle after one bounce.", "Absorb: the ball should stay on the paddle."], goal: "8 of 10 caught", timer: [45, 15, 3], levels: ["One bounce", "No bounce", "Helper tosses left or right"] },
+  { id: "grip-ladder", title: "Grip-Pressure Ladder", focus: "Touch", lesson: "dink", kit: "Paddle, ball, wall", setup: "Same setup as Wall Dinks.", steps: ["10 wall dinks at grip 8/10 (tight).", "10 at 5/10.", "10 at 2–3/10. Feel how the ball softens."], goal: "Feel the difference; finish at 3/10", timer: [45, 15, 3], levels: ["Forehand", "Backhand", "Alternate"] },
+  { id: "serve-target", title: "Driveway Serves", focus: "Deep serves", lesson: "serve", kit: "Paddle, balls, towel, outdoor space", setup: "Towel about 3 ft from the far line of a driveway or court-length space.", steps: ["Underhand, contact below the waist.", "Same motion every time.", "Aim for depth, not power."], goal: "6 of 10 deep", timer: [60, 30, 3], levels: ["Towel target", "Smaller target", "Alternate left and right corners"] },
+  { id: "overhead-shadow", title: "Point-and-Smash Shadow", focus: "Overheads", lesson: "lob", kit: "Paddle", setup: "Any open space.", steps: ["Turn sideways and point at an imaginary lob with your free hand.", "Shuffle back three steps.", "Swing down and through; recover to ready."], goal: "15 clean reps", timer: [30, 15, 4], levels: ["Slow", "Full speed", "With a partner calling 'lob!' at random"] },
+];
+// Ready-made home sessions (drill ids in order)
+const SESSIONS = [
+  { id: "touch15", title: "15-min Touch Session", for: "Dinks and soft hands", drills: ["bump-ups", "wall-dink", "grip-ladder", "dribble"] },
+  { id: "hands15", title: "15-min Fast Hands", for: "Volleys and reflexes", drills: ["wall-volley", "reaction", "kitchen-feet"] },
+  { id: "feet10", title: "10-min Footwork", for: "Ready and movement", drills: ["shuffle", "kitchen-feet", "overhead-shadow"] },
+];
+// ---- TIPS & TRICKS ----
+const TIPS = [
+  ["Dinking", "Aim dinks at the opponent's feet or the middle, not their paddle side."], ["Dinking", "Mix cross-court and straight dinks; cross-court is safer (lower net, longer court)."], ["Dinking", "Patience wins the dink rally. Wait for a ball above the net to attack."], ["Dinking", "Dink to their backhand to draw a weaker reply."],
+  ["Third shot", "If you can't drop, drive, then drop the next ball (drive-drop combo)."], ["Third shot", "Drop cross-court when unsure: more court and lower net."], ["Third shot", "Never stop moving in after a good drop; split-step as they hit."],
+  ["Volleys & hands", "Keep the paddle in front and up; short punches beat big swings."], ["Volleys & hands", "Backhand volleys cover more body area. Use them for balls at your chest."], ["Volleys & hands", "In a hands battle, aim at the shoulder of their paddle arm."],
+  ["Footwork", "Split-step as your opponent makes contact, every time."], ["Footwork", "Shuffle sideways; avoid crossing your feet at the kitchen."], ["Footwork", "Stay low: bent knees are faster than long legs."],
+  ["Serve & return", "Serve deep and to the backhand; consistency beats aces."], ["Serve & return", "Return deep and high enough to give yourself time to reach the kitchen."], ["Serve & return", "Vary serve depth and pace sometimes, but never at the cost of misses."],
+  ["Strategy", "Hit to the weaker player, but don't forget to move the stronger one."], ["Strategy", "When both opponents are at the kitchen, the middle is your friend."], ["Strategy", "Reset a hard ball instead of counter-attacking from below the net."], ["Strategy", "Attack balls above the net; below the net, play soft."],
+  ["Doubles teamwork", "Talk: 'mine', 'yours', 'bounce', 'out'. Early calls prevent clashes."], ["Doubles teamwork", "Move as one, about 10 ft apart, like a rope between you."], ["Doubles teamwork", "Encourage your partner after every error. Confidence wins points."],
+  ["Mental game", "Have a breath routine between points: exhale, reset, ready."], ["Mental game", "Play the ball, not the score."], ["Mental game", "After an error, name the fix in two words ('lift, push') and move on."],
+  ["Gear & body", "Warm up wrists, shoulders and calves for 5 minutes before you play."], ["Gear & body", "Court shoes, not running shoes: you move sideways a lot."], ["Gear & body", "Grip size matters: a too-small grip makes you squeeze."], ["Gear & body", "Hydrate before you're thirsty, especially on Doha nights."],
+];
+
 const PREVIEW_SCENES = 4; // free preview of the first lesson
 
-const meta = l => ({ id: l.id, title: l.title, level: l.level, mins: l.mins, summary: l.summary, scenes: l.scenes.length });
-module.exports = { LESSONS, PREVIEW_SCENES, meta };
+const FREE = ["dink", "ready"];   // two full lessons free: the hook
+const TEASER = 2;                  // every other lesson shows its first scenes
+const meta = l => ({ id: l.id, title: l.title, level: l.level, mins: l.mins, summary: l.summary, scenes: l.scenes.length, free: FREE.includes(l.id) });
+module.exports = { LESSONS, PREVIEW_SCENES, FREE, TEASER, meta, HOME, SESSIONS, TIPS };

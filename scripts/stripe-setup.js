@@ -38,6 +38,8 @@ PLANS.academy = { name: "Soft Hands Academy", desc: "Animated X-ray pickleball c
   // Founding Club: first 10 clubs keep 50% off for life
   try { await stripe.coupons.retrieve("FOUNDING50"); console.log("exists  coupon FOUNDING50"); }
   catch { await stripe.coupons.create({ id: "FOUNDING50", percent_off: 50, duration: "forever", name: "Founding Club · 50% off for life", max_redemptions: 10 }); console.log("created coupon FOUNDING50"); }
+  try { await stripe.coupons.retrieve("ACADEMY_FOUNDER"); console.log("exists  coupon ACADEMY_FOUNDER"); }
+  catch { await stripe.coupons.create({ id: "ACADEMY_FOUNDER", percent_off: 25, duration: "forever", name: "Academy Founder · 25% off for life", max_redemptions: 50 }); console.log("created coupon ACADEMY_FOUNDER"); }
   const promo = await stripe.promotionCodes.list({ code: "FOUNDING", limit: 1 });
   if (!promo.data[0]) { await stripe.promotionCodes.create({ coupon: "FOUNDING50", code: "FOUNDING" }); console.log("created promo code FOUNDING"); }
   // Billing portal: clubs can update their card, see invoices, switch plan or cancel

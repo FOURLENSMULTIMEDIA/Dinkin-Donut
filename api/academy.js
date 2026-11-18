@@ -7,12 +7,12 @@
 //   POST { claim: sessionId }           after paying → { key }
 //   Owner: GET ?keys · POST { grant:{ name, days } } · POST { revoke: key }
 const crypto = require("crypto");
-const { LESSONS, PREVIEW_SCENES, meta } = require("./_lessons");
+const { LESSONS, FREE, TEASER, meta, HOME, SESSIONS, TIPS } = require("./_lessons");
 const { getDoc, setDoc, withLock } = require("./_store");
 const { isHost } = require("./_auth");
 const { stripe, enabled, taxOn } = require("./_stripe");
 
-const DAY = 864e5, RECHECK = 12 * 3600e3, GRACE = 3 * DAY;
+const TRIAL_DAYS = 7, FOUNDER = "ACADEMY_FOUNDER", DAY = 864e5, RECHECK = 12 * 3600e3, GRACE = 3 * DAY;
 const newKey = () => "SHA-" + crypto.randomBytes(2).toString("hex").toUpperCase() + "-" + crypto.randomBytes(2).toString("hex").toUpperCase();
 const clean = (s, n = 40) => String(s ?? "").replace(/[<>]/g, "").trim().slice(0, n);
 const originOf = req => { const h = req.headers["x-forwarded-host"] || req.headers.host || "dinkindonut.asia"; return `${/^localhost|^127\./.test(h) ? "http" : "https"}://${h}`; };
@@ -36,6 +36,16 @@ async function access(req) {
   return k.until > now ? { ok: true, who: "member", until: k.until, name: k.name || "" } : { ok: false, expired: true };
 }
 
+// Founding Member spots left (25% off for life, first 50): read from the Stripe coupon, cached 5 min
+let fc = { at: 0, left: null };
+async function founderLeft() {
+  if (!enabled()) return null;
+  if (Date.now() - fc.at < 300e3) return fc.left;
+  try { const c = await stripe().coupons.retrieve(FOUNDER); fc = { at: Date.now(), left: c.valid ? Math.max(0, (c.max_redemptions || 50) - (c.times_redeemed || 0)) : 0 }; } catch { fc = { at: Date.now(), left: null }; }
+  return fc.left;
+}
+const strip = (l, team) => { const { notes, ...rest } = l; return team ? l : rest; };
+
 module.exports = async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   try {
@@ -50,11 +60,13 @@ module.exports = async (req, res) => {
       if (q.lesson) {
         const L = LESSONS.find(l => l.id === q.lesson);
         if (!L) return res.status(404).json({ error: "Lesson not found." });
-        if (a.ok) return res.json({ lesson: L, access: a });
-        if (L.id !== LESSONS[0].id) return res.status(402).json({ error: "Members only.", access: a });
-        return res.json({ lesson: { ...meta(L), preview: true, scenes: L.scenes.slice(0, PREVIEW_SCENES), keys: L.keys.slice(0, 1) }, access: a });
+        if (a.ok) return res.json({ lesson: strip(L, a.who === "team"), access: a });
+        if (FREE.includes(L.id)) return res.json({ lesson: { ...strip(L, false), free: true }, access: a });
+        return res.json({ lesson: { ...meta(L), preview: true, scenes: L.scenes.slice(0, TEASER), keys: L.keys.slice(0, 1) }, access: a });
       }
-      return res.json({ lessons: LESSONS.map(meta), access: a, card: enabled() });
+      if (q.home !== undefined) return res.json(a.ok ? { home: HOME, sessions: SESSIONS, access: a } : { home: HOME.slice(0, 2), locked: HOME.length - 2, sessions: SESSIONS.map(x => ({ ...x, locked: true })), access: a });
+      if (q.tips !== undefined) return res.json(a.ok ? { tips: TIPS, access: a } : { tips: TIPS.slice(0, 6), locked: TIPS.length - 6, access: a });
+      return res.json({ lessons: LESSONS.map(meta), access: a, card: enabled(), trialDays: TRIAL_DAYS, founderLeft: await founderLeft(), counts: { lessons: LESSONS.length, home: HOME.length, tips: TIPS.length } });
     }
     if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed." });
     const b = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
@@ -65,8 +77,9 @@ module.exports = async (req, res) => {
       if (!price) return res.status(500).json({ error: "Academy plans aren’t set up in Stripe yet." });
       const s = await stripe().checkout.sessions.create({
         mode: "subscription", line_items: [{ price: price.id, quantity: 1 }],
-        metadata: { product: "academy" }, subscription_data: { metadata: { product: "academy" } },
-        billing_address_collection: "auto", automatic_tax: { enabled: taxOn() }, allow_promotion_codes: true,
+        metadata: { product: "academy" }, subscription_data: { metadata: { product: "academy" }, trial_period_days: TRIAL_DAYS },
+        billing_address_collection: "auto", automatic_tax: { enabled: taxOn() },
+        ...((await founderLeft()) > 0 ? { discounts: [{ coupon: FOUNDER }] } : { allow_promotion_codes: true }),
         success_url: `${originOf(req)}/academy?paid={CHECKOUT_SESSION_ID}`, cancel_url: `${originOf(req)}/academy`,
       });
       return res.json({ url: s.url });
