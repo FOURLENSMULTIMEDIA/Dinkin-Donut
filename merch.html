@@ -338,11 +338,12 @@ function renderPanel() {
   $("chart").innerHTML = `<table><caption>Approximate chest width laid flat, in cm. Between sizes? Go one up for a relaxed fit.</caption><tr><th>Size</th>${Object.keys(p.sizeChart).map(k => `<th>${k}</th>`).join("")}</tr><tr><td><b>Chest</b></td>${Object.values(p.sizeChart).map(v => `<td>${v}</td>`).join("")}</tr></table>`;
 }
 function oneOf() { const o = cur(), n = (o.name || "").trim(); const el = $("oneOf");
-  if (o.edition) { el.className = "oneofone gold"; el.innerHTML = `<b>THE 20 · Nº __ / ${ED.cap}</b><span>Only ${ED.cap} will ever be made. Gold Kitchen Line, gold ball and a numbered hem tag. Your number is reserved the moment you send your order. ${edLeft} left.</span>`; return; }
+  if (o.edition) { el.className = "oneofone gold"; el.innerHTML = `<b>THE 20 · Nº __ / ${ED.cap}</b><span>Only ${ED.cap} will ever be made. A gold core inside your pour, a gold crest ring and a numbered gold hem tag. Your number is reserved the moment you send your order. ${edLeft} left.</span>`; return; }
   el.className = "oneofone";
-  if (!n || o.print === "plain") { el.innerHTML = "<b>Your code</b><span>Add a name and the ball on your Kitchen Line lands in a spot set by your name, with your own shirt code on the hem.</span>"; return; }
+  if (st.p === "set") { el.innerHTML = `<b>Court Set</b><span>${n ? `“${n.replace(/[<>&]/g, "")}” is embroidered under the club name on the back.` : "Add a name and we embroider it under the club name on the back."} Classic colours, made to order.</span>`; return; }
+  if (!n || o.print === "plain") { el.innerHTML = "<b>Your pour</b><span>Add a name and your Glaze Pour is shaped by it: its angle, direction and width. Your shirt code goes on the hem.</span>"; return; }
   const svg = P().draw({ way: o.way, side: "back", name: n, num: o.num, print: o.print }), code = (svg.match(/DD-[0-9A-F]{4}/) || [""])[0];
-  el.innerHTML = `<b>${code}</b><span>The ball on your Kitchen Line sits where “${n.replace(/[<>&]/g, "")}” puts it. Want it truly one of a kind? Choose The 20.</span>`; }
+  el.innerHTML = `<b>${code}</b><span>This Glaze Pour is shaped by “${n.replace(/[<>&]/g, "")}”. No other name pours the same way. Want it numbered and gold? Choose The 20.</span>`; }
 function all(animate) { renderPanel(); draw(animate); oneOf(); }
 
 document.addEventListener("click", e => {

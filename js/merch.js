@@ -13,7 +13,7 @@ window.JERSEY = {
   sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
   specs: [
     ["Court cut", "Slim athletic fit with a curved shirt-tail hem and side vents."],
-    ["1 of 1", "The tonal hole pattern is generated from your name, with a numbered hem tag."],
+    ["The Glaze Pour", "An airbrushed sweep of glaze from shoulder to hem, shaped by your name. No two pour the same."],
     ["Performance knit", "Lightweight, quick-dry fabric for Doha nights."],
     ["Full sublimation", "Colours are dyed into the fabric. They won't crack or peel."],
     ["Mesh side panels", "Airflow where you need it during long rallies."],
