@@ -27,6 +27,10 @@
     bhThru: { lean: 20, tF: 28, tB: -16, kF: 46, kB: 40, sh: 60, el: -25, wr: 0, pd: 120, off: 30, oel: 50 },
     overBack: { lean: -6, tF: 14, tB: -16, kF: 14, kB: 16, sh: 165, el: 70, wr: 0, pd: 40, off: 140, oel: 10 },
     overThru: { lean: 16, tF: 22, tB: -12, kF: 24, kB: 20, sh: 95, el: 10, wr: 20, pd: 20, off: 40, oel: 40 },
+    bump: { lean: 8, tF: 14, tB: -10, kF: 18, kB: 16, sh: 40, el: 50, wr: 0, pd: 0, off: 20, oel: 40 },
+    bumpUp: { lean: 8, tF: 14, tB: -10, kF: 22, kB: 20, sh: 48, el: 42, wr: 0, pd: 0, off: 20, oel: 40 },
+    dribble: { lean: 22, tF: 24, tB: -14, kF: 40, kB: 34, sh: 20, el: 60, wr: 10, pd: 0, off: 20, oel: 50 },
+    dribbleDn: { lean: 22, tF: 24, tB: -14, kF: 44, kB: 38, sh: 14, el: 60, wr: 10, pd: 0, off: 20, oel: 50 },
     attackThru: { lean: 20, tF: 26, tB: -14, kF: 38, kB: 32, sh: 75, el: 30, wr: 20, pd: 70, off: 30, oel: 70 },
   };
   function mixPose(a, b, t) { var o = {}; for (var k in a) o[k] = lerp(a[k], b[k] != null ? b[k] : a[k], t); return o; }
@@ -97,6 +101,33 @@
       }
     }
 
+    // Home Court props: wall + tape, chairs + rope, towel, floor tape, mirror
+    function drawProps(sc, k) {
+      var g = Y(0), s = S(), lbl = function (txt, x, y, col) { ctx.fillStyle = col || "rgba(236,240,246,.75)"; ctx.font = "700 10px ui-monospace, Menlo, monospace"; ctx.fillText(txt, x, y); };
+      ctx.save(); ctx.globalAlpha = clamp(k * 4, 0, 1);
+      ctx.strokeStyle = "rgba(236,240,246,.35)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, g); ctx.lineTo(W, g); ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,.03)"; ctx.fillRect(0, g, W, H - g);
+      (sc.props || []).forEach(function (p) {
+        if (p.type === "wall") {
+          ctx.fillStyle = "rgba(236,240,246,.08)"; ctx.fillRect(X(p.x), Y(9), W, 9 * s); line([X(p.x), Y(9)], [X(p.x), g], 2, "rgba(236,240,246,.7)");
+          for (var b = 1; b < 9; b++) line([X(p.x), Y(b)], [X(p.x) + 8, Y(b)], 1, "rgba(236,240,246,.15)");
+          if (p.tape) { line([X(p.x) - 1, Y(34 / 12)], [X(p.x) + 30, Y(34 / 12)], 4, LIME); lbl("TAPE \u00B7 34 IN", X(p.x) + 36, Y(34 / 12) + 4, LIME); }
+          lbl("WALL", X(p.x) + 8, Y(8.4));
+        } else if (p.type === "rope") {
+          [-1.2, 1.2].forEach(function (d) { var cx = X(p.x + d * 0.3); line([cx, g], [cx, Y(34 / 12)], 2, "rgba(236,240,246,.7)"); line([cx - 8, Y(1.5)], [cx + 8, Y(1.5)], 2, "rgba(236,240,246,.7)"); });
+          ctx.setLineDash([6, 4]); line([X(p.x - 0.4), Y(34 / 12)], [X(p.x + 0.4), Y(34 / 12)], 3, LIME); ctx.setLineDash([]);
+          lbl("CHAIRS + ROPE \u00B7 34 IN", X(p.x) - 60, Y(34 / 12) - 12, LIME);
+        } else if (p.type === "towel") {
+          ctx.fillStyle = "rgba(255,77,134,.55)"; ctx.fillRect(X(p.x - 1), g - 3, 2 * s, 6); lbl("TOWEL TARGET", X(p.x) - 36, g - 10, "#FF4D86");
+        } else if (p.type === "tape") {
+          (p.xs || [p.x]).forEach(function (x) { line([X(x) - 14, g + 4], [X(x) + 14, g + 4], 4, LIME); }); lbl(p.label || "FLOOR TAPE", X((p.xs || [p.x])[0]) - 20, g - 10, LIME);
+        } else if (p.type === "mirror") {
+          var gr = ctx.createLinearGradient(X(p.x), 0, X(p.x) + 30, 0); gr.addColorStop(0, "rgba(160,200,255,.22)"); gr.addColorStop(1, "rgba(160,200,255,.04)");
+          ctx.fillStyle = gr; ctx.fillRect(X(p.x), Y(7), 30, 7 * s); line([X(p.x), Y(7)], [X(p.x), g], 2, "rgba(190,215,255,.8)"); lbl("MIRROR", X(p.x) + 6, Y(7.3));
+        }
+      });
+      ctx.restore();
+    }
     function drawFigure(J, alpha, ghost) {
       ctx.save(); ctx.globalAlpha = alpha; ctx.shadowColor = "rgba(220,235,255,.55)"; ctx.shadowBlur = ghost ? 0 : 8;
       var P = {}; for (var k in J) if (Array.isArray(J[k])) P[k] = pt(J[k]);
@@ -138,7 +169,7 @@
       var u = clamp((k - (b.t0 || 0)) / ((b.t1 || 1) - (b.t0 || 0)), 0, 1);
       ctx.save();
       // ghost of the full path
-      ctx.setLineDash([3, 5]); ctx.strokeStyle = "rgba(255,77,134,.25)"; ctx.lineWidth = 1.2; ctx.beginPath();
+      ctx.setLineDash([3, 5]); ctx.strokeStyle = b.noGhost ? "rgba(0,0,0,0)" : "rgba(255,77,134,.25)"; ctx.lineWidth = 1.2; ctx.beginPath();
       for (var i = 0; i <= 40; i++) { var q = pt(flight(b, i / 40)); i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke(); ctx.setLineDash([]);
       // trail so far
       ctx.shadowColor = PINK; ctx.shadowBlur = 10; ctx.strokeStyle = PINK; ctx.lineWidth = 2.4; ctx.beginPath();
@@ -235,7 +266,7 @@
       ctx.save(); ctx.textBaseline = "middle"; ctx.font = "600 " + Math.round(clamp(W / 22, 15, 28)) + "px 'DM Sans', system-ui, sans-serif";
       var lines = [[]], maxW = W * 0.86;
       words.forEach(function (w) { var cur = lines[lines.length - 1].concat(w).join(" ").replace(/\*/g, ""); if (ctx.measureText(cur).width > maxW && lines[lines.length - 1].length) lines.push([w]); else lines[lines.length - 1].push(w); });
-      var idx = 0, lh = clamp(W / 22, 15, 28) * 1.3, y0 = H * 0.88 - (lines.length - 1) * lh / 2;
+      var idx = 0, lh = clamp(W / 22, 15, 28) * 1.3, y0 = Math.min(H * 0.88 - (lines.length - 1) * lh / 2, H - (lines.length - 0.35) * lh);
       lines.forEach(function (ln, li) {
         var full = ln.join(" ").replace(/\*/g, ""), x = (W - ctx.measureText(full).width) / 2, y = y0 + li * lh;
         ln.forEach(function (w) {
@@ -285,11 +316,13 @@
       ctx.fillStyle = "#08090B"; ctx.fillRect(0, 0, W, H);
       // grid
       ctx.strokeStyle = "rgba(255,255,255,.035)"; ctx.lineWidth = 1; for (var gx = 0; gx < W; gx += 32) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); } for (var gy = 0; gy < H; gy += 32) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
-      if (sc.court !== false) drawCourt(sc, clamp(k * 3, 0, 1));
+      if (sc.props) drawProps(sc, clamp(k * 3, 0, 1)); else if (sc.court !== false) drawCourt(sc, clamp(k * 3, 0, 1));
       var Jmain = null;
       (sc.players || []).forEach(function (pl, n) {
         var pa = POSES[pl.from] || POSES.ready, pb = POSES[pl.to || pl.from] || pa, pk = pl.t0 != null ? clamp((k - pl.t0) / ((pl.t1 || 1) - pl.t0), 0, 1) : e;
-        var J = skeleton(mixPose(pa, pb, ease(pk)), pl.x != null ? pl.x : -9, pl.dir || 1);
+        if (pl.reps) { var ph = (k * pl.reps + (pl.phase || 0)) % 1; pk = ph < 0.5 ? ph * 2 : (1 - ph) * 2; }
+        var px = pl.x != null ? pl.x : -9; if (pl.x2 != null) { var mv = pl.reps ? ((k * (pl.moveReps || 1)) % 1) : k; px = lerp(pl.x, pl.x2, pl.reps ? (mv < 0.5 ? mv * 2 : (1 - mv) * 2) : ease(mv)); }
+        var J = skeleton(mixPose(pa, pb, ease(pk)), px, pl.dir || 1);
         if (pl.ghost) drawFigure(skeleton(pa, pl.x != null ? pl.x : -9, pl.dir || 1), 0.18, true);
         drawFigure(J, pl.dim ? 0.45 : 1);
         if (pl.to && pl.to !== pl.from && pl.path !== false && !pl.dim) swingPath(pa, pb, pl.x != null ? pl.x : -9, pl.dir || 1, ease(pk), sc.tag === "dont" ? PINK : LIME);
@@ -300,6 +333,7 @@
       if (Jmain && sc.joints) { var jt = { shoulder: ["SHOULDER", -1, -0.9], elbow: ["ELBOW", -1, 0.5], wrist: ["WRIST", 1, 0.9], knee: ["KNEES", -1, 0.2], paddle: ["PADDLE FACE", 1, -0.6] };
         sc.joints.forEach(function (j) { var d = jt[j]; if (!d) return; var p = j === "knee" ? pt(Jmain.kneeF) : j === "paddle" ? pt([(Jmain.pBase[0] + Jmain.pTip[0]) / 2, (Jmain.pBase[1] + Jmain.pTip[1]) / 2]) : pt(Jmain[j]); ctx.globalAlpha = clamp(k * 4, 0, 1); tagAt(p, d[0], j === sc.focus ? LIME : "rgba(236,240,246,.85)", d[1] * Math.min(W, H) * 0.12, d[2] * S() * 0.8); ctx.globalAlpha = 1; }); }
       drawBall(sc.ball, k);
+      (sc.balls || []).forEach(function (b) { if (k >= b.t0 - 0.001 && k <= b.t1 + 0.06) drawBall(Object.assign({}, b, { ghost: false }), Math.min(k, b.t1)); });
       drawHud(sc.hud, k);
       drawCallout(sc.callout, clamp((k - (sc.callout && sc.callout.t0 || 0.15)) / 0.85, 0, 1), Jmain);
       if (sc.note) { ctx.fillStyle = "rgba(236,240,246,.4)"; ctx.font = "500 10px ui-monospace, Menlo, monospace"; ctx.fillText(sc.note, W * 0.05, H * 0.975); }
@@ -308,7 +342,7 @@
       if (onTick) onTick(t, total, i);
     }
     function loop(now) {
-      if (playing) { t += Math.min(0.05, (now - last) / 1000) * speed; if (t >= total) { t = total; playing = false; } }
+      if (playing) { t += Math.min(0.05, (now - last) / 1000) * speed; if (t >= total) { if (lesson && lesson.loop) t = 0; else { t = total; playing = false; } } }
       last = now; frame(); raf = requestAnimationFrame(loop);
     }
     size(); window.addEventListener("resize", size);
