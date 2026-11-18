@@ -14,13 +14,15 @@ const PLANS = {
   venue: { name: "Courtcall Venue", desc: "12 courts · up to 200 players a night · setup help", m: { usd: 149, aed: 549, qar: 549, eur: 139, gbp: 119, php: 8590, sgd: 199, aud: 225, cad: 199 } },
 };
 const minor = (cur, v) => Math.round(v * 100);
+// Soft Hands Academy (coaching subscription)
+PLANS.academy = { name: "Soft Hands Academy", desc: "Animated X-ray pickleball coaching, drills and quizzes", lookup: "academy", m: { usd: 10, aed: 39, qar: 39, eur: 10, gbp: 9, php: 590, sgd: 14, aud: 16, cad: 14 } };
 
 (async () => {
   for (const [plan, p] of Object.entries(PLANS)) {
     const found = await stripe.products.search({ query: `metadata['courtcall_plan']:'${plan}'` });
     const product = found.data[0] || await stripe.products.create({ name: p.name, description: p.desc, metadata: { courtcall_plan: plan }, tax_code: "txcd_10103001" /* SaaS, business use */ });
     for (const interval of ["month", "year"]) {
-      const lookup = `courtcall_${plan}_${interval}`;
+      const lookup = p.lookup ? `${p.lookup}_${interval}` : `courtcall_${plan}_${interval}`;
       const have = await stripe.prices.list({ lookup_keys: [lookup], limit: 1 });
       if (have.data[0]) { console.log("exists ", lookup, have.data[0].id); continue; }
       const k = interval === "year" ? 10 : 1;

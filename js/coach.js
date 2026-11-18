@@ -1,0 +1,257 @@
+// Soft Hands Academy: X-ray coaching animation engine.
+// A lesson is a list of scenes. Each scene animates a camera, X-ray players, a ball flight, court geometry,
+// callouts, a measurement panel and a word-by-word caption. Coach.player(canvas, lesson) returns controls.
+(function () {
+  var PINK = "#FF4D86", LIME = "#D7F03C", BONE = "rgba(236,240,246,.92)", DIM = "rgba(236,240,246,.35)";
+  var lerp = function (a, b, t) { return a + (b - a) * t; };
+  var ease = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+  var clamp = function (x, a, b) { return Math.max(a, Math.min(b, x)); };
+  var rad = function (d) { return d * Math.PI / 180; };
+
+  // ---- poses (degrees). lean: torso forward; tF/tB: thigh angles of front/back leg (forward +);
+  // kF/kB: knee bend; sh: upper arm (0 = hanging, 90 = straight forward); el: elbow bend; wr: wrist; pd: paddle vs forearm.
+  var POSES = {
+    stand: { lean: 4, tF: 8, tB: -6, kF: 6, kB: 6, sh: 20, el: 30, wr: 0, pd: 40, off: 10, oel: 40 },
+    ready: { lean: 18, tF: 26, tB: -14, kF: 40, kB: 36, sh: 42, el: 62, wr: 6, pd: 70, off: 30, oel: 70 },
+    dinkBack: { lean: 22, tF: 30, tB: -16, kF: 48, kB: 40, sh: 8, el: 18, wr: 0, pd: 120, off: 30, oel: 60 },
+    dinkThru: { lean: 22, tF: 30, tB: -16, kF: 48, kB: 40, sh: 52, el: 14, wr: 0, pd: 112, off: 30, oel: 60 },
+    flickBack: { lean: 22, tF: 30, tB: -16, kF: 48, kB: 40, sh: 14, el: 30, wr: -40, pd: 120, off: 30, oel: 60 },
+    flickThru: { lean: 22, tF: 30, tB: -16, kF: 48, kB: 40, sh: 20, el: 40, wr: 70, pd: 120, off: 30, oel: 60 },
+    dropBack: { lean: 14, tF: 24, tB: -18, kF: 34, kB: 30, sh: -18, el: 16, wr: 0, pd: 125, off: 34, oel: 50 },
+    dropThru: { lean: 14, tF: 24, tB: -18, kF: 34, kB: 30, sh: 70, el: 12, wr: 0, pd: 108, off: 34, oel: 50 },
+    serveBack: { lean: 8, tF: 18, tB: -14, kF: 20, kB: 18, sh: -38, el: 10, wr: 0, pd: 150, off: 40, oel: 80 },
+    serveThru: { lean: 6, tF: 18, tB: -14, kF: 20, kB: 18, sh: 80, el: 14, wr: 0, pd: 100, off: 40, oel: 80 },
+    block: { lean: 16, tF: 28, tB: -16, kF: 44, kB: 38, sh: 58, el: 70, wr: 0, pd: 60, off: 30, oel: 70 },
+    attackBack: { lean: 16, tF: 26, tB: -14, kF: 38, kB: 32, sh: 40, el: 110, wr: -20, pd: 70, off: 30, oel: 70 },
+    attackThru: { lean: 20, tF: 26, tB: -14, kF: 38, kB: 32, sh: 75, el: 30, wr: 20, pd: 70, off: 30, oel: 70 },
+  };
+  function mixPose(a, b, t) { var o = {}; for (var k in a) o[k] = lerp(a[k], b[k] != null ? b[k] : a[k], t); return o; }
+
+  // Forward kinematics in feet. Returns joints with y up; dir = 1 faces right.
+  function skeleton(p, x, dir) {
+    var L = { th: 1.55, sh: 1.5, to: 1.85, ne: 0.32, ua: 1.05, fa: 0.95, ha: 0.24, pdH: 0.42, pdF: 0.95 };
+    var leg = function (t, k) { var a = rad(t), kn = [Math.sin(a) * L.th * dir, -Math.cos(a) * L.th], b = rad(t - k); return { knee: kn, foot: [kn[0] + Math.sin(b) * L.sh * dir, kn[1] - Math.cos(b) * L.sh] }; };
+    var F = leg(p.tF, p.kF), B = leg(p.tB, p.kB), lift = -Math.min(F.foot[1], B.foot[1]);
+    var hip = [x, lift], add = function (a, b) { return [a[0] + b[0], a[1] + b[1]]; };
+    var J = { hip: hip, kneeF: add(hip, F.knee), footF: add(hip, F.foot), kneeB: add(hip, B.knee), footB: add(hip, B.foot) };
+    var tl = rad(p.lean), chest = add(hip, [Math.sin(tl) * L.to * dir, Math.cos(tl) * L.to]);
+    J.chest = chest; J.neck = add(chest, [Math.sin(tl) * L.ne * dir, Math.cos(tl) * L.ne]); J.head = add(J.neck, [Math.sin(tl) * 0.38 * dir, 0.4]);
+    J.shoulder = add(chest, [-0.06 * dir, -0.1]);
+    var arm = function (s, e, w, pd) {
+      var a1 = rad(s - p.lean * 0), el = add(J.shoulder, [Math.sin(a1) * L.ua * dir, -Math.cos(a1) * L.ua]);
+      var a2 = a1 + rad(e), wr = add(el, [Math.sin(a2) * L.fa * dir, -Math.cos(a2) * L.fa]);
+      var a3 = a2 + rad(w), hand = add(wr, [Math.sin(a3) * L.ha * dir, -Math.cos(a3) * L.ha]);
+      var a4 = a3 + rad(pd), base = add(hand, [Math.sin(a4) * L.pdH * dir, -Math.cos(a4) * L.pdH]), tip = add(base, [Math.sin(a4) * L.pdF * dir, -Math.cos(a4) * L.pdF]);
+      return { el: el, wr: wr, hand: hand, pBase: base, pTip: tip, pAng: a4 };
+    };
+    var A = arm(p.sh, p.el, p.wr, p.pd); J.elbow = A.el; J.wrist = A.wr; J.hand = A.hand; J.pBase = A.pBase; J.pTip = A.pTip; J.pAng = A.pAng;
+    var oa = rad(p.off), oel = add(J.shoulder, [Math.sin(oa) * L.ua * dir * 0.92, -Math.cos(oa) * L.ua * 0.92]);
+    var ob = oa + rad(p.oel); J.oElbow = oel; J.oHand = add(oel, [Math.sin(ob) * L.fa * dir * 0.92, -Math.cos(ob) * L.fa * 0.92]);
+    return J;
+  }
+
+  function Player(canvas) {
+    var ctx = canvas.getContext("2d"), lesson = null, scenes = [], total = 0, t = 0, playing = false, speed = 1, last = 0, onTick = null, raf = 0;
+    var W = 0, H = 0, DPR = 1, cam = { x: 0, y: 3, z: 1 };
+    function size() {
+      var r = canvas.getBoundingClientRect(); DPR = Math.min(2, window.devicePixelRatio || 1);
+      W = Math.max(320, r.width); H = Math.max(320, r.height); canvas.width = W * DPR; canvas.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    // world (feet) → screen
+    var S = function () { return (W / 30) * cam.z; };
+    var X = function (x) { return W / 2 + (x - cam.x) * S(); };
+    var Y = function (y) { return H * 0.6 - (y - cam.y) * S(); };
+    var pt = function (p) { return [X(p[0]), Y(p[1])]; };
+
+    function line(a, b, w, col) { ctx.strokeStyle = col || BONE; ctx.lineWidth = w; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+    function joint(a, r) { ctx.beginPath(); ctx.arc(a[0], a[1], r, 0, 7); ctx.fillStyle = "#0A0B0D"; ctx.fill(); ctx.lineWidth = 1.2; ctx.strokeStyle = BONE; ctx.stroke(); }
+
+    function drawCourt(sc, k) {
+      var g = Y(0), s = S();
+      // floor with perspective lines and the kitchen
+      ctx.fillStyle = "rgba(255,255,255,.035)"; ctx.fillRect(0, g, W, H - g);
+      ctx.strokeStyle = "rgba(255,255,255,.18)"; ctx.lineWidth = 1;
+      [-22, -7, 7, 22].forEach(function (x) { ctx.beginPath(); ctx.moveTo(X(x), g); ctx.lineTo(X(x) + (x - cam.x) * s * 0.18, H); ctx.stroke(); });
+      ctx.beginPath(); ctx.moveTo(0, g); ctx.lineTo(W, g); ctx.stroke();
+      if (sc.kitchen) {
+        var a = sc.kitchen === "both" ? [-7, 7] : sc.kitchen === "left" ? [-7, 0] : [0, 7];
+        ctx.fillStyle = "rgba(215,240,60," + (0.08 * k) + ")"; ctx.beginPath(); ctx.moveTo(X(a[0]), g); ctx.lineTo(X(a[1]), g); ctx.lineTo(X(a[1]) + (a[1] - cam.x) * s * 0.18, H); ctx.lineTo(X(a[0]) + (a[0] - cam.x) * s * 0.18, H); ctx.fill();
+        ctx.fillStyle = "rgba(215,240,60," + (0.8 * k) + ")"; ctx.font = "600 10px ui-monospace, Menlo, monospace"; ctx.fillText("KITCHEN \u00B7 7 FT", X(a[0]) + 6, g + 16);
+      }
+      // net: posts 36 in, centre 34 in (side view shows the centre height)
+      var nh = 34 / 12;
+      ctx.fillStyle = "rgba(255,255,255,.07)"; ctx.fillRect(X(-0.06), Y(nh), 0.12 * s, nh * s);
+      for (var i = 1; i < 9; i++) line([X(-0.06), Y(nh * i / 9)], [X(0.06), Y(nh * i / 9)], 0.6, "rgba(255,255,255,.2)");
+      line([X(0), Y(0)], [X(0), Y(36 / 12)], 2.4, "rgba(240,240,240,.8)");
+      line([X(-0.25), Y(nh)], [X(0.25), Y(nh)], 3, "rgba(255,255,255,.95)");
+    }
+
+    function drawFigure(J, alpha, ghost) {
+      ctx.save(); ctx.globalAlpha = alpha; ctx.shadowColor = "rgba(220,235,255,.55)"; ctx.shadowBlur = ghost ? 0 : 8;
+      var P = {}; for (var k in J) if (Array.isArray(J[k])) P[k] = pt(J[k]);
+      var s = S(), bw = Math.max(1.6, s * 0.06);
+      // legs
+      line(P.hip, P.kneeB, bw * 1.2, DIM); line(P.kneeB, P.footB, bw, DIM);
+      line(P.hip, P.kneeF, bw * 1.3); line(P.kneeF, P.footF, bw * 1.1);
+      line(P.footF, [P.footF[0] + s * 0.45 * (P.footF[0] > P.hip[0] ? 1 : 1), P.footF[1]], bw * 0.9);
+      // pelvis
+      ctx.strokeStyle = BONE; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.ellipse(P.hip[0], P.hip[1] - s * 0.1, s * 0.32, s * 0.2, 0, 0, 7); ctx.stroke();
+      // spine + ribcage
+      line(P.hip, P.neck, bw * 0.8);
+      for (var r = 0; r < 6; r++) { var f = 0.35 + r * 0.1, c = [lerp(P.hip[0], P.chest[0], f), lerp(P.hip[1], P.chest[1], f)]; ctx.beginPath(); ctx.ellipse(c[0], c[1], s * (0.2 + r * 0.025), s * 0.07, 0, 0, 7); ctx.lineWidth = 1; ctx.strokeStyle = "rgba(236,240,246,.55)"; ctx.stroke(); }
+      // skull
+      ctx.beginPath(); ctx.ellipse(P.head[0], P.head[1], s * 0.3, s * 0.36, 0, 0, 7); ctx.lineWidth = 1.6; ctx.strokeStyle = BONE; ctx.stroke();
+      ctx.beginPath(); ctx.arc(P.head[0] + s * 0.1, P.head[1] - s * 0.02, s * 0.07, 0, 7); ctx.stroke();
+      // off arm then paddle arm
+      line(P.shoulder, P.oElbow, bw * 0.8, DIM); line(P.oElbow, P.oHand, bw * 0.7, DIM);
+      line(P.shoulder, P.elbow, bw); line(P.elbow, P.wrist, bw * 0.9); line(P.wrist, P.hand, bw * 0.8);
+      [P.kneeF, P.kneeB, P.elbow, P.wrist, P.shoulder].forEach(function (j) { joint(j, Math.max(2, s * 0.07)); });
+      // paddle
+      var a = P.pBase, b = P.pTip, ang = Math.atan2(b[1] - a[1], b[0] - a[0]), len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+      line(P.hand, a, bw * 1.1, "rgba(236,240,246,.8)");
+      ctx.save(); ctx.translate((a[0] + b[0]) / 2, (a[1] + b[1]) / 2); ctx.rotate(ang);
+      ctx.beginPath(); ctx.roundRect(-len / 2, -s * 0.36, len, s * 0.72, s * 0.3); ctx.fillStyle = "rgba(255,255,255,.08)"; ctx.fill(); ctx.lineWidth = 1.6; ctx.strokeStyle = BONE; ctx.stroke();
+      ctx.restore();
+      ctx.restore();
+    }
+
+    function arcPoint(b, u) { var x = lerp(b.from[0], b.to[0], u), y0 = lerp(b.from[1], b.to[1], u), h = b.apex - Math.max(b.from[1], b.to[1]); return [x, y0 + 4 * h * u * (1 - u) * (b.apexAt ? 1 : 1)]; }
+    // skewed parabola: apex sits at fraction b.apexAt along the flight
+    function flight(b, u) {
+      var ax = b.apexAt == null ? 0.5 : b.apexAt, x = lerp(b.from[0], b.to[0], u);
+      var y = u <= ax ? lerp(b.from[1], b.apex, 1 - Math.pow(1 - u / ax, 2)) : lerp(b.apex, b.to[1], Math.pow((u - ax) / (1 - ax), 2));
+      return [x, y];
+    }
+    function drawBall(b, k) {
+      if (!b) return;
+      var u = clamp((k - (b.t0 || 0)) / ((b.t1 || 1) - (b.t0 || 0)), 0, 1);
+      ctx.save();
+      // ghost of the full path
+      ctx.setLineDash([3, 5]); ctx.strokeStyle = "rgba(255,77,134,.25)"; ctx.lineWidth = 1.2; ctx.beginPath();
+      for (var i = 0; i <= 40; i++) { var q = pt(flight(b, i / 40)); i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); } ctx.stroke(); ctx.setLineDash([]);
+      // trail so far
+      ctx.shadowColor = PINK; ctx.shadowBlur = 10; ctx.strokeStyle = PINK; ctx.lineWidth = 2.4; ctx.beginPath();
+      for (var j = 0; j <= 60 * u; j++) { var q2 = pt(flight(b, j / 60)); j ? ctx.lineTo(q2[0], q2[1]) : ctx.moveTo(q2[0], q2[1]); } ctx.stroke();
+      var p = pt(flight(b, u)); ctx.shadowBlur = 14; ctx.fillStyle = "#FFE3EC"; ctx.beginPath(); ctx.arc(p[0], p[1], Math.max(3.5, S() * 0.14), 0, 7); ctx.fill();
+      ctx.restore();
+      if (b.showApex && u > (b.apexAt || 0.5)) {
+        var ap = pt(flight(b, b.apexAt || 0.5)); ctx.fillStyle = "rgba(236,240,246,.9)"; ctx.font = "600 10px ui-monospace, Menlo, monospace"; ctx.fillText("APEX", ap[0] - 14, ap[1] - 12);
+        ctx.beginPath(); ctx.arc(ap[0], ap[1], 3, 0, 7); ctx.fill();
+        ctx.setLineDash([2, 4]); line(ap, [ap[0], Y(0)], 1, "rgba(236,240,246,.35)"); ctx.setLineDash([]);
+      }
+      if (b.bounce && u >= 1) { var e = pt(b.to); ctx.strokeStyle = "rgba(255,77,134,.7)"; ctx.beginPath(); ctx.ellipse(e[0], e[1], 10, 3, 0, 0, 7); ctx.stroke(); }
+    }
+
+    function drawHud(rows, k) {
+      if (!rows) return;
+      var x = W * 0.05, y = H * 0.06, w = Math.min(300, W * 0.6), rh = 30;
+      ctx.save(); ctx.globalAlpha = clamp(k * 4, 0, 1);
+      ctx.fillStyle = "rgba(10,11,13,.85)"; ctx.strokeStyle = "rgba(236,240,246,.25)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(x, y, w, rh * rows.length + 12, 6); ctx.fill(); ctx.stroke();
+      rows.forEach(function (r, i) {
+        var yy = y + 26 + i * rh, v = r[1] * clamp((k - i * 0.12) * 2.2, 0, 1);
+        ctx.fillStyle = i === rows.length - 1 ? "rgba(236,240,246,.95)" : "rgba(236,240,246,.6)"; ctx.font = "600 11px ui-monospace, Menlo, monospace"; ctx.fillText(r[0], x + 12, yy);
+        ctx.font = "700 22px ui-monospace, Menlo, monospace"; ctx.textAlign = "right"; ctx.fillText(String(Math.round(v)), x + w - 38, yy + 4); ctx.font = "600 10px ui-monospace, Menlo, monospace"; ctx.fillText(r[2], x + w - 12, yy + 4); ctx.textAlign = "left";
+        if (i < rows.length - 1) line([x + 8, yy + 10], [x + w - 8, yy + 10], 1, "rgba(236,240,246,.12)");
+      });
+      ctx.restore();
+    }
+
+    function drawCallout(c, k, J) {
+      if (!c) return;
+      var anchor = c.at === "paddle" && J ? pt([(J.pBase[0] + J.pTip[0]) / 2, (J.pBase[1] + J.pTip[1]) / 2]) : c.at === "wrist" && J ? pt(J.wrist) : c.at === "shoulder" && J ? pt(J.shoulder) : pt(c.at || [0, 3]);
+      var r = Math.min(W, H) * 0.12, cx = c.pos ? W * c.pos[0] : anchor[0] - r * 1.6, cy = c.pos ? H * c.pos[1] : anchor[1] - r * 1.4, a = clamp(k * 3, 0, 1);
+      ctx.save(); ctx.globalAlpha = a;
+      ctx.strokeStyle = "rgba(236,240,246,.8)"; ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(anchor[0], anchor[1]); ctx.lineTo(cx, cy); ctx.stroke(); ctx.setLineDash([]);
+      ctx.beginPath(); ctx.arc(anchor[0], anchor[1], 9, 0, 7); ctx.stroke();
+      ctx.fillStyle = "rgba(10,11,13,.9)"; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill(); ctx.lineWidth = 1.4; ctx.stroke();
+      ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, r - 2, 0, 7); ctx.clip(); ctx.translate(cx, cy);
+      var s = r / 50, ph = (k * 2) % 1;
+      if (c.kind === "push" || c.kind === "flick") {
+        // paddle face moving through contact: push = face stays set, flick = face rotates
+        for (var i = 0; i < 5; i++) {
+          var f = i / 4, ang = c.kind === "push" ? -0.35 : -0.35 + f * 1.4, x0 = -26 * s + f * 36 * s;
+          ctx.save(); ctx.translate(x0, 8 * s - f * 10 * s); ctx.rotate(ang); ctx.globalAlpha = 0.25 + f * 0.75;
+          ctx.strokeStyle = BONE; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.roundRect(-7 * s, -18 * s, 14 * s, 26 * s, 6 * s); ctx.stroke(); ctx.restore();
+        }
+        ctx.fillStyle = PINK; ctx.beginPath(); ctx.arc(18 * s, -14 * s - (c.kind === "flick" ? 10 * s : 0), 4 * s, 0, 7); ctx.fill();
+        ctx.strokeStyle = c.kind === "push" ? LIME : PINK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(-30 * s, 22 * s); ctx.quadraticCurveTo(0, c.kind === "push" ? 6 * s : 18 * s, 30 * s, c.kind === "push" ? -10 * s : -34 * s); ctx.stroke();
+      } else if (c.kind === "grip") {
+        for (var g = 1; g <= 10; g++) { ctx.fillStyle = g <= (c.value || 3) ? LIME : "rgba(236,240,246,.18)"; ctx.fillRect(-40 * s + (g - 1) * 8.4 * s, 6 * s, 6.4 * s, -((g * 2.4) + 4) * s); }
+        ctx.fillStyle = BONE; ctx.font = "700 " + Math.round(18 * s) + "px ui-monospace, Menlo, monospace"; ctx.textAlign = "center"; ctx.fillText((c.value || 3) + "/10", 0, 30 * s); ctx.textAlign = "left";
+      } else if (c.kind === "height") {
+        line([-30 * s, 30 * s], [30 * s, 30 * s], 1.4, BONE); line([0, 30 * s], [0, -20 * s], 2.4, BONE);
+        ctx.fillStyle = PINK; [[-26, 0.35], [-8, 0.2], [10, 0.6], [26, 0.9]].forEach(function (b2, i2) { var yy = -30 * s + i2 * 6 * s; ctx.globalAlpha = 0.3 + i2 * 0.23; ctx.beginPath(); ctx.arc(b2[0] * s, yy + (i2 > 1 ? i2 * 8 * s : 0), 4 * s, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1;
+      } else if (c.kind === "toes") {
+        ctx.fillStyle = "rgba(215,240,60,.18)"; ctx.fillRect(4 * s, -40 * s, 40 * s, 80 * s); line([4 * s, -40 * s], [4 * s, 40 * s], 2, LIME);
+        ctx.strokeStyle = BONE; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.ellipse(-12 * s, 14 * s, 16 * s, 7 * s, 0, 0, 7); ctx.stroke();
+      }
+      ctx.restore();
+      if (c.label) { ctx.fillStyle = "rgba(236,240,246,.9)"; ctx.font = "600 10px ui-monospace, Menlo, monospace"; ctx.textAlign = "center"; ctx.fillText(c.label, cx, cy - r - 8); ctx.textAlign = "left"; }
+      ctx.restore();
+    }
+
+    function drawCaption(text, k) {
+      if (!text) return;
+      var words = text.split(" "), shown = Math.ceil(clamp(k / 0.55, 0, 1) * words.length);
+      ctx.save(); ctx.textBaseline = "middle"; ctx.font = "600 " + Math.round(clamp(W / 22, 15, 28)) + "px 'DM Sans', system-ui, sans-serif";
+      var lines = [[]], maxW = W * 0.86;
+      words.forEach(function (w) { var cur = lines[lines.length - 1].concat(w).join(" ").replace(/\*/g, ""); if (ctx.measureText(cur).width > maxW && lines[lines.length - 1].length) lines.push([w]); else lines[lines.length - 1].push(w); });
+      var idx = 0, lh = clamp(W / 22, 15, 28) * 1.3, y0 = H * 0.88 - (lines.length - 1) * lh / 2;
+      lines.forEach(function (ln, li) {
+        var full = ln.join(" ").replace(/\*/g, ""), x = (W - ctx.measureText(full).width) / 2, y = y0 + li * lh;
+        ln.forEach(function (w) {
+          var key = /^\*.*\*[.,!?]?$/.test(w), word = w.replace(/\*/g, ""), ww = ctx.measureText(word).width, vis = idx < shown;
+          if (vis) {
+            if (key) { ctx.strokeStyle = LIME; ctx.lineWidth = 1.2; ctx.strokeRect(x - 4, y - lh * 0.42, ww + 8, lh * 0.84); ctx.fillStyle = LIME; [[x - 4, y - lh * 0.42], [x + ww + 4, y + lh * 0.42]].forEach(function (d) { ctx.beginPath(); ctx.arc(d[0], d[1], 2.6, 0, 7); ctx.fill(); }); }
+            ctx.fillStyle = key ? "#FFFFFF" : idx === shown - 1 ? "#FFFFFF" : "rgba(236,240,246,.62)"; ctx.fillText(word, x, y);
+          }
+          x += ww + ctx.measureText(" ").width; idx++;
+        });
+      });
+      ctx.restore();
+    }
+
+    function frame(time) {
+      if (!lesson) return;
+      var sc = scenes[0], acc = 0, i = 0;
+      for (i = 0; i < scenes.length; i++) { if (t < acc + scenes[i].dur || i === scenes.length - 1) { sc = scenes[i]; break; } acc += scenes[i].dur; }
+      var k = clamp((t - acc) / sc.dur, 0, 1), e = ease(clamp(k / 0.7, 0, 1));
+      var prev = scenes[i - 1] || sc, c0 = prev.cam || { x: 0, y: 3, z: 1 }, c1 = sc.cam || c0, ck = ease(clamp(k / 0.35, 0, 1));
+      cam = { x: lerp(c0.x, c1.x, ck), y: lerp(c0.y, c1.y, ck), z: lerp(c0.z, c1.z, ck) };
+      ctx.fillStyle = "#08090B"; ctx.fillRect(0, 0, W, H);
+      // grid
+      ctx.strokeStyle = "rgba(255,255,255,.035)"; ctx.lineWidth = 1; for (var gx = 0; gx < W; gx += 32) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); } for (var gy = 0; gy < H; gy += 32) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+      if (sc.court !== false) drawCourt(sc, clamp(k * 3, 0, 1));
+      var Jmain = null;
+      (sc.players || []).forEach(function (pl, n) {
+        var pa = POSES[pl.from] || POSES.ready, pb = POSES[pl.to || pl.from] || pa, pk = pl.t0 != null ? clamp((k - pl.t0) / ((pl.t1 || 1) - pl.t0), 0, 1) : e;
+        var J = skeleton(mixPose(pa, pb, ease(pk)), pl.x != null ? pl.x : -9, pl.dir || 1);
+        if (pl.ghost) drawFigure(skeleton(pa, pl.x != null ? pl.x : -9, pl.dir || 1), 0.18, true);
+        drawFigure(J, pl.dim ? 0.45 : 1);
+        if (n === 0) Jmain = J;
+      });
+      drawBall(sc.ball, k);
+      drawHud(sc.hud, k);
+      drawCallout(sc.callout, clamp((k - (sc.callout && sc.callout.t0 || 0.15)) / 0.85, 0, 1), Jmain);
+      if (sc.note) { ctx.fillStyle = "rgba(236,240,246,.4)"; ctx.font = "500 10px ui-monospace, Menlo, monospace"; ctx.fillText(sc.note, W * 0.05, H * 0.975); }
+      drawCaption(sc.cap, k);
+      if (onTick) onTick(t, total, i);
+    }
+    function loop(now) {
+      if (playing) { t += Math.min(0.05, (now - last) / 1000) * speed; if (t >= total) { t = total; playing = false; } }
+      last = now; frame(); raf = requestAnimationFrame(loop);
+    }
+    size(); window.addEventListener("resize", size);
+    raf = requestAnimationFrame(function (n) { last = n; loop(n); });
+    return {
+      load: function (l) { lesson = l; scenes = l.scenes; total = scenes.reduce(function (a, s) { return a + s.dur; }, 0); t = 0; },
+      play: function () { if (t >= total) t = 0; playing = true; }, pause: function () { playing = false; },
+      toggle: function () { this[playing ? "pause" : "play"](); return playing; },
+      seek: function (x) { t = clamp(x, 0, total); }, chapter: function (n) { var a = 0; for (var i = 0; i < n; i++) a += scenes[i].dur; t = a; },
+      speed: function (s) { speed = s; }, get t() { return t; }, get total() { return total; }, get playing() { return playing; },
+      onTick: function (f) { onTick = f; }, render: function (x) { t = x; frame(); }, destroy: function () { cancelAnimationFrame(raf); },
+    };
+  }
+  window.Coach = { player: Player, POSES: POSES };
+})();

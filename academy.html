@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Soft Hands Academy · Dinkin' Donut</title>
+<meta name="description" content="Advanced pickleball coaching: X-ray technique animations, drills and quizzes. Learn the dink, the drop, the reset and more.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090B">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#08090B;--s1:#101216;--s2:#161A20;--line:rgba(236,240,246,.1);--fg:#ECF0F6;--mute:rgba(236,240,246,.6);--pink:#FF4D86;--lime:#D7F03C;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;--d:"Fredoka",system-ui,sans-serif;--b:"DM Sans",system-ui,sans-serif;--e:cubic-bezier(.16,1,.3,1)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--b);-webkit-font-smoothing:antialiased}
+a{color:inherit}button{font:inherit;color:inherit}[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--d);font-weight:700;line-height:1.02;margin:0;letter-spacing:-.01em}
+.w{max-width:1240px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left))}
+.k{font:700 11px var(--mono);letter-spacing:.24em;text-transform:uppercase;color:var(--lime)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:13px 20px;font:700 15px var(--b);cursor:pointer;text-decoration:none;transition:transform .2s var(--e),background .2s}
+.btn:hover{transform:translateY(-1px)}.btn.lime{background:var(--lime);color:#0B0C0E}.btn.pink{background:var(--pink);color:#fff}.btn.ghost{background:transparent;box-shadow:inset 0 0 0 1px rgba(236,240,246,.22)}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px}
+/* nav */
+.nav{position:sticky;top:0;z-index:20;background:rgba(8,9,11,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .w{display:flex;align-items:center;gap:14px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 18px var(--d)}.brand img{width:30px;height:30px}
+.brand small{font:700 11px var(--mono);letter-spacing:.2em;color:var(--mute);margin-left:4px}
+.who{margin-left:auto;display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid var(--line);font:700 12px var(--mono);letter-spacing:.08em}
+.who i{width:8px;height:8px;border-radius:50%;background:var(--mute)}.who.on i{background:var(--lime);box-shadow:0 0 0 4px rgba(215,240,60,.18)}
+/* stage */
+.top{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:32px;padding:32px 0 20px;align-items:start}
+.stage{position:relative;border-radius:22px;overflow:hidden;background:#000;border:1px solid var(--line);aspect-ratio:4/5;max-height:78vh;width:100%}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage .lock{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(180deg,rgba(8,9,11,.2),rgba(8,9,11,.92));text-align:center;padding:24px}
+.ctl{display:flex;align-items:center;gap:10px;margin-top:12px}
+.ctl button{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--s1);cursor:pointer;display:grid;place-items:center}
+.ctl button.wide{width:auto;padding:0 14px;border-radius:999px;font:700 12px var(--mono)}
+.ctl button[aria-pressed=true]{background:var(--lime);color:#0B0C0E;border-color:var(--lime)}
+.bar{position:relative;flex:1;height:34px;cursor:pointer;touch-action:none}
+.bar .tr{position:absolute;left:0;right:0;top:15px;height:4px;border-radius:4px;background:rgba(236,240,246,.12)}
+.bar .fi{position:absolute;left:0;top:15px;height:4px;border-radius:4px;background:var(--pink)}
+.bar .tk{position:absolute;top:11px;width:2px;height:12px;background:rgba(236,240,246,.35)}
+.time{font:600 12px var(--mono);color:var(--mute);min-width:84px;text-align:right}
+.chap{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:4px}
+.chap button{flex:none;border:1px solid var(--line);background:transparent;border-radius:999px;padding:6px 11px;font:600 12px var(--mono);color:var(--mute);cursor:pointer}
+.chap button.on{color:#0B0C0E;background:var(--fg);border-color:var(--fg)}
+/* side */
+.side h1{font-size:clamp(34px,4.4vw,54px);margin:10px 0 10px}
+.side .sum{color:var(--mute);font-size:17px;margin:0 0 18px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}.meta span{font:700 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;padding:7px 11px;border-radius:999px;border:1px solid var(--line)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.tabs button{border:0;background:none;padding:10px 12px;font:700 14px var(--b);color:var(--mute);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected=true]{color:var(--fg);border-color:var(--lime)}
+.pane ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.pane li{display:flex;gap:12px;padding:14px;border-radius:14px;background:var(--s1);border:1px solid var(--line)}
+.pane li b{display:block;font-size:15px}.pane li span{color:var(--mute);font-size:14px}
+.pane .n{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:700 12px var(--mono);background:rgba(215,240,60,.14);color:var(--lime)}
+.pane .x{background:rgba(255,77,134,.14);color:var(--pink)}
+.pane input[type=checkbox]{width:20px;height:20px;accent-color:var(--lime);flex:none;margin-top:2px}
+.q{padding:16px;border-radius:14px;background:var(--s1);border:1px solid var(--line);margin-bottom:10px}
+.q p{margin:0 0 10px;font-weight:700}.q button{display:block;width:100%;text-align:left;margin-top:6px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:transparent;cursor:pointer}
+.q button.ok{border-color:var(--lime);background:rgba(215,240,60,.12)}.q button.no{border-color:var(--pink);background:rgba(255,77,134,.1)}
+.done{margin-top:16px;width:100%}
+/* library */
+.lib{padding:40px 0}
+.lib-h{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.lib-h h2{font-size:clamp(28px,3.4vw,40px)}
+.prog{display:flex;align-items:center;gap:10px;font:700 12px var(--mono);color:var(--mute)}.prog .pb{width:180px;height:6px;border-radius:6px;background:rgba(236,240,246,.12);overflow:hidden}.prog .pb i{display:block;height:100%;background:var(--lime)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.card{position:relative;text-align:left;padding:18px;border-radius:18px;background:var(--s1);border:1px solid var(--line);cursor:pointer;transition:border-color .2s,transform .3s var(--e);min-height:180px;display:flex;flex-direction:column;gap:8px}
+.card:hover{transform:translateY(-2px);border-color:rgba(215,240,60,.4)}.card.on{border-color:var(--lime)}
+.card .lv{font:700 10px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+.card h3{font-size:19px}.card p{margin:0;color:var(--mute);font-size:13.5px;flex:1}
+.card .st{position:absolute;top:14px;right:14px;font:700 11px var(--mono)}
+.card .st.lock{color:var(--mute)}.card .st.ok{color:var(--lime)}
+.card .num{font:700 12px var(--mono);color:var(--pink)}
+@media(max-width:1000px){.top{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stage{max-height:none}}
+@media(max-width:520px){.grid{grid-template-columns:1fr}}
+/* paywall */
+.pay{margin:10px 0 50px;padding:clamp(22px,4vw,40px);border-radius:26px;background:radial-gradient(600px 300px at 90% 0%,rgba(255,77,134,.14),transparent 70%),var(--s1);border:1px solid var(--line);display:grid;grid-template-columns:1.1fr .9fr;gap:30px}
+.pay h2{font-size:clamp(28px,3.6vw,44px);margin:10px 0}.pay p{color:var(--mute)}
+.plans{display:grid;gap:10px}
+.plan{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border-radius:16px;border:1px solid var(--line);background:var(--s2)}
+.plan b{font:700 22px var(--d)}.plan small{display:block;color:var(--mute)}
+.plan.hot{border-color:var(--lime)}
+.keyin{display:flex;gap:8px;margin-top:6px}.keyin input{flex:1;min-width:0;font:700 16px var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:#000;color:var(--fg)}
+.err{color:var(--pink);font-weight:700;min-height:1.3em;margin:8px 0 0}
+.keybox{padding:18px;border-radius:16px;border:1px solid var(--lime);background:rgba(215,240,60,.08);margin:0 0 30px}
+.keybox code{font:700 22px var(--mono);letter-spacing:.12em;color:var(--lime)}
+@media(max-width:860px){.pay{grid-template-columns:1fr}}
+/* owner */
+.own{margin:0 0 60px;padding:24px;border-radius:22px;border:1px dashed rgba(215,240,60,.4)}
+.own table{width:100%;border-collapse:collapse;font-size:14px;margin-top:12px}.own td,.own th{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line)}
+.own th{font:700 10px var(--mono);letter-spacing:.16em;color:var(--mute)}
+.own input{font:600 14px var(--b);padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#000;color:var(--fg)}
+@media(max-width:520px){.brand small{display:none}.who{font-size:11px}}
+footer{padding:30px 0 50px;border-top:1px solid var(--line);color:var(--mute);font-size:13px}
+footer .w{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+</style>
+</head>
+<body>
+<header class="nav"><div class="w"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut<small>ACADEMY</small></a><span class="who" id="who"><i></i><span>Free preview</span></span></div></header>
+
+<main class="w">
+  <div class="keybox" id="keybox" hidden><div class="k">Welcome to the Academy</div><p style="margin:8px 0">Your Academy key. Save it: use it to sign in on your other devices.</p><code id="keyval"></code></div>
+
+  <section class="top">
+    <div>
+      <div class="stage" id="stage"><canvas id="cv" aria-label="Lesson animation"></canvas>
+        <div class="lock" id="lockov" hidden><div><div class="k">Members only</div><h3 style="font-size:28px;margin:10px 0">Unlock the full lesson</h3><p style="color:var(--mute);margin:0 0 16px">You’ve watched the free preview.</p><a class="btn lime" href="#join">See plans</a></div></div>
+      </div>
+      <div class="ctl">
+        <button type="button" id="play" aria-label="Play"><svg width="16" height="16" viewBox="0 0 16 16"><path id="playIcon" d="M4 2l10 6-10 6z" fill="currentColor"/></svg></button>
+        <div class="bar" id="bar" role="slider" aria-label="Lesson progress" tabindex="0"><div class="tr"></div><div class="fi" id="fill"></div><div id="ticks"></div></div>
+        <span class="time" id="time">0:00 / 0:00</span>
+      </div>
+      <div class="ctl" style="margin-top:6px">
+        <button type="button" class="wide" id="slow" aria-pressed="false">0.5×</button>
+        <button type="button" class="wide" id="voice" aria-pressed="false">Narration</button>
+        <button type="button" class="wide" id="replay">Replay</button>
+      </div>
+      <div class="chap" id="chap"></div>
+    </div>
+    <div class="side">
+      <div class="k">Soft Hands Academy</div>
+      <h1 id="lt">Loading…</h1>
+      <p class="sum" id="ls"></p>
+      <div class="meta" id="lm"></div>
+      <div class="tabs" role="tablist"><button role="tab" data-t="keys" aria-selected="true">Key points</button><button role="tab" data-t="drills" aria-selected="false">Drills</button><button role="tab" data-t="mist" aria-selected="false">Mistakes</button><button role="tab" data-t="quiz" aria-selected="false">Quick check</button></div>
+      <div class="pane" id="pane"></div>
+      <button class="btn ghost done" id="done" type="button">Mark lesson complete</button>
+    </div>
+  </section>
+
+  <section class="lib">
+    <div class="lib-h"><div><div class="k">Curriculum</div><h2>Eight lessons. Soft hands, sharp game.</h2></div><div class="prog"><span id="pt">0 of 8 complete</span><span class="pb"><i id="pbi" style="width:0"></i></span></div></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="pay" id="join">
+    <div>
+      <div class="k">Membership</div>
+      <h2>Train like the players you admire.</h2>
+      <p>Every lesson in full: X-ray technique animations, slow-motion, narration, drills, common mistakes and quick checks. New lessons are added as the club grows. Cancel any time.</p>
+      <div class="keyin"><input id="keyIn" placeholder="SHA-XXXX-XXXX" aria-label="Academy key" maxlength="13"><button class="btn ghost" id="keyGo" type="button">Use key</button></div>
+      <p class="err" id="payErr"></p>
+    </div>
+    <div class="plans">
+      <div class="plan"><div><b>39 QAR</b><small>per month</small></div><button class="btn ghost" data-buy="month" type="button">Join monthly</button></div>
+      <div class="plan hot"><div><b>390 QAR</b><small>per year · 2 months free</small></div><button class="btn lime" data-buy="year" type="button">Join yearly</button></div>
+      <a class="btn ghost" id="waPay" target="_blank" rel="noopener" data-noicon>Pay by Fawran on WhatsApp</a>
+      <small style="color:var(--mute);text-align:center">Secure card payments by Stripe. Prices may show in your local currency at checkout.</small>
+    </div>
+  </section>
+
+  <section class="own" id="own" hidden>
+    <div class="k">Team · Academy keys</div>
+    <h3 style="font-size:24px;margin:8px 0">Give someone access</h3>
+    <p style="color:var(--mute);margin:0 0 10px">For players who paid by Fawran, or for coaches on your team. Send them the key on WhatsApp.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><input id="gName" placeholder="Name"><select id="gDays" style="font:600 14px var(--b);padding:10px;border-radius:10px;background:#000;color:var(--fg);border:1px solid var(--line)"><option value="30">1 month</option><option value="90">3 months</option><option value="365">1 year</option></select><button class="btn lime" id="gGo" type="button">Create key</button></div>
+    <p id="gOut" style="font:700 18px var(--mono);color:var(--lime)"></p>
+    <table><thead><tr><th>KEY</th><th>NAME</th><th>TYPE</th><th>VALID UNTIL</th><th></th></tr></thead><tbody id="keys"></tbody></table>
+  </section>
+</main>
+<footer><div class="w"><span>© Dinkin’ Donut · Soft Hands Academy · Sweet game, soft hands.</span><span><a href="/">Home</a> · Designed &amp; Developed by Drew Nolasco &amp; Angel Flores</span></div></footer>
+
+<script src="/js/coach.js"></script>
+<script src="/js/social.js" defer></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const store = { get: k => { try { return localStorage.getItem(k) || ""; } catch { return ""; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
+let KEY = store.get("dd-academy-key"), HOST = store.get("dd-host-token"), ACCESS = { ok: false }, LIST = [], cur = null, L = null, tab = "keys";
+const done = () => { try { return JSON.parse(store.get("dd-academy-done") || "[]"); } catch { return []; } };
+const api = (q, body) => fetch("/api/academy" + (q || ""), { method: body ? "POST" : "GET", headers: { "Content-Type": "application/json", ...(KEY ? { "x-academy-key": KEY } : {}), ...(HOST ? { "x-host-token": HOST } : {}) }, body: body ? JSON.stringify(body) : undefined }).then(async r => ({ status: r.status, ...(await r.json()) }));
+
+const P = Coach.player($("cv"));
+P.onTick((t, total, i) => {
+  $("fill").style.width = (total ? t / total * 100 : 0) + "%";
+  const f = s => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0"); $("time").textContent = f(t) + " / " + f(total);
+  $("playIcon").setAttribute("d", P.playing ? "M3 2h4v12H3zM9 2h4v12H9z" : "M4 2l10 6-10 6z");
+  document.querySelectorAll("#chap button").forEach((b, n) => b.classList.toggle("on", n === i));
+  if (i !== lastScene) { lastScene = i; speak(i); }
+  if (L && L.preview && t >= total && !ACCESS.ok) $("lockov").hidden = false;
+});
+let lastScene = -1, voiceOn = false;
+function speak(i) {
+  if (!voiceOn || !("speechSynthesis" in window) || !L || !P.playing) return;
+  speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(L.scenes[i].cap.replace(/\*/g, "")); u.rate = P.speedV || 1; speechSynthesis.speak(u);
+}
+
+async function boot() {
+  const paid = new URLSearchParams(location.search).get("paid");
+  if (paid) {
+    history.replaceState(null, "", "/academy");
+    const r = await api("", { claim: paid });
+    if (r.key) { KEY = r.key; store.set("dd-academy-key", KEY); $("keyval").textContent = KEY; $("keybox").hidden = false; }
+    else $("payErr").textContent = r.error || "";
+  }
+  const j = await api("?lessons");
+  LIST = j.lessons || []; ACCESS = j.access || { ok: false };
+  const w = $("who"); w.classList.toggle("on", ACCESS.ok); w.querySelector("span").textContent = ACCESS.who === "team" ? "Team access" : ACCESS.ok ? "Member" : ACCESS.expired ? "Membership ended" : "Free preview";
+  $("join").hidden = ACCESS.ok; $("own").hidden = ACCESS.who !== "team";
+  if (ACCESS.who === "team") loadKeys();
+  library(); open(LIST[0].id);
+}
+function library() {
+  const d = done();
+  $("grid").innerHTML = LIST.map((l, i) => { const locked = !ACCESS.ok && i > 0, ok = d.includes(l.id);
+    return `<button class="card ${cur === l.id ? "on" : ""}" data-l="${l.id}" type="button"><span class="num">${String(i + 1).padStart(2, "0")}</span><span class="lv">${esc(l.level)} · ${l.mins} min</span><h3>${esc(l.title)}</h3><p>${esc(l.summary)}</p><span class="st ${locked ? "lock" : ok ? "ok" : ""}">${locked ? "LOCKED" : ok ? "✓ DONE" : i === 0 && !ACCESS.ok ? "PREVIEW" : ""}</span></button>`; }).join("");
+  $("pt").textContent = `${d.length} of ${LIST.length} complete`; $("pbi").style.width = (d.length / LIST.length * 100) + "%";
+}
+async function open(id) {
+  const i = LIST.findIndex(l => l.id === id);
+  if (!ACCESS.ok && i > 0) { $("join").scrollIntoView({ behavior: "smooth" }); return; }
+  const r = await api("?lesson=" + id); if (!r.lesson) return;
+  L = r.lesson; cur = id; lastScene = -1; $("lockov").hidden = true;
+  P.load(L); P.play();
+  $("lt").textContent = L.title; $("ls").textContent = L.summary;
+  $("lm").innerHTML = `<span>${esc(L.level)}</span><span>${L.mins} min</span><span>${L.scenes.length} scenes</span>${L.preview ? "<span style='border-color:var(--pink);color:var(--pink)'>Preview</span>" : ""}`;
+  const total = L.scenes.reduce((a, s) => a + s.dur, 0); let acc = 0;
+  $("ticks").innerHTML = L.scenes.map(s => { const x = acc / total * 100; acc += s.dur; return `<span class="tk" style="left:${x}%"></span>`; }).join("");
+  $("chap").innerHTML = L.scenes.map((s, n) => `<button type="button" data-c="${n}">${String(n + 1).padStart(2, "0")}</button>`).join("");
+  $("done").hidden = !!L.preview; $("done").textContent = done().includes(id) ? "✓ Completed" : "Mark lesson complete";
+  pane(); library(); if (innerWidth < 1000) $("stage").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function pane() {
+  if (!L) return; const d = L, el = $("pane");
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.t === tab));
+  if (d.preview && tab !== "keys") { el.innerHTML = `<ul><li><span class="n">🔒</span><div><b>Members only</b><span>Drills, common mistakes and quick checks come with membership.</span></div></li></ul>`; return; }
+  if (tab === "keys") el.innerHTML = `<ul>${(d.keys || []).map((k, n) => `<li><span class="n">${n + 1}</span><div><b>${esc(k)}</b></div></li>`).join("")}</ul>`;
+  if (tab === "drills") { const saved = JSON.parse(store.get("dd-drill-" + d.id) || "[]"); el.innerHTML = `<ul>${d.drills.map((x, n) => `<li><input type="checkbox" data-dr="${n}" ${saved.includes(n) ? "checked" : ""} aria-label="Drill done"><div><b>${esc(x[0])}</b><span>${esc(x[1])}</span></div></li>`).join("")}</ul>`; }
+  if (tab === "mist") el.innerHTML = `<ul>${d.mistakes.map(x => `<li><span class="n x">!</span><div><b>${esc(x[0])}</b><span>${esc(x[1])}</span></div></li>`).join("")}</ul>`;
+  if (tab === "quiz") el.innerHTML = d.quiz.map((q, n) => `<div class="q" data-q="${n}"><p>${n + 1}. ${esc(q[0])}</p>${q[1].map((a, m) => `<button type="button" data-a="${m}">${esc(a)}</button>`).join("")}</div>`).join("") + `<p id="score" style="font:700 13px var(--mono);color:var(--mute)"></p>`;
+}
+document.addEventListener("click", e => {
+  const c = e.target.closest("[data-l]"); if (c) return open(c.dataset.l);
+  const t = e.target.closest("[data-t]"); if (t) { tab = t.dataset.t; return pane(); }
+  const ch = e.target.closest("[data-c]"); if (ch) { P.chapter(+ch.dataset.c); P.play(); return; }
+  const a = e.target.closest(".q button"); if (a) { const qd = a.closest(".q"), q = L.quiz[+qd.dataset.q], right = +a.dataset.a === q[2];
+    qd.querySelectorAll("button").forEach((b, m) => { b.disabled = true; if (m === q[2]) b.classList.add("ok"); }); if (!right) a.classList.add("no");
+    const answered = document.querySelectorAll(".q button:disabled").length / 1, okN = document.querySelectorAll(".q button.ok").length - document.querySelectorAll(".q button.no").length;
+    $("score").textContent = `${document.querySelectorAll(".q button.no").length ? "Review the lesson and try again." : "Nice: all correct so far."}`; return; }
+  const buy = e.target.closest("[data-buy]"); if (buy) { buy.disabled = true; $("payErr").textContent = ""; api("", { checkout: { interval: buy.dataset.buy } }).then(r => { if (r.url) location.href = r.url; else { $("payErr").textContent = r.error || "Card payment isn’t available right now. Use WhatsApp instead."; buy.disabled = false; } }); }
+});
+document.addEventListener("change", e => { const d = e.target.closest("[data-dr]"); if (d) { const k = "dd-drill-" + L.id, s = new Set(JSON.parse(store.get(k) || "[]")); d.checked ? s.add(+d.dataset.dr) : s.delete(+d.dataset.dr); store.set(k, JSON.stringify([...s])); } });
+$("done").onclick = () => { const d = new Set(done()); d.add(cur); store.set("dd-academy-done", JSON.stringify([...d])); $("done").textContent = "✓ Completed"; library(); };
+$("play").onclick = () => { if ($("lockov").hidden === false) return; P.toggle(); if (P.playing) speak(lastScene < 0 ? 0 : lastScene); else if (window.speechSynthesis) speechSynthesis.cancel(); };
+$("replay").onclick = () => { $("lockov").hidden = true; P.seek(0); P.play(); };
+$("slow").onclick = e => { const on = e.target.getAttribute("aria-pressed") !== "true"; e.target.setAttribute("aria-pressed", on); P.speed(on ? 0.5 : 1); P.speedV = on ? 0.8 : 1; };
+$("voice").onclick = e => { voiceOn = e.target.getAttribute("aria-pressed") !== "true"; e.target.setAttribute("aria-pressed", voiceOn); if (!voiceOn && window.speechSynthesis) speechSynthesis.cancel(); else speak(Math.max(0, lastScene)); };
+const scrub = ev => { const r = $("bar").getBoundingClientRect(), x = Math.min(1, Math.max(0, ((ev.touches ? ev.touches[0].clientX : ev.clientX) - r.left) / r.width)); P.seek(x * P.total); };
+$("bar").addEventListener("pointerdown", ev => { scrub(ev); const mv = e2 => scrub(e2), up = () => { removeEventListener("pointermove", mv); removeEventListener("pointerup", up); }; addEventListener("pointermove", mv); addEventListener("pointerup", up); });
+$("bar").addEventListener("keydown", e => { if (e.key === "ArrowRight") P.seek(P.t + 3); if (e.key === "ArrowLeft") P.seek(P.t - 3); });
+document.addEventListener("keydown", e => { if (e.key === " " && e.target === document.body) { e.preventDefault(); $("play").click(); } });
+$("keyGo").onclick = async () => { const k = $("keyIn").value.trim().toUpperCase(); KEY = k; const r = await api("?lessons"); if (r.access && r.access.ok) { store.set("dd-academy-key", k); location.reload(); } else { KEY = store.get("dd-academy-key"); $("payErr").textContent = r.access && r.access.expired ? "That key’s membership has ended. Renew to continue." : "That key didn’t work. Check it and try again."; } };
+$("waPay").href = "https://wa.me/97430763431?text=" + encodeURIComponent("Hi Dinkin' Donut! I'd like to join Soft Hands Academy and pay by Fawran. Monthly (39 QAR) or yearly (390 QAR):");
+async function loadKeys() { const r = await api("?keys"); $("keys").innerHTML = (r.keys || []).map(k => `<tr><td><code>${k.key}</code></td><td>${esc(k.name || k.email || "")}</td><td>${k.kind === "stripe" ? "Card" : "Issued"}</td><td>${k.active ? new Date(k.until).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "<span style='color:var(--pink)'>Inactive</span>"}</td><td>${k.active ? `<button class="btn ghost" style="padding:6px 10px;font-size:12px" data-rv="${k.key}">Revoke</button>` : ""}</td></tr>`).join("") || `<tr><td colspan="5" style="color:var(--mute)">No keys yet.</td></tr>`; }
+$("gGo").onclick = async () => { const r = await api("", { grant: { name: $("gName").value, days: $("gDays").value } }); if (r.key) { $("gOut").textContent = r.key; loadKeys(); } };
+$("keys").addEventListener("click", e => { const k = e.target.dataset.rv; if (k && confirm("Revoke " + k + "?")) api("", { revoke: k }).then(loadKeys); });
+boot();
+</script>
+</body>
+</html>
