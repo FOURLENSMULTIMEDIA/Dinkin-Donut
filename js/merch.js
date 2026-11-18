@@ -88,3 +88,21 @@ window.MERCH = [
 // The 20: the numbered 1-of-1 edition. Only 20 are ever made (the server hands out Nº 01-20).
 // "extra" is added to the shirt price, in QAR.
 window.EDITION = { name: "The 20", cap: 20, extra: 60 };
+
+// The Court Set (women's): fitted polo with an open contrast collar + pleated tennis skirt.
+window.SET = {
+  name: "The Court Set",
+  price: 249,
+  status: "preorder",
+  leadTime: "Made to order. Ready in about 3 weeks.",
+  fits: ["Women’s fit"],
+  prints: [["name", "Name on back"], ["plain", "No name"]],
+  sizes: ["XS", "S", "M", "L", "XL"],
+  specs: [
+    ["Open Johnny collar", "A contrast collar that lies flat and frames the neckline, with fine tipping."],
+    ["Fitted, not tight", "Princess seams and a curved hem that sits just over the skirt’s waistband."],
+    ["Pleated court skirt", "Box pleats that move with you, a tipped hem and built-in shorts with a ball pocket."],
+    ["Quick-dry knit", "Light, breathable and made for long Doha nights on court."],
+  ],
+  sizeChart: { XS: 42, S: 45, M: 48, L: 51, XL: 54 },
+};

@@ -71,6 +71,7 @@ svg{overflow:visible}
 <div id="grain"></div><div id="vig"></div>
 </div>
 <script src="../js/jersey.js"></script>
+<script src="../js/mockup.js"></script>
 <script>
 const $=id=>document.getElementById(id);
 const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
@@ -90,7 +91,7 @@ const cols=["#D7F03C","#FFF6EA","#2F7A4F","#E8A95B","#FFFFFF"];let sp="";
 for(let i=0;i<34;i++){const a=i*2.39996,R=24+(i*7.3%22),x=R*Math.cos(a),y=R*Math.sin(a)*.8-6;sp+=`<rect class="s" x="-4" y="-1.2" width="8" height="2.4" rx="1.2" fill="${cols[i%5]}" data-x="${x}" data-y="${y}" data-r="${(i*47)%180}"/>`}
 $("spr").innerHTML=sp;const sprs=[...document.querySelectorAll("#spr .s")];
 const J=window.Jersey;
-$("shirts").innerHTML=`<div>${J.render({way:Object.keys(J.WAYS)[0],side:"back",name:"DREW",num:"7"})}</div><div>${J.renderPro({way:"bughaw",side:"back",name:"ANGEL",num:"11"})}</div><div>${J.renderPolo({way:Object.keys(J.POLO_WAYS)[0],side:"back",name:"ARAYKOH",num:"3"})}</div>`;
+$("shirts").innerHTML=`<div>${Mockup.tee({way:Object.keys(J.WAYS)[0],side:"back",name:"DREW",num:"7"})}</div><div>${Mockup.pro({way:"bughaw",side:"back",name:"ANGEL",num:"11"})}</div><div>${Mockup.polo({way:Object.keys(J.POLO_WAYS)[0],side:"back",name:"ARAYKOH",num:"3"})}</div>`;
 const shirts=[...$("shirts").children];
 
 function seek(t){

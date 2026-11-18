@@ -40,16 +40,16 @@
     if (i === 0) later(function () { type($("t0"), "Courts are lit.", 75); }, 350);
     if (i === 2) {
       var f = $("fJ"); f.style.transform = "perspective(900px) rotateY(0)";
-      f.innerHTML = J.render({ way: "midnight", side: "front" });
+      f.innerHTML = Mockup.tee({ way: "midnight", side: "front" });
       $("fName").textContent = "Made for you.";
       later(function () { f.style.transform = "perspective(900px) rotateY(90deg)"; }, 1200);
       later(function () {
         var name = "ANGEL", n = 0, num = 0;
-        f.innerHTML = J.render({ way: "midnight", side: "back", name: "", num: "" });
+        f.innerHTML = Mockup.tee({ way: "midnight", side: "back", name: "", num: "" });
         f.style.transform = "perspective(900px) rotateY(0)";
         var iv = setInterval(function () {
           n++; num = Math.min(7, num + 1);
-          f.innerHTML = J.render({ way: "midnight", side: "back", name: name.slice(0, n), num: String(num) });
+          f.innerHTML = Mockup.tee({ way: "midnight", side: "back", name: name.slice(0, n), num: String(num) });
 
           if (n >= name.length && num >= 7) { clearInterval(iv); $("fName").textContent = "Your name. Your number."; }
         }, 170);
@@ -58,14 +58,14 @@
     }
     if (i === 3) {
       var row = [["glaze", "DREW", "10", "Glaze", "Home"], ["midnight", "ANGEL", "23", "Midnight", "Tournament"], ["court", "ARAYKOH", "4", "Court", "Away"]];
-      $("fRow").innerHTML = row.map(function (r) { return "<div>" + J.render({ way: r[0], side: "back", name: r[1], num: r[2] }) + "<small>" + r[4] + "</small><b>" + r[3] + "</b></div>"; }).join("");
+      $("fRow").innerHTML = row.map(function (r) { return "<div>" + Mockup.tee({ way: r[0], side: "back", name: r[1], num: r[2] }) + "<small>" + r[4] + "</small><b>" + r[3] + "</b></div>"; }).join("");
     }
-    if (i === 5) $("fSeven").innerHTML = ["glaze", "court", "midnight", "cream", "cocoa", "sage", "blush"].map(function (w) { return J.render({ way: w, side: "front" }); }).join("");
-    if (i === 6) $("fPro").innerHTML = J.renderPro({ way: "bughaw", side: "front" }) + J.renderPro({ way: "perlas", side: "back", name: "DREW", num: "10" });
+    if (i === 5) $("fSeven").innerHTML = ["glaze", "court", "midnight", "cream", "cocoa", "sage", "blush"].map(function (w) { return Mockup.tee({ way: w, side: "front" }); }).join("");
+    if (i === 6) $("fPro").innerHTML = Mockup.pro({ way: "bughaw", side: "front" }) + Mockup.pro({ way: "perlas", side: "back", name: "DREW", num: "10" });
     if (i === 7) { var nm = "ARAYKOH", f1 = $("fOne"), tg = $("fOneTag");
-      var p1 = function (n) { var svg = J.render({ way: "cream", side: "back", name: n, num: n ? "8" : "" }); f1.innerHTML = svg; var m = svg.match(/DD-[0-9A-F]{4}/); tg.textContent = "1 of 1 · " + (m ? m[0] : "DD-····"); };
+      var p1 = function (n) { var svg = Mockup.tee({ way: "cream", side: "back", name: n, num: n ? "8" : "" }); f1.innerHTML = svg; var m = svg.match(/DD-[0-9A-F]{4}/); tg.textContent = "1 of 1 · " + (m ? m[0] : "DD-····"); };
       p1(""); for (var c = 1; c <= nm.length; c++) (function (k) { later(function () { p1(nm.slice(0, k)); }, 400 + k * 380); })(c); }
-    if (i === 4) $("fPolo").innerHTML = J.renderPolo({ way: "night", side: "front" }) + J.renderPolo({ way: "clubhouse", side: "back", name: "ANGEL" });
+    if (i === 4) $("fPolo").innerHTML = Mockup.polo({ way: "night", side: "front" }) + Mockup.polo({ way: "clubhouse", side: "back", name: "ANGEL" });
   }
 
   function tick(now) {
@@ -86,7 +86,7 @@
   function play() { if (playing) return; playing = true; $("play").hidden = true; t0 = performance.now() - elapsed; cur = -1; raf = requestAnimationFrame(tick); paint(); syncMusic(); }
   // Paused mid-shot: show the finished frame of that shot, never a half-turned or empty stage.
   function settle(i) {
-    if (i === 2) { var f = $("fJ"); f.style.transform = "none"; f.innerHTML = J.render({ way: "midnight", side: "back", name: "ANGEL", num: "7" }); $("fName").textContent = "Your name. Your number."; }
+    if (i === 2) { var f = $("fJ"); f.style.transform = "none"; f.innerHTML = Mockup.tee({ way: "midnight", side: "back", name: "ANGEL", num: "7" }); $("fName").textContent = "Your name. Your number."; }
     if (i === 0) $("t0").textContent = "Courts are lit.";
   }
   function pause() { playing = false; cancelAnimationFrame(raf); clear(); settle(cur); paint(); music.pause(); }
