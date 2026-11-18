@@ -204,6 +204,8 @@ footer .w{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
     <p id="tipsMore" style="color:var(--mute)"></p>
   </section>
 
+  <section id="film" style="margin:10px 0 26px" class="nomem"><div class="k">The 36-second tour</div><h2 style="font-size:clamp(26px,3.4vw,40px);margin:8px 0 14px">See what’s inside before you start.</h2>
+    <video controls playsinline preload="none" poster="/assets/video/academy-poster.jpg" style="width:100%;border-radius:22px;border:1px solid var(--line);background:#000;aspect-ratio:16/9"><source src="/assets/video/academy-16x9.mp4" type="video/mp4"></video></section>
   <section class="pay" id="join">
     <div>
       <div class="k">7 days free · then cancel or keep going</div>
@@ -275,7 +277,7 @@ async function boot() {
   if (paid) { history.replaceState(null, "", "/academy"); const r = await api("", { claim: paid }); if (r.key) { KEY = r.key; store.set("dd-academy-key", KEY); $("keyval").textContent = KEY; $("keybox").hidden = false; } else $("payErr").textContent = r.error || ""; }
   INFO = await api("?lessons"); LIST = INFO.lessons || []; ACCESS = INFO.access || { ok: false };
   const w = $("who"); w.classList.toggle("on", ACCESS.ok); w.querySelector("span").textContent = team() ? "Team access" : ACCESS.ok ? "Member" : ACCESS.expired ? "Membership ended" : "Free";
-  $("join").hidden = ACCESS.ok; $("own").hidden = !team(); $("present").hidden = !team(); $("notesTab").hidden = !team();
+  $("join").hidden = ACCESS.ok; $("film").hidden = ACCESS.ok; $("own").hidden = !team(); $("present").hidden = !team(); $("notesTab").hidden = !team();
   $("ctaBar").classList.toggle("on", !ACCESS.ok);
   $("libH").textContent = `${LIST.length} lessons. Soft hands, sharp game.`;
   const C = INFO.counts || {};

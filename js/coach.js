@@ -62,7 +62,7 @@
       W = Math.max(320, r.width); H = Math.max(320, r.height); canvas.width = W * DPR; canvas.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     }
     // world (feet) → screen
-    var S = function () { return (W / 30) * cam.z; };
+    var S = function () { return (Math.max(W, H * 0.75) / 30) * cam.z; };
     var X = function (x) { return W / 2 + (x - cam.x) * S(); };
     var Y = function (y) { return H * 0.6 - (y - cam.y) * S(); };
     var pt = function (p) { return [X(p[0]), Y(p[1])]; };
@@ -303,7 +303,7 @@
       drawHud(sc.hud, k);
       drawCallout(sc.callout, clamp((k - (sc.callout && sc.callout.t0 || 0.15)) / 0.85, 0, 1), Jmain);
       if (sc.note) { ctx.fillStyle = "rgba(236,240,246,.4)"; ctx.font = "500 10px ui-monospace, Menlo, monospace"; ctx.fillText(sc.note, W * 0.05, H * 0.975); }
-      chip(sc, i, k);
+      if (!lesson.noChip) chip(sc, i, k);
       drawCaption(sc.cap, k);
       if (onTick) onTick(t, total, i);
     }
