@@ -7,7 +7,7 @@
 //   POST { claim: sessionId }           after paying → { key }
 //   Owner: GET ?keys · POST { grant:{ name, days } } · POST { revoke: key }
 const crypto = require("crypto");
-const { LESSONS, FREE, TEASER, meta, HOME, SESSIONS, TIPS } = require("./_lessons");
+const { LESSONS, FREE, TEASER, meta, HOME, SESSIONS, TIPS, PLANS } = require("./_lessons");
 const { getDoc, setDoc, withLock } = require("./_store");
 const { isHost } = require("./_auth");
 const { stripe, enabled, taxOn } = require("./_stripe");
@@ -64,7 +64,7 @@ module.exports = async (req, res) => {
         if (FREE.includes(L.id)) return res.json({ lesson: { ...strip(L, false), free: true }, access: a });
         return res.json({ lesson: { ...meta(L), preview: true, scenes: L.scenes.slice(0, TEASER), keys: L.keys.slice(0, 1) }, access: a });
       }
-      if (q.home !== undefined) return res.json(a.ok ? { home: HOME, sessions: SESSIONS, access: a } : { home: HOME.slice(0, 2), locked: HOME.length - 2, sessions: SESSIONS.map(x => ({ ...x, locked: true })), access: a });
+      if (q.home !== undefined) return res.json(a.ok ? { home: HOME, sessions: SESSIONS, plans: PLANS, access: a } : { home: HOME.slice(0, 2), locked: HOME.length - 2, sessions: SESSIONS.map(x => ({ ...x, locked: true })), plans: PLANS.map(p => ({ id: p.id, title: p.title, for: p.for, weeks: p.weeks.map(w => ({ w: w.w, focus: w.focus })), locked: true })), access: a });
       if (q.tips !== undefined) return res.json(a.ok ? { tips: TIPS, access: a } : { tips: TIPS.slice(0, 6), locked: TIPS.length - 6, access: a });
       return res.json({ lessons: LESSONS.map(meta), access: a, card: enabled(), trialDays: TRIAL_DAYS, founderLeft: await founderLeft(), counts: { lessons: LESSONS.length, home: HOME.length, tips: TIPS.length } });
     }

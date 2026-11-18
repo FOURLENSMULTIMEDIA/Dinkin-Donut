@@ -248,6 +248,98 @@ const NOTES = {
 };
 LESSONS.forEach(l => { l.notes = NOTES[l.id] || null; });
 
+
+// ---- PRO TRACK: lessons 15-20 (advanced, for raising your DUPR) ----
+LESSONS.push(
+  {
+    id: "counters", title: "Counters & Hand Speed", level: "Pro", mins: 2,
+    summary: "Win the hands battle: compact swings, paddle tip up, and countering a speed-up instead of just surviving it.",
+    keys: ["Paddle tip up and out in front: it shortens your reaction path.", "Compact swing: the paddle travels inches, not feet.", "Counter at the shoulder or hip of their paddle side, aimed down.", "Reset the next ball if you're off balance; counter only when set."],
+    drills: [["Wall counters", "Alternate a speed-up and a counter against the wall for 30 seconds without a bounce."], ["Partner counter battle", "From the kitchen line, one speed-up, then counter until someone misses. Keep score to 11."], ["Tip-up freeze", "Partner calls 'freeze' mid-rally: your paddle tip must be above your wrist."]],
+    mistakes: [["Big backswing", "You're late on the second ball."], ["Countering upward", "Hitting up gives them an easy put-away."], ["Paddle tip down", "Every high ball becomes a reach."]],
+    quiz: [["Where should your paddle tip point in a hands battle?", ["Up", "Down at the floor"], 0], ["Where do you aim a counter?", ["Down at the shoulder or hip of their paddle side", "High over their head"], 0], ["Off balance after a speed-up?", ["Counter anyway", "Reset it soft"], 1]],
+    scenes: [
+      { dur: 4.5, cam: NET, kitchen: "both", tag: "dont", cap: "A big *backswing* makes you late on the second ball.", players: [{ x: -7.6, from: "attackBack", to: "attackThru" }, { x: 7.6, dir: -1, from: "attackBack", to: "attackThru", dim: true }] },
+      { dur: 4.5, cam: CLOSE, tag: "do", cap: "Paddle tip *up,* out in front. The swing travels inches.", players: [{ x: -8.5, from: "block", to: "attackThru", ghost: true }], joints: ["paddle", "elbow"], focus: "paddle" },
+      { dur: 5, cam: SIDE, kitchen: "both", tag: "do", cap: "Counter *down,* at their paddle-side hip.", players: [{ x: -7.6, from: "block", to: "attackThru", t0: 0.15, t1: 0.4 }, { x: 7.6, dir: -1, from: "attackThru", dim: true }], ball: { from: [-6.6, 3.8], to: [7.2, 2.2], apex: 3.9, apexAt: 0.1, t0: 0.25, t1: 0.65 } },
+      { dur: 4.5, cam: SIDE, kitchen: "both", tag: "tip", cap: "Off balance? Don't counter. *Reset* it into the kitchen.", players: [{ x: -8, from: "block" }, opp("ready", 7.6)], ball: { from: [-7.2, 2.6], to: [4.4, 0], apex: 3.7, apexAt: 0.45, t0: 0.15, t1: 0.9, bounce: true } },
+    ],
+  },
+  {
+    id: "block", title: "Body Shots: the Backhand Block", level: "Pro", mins: 2,
+    summary: "Balls aimed at your chest: why the backhand covers more of your body, and how to block soft or counter.",
+    keys: ["Body shots are faster to block with the backhand: it covers chest and hip.", "Keep the paddle in front of your chest in ready.", "Soft grip to block into the kitchen; firm grip to counter.", "Move the body out of the way if you can; don't jam the forehand."],
+    drills: [["Body-feed blocks", "Partner hits soft balls at your chest; block each back into the kitchen with the backhand."], ["Block or counter", "Partner mixes pace; block the fast ones, counter the ones above the net."]],
+    mistakes: [["Forehand at the chest", "Elbow jams, ball pops up."], ["Swinging at a body shot", "No time: just block."]],
+    quiz: [["Which side covers more of your body?", ["Backhand", "Forehand"], 0], ["Ball rockets at your chest. Best play?", ["Big swing", "Backhand block"], 1]],
+    scenes: [
+      { dur: 4.5, cam: SIDE, kitchen: "both", tag: "why", cap: "They aim at your *chest.* No time to swing.", players: [{ x: -7.6, from: "ready" }, { x: 7.6, dir: -1, from: "attackBack", to: "attackThru", dim: true }], ball: { from: [7, 3.6], to: [-7, 4.1], apex: 4.2, apexAt: 0.5, t0: 0.2, t1: 0.7 } },
+      { dur: 4.5, cam: CLOSE, tag: "do", cap: "Backhand *block.* It covers your chest and hip.", players: [{ x: -8.5, from: "ready", to: "bhThru" }], joints: ["paddle", "elbow"], focus: "paddle" },
+      { dur: 5, cam: SIDE, kitchen: "right", tag: "do", cap: "Soft grip, open face: the ball *dies* into their kitchen.", players: [{ x: -7.6, from: "bhThru" }, opp("ready", 7.6)], ball: { from: [-6.8, 3.9], to: [4.2, 0], apex: 4, apexAt: 0.2, t0: 0.1, t1: 0.85, bounce: true }, callout: { kind: "grip", value: 2, at: "wrist", label: "SOFT GRIP", pos: [0.24, 0.24] } },
+    ],
+  },
+  {
+    id: "stacking", title: "Stacking", level: "Pro", mins: 2,
+    summary: "Keep your best shots where you want them: both players switch sides after the serve or return, legally.",
+    keys: ["The right player must serve or receive from the correct side; after that, you can move anywhere.", "Stack so both forehands cover the middle, or your stronger player stays on one side.", "Serving team: partner stands off-court beside the server, then both slide to their sides.", "Receiving team: the non-receiver starts on the same side, then crosses after the return."],
+    drills: [["Walk-through", "Practise the stack slowly without a ball: serve, slide, call 'switch'."], ["Stack games", "Play to 7 stacking every point; call the switch out loud."]],
+    mistakes: [["Wrong server", "Stacking never changes who must serve or receive."], ["Late switch", "Cross early on the return while the ball travels deep."]],
+    quiz: [["Does stacking change who serves?", ["Yes", "No, it only changes where you play after"], 1], ["When does the receiving team switch?", ["After the return", "Before the serve"], 0]],
+    scenes: [
+      { dur: 5.5, cam: SIDE, tag: "why", cap: "You both want your *forehands* in the middle.", players: [{ x: -8, from: "ready" }], callout: MAP([], [{ at: [-8, 5], label: "FH" }, { at: [-8, -5], label: "FH" }], "FOREHANDS IN THE MIDDLE") },
+      { dur: 6, cam: SIDE, tag: "rule", cap: "Serve from the correct side, then *slide.* Your partner crosses behind.", players: [{ x: -21, from: "serveBack", to: "serveThru", t0: 0, t1: 0.2 }], callout: MAP([{ pts: [[-21, 5], [-21, -4]], col: "#D7F03C", label: "SERVER SLIDES", t0: 0.35, t1: 0.9 }, { pts: [[-21, 9], [-21, 5]], col: "#8FD3FF", label: "PARTNER", t0: 0.35, t1: 0.9 }, { pts: [[-20, 5], [15, -5]], col: "#FF4D86", ball: true, t0: 0.05, t1: 0.4 }], [], "SERVING TEAM STACK") },
+      { dur: 5, cam: SIDE, tag: "rule", cap: "Receiving? Return deep, then *switch* as it travels.", players: [{ x: -21, from: "dropBack", to: "dropThru", t0: 0, t1: 0.2 }], callout: MAP([{ pts: [[-21, -5], [-8, 5]], col: "#D7F03C", label: "RETURNER", t0: 0.3, t1: 0.9 }, { pts: [[-12, 5], [-8, -5]], col: "#8FD3FF", label: "PARTNER", t0: 0.3, t1: 0.9 }], [], "RECEIVING TEAM STACK") },
+    ],
+  },
+  {
+    id: "poach", title: "Poaching the Middle", level: "Pro", mins: 2,
+    summary: "Cross over to take a ball meant for your partner: when to go, when to stay, and how to finish.",
+    keys: ["Poach balls that are high and floating toward the middle.", "Move as their paddle commits, not before.", "Finish down the middle or at the feet; then stay on that side.", "Your partner covers your old side behind you."],
+    drills: [["Signal poach", "Agree a signal; on the next high middle ball, cross and finish."], ["Poach or hold", "Coach feeds; poach only balls above the net."]],
+    mistakes: [["Going too early", "They see you and hit behind you."], ["Poaching low balls", "You hit up from an awkward position."]],
+    quiz: [["Which ball should you poach?", ["High and floating toward the middle", "Low and at your partner's feet"], 0], ["After poaching, where do you stay?", ["On your new side", "Run back"], 0]],
+    scenes: [
+      { dur: 5, cam: SIDE, tag: "why", cap: "A *floater* heads to your partner, through the middle.", players: [{ x: -8, from: "ready" }, opp("dinkThru", 7.6)], callout: MAP([{ pts: [[7, -3], [-8, -5]], col: "#FF4D86", ball: true, label: "FLOATER", t0: 0.2, t1: 0.9 }], [{ at: [-8, 5], label: "YOU" }, { at: [-8, -6], label: "PARTNER" }], "THE CHANCE") },
+      { dur: 5, cam: SIDE, tag: "do", cap: "Go as their paddle *commits.* Cross and finish at the feet.", players: [{ x: -7.6, from: "attackBack", to: "attackThru" }, opp("block", 7.6)], callout: MAP([{ pts: [[-8, 5], [-7, -3]], col: "#D7F03C", label: "POACH", t0: 0.1, t1: 0.6 }, { pts: [[-8, -6], [-9, 5]], col: "#8FD3FF", label: "PARTNER FILLS", t0: 0.3, t1: 0.9 }], [], "SWITCH SIDES") },
+    ],
+  },
+  {
+    id: "patterns", title: "Dink Patterns that Set Up the Attack", level: "Pro", mins: 2,
+    summary: "Move them, don't just rally: cross-court to the backhand, then straight; pull wide, then attack the middle.",
+    keys: ["Cross-court dinks are safer: lowest net, longest court.", "Target the backhand to draw a weaker reply.", "Pull them wide, then the middle opens.", "Change direction to make them reach: a reach often pops up."],
+    drills: [["3-dink pattern", "Cross, cross, then straight. Repeat 10 times without a miss."], ["Wide and middle", "Pull wide twice, then speed-up the middle if it's above the net."]],
+    mistakes: [["Same dink every time", "They settle in; no openings."], ["Attacking from the pattern too early", "Only attack balls above the net."]],
+    quiz: [["Why dink cross-court?", ["Lower net and longer court", "Because it's faster"], 0], ["What opens after pulling them wide?", ["The middle", "Nothing"], 0]],
+    scenes: [
+      { dur: 5.5, cam: SIDE, tag: "do", cap: "Cross-court to the *backhand.* Lower net, longer court.", players: [{ x: -7.6, from: "dinkBack", to: "dinkThru" }, opp("ready", 7.6)], callout: MAP([{ pts: [[-7, 5], [5, -6]], col: "#FF4D86", ball: true, label: "CROSS", t0: 0.1, t1: 0.6 }], [], "STEP 1") },
+      { dur: 5.5, cam: SIDE, tag: "do", cap: "Then *straight* and wide. Make them reach.", players: [{ x: -7.6, from: "dinkBack", to: "dinkThru" }, opp("ready", 7.6)], callout: MAP([{ pts: [[-7, -5], [5, -9]], col: "#FF4D86", ball: true, label: "WIDE", t0: 0.1, t1: 0.6 }], [], "STEP 2") },
+      { dur: 5, cam: SIDE, kitchen: "both", tag: "do", cap: "Their reply pops *up.* Now attack the middle.", players: [{ x: -7.6, from: "attackBack", to: "attackThru", t0: 0.3, t1: 0.6 }, opp("block", 7.6)], callout: MAP([{ pts: [[-7, 0], [6, 0]], col: "#D7F03C", ball: true, label: "MIDDLE", t0: 0.4, t1: 0.9 }], [], "STEP 3") },
+    ],
+  },
+  {
+    id: "drive", title: "Drive or Drop? Third-Shot Choices", level: "Pro", mins: 2,
+    summary: "Read the return: drive the high, short ones and drop the deep, low ones. Then the drive-drop combo.",
+    keys: ["Deep, low return: drop it.", "Short or high return: drive it, low over the net.", "After a drive, expect a block: drop the fifth shot and move in.", "Drive at the feet or the backhand of the player who's still moving."],
+    drills: [["Read and choose", "Feeder mixes returns; call 'drive' or 'drop' before you hit."], ["Drive-drop", "Drive the third, drop the fifth, move to the kitchen. 15 reps."]],
+    mistakes: [["Driving everything", "Easy blocks and counters for them."], ["Standing after a drive", "The fifth shot is the drop: get ready to move."]],
+    quiz: [["Deep, low return. Best third shot?", ["Drop", "Drive"], 0], ["What usually follows a good drive?", ["A block, then your drop", "An immediate winner"], 0]],
+    scenes: [
+      { dur: 5, cam: WIDE, tag: "do", cap: "Return lands *deep* and low: drop it.", players: [{ x: -20, from: "dropBack", to: "dropThru", t0: 0.1, t1: 0.35 }, opp("ready", 7.6)], ball: { from: [-19.2, 1.6], to: [4.2, 0], apex: 8.5, apexAt: 0.62, t0: 0.2, t1: 0.95, bounce: true } },
+      { dur: 5, cam: WIDE, tag: "do", cap: "Return sits *short* and high: drive it, low over the net.", players: [{ x: -14, from: "attackBack", to: "attackThru", t0: 0.1, t1: 0.35 }, { x: 7.6, dir: -1, from: "block", dim: true }], ball: { from: [-13.2, 3.2], to: [7, 2.6], apex: 3.6, apexAt: 0.4, t0: 0.2, t1: 0.6 } },
+      { dur: 5, cam: WIDE, kitchen: "right", tag: "tip", cap: "They *block* it back. Now drop the fifth and move in.", players: [{ x: -14, from: "dropBack", to: "dropThru", t0: 0.3, t1: 0.55 }, opp("block", 7.6)], ball: { from: [-13.2, 1.6], to: [4.3, 0], apex: 6.5, apexAt: 0.6, t0: 0.4, t1: 0.95, bounce: true } },
+    ],
+  }
+);
+Object.assign(NOTES, {
+  counters: { cues: ["'Tip up, inches not feet.'", "'Counter down.'"], plan: ["10 min wall counters", "10 min partner counter battles to 11"] },
+  block: { cues: ["'Backhand at the body.'", "'Soft to block, firm to counter.'"], plan: ["10 min body-feed blocks"] },
+  stacking: { cues: ["'Right person serves, then switch.'"], plan: ["5 min walk-through", "15 min stack games"] },
+  poach: { cues: ["'Go when they commit.'", "'Stay where you finish.'"], plan: ["10 min signal poach drills"] },
+  patterns: { cues: ["'Cross, cross, straight.'", "'Wide opens the middle.'"], plan: ["10 min 3-dink patterns", "10 min wide-and-middle"] },
+  drive: { cues: ["'Deep: drop. Short: drive.'", "'Drive, then drop the fifth.'"], plan: ["10 min read-and-choose", "10 min drive-drop combos"] },
+});
+LESSONS.forEach(l => { if (!l.notes) l.notes = NOTES[l.id] || null; });
+
 // Shots that involve the baseline use the wide camera automatically
 LESSONS.forEach(l => l.scenes.forEach(sc => { if (sc.cam === SIDE && (sc.players || []).some(p => Math.abs(p.x) > 12)) sc.cam = WIDE; }));
 
@@ -270,7 +362,7 @@ const HOME = [
 ];
 
 // Animated demos for each Home Court drill (looping X-ray clips)
-const HC = { x: 0, y: 3.2, z: 1.5 }, HCW = { x: 0, y: 3.3, z: 1.2 };
+const HC = { x: 0, y: 3.1, z: 1.95 }, HCW = { x: 0, y: 3.2, z: 1.35 };
 const seq = (pts, t0, t1, apexes, opts) => pts.slice(0, -1).map((p, i) => Object.assign({ from: p, to: pts[i + 1], apex: apexes[i], apexAt: (opts && opts.at && opts.at[i]) != null ? opts.at[i] : 0.5, t0: t0 + (t1 - t0) * i / (pts.length - 1), t1: t0 + (t1 - t0) * (i + 1) / (pts.length - 1), noGhost: true }, i === pts.length - 2 && opts && opts.bounce ? { bounce: true } : {}));
 const ANIM = {
   "wall-dink": [{ dur: 4.4, cam: HC, cap: "Push. *Wall.* Bounce. Push.", props: [{ type: "wall", x: 3.4, tape: true }], players: [{ x: -2.6, from: "dinkBack", to: "dinkThru", reps: 2 }], balls: seq([[-1.4, 1.5], [3.4, 3.4], [-0.6, 0], [-1.4, 1.5], [3.4, 3.4], [-0.6, 0]], 0.02, 0.98, [3.9, 3.4, 1.6, 3.9, 3.4]) }],
@@ -286,7 +378,7 @@ const ANIM = {
   "serve-target": [{ dur: 4.4, cam: HCW, cap: "Low to high. Same motion. *Deep.*", props: [{ type: "towel", x: 9 }], players: [{ x: -10, from: "serveBack", to: "serveThru", t0: 0, t1: 0.3 }], ball: { from: [-9.2, 1.9], to: [9, 0], apex: 6.5, apexAt: 0.48, t0: 0.18, t1: 0.92, bounce: true } }],
   "overhead-shadow": [{ dur: 3.8, cam: HCW, cap: "Turn. *Point.* Swing down. Recover.", props: [], players: [{ x: -1, x2: -3.4, from: "overBack", to: "overThru", reps: 2, moveReps: 1 }], joints: ["shoulder"] }],
 };
-HOME.forEach(d => { if (ANIM[d.id]) d.anim = { loop: true, noChip: true, scenes: ANIM[d.id] }; });
+HOME.forEach(d => { if (ANIM[d.id]) d.anim = { loop: true, noChip: true, fullCap: true, scenes: ANIM[d.id] }; });
 
 // Ready-made home sessions (drill ids in order)
 const SESSIONS = [
@@ -307,9 +399,40 @@ const TIPS = [
   ["Gear & body", "Warm up wrists, shoulders and calves for 5 minutes before you play."], ["Gear & body", "Court shoes, not running shoes: you move sideways a lot."], ["Gear & body", "Grip size matters: a too-small grip makes you squeeze."], ["Gear & body", "Hydrate before you're thirsty, especially on Doha nights."],
 ];
 
+
+// ---- Advanced home drills (Pro Track) ----
+const A = (scenes) => ({ loop: true, noChip: true, fullCap: true, scenes });
+HOME.push(
+  { id: "wall-counter", title: "Wall Counter Battle", focus: "Hand speed", lesson: "counters", pro: true, kit: "Paddle, ball, wall, tape", setup: "Tape at 34 in. Stand 5 ft from the wall.", steps: ["Speed-up the ball low at the wall.", "Counter the rebound without a bounce, paddle tip up.", "Keep every swing compact: inches, not feet."], goal: "40 touches without a bounce", timer: [30, 20, 5], levels: ["Forehand only", "Alternate forehand and backhand", "Step in to 4 ft"],
+    anim: A([{ dur: 2.8, cam: { x: 0, y: 3.1, z: 1.95 }, cap: "Tip *up.* Inches, not feet.", props: [{ type: "wall", x: 2.6, tape: true }], players: [{ x: -2, from: "block", to: "attackThru", reps: 5 }], joints: ["paddle"], balls: seq([[-0.4, 3.6], [2.6, 3.2], [-0.4, 3.8], [2.6, 3.0], [-0.4, 3.6], [2.6, 3.2], [-0.4, 3.8], [2.6, 3.0], [-0.4, 3.6], [2.6, 3.2], [-0.4, 3.8]], 0, 1, [3.7, 3.9, 3.7, 3.9, 3.7, 3.9, 3.7, 3.9, 3.7, 3.9]) }]) },
+  { id: "hard-soft", title: "Hard-Soft Wall Reset", focus: "Resets", lesson: "reset", pro: true, kit: "Paddle, ball, wall, tape", setup: "Tape at 34 in. Stand 8 ft from the wall.", steps: ["Hit one firm ball at the wall.", "Absorb the rebound and reset it softly just over the tape.", "Let it bounce, start again."], goal: "8 of 10 resets just above the tape", timer: [45, 15, 4], levels: ["From 8 ft", "From 10 ft", "No bounce before the reset"],
+    anim: A([{ dur: 4.2, cam: { x: 0, y: 3.1, z: 1.75 }, cap: "Firm. Then *absorb* and reset.", props: [{ type: "wall", x: 3.6, tape: true }], players: [{ x: -3.4, from: "attackBack", to: "attackThru", t0: 0, t1: 0.2 }], balls: seq([[-1.6, 3.4], [3.6, 3.6], [-1.6, 2.4], [3.6, 3.2], [0, 0]], 0.1, 0.95, [4, 3.8, 3.6, 3.3]) }]) },
+  { id: "dink-grid", title: "Dink Accuracy Grid", focus: "Placement", lesson: "patterns", pro: true, kit: "Paddle, ball, wall, tape", setup: "Tape a 3-box grid above the 34 in line: left, middle, right.", steps: ["Call a box before each dink.", "Hit it with a set face, push from the shoulder.", "Score a point for every called box."], goal: "15 of 20 called boxes", timer: [60, 20, 3], levels: ["Call 1 box per set", "Alternate left and right", "Random calls from a helper"],
+    anim: A([{ dur: 4.4, cam: { x: 0, y: 3.1, z: 1.95 }, cap: "*Call* it. Then hit it.", props: [{ type: "wall", x: 3.4, tape: true }], players: [{ x: -2.6, from: "dinkBack", to: "dinkThru", reps: 2 }], callout: { kind: "toes", at: [3.4, 3.4], label: "LEFT · MIDDLE · RIGHT", pos: [0.78, 0.24] }, balls: seq([[-1.4, 1.5], [3.4, 3.6], [-0.6, 0], [-1.4, 1.5], [3.4, 3.1], [-0.6, 0]], 0.02, 0.98, [4, 3.6, 1.6, 3.9, 3.3]) }]) },
+  { id: "tip-reaction", title: "Tip-Up Reaction Tosses", focus: "Body shots", lesson: "block", pro: true, kit: "Paddle, soft ball, a helper", setup: "Helper stands 8 ft away and tosses underhand at your chest.", steps: ["Paddle in front of your chest, tip up.", "Block every toss with the backhand.", "Soft grip: the ball should drop in front of you."], goal: "10 clean blocks in a row", timer: [40, 20, 4], levels: ["Slow tosses", "Faster tosses", "Helper mixes left, right and body"],
+    anim: A([{ dur: 3.4, cam: { x: 0, y: 3.2, z: 1.6 }, cap: "Chest ball? *Backhand* block.", props: [], players: [{ x: -2.6, from: "ready", to: "bhThru", t0: 0.35, t1: 0.6 }, { x: 4.4, dir: -1, from: "dropThru", dim: true, label: "HELPER", path: false }], balls: seq([[3.6, 3.4], [-1.6, 4.2], [-0.6, 0]], 0.05, 0.85, [4.4, 3.4], { at: [0.4, 0.05] }) }]) },
+  { id: "ladder", title: "Tape Ladder Footwork", focus: "Quick feet", lesson: "ready", pro: true, kit: "Tape", setup: "Tape a 6-rung ladder on the floor, rungs 18 in apart.", steps: ["In-in, out-out through the ladder, sideways.", "Split-step at the end, paddle up.", "Shuffle back and repeat."], goal: "3 clean runs in 30 seconds", timer: [30, 20, 5], levels: ["Walk it", "Fast feet", "Add a shadow volley at the end"],
+    anim: A([{ dur: 3.6, cam: { x: 0, y: 3.2, z: 1.35 }, cap: "Quick feet. *Split* at the end.", props: [{ type: "tape", xs: [-4.5, -3, -1.5, 0, 1.5, 3, 4.5], label: "TAPE LADDER" }], players: [{ x: -4.5, x2: 4.5, from: "ready", to: "stand", reps: 8, moveReps: 1, path: false }] }]) },
+  { id: "roll-shadow", title: "Topspin Roll Shadow", focus: "Advanced dink", lesson: "patterns", pro: true, kit: "Paddle, mirror", setup: "Side-on to a mirror.", steps: ["Start low with the paddle face slightly closed.", "Brush up and forward: low to high, finishing at shoulder height.", "Same calm tempo as a dink, just with a brush."], goal: "20 smooth reps", timer: [40, 15, 3], levels: ["Slow brush", "Normal tempo", "Alternate a flat dink and a roll"],
+    anim: A([{ dur: 3.6, cam: { x: 0.4, y: 3.2, z: 1.5 }, cap: "Low to high. *Brush* the ball.", props: [{ type: "mirror", x: 1.8 }], players: [{ x: -1.6, from: "dropBack", to: "dinkThru", reps: 2 }], joints: ["paddle"] }]) }
+);
+SESSIONS.push(
+  { id: "pro20", title: "20-min Pro Hands", for: "Counters, resets and body shots", pro: true, drills: ["wall-counter", "hard-soft", "tip-reaction"] },
+  { id: "control20", title: "20-min Pro Control", for: "Placement, rolls and footwork", pro: true, drills: ["dink-grid", "roll-shadow", "ladder"] }
+);
+// 4-week Pro Track: the skills behind a higher DUPR rating (results depend on practice and match play)
+const PLANS = [
+  { id: "pro4", title: "Pro Track · 4 weeks", for: "Build the skills behind a higher DUPR rating", weeks: [
+    { w: 1, focus: "Consistency", lessons: ["dink", "drop", "reset"], sessions: ["touch15", "touch15", "feet10"], play: "Play 2 rec sessions: count unforced errors." },
+    { w: 2, focus: "Placement", lessons: ["patterns", "backhand", "shadow"], sessions: ["control20", "touch15", "feet10"], play: "Dink rallies: aim every ball at a target." },
+    { w: 3, focus: "Hands & pace", lessons: ["counters", "block", "speedup"], sessions: ["pro20", "hands15", "pro20"], play: "Play stronger opponents; attack only above the net." },
+    { w: 4, focus: "Match IQ", lessons: ["drive", "stacking", "poach"], sessions: ["control20", "pro20", "touch15"], play: "Play 2 DUPR-rated games at Reclub and review them." },
+  ] },
+];
+
 const PREVIEW_SCENES = 4; // free preview of the first lesson
 
 const FREE = ["dink", "ready"];   // two full lessons free: the hook
 const TEASER = 2;                  // every other lesson shows its first scenes
 const meta = l => ({ id: l.id, title: l.title, level: l.level, mins: l.mins, summary: l.summary, scenes: l.scenes.length, free: FREE.includes(l.id) });
-module.exports = { LESSONS, PREVIEW_SCENES, FREE, TEASER, meta, HOME, SESSIONS, TIPS };
+module.exports = { LESSONS, PREVIEW_SCENES, FREE, TEASER, meta, HOME, SESSIONS, TIPS, PLANS };

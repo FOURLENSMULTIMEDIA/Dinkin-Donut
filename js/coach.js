@@ -63,7 +63,7 @@
     var W = 0, H = 0, DPR = 1, cam = { x: 0, y: 3, z: 1 };
     function size() {
       var r = canvas.getBoundingClientRect(); DPR = Math.min(2, window.devicePixelRatio || 1);
-      W = Math.max(320, r.width); H = Math.max(320, r.height); canvas.width = W * DPR; canvas.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      W = Math.max(1, r.width); H = Math.max(1, r.height); canvas.width = W * DPR; canvas.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     }
     // world (feet) → screen
     var S = function () { return (Math.max(W, H * 0.75) / 30) * cam.z; };
@@ -111,7 +111,7 @@
         if (p.type === "wall") {
           ctx.fillStyle = "rgba(236,240,246,.08)"; ctx.fillRect(X(p.x), Y(9), W, 9 * s); line([X(p.x), Y(9)], [X(p.x), g], 2, "rgba(236,240,246,.7)");
           for (var b = 1; b < 9; b++) line([X(p.x), Y(b)], [X(p.x) + 8, Y(b)], 1, "rgba(236,240,246,.15)");
-          if (p.tape) { line([X(p.x) - 1, Y(34 / 12)], [X(p.x) + 30, Y(34 / 12)], 4, LIME); lbl("TAPE \u00B7 34 IN", X(p.x) + 36, Y(34 / 12) + 4, LIME); }
+          if (p.tape) { line([X(p.x) - 1, Y(34 / 12)], [X(p.x) + 30, Y(34 / 12)], 4, LIME); lbl("TAPE \u00B7 34 IN", X(p.x) + 6, Y(34 / 12) - 9, LIME); }
           lbl("WALL", X(p.x) + 8, Y(8.4));
         } else if (p.type === "rope") {
           [-1.2, 1.2].forEach(function (d) { var cx = X(p.x + d * 0.3); line([cx, g], [cx, Y(34 / 12)], 2, "rgba(236,240,246,.7)"); line([cx - 8, Y(1.5)], [cx + 8, Y(1.5)], 2, "rgba(236,240,246,.7)"); });
@@ -262,7 +262,7 @@
 
     function drawCaption(text, k) {
       if (!text) return;
-      var words = text.split(" "), shown = Math.ceil(clamp(k / 0.55, 0, 1) * words.length);
+      var words = text.split(" "), shown = lesson && lesson.fullCap ? words.length : Math.ceil(clamp(k / 0.55, 0, 1) * words.length);
       ctx.save(); ctx.textBaseline = "middle"; ctx.font = "600 " + Math.round(clamp(W / 22, 15, 28)) + "px 'DM Sans', system-ui, sans-serif";
       var lines = [[]], maxW = W * 0.86;
       words.forEach(function (w) { var cur = lines[lines.length - 1].concat(w).join(" ").replace(/\*/g, ""); if (ctx.measureText(cur).width > maxW && lines[lines.length - 1].length) lines.push([w]); else lines[lines.length - 1].push(w); });
@@ -346,6 +346,7 @@
       last = now; frame(); raf = requestAnimationFrame(loop);
     }
     size(); window.addEventListener("resize", size);
+    var ro = "ResizeObserver" in window ? new ResizeObserver(function () { size(); if (!playing) frame(); }) : null; if (ro) ro.observe(canvas);
     raf = requestAnimationFrame(function (n) { last = n; loop(n); });
     return {
       load: function (l) { lesson = l; scenes = l.scenes; total = scenes.reduce(function (a, s) { return a + s.dur; }, 0); t = 0; },
@@ -353,7 +354,7 @@
       toggle: function () { this[playing ? "pause" : "play"](); return playing; },
       seek: function (x) { t = clamp(x, 0, total); }, chapter: function (n) { var a = 0; for (var i = 0; i < n; i++) a += scenes[i].dur; t = a; },
       speed: function (s) { speed = s; }, get t() { return t; }, get total() { return total; }, get playing() { return playing; },
-      onTick: function (f) { onTick = f; }, render: function (x) { t = x; frame(); }, destroy: function () { cancelAnimationFrame(raf); },
+      onTick: function (f) { onTick = f; }, render: function (x) { t = x; frame(); }, destroy: function () { cancelAnimationFrame(raf); if (ro) ro.disconnect(); window.removeEventListener("resize", size); },
     };
   }
   window.Coach = { player: Player, POSES: POSES };
