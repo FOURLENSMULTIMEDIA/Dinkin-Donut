@@ -387,7 +387,32 @@ section.block{padding-block:80px 0}
 .foot{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px}
 .foot h4{font-size:18px;margin-bottom:8px;color:var(--ball)}
 .foot p{margin:4px 0;opacity:.9}
+.menu-links a .ddi{order:1;opacity:.85;margin-left:auto;align-self:center}
+.mf-app{cursor:pointer;text-align:left;font:inherit;color:inherit;border:1px solid rgba(255,95,162,.4)!important;background:rgba(255,95,162,.08)!important}
+.menu-sell{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:28px 0 8px}
+.ms{position:relative;display:grid;gap:10px;align-content:start;padding:26px 24px 22px;border-radius:24px;text-decoration:none!important;color:#FFF6EA;overflow:hidden;transition:transform .25s}
+.ms *{text-decoration:none}
+.ms:hover{transform:translateY(-3px)}
+.ms-ac{background:linear-gradient(160deg,#4A2C1A,#2A1A10 70%);border:1px solid rgba(255,95,162,.35)}
+.ms-cc{background:linear-gradient(160deg,#1F3A2A,#14241A 70%);border:1px solid rgba(215,240,60,.35)}
+.ms::after{content:"";position:absolute;right:-60px;top:-60px;width:180px;height:180px;border-radius:50%;border:34px solid #FFF6EA;opacity:.05}
+.ms-k{display:inline-flex;gap:8px;align-items:center;font:700 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.2em;text-transform:uppercase;color:#FF5FA2}
+.ms-cc .ms-k{color:#D7F03C}
+.ms b{display:block;font:700 clamp(26px,3.2vw,38px)/1.02 var(--display,Fredoka);letter-spacing:-.01em}
+.ms p{margin:0;color:rgba(255,246,234,.72);font-size:15px;line-height:1.5;max-width:42ch}
+.ms ul{list-style:none;margin:2px 0 4px;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.ms li{padding:6px 11px;border-radius:999px;background:rgba(255,246,234,.08);font-size:12.5px;color:rgba(255,246,234,.85)}
+.ms-cta{justify-self:start;display:inline-flex;gap:10px;align-items:center;margin-top:6px;padding:13px 20px;border-radius:999px;background:#FF5FA2;color:#fff;font-weight:700;font-size:15px}
+.ms-cc .ms-cta{background:#D7F03C;color:#14241A}
+.ms-cta i{font-style:normal;transition:transform .2s}.ms:hover .ms-cta i{transform:translateX(4px)}
+.ms small{color:rgba(255,246,234,.5);font-size:12px}
+@media(max-width:760px){.menu-sell{grid-template-columns:1fr}}
 </style>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dinkin' Donut">
+<script src="/js/pwa.js" defer></script>
 </head>
 <body>
 <nav class="nav"><div class="wrap">
@@ -400,21 +425,37 @@ section.block{padding-block:80px 0}
   <div class="menu-in wrap">
     <div class="menu-top"><span class="eyebrow">Dinkin’ Donut · Doha</span><button class="menuclose" id="menuClose" type="button" aria-label="Close menu">Close</button></div>
     <nav class="menu-links" aria-label="Site">
-      <a href="/first-serve"><small>01</small>The First Serve</a>
-      <a href="/queue"><small>02</small>Join the queue</a>
-      <a href="#live"><small>03</small>Live courts</a>
-      <a href="#nights"><small>04</small>How a night runs</a>
-      <a href="#rules"><small>05</small>Kitchen rules</a>
-      <a href="#hall"><small>06</small>Hall of Glaze</a>
-      <a href="#cup"><small>07</small>The Glaze Cup</a>
-      <a href="/loyalty"><small>08</small>Glaze Card</a>
-      <a href="/merch"><small>09</small>Shop</a>
-      <a href="/dupr"><small>10</small>DUPR games</a>
-      <a href="#contact"><small>11</small>Contact</a>
-      <a href="/academy"><small>12</small>Soft Hands Academy</a>
-      <a href="/clubs"><small>13</small>For clubs · Courtcall</a>
+      <a href="/first-serve" data-ddi="calendar" data-ddi-size="26"><small>01</small>The First Serve</a>
+      <a href="/queue" data-ddi="queue" data-ddi-size="26"><small>02</small>Join the queue</a>
+      <a href="#live" data-ddi="courts" data-ddi-size="26"><small>03</small>Live courts</a>
+      <a href="#nights" data-ddi="timer" data-ddi-size="26"><small>04</small>How a night runs</a>
+      <a href="#rules" data-ddi="rules" data-ddi-size="26"><small>05</small>Kitchen rules</a>
+      <a href="#hall" data-ddi="trophy" data-ddi-size="26"><small>06</small>Hall of Glaze</a>
+      <a href="#cup" data-ddi="tournament" data-ddi-size="26"><small>07</small>The Glaze Cup</a>
+      <a href="/loyalty" data-ddi="card" data-ddi-size="26"><small>08</small>Glaze Card</a>
+      <a href="/merch" data-ddi="shop" data-ddi-size="26"><small>09</small>Shop</a>
+      <a href="/dupr" data-ddi="star" data-ddi-size="26"><small>10</small>DUPR games</a>
+      <a href="#contact" data-ddi="cues" data-ddi-size="26"><small>11</small>Contact</a>
     </nav>
-    <div class="menu-foot">
+    <div class="menu-sell">
+      <a class="ms ms-ac" href="/academy">
+        <span class="ms-k" data-ddi="academy" data-ddi-size="16">For players · Soft Hands Academy</span>
+        <b>Play smarter in 7 days.</b>
+        <p>20 animated lessons, a Pro Track to raise your DUPR, and drills you can do at home with a paddle and a wall.</p>
+        <ul><li>Slow-motion breakdowns</li><li>Home Court sessions</li><li>Works offline</li></ul>
+        <span class="ms-cta">Start your free week <i>→</i></span>
+        <small>Founding members · 25% off for life</small>
+      </a>
+      <a class="ms ms-cc" href="/clubs">
+        <span class="ms-k" data-ddi="host" data-ddi-size="16">For clubs · Courtcall</span>
+        <b>Run open play like a pro.</b>
+        <p>The queue, host console and TV board that run our nights, ready for your club with your name and colours.</p>
+        <ul><li>Smart matching · mixed · fixed partners</li><li>Tournaments with a 15-point final</li><li>Pay by card, worldwide</li></ul>
+        <span class="ms-cta">See plans <i>→</i></span>
+        <small>Set up in 5 minutes · cancel anytime</small>
+      </a>
+    </div>
+    <div class="menu-foot"><button type="button" class="mf-card mf-app" onclick="window.DDInstall&&DDInstall()"><span class="mf-k" data-ddi="install" data-ddi-size="16">Get the app</span><b style="font:700 18px var(--display)">Install Dinkin’ Donut</b><small style="color:rgba(255,246,234,.6)">iPhone, Android, Mac &amp; Windows · works offline</small></button>
       <a class="mf-card mf-live" href="/queue" id="mfLive">
         <span class="mf-k"><i class="mf-dot"></i><span id="mfLiveK">Tonight</span></span>
         <b id="mfLiveB">Courts are quiet.</b>
@@ -773,6 +814,7 @@ section.block{padding-block:80px 0}
 <script src="/js/contact.js"></script>
 <script src="/js/common.js"></script>
 <script src="/js/courtshow.js" defer></script>
+<script src="/js/icons.js"></script>
 <script src="/js/jersey.js"></script>
 <script src="/js/mockup.js"></script>
 <script src="/js/opener.js" defer></script>

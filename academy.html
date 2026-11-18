@@ -95,7 +95,7 @@ h1,h2,h3{font-family:var(--d);font-weight:700;line-height:1.02;margin:0;letter-s
 @media(max-width:520px){.brand small{display:none}.who{font-size:11px}}
 
 .sect{display:flex;gap:6px;margin:26px 0 0;padding:5px;border-radius:999px;background:var(--s1);border:1px solid var(--line);width:max-content;max-width:100%;overflow-x:auto}
-.sect button{border:0;background:transparent;padding:10px 18px;border-radius:999px;font:700 14px var(--b);color:var(--mute);cursor:pointer;white-space:nowrap}
+.sect button{display:inline-flex;align-items:center;gap:8px;border:0;background:transparent;padding:10px 18px;border-radius:999px;font:700 14px var(--b);color:var(--mute);cursor:pointer;white-space:nowrap}
 .sect button[aria-selected=true]{background:var(--fg);color:#160D08}
 .lock .k{color:var(--pink)}
 .card .st.free{color:var(--lime)}.card .st.teaser{color:#E8A95B}
@@ -165,13 +165,18 @@ h1,h2,h3{font-family:var(--d);font-weight:700;line-height:1.02;margin:0;letter-s
 footer{padding:30px 0 50px;border-top:1px solid var(--line);color:var(--mute);font-size:13px}
 footer .w{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 </style>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dinkin' Donut">
+<script src="/js/pwa.js" defer></script>
 </head>
 <body>
-<header class="nav"><div class="w"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut<small>ACADEMY</small></a><span class="who" id="who"><i></i><span>Free preview</span></span></div></header>
+<header class="nav"><div class="w"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut<small>ACADEMY</small></a><button class="who" type="button" onclick="window.DDInstall&&DDInstall()" data-ddi="install" data-ddi-size="16" style="margin-left:auto;cursor:pointer;background:transparent;color:inherit">Get the app</button><span class="who" id="who" style="margin-left:8px"><i></i><span>Free preview</span></span></div></header>
 
 <main class="w">
   <div class="keybox" id="keybox" hidden><div class="k">Welcome to the Academy</div><p style="margin:8px 0">Your Academy key. Save it: use it to sign in on your other devices. Your free trial has started.</p><code id="keyval"></code></div>
-  <div class="sect" role="tablist" aria-label="Academy"><button role="tab" data-s="lessons" aria-selected="true">Lessons</button><button role="tab" data-s="home" aria-selected="false">Home Court</button><button role="tab" data-s="tips" aria-selected="false">Tips &amp; Tricks</button><button role="tab" data-s="rules" aria-selected="false">Rules · free</button></div>
+  <div class="sect" role="tablist" aria-label="Academy"><button role="tab" data-s="lessons" aria-selected="true" data-ddi="academy" data-ddi-size="18">Lessons</button><button role="tab" data-s="home" aria-selected="false" data-ddi="home" data-ddi-size="18">Home Court</button><button role="tab" data-s="tips" aria-selected="false" data-ddi="tips" data-ddi-size="18">Tips &amp; Tricks</button><button role="tab" data-s="rules" aria-selected="false" data-ddi="rules" data-ddi-size="18">Rules · free</button></div>
 
   <div id="secLessons">
   <section class="top">
@@ -244,7 +249,7 @@ footer .w{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
     <div>
       <div class="k">7 days free · then cancel or keep going</div>
       <h2>Start your free week. Feel the difference by Saturday.</h2>
-      <div class="found" id="found" hidden><span>🏅</span><span><b>Founding Member:</b> 25% off for life · <b id="fLeft">50</b> of 50 spots left</span><span class="bar2"><i id="fBar" style="width:0"></i></span></div>
+      <div class="found" id="found" hidden><span data-ddi="trophy" data-ddi-size="22" style="color:var(--fg)"></span><span><b>Founding Member:</b> 25% off for life · <b id="fLeft">50</b> of 50 spots left</span><span class="bar2"><i id="fBar" style="width:0"></i></span></div>
       <ul class="feat" id="feat"></ul>
       <div class="keyin"><input id="keyIn" placeholder="SHA-XXXX-XXXX" aria-label="Academy key" maxlength="13"><button class="btn ghost" id="keyGo" type="button">Use key</button></div>
       <p class="err" id="payErr"></p>
@@ -276,6 +281,7 @@ footer .w{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 <footer><div class="w"><span>© Dinkin’ Donut · Soft Hands Academy · Sweet game, soft hands.</span><span><a href="/">Home</a> · Designed &amp; Developed by Drew Nolasco &amp; Angel Flores</span></div></footer>
 
 <script src="/js/coach.js"></script>
+<script src="/js/icons.js"></script>
 <script src="/js/social.js" defer></script>
 <script>
 const $ = id => document.getElementById(id);
@@ -342,27 +348,17 @@ async function open(id, quiet) {
 function pane() {
   if (!L) return; const d = L, el = $("pane");
   document.querySelectorAll("#ltabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.t === tab));
-  if (d.preview && tab !== "keys") { el.innerHTML = `<ul><li><span class="n">🔒</span><div><b>In the Academy</b><span>Drills, common mistakes and the quick check for this lesson. Free for ${INFO.trialDays || 7} days.</span></div></li></ul>`; return; }
+  if (d.preview && tab !== "keys") { el.innerHTML = `<ul><li><span class="n">${DDIcon("lock", 14)}</span><div><b>In the Academy</b><span>Drills, common mistakes and the quick check for this lesson. Free for ${INFO.trialDays || 7} days.</span></div></li></ul>`; return; }
   if (tab === "keys") el.innerHTML = `<ul>${(d.keys || []).map((k, n) => `<li><span class="n">${n + 1}</span><div><b>${esc(k)}</b></div></li>`).join("")}</ul>`;
   if (tab === "drills") { const saved = JSON.parse(store.get("dd-drill-" + d.id) || "[]"); el.innerHTML = `<ul>${d.drills.map((x, n) => `<li><input type="checkbox" data-dr="${n}" ${saved.includes(n) ? "checked" : ""} aria-label="Drill done"><div><b>${esc(x[0])}</b><span>${esc(x[1])}</span></div></li>`).join("")}</ul>`; }
   if (tab === "mist") el.innerHTML = `<ul>${d.mistakes.map(x => `<li><span class="n x">!</span><div><b>${esc(x[0])}</b><span>${esc(x[1])}</span></div></li>`).join("")}</ul>`;
   if (tab === "quiz") el.innerHTML = d.quiz.map((q, n) => `<div class="q" data-q="${n}"><p>${n + 1}. ${esc(q[0])}</p>${q[1].map((a, m) => `<button type="button" data-a="${m}">${esc(a)}</button>`).join("")}</div>`).join("") + `<p id="score" style="font:700 13px var(--mono);color:var(--mute)"></p>`;
-  if (tab === "notes" && d.notes) el.innerHTML = `<ul><li><span class="n">🗣</span><div><b>Coaching cues</b><span>${d.notes.cues.map(esc).join("<br>")}</span></div></li><li><span class="n">⏱</span><div><b>Session plan</b><span>${d.notes.plan.map(esc).join("<br>")}</span></div></li><li><span class="n">✓</span><div><b>Check for understanding</b><span>Ask the quick-check questions out loud; have players demonstrate the DO scene in slow motion.</span></div></li></ul>`;
+  if (tab === "notes" && d.notes) el.innerHTML = `<ul><li><span class="n">${DDIcon("cues", 14)}</span><div><b>Coaching cues</b><span>${d.notes.cues.map(esc).join("<br>")}</span></div></li><li><span class="n">${DDIcon("timer", 14)}</span><div><b>Session plan</b><span>${d.notes.plan.map(esc).join("<br>")}</span></div></li><li><span class="n">${DDIcon("check", 14)}</span><div><b>Check for understanding</b><span>Ask the quick-check questions out loud; have players demonstrate the DO scene in slow motion.</span></div></li></ul>`;
 }
 
 // ---------- home court ----------
-const KIT = [
-  [/paddle/i, "Paddle", '<rect x="6" y="2" width="12" height="14" rx="6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 16v6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>'],
-  [/ball/i, "Ball", '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="9" r="1.4" fill="currentColor"/><circle cx="15" cy="10" r="1.4" fill="currentColor"/><circle cx="11" cy="15" r="1.4" fill="currentColor"/>'],
-  [/wall/i, "Wall", '<path d="M3 4h18v16H3z M3 9h18 M3 14h18 M9 4v5 M15 9v5 M9 14v6" fill="none" stroke="currentColor" stroke-width="1.6"/>'],
-  [/tape/i, "Tape", '<circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/>'],
-  [/chair|rope/i, "Chairs + rope", '<path d="M5 3v18 M5 12h8v9 M5 8h8 M13 8v4 M15 7h6" fill="none" stroke="currentColor" stroke-width="1.8"/>'],
-  [/towel/i, "Towel", '<path d="M4 6h16v12H4z M4 10h16" fill="none" stroke="currentColor" stroke-width="1.8"/>'],
-  [/mirror/i, "Mirror", '<rect x="6" y="2" width="12" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 7l4-3 M9 11l6-5" stroke="currentColor" stroke-width="1.4"/>'],
-  [/helper/i, "A helper", '<circle cx="12" cy="7" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7" fill="none" stroke="currentColor" stroke-width="1.8"/>'],
-  [/outdoor|driveway/i, "Outdoor space", '<path d="M3 20h18 M6 20l3-8h6l3 8 M12 4v4" fill="none" stroke="currentColor" stroke-width="1.8"/>'],
-];
-const kitIcons = k => `<div class="kitrow">${KIT.filter(x => x[0].test(k)).map(x => `<span class="kt"><svg viewBox="0 0 24 24">${x[2]}</svg>${x[1]}</span>`).join("")}</div>`;
+const KIT = [[/paddle/i, "Paddle", "paddle"], [/ball/i, "Ball", "ball"], [/wall/i, "Wall", "wall"], [/tape/i, "Tape", "tape"], [/chair|rope/i, "Chairs + rope", "chairs"], [/towel/i, "Towel", "towel"], [/mirror/i, "Mirror", "mirror"], [/helper/i, "A helper", "helper"], [/outdoor|driveway/i, "Outdoor space", "outdoor"]];
+const kitIcons = k => `<div class="kitrow">${KIT.filter(x => x[0].test(k)).map(x => `<span class="kt">${DDIcon(x[2], 16)}${x[1]}</span>`).join("")}</div>`;
 // demo animations: a player per visible card, stopped when off-screen (keeps phones fast)
 const DEMOS = new Map();
 const demoIO = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => {
@@ -375,13 +371,13 @@ let HOME = null, SESS = [], LOCKED = 0, lvl = {}, PLANS = [];
 async function home() {
   if (!HOME) { const r = await api("?home"); HOME = r.home; SESS = r.sessions; LOCKED = r.locked || 0; PLANS = r.plans || []; }
   const pdone = (() => { try { return JSON.parse(store.get("dd-plan") || "[]"); } catch { return []; } })(), title = id => (LIST.find(l => l.id === id) || {}).title || id, sname = id => (SESS.find(x => x.id === id) || {}).title || id;
-  $("plan").innerHTML = PLANS.map(pl => `<div class="ptrack"><span class="k">Pro Track ${pl.locked ? "· members" : ""}</span><h3>${esc(pl.title)}</h3><p style="color:var(--mute);margin:0">${esc(pl.for)}. Four weeks, three home sessions a week, plus real match play.</p>
+  $("plan").innerHTML = PLANS.map(pl => `<div class="ptrack"><span class="k" style="display:inline-flex;gap:6px;align-items:center">${DDIcon("trophy", 16)}Pro Track ${pl.locked ? "· members" : ""}</span><h3>${esc(pl.title)}</h3><p style="color:var(--mute);margin:0">${esc(pl.for)}. Four weeks, three home sessions a week, plus real match play.</p>
     <div class="weeks">${pl.weeks.map(w => { const dn = pdone.includes(pl.id + w.w); return `<div class="wk ${dn ? "done" : ""}"><b>WEEK ${w.w}</b><h4>${esc(w.focus)}</h4>${pl.locked ? `<small>Lessons, sessions and match goals unlock with your free trial.</small>` : `<small>Learn</small><div class="cx">${w.lessons.map(id => `<button type="button" data-goto="${id}">${esc(title(id).split(":")[0])}</button>`).join("")}</div><small>Train at home</small><div class="cx">${w.sessions.map(id => `<button type="button" class="s" data-ses="${id}">${esc(sname(id))}</button>`).join("")}</div><small>Play: ${esc(w.play)}</small><label><input type="checkbox" data-wk="${pl.id + w.w}" ${dn ? "checked" : ""}> Week complete</label>`}</div>`; }).join("")}</div>
     ${pl.locked ? `<a class="btn lime" href="#join" style="margin-top:14px">Unlock the Pro Track · 7 days free</a>` : ""}</div>`).join("");
   const by = Object.fromEntries(HOME.map(d => [d.id, d]));
   $("sess").innerHTML = SESS.map(x => { const mins = Math.round(x.drills.reduce((a, id) => { const d = by[id]; return a + (d ? (d.timer[0] + d.timer[1]) * d.timer[2] : 180); }, 0) / 60);
-    return `<div class="ses"><span class="k">${mins} min · ${x.drills.length} drills</span><h3>${esc(x.title)}${x.pro ? `<span class="pro">PRO</span>` : ""}</h3><p>${esc(x.for)}</p><button class="btn ${x.locked ? "ghost" : "lime"}" data-ses="${x.id}" type="button">${x.locked ? "🔒 Start free trial" : "Start session"}</button></div>`; }).join("");
-  $("drills").innerHTML = HOME.map(d => { const L2 = lvl[d.id] || 0; return `<div class="dr"><span class="f">${esc(d.focus)}</span><h3>${esc(d.title)}${d.pro ? `<span class="pro">PRO</span>` : ""}</h3>${d.anim ? `<div class="dv"><canvas data-anim="${d.id}" aria-label="${esc(d.title)} demo"></canvas><span class="pl">▶ DEMO</span></div>` : ""}<span class="kit" style="font-weight:700;color:var(--fg)">What you need</span>${kitIcons(d.kit)}<span class="kit">${esc(d.setup)}</span><ol>${d.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol><div class="lv">${d.levels.map((x, n) => `<button type="button" data-lv="${d.id}" data-n="${n}" aria-pressed="${n === L2}" title="${esc(x)}">L${n + 1}</button>`).join("")}</div><span class="kit"><b>Level ${L2 + 1}:</b> ${esc(d.levels[L2])}</span><span class="goal">GOAL · ${esc(d.goal)}</span><button class="btn ghost" data-one="${d.id}" type="button">Start with timer</button></div>`; }).join("") +
+    return `<div class="ses"><span class="k" style="display:inline-flex;gap:6px;align-items:center">${DDIcon("timer", 15)}${mins} min · ${x.drills.length} drills</span><h3>${esc(x.title)}${x.pro ? `<span class="pro">PRO</span>` : ""}</h3><p>${esc(x.for)}</p><button class="btn ${x.locked ? "ghost" : "lime"}" data-ses="${x.id}" type="button">${x.locked ? DDIcon("lock", 16) + " Start free trial" : DDIcon("play", 16) + " Start session"}</button></div>`; }).join("");
+  $("drills").innerHTML = HOME.map(d => { const L2 = lvl[d.id] || 0; return `<div class="dr"><span class="f">${esc(d.focus)}</span><h3>${esc(d.title)}${d.pro ? `<span class="pro">PRO</span>` : ""}</h3>${d.anim ? `<div class="dv"><canvas data-anim="${d.id}" aria-label="${esc(d.title)} demo"></canvas><span class="pl">DEMO</span></div>` : ""}<span class="kit" style="font-weight:700;color:var(--fg)">What you need</span>${kitIcons(d.kit)}<span class="kit">${esc(d.setup)}</span><ol>${d.steps.map(x => `<li>${esc(x)}</li>`).join("")}</ol><div class="lv">${d.levels.map((x, n) => `<button type="button" data-lv="${d.id}" data-n="${n}" aria-pressed="${n === L2}" title="${esc(x)}">L${n + 1}</button>`).join("")}</div><span class="kit"><b>Level ${L2 + 1}:</b> ${esc(d.levels[L2])}</span><span class="goal">GOAL · ${esc(d.goal)}</span><button class="btn ghost" data-one="${d.id}" type="button">Start with timer</button></div>`; }).join("") +
     Array.from({ length: LOCKED }, (_, n) => `<div class="dr locked"><span class="f">Home Court</span><h3>Drill ${HOME.length + n + 1}</h3><span class="kit">Animated demo, steps and timer. Unlock with your free trial.</span><a class="btn ghost" href="#join">Start free trial</a></div>`).join("");
   DEMOS.forEach(p => p.destroy()); DEMOS.clear();
   if (demoIO) document.querySelectorAll("#drills canvas[data-anim]").forEach(c => demoIO.observe(c));

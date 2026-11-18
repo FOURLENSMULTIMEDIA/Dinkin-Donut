@@ -5,7 +5,7 @@ const MAX_LOG = 150;
 function fresh() {
   return {
     v: 0, updatedAt: Date.now(), nightTitle: "Open Play Night",
-    format: 2, rotation: "winstay", maxWins: 2, match: "smart", requirePin: true, autopilot: true, gameCap: 0, target: 11, gameLimit: "auto", sessionEnd: 1440, done: [],
+    format: 2, rotation: "winstay", maxWins: 2, match: "smart", requirePin: true, autopilot: true, gameCap: 0, target: 11, gameLimit: "auto", sessionEnd: 1440, autoClose: 3, done: [],
     players: {}, queue: [], bench: [], games: 0, nextId: 1, durSum: 0, durN: 0,
     fee: 0, pay: {}, fawran: "",
     courts: [1, 2, 3].map(id => ({ id, teams: null, start: null, stayers: null, streak: 0 })),
@@ -309,6 +309,7 @@ const actions = {
     if (typeof a.autopilot === "boolean") S.autopilot = a.autopilot;
     if (a.gameLimit !== undefined) S.gameLimit = a.gameLimit === "auto" ? "auto" : Math.max(0, Math.min(20, parseInt(a.gameLimit, 10) || 0));
     if (a.sessionEnd !== undefined) S.sessionEnd = Math.max(0, Math.min(1800, parseInt(a.sessionEnd, 10) || 1440));
+    if (a.autoClose !== undefined) S.autoClose = [0, 1, 2, 3, 4, 6].includes(Number(a.autoClose)) ? Number(a.autoClose) : 3;
     if (a.target) S.target = [11, 15, 21].includes(Number(a.target)) ? Number(a.target) : 11;
     if (a.gameCap !== undefined) S.gameCap = Math.max(0, Math.min(40, Number(a.gameCap) || 0));
     if (a.match) S.match = ["order", "smart", "levels", "record", "mix"].includes(a.match) ? a.match : "smart";
@@ -321,7 +322,7 @@ const actions = {
   reset: (S, a) => {
     const n = fresh();
     if (!a.clearRoster) Object.values(S.players).forEach(p => { n.players[p.id] = { id: p.id, name: p.name, level: p.level, g: p.g || "", w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false }; });
-    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.mixed = !!S.mixed; n.requirePin = S.requirePin !== false; n.autopilot = S.autopilot !== false; n.gameCap = 0; n.target = S.target || 11; n.gameLimit = S.gameLimit ?? "auto"; n.sessionEnd = S.sessionEnd || 1440;
+    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.mixed = !!S.mixed; n.requirePin = S.requirePin !== false; n.autopilot = S.autopilot !== false; n.gameCap = 0; n.target = S.target || 11; n.gameLimit = S.gameLimit ?? "auto"; n.sessionEnd = S.sessionEnd || 1440; n.autoClose = S.autoClose ?? 3;
     n.courts = S.courts.map(c => ({ id: c.id, teams: null, start: null, stayers: null, streak: 0, level: c.level || "any" }));
     return n;
   },
@@ -341,4 +342,18 @@ function apply(S, a) {
   return { state: next, result: next === S ? out : {} };
 }
 
-module.exports = { fresh, apply, PUBLIC };
+// Sleep mode: a night the host forgot to end closes itself.
+// Idle for autoClose hours, or quiet for 45 min after the end time, with something still open.
+function staleReason(S, now = Date.now()) {
+  if (!S || !S.updatedAt || S.autoClose === 0) return "";
+  const open = S.queue.length || S.courts.some(c => c.teams) || Object.values(S.players).some(p => p.in || p.w || p.l);
+  if (!open) return "";
+  const idle = (now - S.updatedAt) / 60000;
+  if (idle >= (S.autoClose ?? 3) * 60) return "idle";
+  const d = new Date(now + 3 * 3600e3), mins = d.getUTCHours() * 60 + d.getUTCMinutes(); // same clock as minutesLeft
+  const past = ((mins % 1440) - (S.sessionEnd || 1440) % 1440 + 1440) % 1440;
+  if ((S.sessionEnd || 1440) !== 1440 && past > 0 && past < 360 && idle >= 45) return "ended";
+  return "";
+}
+
+module.exports = { fresh, apply, PUBLIC, staleReason };

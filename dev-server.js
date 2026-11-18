@@ -2,7 +2,7 @@
 // Uses in-memory storage unless KV_REST_API_URL / KV_REST_API_TOKEN are set.
 const http = require("http"), fs = require("fs"), path = require("path");
 const api = require("./api/queue"), members = require("./api/members"), wa = require("./api/whatsapp"), founders = require("./api/founders"), clubs = require("./api/clubs"), pay = require("./api/stripe"), hook = require("./api/stripe-webhook"), tour = require("./api/tournament"), edi = require("./api/edition"), aca = require("./api/academy");
-const types = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".svg": "image/svg+xml", ".png": "image/png", ".woff2": "font/woff2", ".mp4": "video/mp4", ".jpg": "image/jpeg", ".mp3": "audio/mpeg" };
+const types = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".svg": "image/svg+xml", ".png": "image/png", ".woff2": "font/woff2", ".mp4": "video/mp4", ".jpg": "image/jpeg", ".mp3": "audio/mpeg", ".webmanifest": "application/manifest+json" };
 http.createServer(async (req, res) => {
   const url = new URL(req.url, "http://x");
   if (url.pathname === "/api/stripe-webhook") { // raw body for the signature check

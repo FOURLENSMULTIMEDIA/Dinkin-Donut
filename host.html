@@ -164,6 +164,11 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .gchip.m{border-style:solid;border-color:#5B8DEF;color:#5B8DEF}.gchip.f{border-style:solid;border-color:var(--glaze);color:var(--glaze)}
 .ptchip.on{border-style:solid;border-color:var(--court);background:var(--court);color:#fff}.ptchip.req{border-style:solid;border-color:#F5C542;color:#B8860B;background:rgba(245,197,66,.12)}
 </style>
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dinkin' Donut">
+<script src="/js/pwa.js" defer></script>
 </head>
 <body>
 <nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Host console</a><span class="chip" style="margin-left:auto" data-conn="on"><span class="live-dot"></span>Live</span></div></nav>
@@ -201,6 +206,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
     <label for="gameLimit">Games each</label><select id="gameLimit"><option value="auto">Auto</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="0">No limit</option></select>
     <span class="sharechip" id="shareChip"></span>
     <label for="sessionEnd">Ends</label><input id="sessionEnd" type="time" style="width:110px">
+    <label for="autoClose" title="If you forget to end the night, it closes itself: results go to the Hall of Glaze, regulars stay on the roster">Auto-reset</label><select id="autoClose"><option value="3">After 3 h idle</option><option value="1">After 1 h idle</option><option value="2">After 2 h idle</option><option value="4">After 4 h idle</option><option value="6">After 6 h idle</option><option value="0">Off</option></select>
     <label for="target">Game to</label><select id="target"><option value="11">11 points</option><option value="15">15 points</option><option value="21">21 points</option></select>
     <label class="row muted" style="gap:6px"><input type="checkbox" id="requirePin"> PIN to join</label>
     <label for="match">Matching</label><select id="match"><option value="smart">Smart match</option><option value="record">Winners vs Winners</option><option value="mix">Winner + Loser teams</option><option value="levels">Level courts</option><option value="order">Queue order</option></select>
@@ -353,6 +359,13 @@ $("peek").onclick = () => { const i = $("pin"), show = i.type === "password"; i.
 if (PIN) fetch("/api/queue?check", { headers: { "x-host-token": PIN } }).then(r => r.json()).then(j => { if (j.ok) openConsole(); else logout(); }).catch(() => openConsole());
 
 function render() {
+  { let b = $("sleepNote"); const z = S.autoClosed;
+    if (z && !b) { b = document.createElement("div"); b.id = "sleepNote"; b.style.cssText = "margin:12px 0;padding:14px 16px;border-radius:16px;background:rgba(215,240,60,.12);border:1px solid rgba(215,240,60,.5);display:flex;gap:12px;align-items:center;flex-wrap:wrap"; document.querySelector(".bar").before(b); }
+    if (z) { const t = new Date(z.at).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" });
+      b.innerHTML = `<b style="font-size:20px">&#9790;</b><span style="flex:1;min-width:220px"><b>Sleep mode closed the last night for you</b> · ${t}<br><small class="muted">${z.why === "ended" ? "It was past the end time and the courts were quiet." : "Nothing happened for a while."} ${z.games} games saved to the Hall of Glaze. Regulars are still on the roster. Fresh night ready.</small></span><button class="btn ghost sm" type="button" id="sleepOk">Got it</button>`;
+      $("sleepOk").onclick = () => act({ type: "dismissAuto" }); }
+    else if (b) b.remove(); }
+  if (document.activeElement !== $("autoClose")) $("autoClose").value = String(S.autoClose ?? 3);
   if (!S) return;
   const need = S.format * 2, n = id => lvDot(S.players[id]) + DD.esc(S.players[id]?.name);
   $("noDb").hidden = S.persistent;
@@ -640,6 +653,7 @@ document.addEventListener("click", e => { const b = e.target.closest("[data-call
 $("mixed").onchange = e => act({ type: "settings", mixed: e.target.checked }, e.target.checked ? "Mixed doubles on: every team is one man + one woman. Set M/F on each player." : "Mixed doubles off");
 $("autopilot").onchange = e => act({ type: "settings", autopilot: e.target.checked }, e.target.checked ? "Autopilot on: courts fill themselves" : "Autopilot off: start games by hand");
 $("gameLimit").onchange = e => act({ type: "settings", gameLimit: e.target.value }, e.target.value === "auto" ? "Games each: worked out from who’s here" : e.target.value === "0" ? "No game limit" : `Everyone gets ${e.target.value} games`);
+$("autoClose").onchange = e => act({ type: "settings", autoClose: Number(e.target.value) }, e.target.value === "0" ? "Auto-reset off" : "Auto-reset on");
 $("sessionEnd").onchange = e => { const [h, m] = e.target.value.split(":").map(Number); act({ type: "settings", sessionEnd: (h * 60 + m) || 1440 }, "End time saved"); };
 $("target").onchange = e => act({ type: "settings", target: e.target.value }, `Games now go to ${e.target.value}`);
 $("requirePin").onchange = e => act({ type: "settings", requirePin: e.target.checked }, e.target.checked ? "Players now need their PIN to join" : "PIN no longer required");

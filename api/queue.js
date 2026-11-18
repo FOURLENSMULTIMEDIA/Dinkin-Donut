@@ -1,4 +1,4 @@
-const { fresh, apply, PUBLIC } = require("./_engine");
+const { fresh, apply, PUBLIC, staleReason } = require("./_engine");
 const { load, save, withLock, hasDb, loadHall, addHall, clearHall, runAsClub } = require("./_store");
 const { getClub, access, publicClub, limitsOf } = require("./_clubs");
 const { sendPass, configured } = require("./_wa");
@@ -40,11 +40,25 @@ async function handle(req, res, club) {
   const hostOk = r => club ? isClubHost(r, club) : ddHost(r);
   const login = (r, body) => club ? clubLogin(r, body, club) : ddLogin(r, body);
   const tag = o => club ? { ...o, club: publicClub(club) } : o;
+  // Auto-reset: results go to the Hall, the roster is kept, the courts are cleared
+  async function sleepCheck() {
+    const S0 = (await load()) || fresh();
+    if (!staleReason(S0)) return S0;
+    return withLock(async () => {
+      const S = (await load()) || fresh(), why = staleReason(S);
+      if (!why) return S;
+      const e = hallEntry(S); if (e) await addHall(e);
+      const games = S.games || 0, title = S.nightTitle || "";
+      const { state } = apply(S, { type: "reset" });
+      state.autoClosed = { at: Date.now(), why, games, title, last: S.updatedAt };
+      await save(state); return state;
+    });
+  }
   try {
     if (req.method === "GET") {
       if (req.query && req.query.check !== undefined) return res.status(200).json({ ok: hostOk(req) });
       if (req.query && req.query.hall !== undefined) return res.status(200).json({ hall: await loadHall() });
-      const S = (await load()) || fresh();
+      const S = await sleepCheck();
       if (club && !S.__cc) S.courts = S.courts.slice(0, limitsOf(club).courts);
       const host = hostOk(req);
       return res.status(200).json(tag({ ...(host ? { ...S, waAuto: !club && configured() && Boolean(process.env.WA_TEMPLATE), waFree: !club && configured() } : publicView(S)), host, persistent: hasDb() }));
@@ -61,8 +75,10 @@ async function handle(req, res, club) {
     if (!PUBLIC.has(a.type) && !isHost) {
       return res.status(401).json({ error: "Your host session has ended. Please sign in again.", signin: true });
     }
+    if (a.type !== "dismissAuto") await sleepCheck();
     const out = await withLock(async () => {
       const S = (await load()) || fresh();
+      if (a.type === "dismissAuto") { delete S.autoClosed; await save(S); return { state: S, result: {} }; }
       if (a.type === "reset" && a.publish !== false) { const e = hallEntry(S); if (e) await addHall(e); }
       if (club && !S.__cc) { const L = limitsOf(club); S.courts = S.courts.slice(0, L.courts); S.__cc = 1; }
       const { state, result } = apply(S, a);
