@@ -4,14 +4,14 @@
 @font-face{font-family:Brico;font-weight:800;src:url(../assets/fonts/bricolage-800.woff2)}
 @font-face{font-family:"DM Sans";font-weight:500;src:url(../assets/fonts/dm-sans-500.woff2)}
 @font-face{font-family:"DM Sans";font-weight:700;src:url(../assets/fonts/dm-sans-700.woff2)}
-:root{--ink:#0E1311;--ink2:#161E1A;--fg:#EDF2EC;--lime:#D7F03C;--court:#2F7A4F;--mute:rgba(237,242,236,.6)}
+:root{--ink:#0E1311;--ink2:#161E1A;--fg:#EDF2EC;--lime:#E2D2A6;--court:#4C6A8A;--mute:rgba(237,242,236,.6)}
 *{margin:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--ink)}
 #v{position:fixed;inset:0;overflow:hidden;background:var(--ink);color:var(--fg);font-family:"DM Sans"}
 .l{position:absolute;inset:0;display:grid;place-items:center;opacity:0}
 .h{font-family:Brico;font-weight:800;letter-spacing:-.035em;line-height:.95;text-align:center}
 .k{font-weight:700;letter-spacing:.3em;text-transform:uppercase;font-size:2.4vmin;color:var(--lime);text-align:center}
-#glow{position:absolute;inset:0;background:radial-gradient(60vmin 40vmin at 70% 30%,rgba(215,240,60,.12),transparent 70%),radial-gradient(60vmin 50vmin at 20% 90%,rgba(47,122,79,.25),transparent 70%)}
+#glow{position:absolute;inset:0;background:radial-gradient(60vmin 40vmin at 70% 30%,rgba(226,210,166,.12),transparent 70%),radial-gradient(60vmin 50vmin at 20% 90%,rgba(47,122,79,.25),transparent 70%)}
 #grain{position:absolute;inset:-50%;opacity:.06;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
 /* chat chaos */
 .bub{position:absolute;padding:1.6vmin 2.4vmin;border-radius:2.6vmin;background:#1F2A25;font-weight:500;font-size:2.9vmin;white-space:nowrap;box-shadow:0 1vmin 3vmin rgba(0,0,0,.35)}
@@ -40,13 +40,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--ink)}
 .court::after{content:"";position:absolute;top:2.4vmin;bottom:2.4vmin;left:50%;border-left:.5vmin solid rgba(255,255,255,.75)}
 /* tv */
 .tv{width:86vmin;padding:3vmin;border-radius:3vmin;background:linear-gradient(180deg,#18211D,#101613);border:.2vmin solid rgba(237,242,236,.1);box-shadow:0 5vmin 10vmin rgba(0,0,0,.5)}
-.tvh{display:flex;align-items:center;gap:1.4vmin;font-weight:700;font-size:2.4vmin;margin-bottom:2vmin}.tvh .d{width:1.4vmin;height:1.4vmin;border-radius:50%;background:#7BD9A0}
+.tvh{display:flex;align-items:center;gap:1.4vmin;font-weight:700;font-size:2.4vmin;margin-bottom:2vmin}.tvh .d{width:1.4vmin;height:1.4vmin;border-radius:50%;background:#A9BCD0}
 .tvc{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6vmin}
 .ct{border-radius:2vmin;background:var(--court);padding:1.8vmin;min-height:20vmin}
 .ct b{font-size:1.6vmin;letter-spacing:.2em;opacity:.7}
 .ct .r{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:2vmin;margin-top:1.4vmin}
 .ct .r span:last-child{font:800 4.6vmin Brico}
-.call{margin-top:2vmin;padding:1.8vmin 2.2vmin;border-radius:2vmin;background:rgba(215,240,60,.12);color:var(--lime);font-weight:700;font-size:2.4vmin;display:flex;gap:1.4vmin;align-items:center}
+.call{margin-top:2vmin;padding:1.8vmin 2.2vmin;border-radius:2vmin;background:rgba(226,210,166,.12);color:var(--lime);font-weight:700;font-size:2.4vmin;display:flex;gap:1.4vmin;align-items:center}
 .wave{display:flex;gap:.5vmin;align-items:center}.wave i{width:.6vmin;border-radius:.4vmin;background:var(--lime)}
 @media (orientation:portrait){#s1>div,#s2>div,#s3>div,#s4>div,#s7>div,#s8>div{zoom:1.32}#s4 .phone{width:30vmin;height:58vmin}}
 </style></head><body><div id="v"><div id="glow"></div>
@@ -111,10 +111,10 @@ const pos=MSG.map((_,i)=>[8+((i*37)%62),10+((i*53)%74),((i*29)%14)-7]);
 // qr
 let q="";for(let i=0;i<121;i++){const x=i%11,y=Math.floor(i/11),f=(x<3&&y<3)||(x>7&&y<3)||(x<3&&y>7);q+=`<i style="opacity:${f||((i*7+3)%5<2)?1:0}"></i>`}$("qr").innerHTML=q;
 // chips
-const PL=[["MY","Maya","#D7F03C"],["RX","Rex","#7FD3FF"],["JO","Jo","#FF9CC5"],["KN","Ken","#FFD23F"]];
+const PL=[["MY","Maya","#E2D2A6"],["RX","Rex","#7FD3FF"],["JO","Jo","#CDB07E"],["KN","Ken","#FFD23F"]];
 $("chips").innerHTML=PL.map((p,i)=>`<div class="chip" id="h${i}"><i style="background:${p[2]}">${p[0]}</i>${p[1]}<span style="font-size:1.8vmin;opacity:.6;margin-left:.6vmin">${["3.5","3.0","3.5","3.0"][i]}</span></div>`).join("");
 $("wave").innerHTML=Array.from({length:6},()=>"<i></i>").join("");
-const BR=[["MD","Manila Dinkers","#1F4FD8"],["LP","London Pickle Co.","#E4572E"],["DS","Dubai Smash Club","#7A3CF0"],["DD","Dinkin’ Donut","#FF5FA2"]];
+const BR=[["MD","Manila Dinkers","#1F4FD8"],["LP","London Pickle Co.","#E4572E"],["DS","Dubai Smash Club","#7A3CF0"],["DD","Dink Different","#9C7A45"]];
 const tw=(s,u)=>s.slice(0,Math.floor(s.length*u));
 
 function seek(t){
@@ -122,7 +122,7 @@ function seek(t){
   const s1=$("s1");s1.style.opacity=t<4.6?1-r(t,4.2,4.6):0;
   const L1=["8:00 PM. Open play.","40 players. 3 courts.","1 group chat."];
   const li=t<1.4?0:t<2.8?1:2,lu=r(t,[0.1,1.5,2.9][li],[0.9,2.3,3.5][li]);
-  $("t1").innerHTML=tw(L1[li],lu)+'<span style="opacity:'+(Math.floor(t*3)%2)+';color:#D7F03C">|</span>';
+  $("t1").innerHTML=tw(L1[li],lu)+'<span style="opacity:'+(Math.floor(t*3)%2)+';color:#E2D2A6">|</span>';
   // chat flood 3.0-6.4
   const ch=$("chat");ch.style.opacity=t>3&&t<6.6?1:0;
   MSG.forEach((m,i)=>{const e=$("m"+i),a=3.1+i*.2,u=back(r(t,a,a+.45)),sh=t>5.6?eio(r(t,5.6,6.3)):0;
@@ -154,7 +154,7 @@ function seek(t){
   // S6 tv 21.8-26.4
   win($("s6"),21.8,26.6,t);const tu=eo(r(t,21.8,22.8));$("tv").style.transform=`perspective(120vmin) rotateX(${(1-tu)*16}deg) translateY(${(1-tu)*8}vmin)`;
   const k=Math.floor(r(t,22,25.5)*6);$("a1").textContent=9+Math.min(2,k>>1);$("a2").textContent=7+(k>3?1:0);$("b1").textContent=k>1?11:10;$("c1").textContent=4+Math.min(3,k);$("c2").textContent=5+(k>2?2:k>0?1:0);
-  $("b1").style.color=k>1?"#D7F03C":"";
+  $("b1").style.color=k>1?"#E2D2A6":"";
   [...$("wave").children].forEach((w,i)=>w.style.height=(1+Math.abs(Math.sin(t*9+i*1.3))*2.6)+"vmin");
   $("call").style.opacity=eo(r(t,23.2,23.7));$("callt").innerHTML=tw("Court 2 · Carla & Dev vs Omar & Pia, you’re up.",r(t,23.4,25)).replace(/&(?!amp)/g,"&amp;");
   $("t6").style.opacity=eo(r(t,22.6,23.3));

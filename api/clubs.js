@@ -3,7 +3,7 @@
 //   GET  ?available=x           is this link free?
 //   GET  ?stats                 founding spots left
 //   POST {create:{...}}         sign up (club starts LOCKED until the owner approves it on WhatsApp)
-//   Owner (Dinkin' Donut host token): GET ?all, POST {slug, owner: "approve"|"paid"|"extend"|"suspend"|"unsuspend"|"pin"|"delete", months, plan}
+//   Owner (Dink Different host token): GET ?all, POST {slug, owner: "approve"|"paid"|"extend"|"suspend"|"unsuspend"|"pin"|"delete", months, plan}
 const crypto = require("crypto");
 const { isHost: isOwner, hashPin } = require("./_auth");
 const { recordPayment, listPayments, TRIAL_DAYS, PLANS, FOUNDING_SPOTS, SALES, slugify, RESERVED, getClub, saveClub, listClubs, access, publicClub } = require("./_clubs");
@@ -68,7 +68,7 @@ module.exports = async (req, res) => {
       const wkey = wa.slice(-8);
       const c = {
         slug, name, short: clean(f.short || name, 20), city: clean(f.city, 40),
-        color: hex(f.color) || "#FF5FA2", accent: hex(f.accent) || "#D7F03C", logo,
+        color: hex(f.color) || "#9C7A45", accent: hex(f.accent) || "#E2D2A6", logo,
         contact: clean(f.contact, 40), whatsapp: "+" + (wa.length === 8 ? "974" + wa : wa), email: clean(f.email, 80),
         plan: PLANS[f.plan] ? f.plan : "club",
         pinHash: hashPin(f.pin), created: now, trialEnds: 0, paidUntil: 0, suspended: false,

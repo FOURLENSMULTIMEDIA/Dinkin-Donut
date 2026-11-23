@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Post Studio · Dinkin' Donut</title>
+<title>Post Studio · Dink Different</title>
 <meta name="robots" content="noindex">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/theme.js"></script>
 <style>
@@ -21,7 +21,7 @@
 @media (max-width:880px){.work{grid-template-columns:minmax(0,1fr)}}
 .preview{position:sticky;top:calc(80px + env(safe-area-inset-top,0px));background:var(--sunk);border-radius:24px;padding:16px;display:grid;justify-items:center;gap:10px}
 @media (max-width:880px){.preview{position:relative;top:0}}
-.preview canvas{width:100%;max-width:440px;height:auto;border-radius:14px;box-shadow:0 18px 40px rgba(59,36,22,.2);background:#fff}
+.preview canvas{width:100%;max-width:440px;height:auto;border-radius:14px;box-shadow:0 18px 40px rgba(29,40,64,.2);background:#fff}
 .fmt{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px}
 .fmt button{border:0;background:transparent;font:700 13px var(--body);color:var(--muted);padding:8px 14px;border-radius:999px;cursor:pointer}
 .fmt button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink)}
@@ -38,7 +38,7 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dinkin' Donut">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dink Different">
 <script src="/js/pwa.js" defer></script>
 </head>
 <body>
@@ -48,8 +48,8 @@
   <div class="tabs" role="tablist" id="tabs">
     <button role="tab" data-t="tonight" aria-selected="true">Open play tonight</button>
     <button role="tab" data-t="recap" aria-selected="false">Session recap</button>
-    <button role="tab" data-t="jersey" aria-selected="false">Glaze Jersey</button>
-    <button role="tab" data-t="card" aria-selected="false">Glaze Card</button>
+    <button role="tab" data-t="jersey" aria-selected="false">Club Jersey</button>
+    <button role="tab" data-t="card" aria-selected="false">Club Card</button>
   </div>
   <div class="work">
     <div class="preview">
@@ -65,7 +65,7 @@
         <button class="btn ghost" id="copy" type="button">Copy caption</button>
       </div>
       <p class="hint" id="status"></p>
-      <div class="tip"><b>Best times in Doha:</b> post the open play announcement around 4–6 PM on the day, and the recap the next morning. Add a few session photos after the recap image to make it a carousel.</div>
+      <div class="tip"><b>Best times:</b> post the open play announcement around 4–6 PM on the day, and the recap the next morning. Add a few session photos after the recap image to make it a carousel.</div>
     </div>
   </div>
 </main>
@@ -77,21 +77,21 @@
 <script>
 const $ = id => document.getElementById(id), C = window.CLUB;
 const cv = $("cv"); let x = cv.getContext("2d");
-const COL = { glaze: "#FF5FA2", ball: "#D7F03C", dough: "#E8A95B", court: "#2F7A4F", choco: "#3B2416", cream: "#FFF6EA" };
-const TAGS = "#DinkinDonut #DohaPickleball #Pickleball #OpenPlay #Doha";
+const COL = { glaze: "#9C7A45", ball: "#E2D2A6", dough: "#C9B48A", court: "#4C6A8A", choco: "#1D2840", cream: "#F4EFE3" };
+const TAGS = "#DinkDifferent #DohaPickleball #Pickleball #OpenPlay #Doha";
 let tpl = "tonight", fmt = "post", HALL = null, assets = {};
 
 // ---------- assets: fonts + images (same origin, so the canvas can be exported) ----------
 const loadImg = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
 const b64 = async url => { const buf = await (await fetch(url)).arrayBuffer(); let s = ""; new Uint8Array(buf).forEach(b => s += String.fromCharCode(b)); return btoa(s); };
 async function boot() {
-  const faces = [["Fredoka", "700", "fredoka-700"], ["Fredoka", "600", "fredoka-600"], ["DM Sans", "500", "dm-sans-500"], ["DM Sans", "700", "dm-sans-700"]];
+  const faces = [[Fraunces, "700", "fredoka-700"], [Fraunces, "600", "fredoka-600"], ["DM Sans", "500", "dm-sans-500"], ["DM Sans", "700", "dm-sans-700"]];
   await Promise.all(faces.map(async ([f, w, file]) => { const ff = new FontFace(f, `url(/assets/fonts/${file}.woff2)`, { weight: w }); await ff.load(); document.fonts.add(ff); }));
-  const [logo, gold, silver, bronze, cardF, cardB] = await Promise.all(["/assets/logo.svg", "/assets/donut-gold.svg", "/assets/donut-silver.svg", "/assets/donut-bronze.svg", "/assets/loyalty/card-front.png", "/assets/loyalty/card-back.png"].map(loadImg));
+  const [logo, gold, silver, bronze, cardF, cardB] = await Promise.all(["/assets/logo.svg", "/assets/medal-gold.svg", "/assets/medal-silver.svg", "/assets/medal-bronze.svg", "/assets/loyalty/card-front.png", "/assets/loyalty/card-back.png"].map(loadImg));
   assets = { logo, gold, silver, bronze, cardF, cardB };
   // For SVG drawn into canvas: inline the logo and the fonts so nothing external is needed
   assets.logoData = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(await (await fetch("/assets/logo.svg")).text())));
-  assets.fontCss = `@font-face{font-family:Fredoka;font-weight:700;src:url(data:font/woff2;base64,${await b64("/assets/fonts/fredoka-700.woff2")})}@font-face{font-family:"DM Sans";font-weight:700;src:url(data:font/woff2;base64,${await b64("/assets/fonts/dm-sans-700.woff2")})}`;
+  assets.fontCss = `@font-face{font-family:Fraunces;font-weight:700;src:url(data:font/woff2;base64,${await b64("/assets/fonts/fraunces-normal.woff2")})}@font-face{font-family:"DM Sans";font-weight:700;src:url(data:font/woff2;base64,${await b64("/assets/fonts/dm-sans-700.woff2")})}`;
   try { HALL = (await (await fetch("/api/queue?hall", { cache: "no-store" })).json()).hall?.[0] || null; } catch {}
   setTpl(["tonight", "recap", "jersey", "card"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "tonight");
 }
@@ -101,7 +101,7 @@ function svgImg(svg) {
 }
 
 // ---------- drawing helpers ----------
-function txt(t, X, Y, { size = 40, w = 700, font = "Fredoka", color = COL.choco, align = "left", track = 0, max } = {}) {
+function txt(t, X, Y, { size = 40, w = 700, font = Fraunces, color = COL.choco, align = "left", track = 0, max } = {}) {
   x.font = `${w} ${size}px "${font}"`; x.fillStyle = color; x.textAlign = align; x.textBaseline = "alphabetic";
   if ("letterSpacing" in x) x.letterSpacing = track + "px";
   if (max) { let s = size; while (x.measureText(t).width > max && s > 20) { s -= 2; x.font = `${w} ${s}px "${font}"`; } }
@@ -110,15 +110,13 @@ function txt(t, X, Y, { size = 40, w = 700, font = "Fredoka", color = COL.choco,
 function wrap(t, X, Y, maxW, lh, o) { const words = t.split(" "); let line = ""; x.font = `${o.w || 500} ${o.size}px "${o.font || "DM Sans"}"`;
   words.forEach(wd => { const test = line ? line + " " + wd : wd; if (x.measureText(test).width > maxW && line) { txt(line, X, Y, o); Y += lh; line = wd; } else line = test; }); if (line) txt(line, X, Y, o); return Y; }
 function rr(X, Y, W, H, r, fill) { x.beginPath(); x.roundRect(X, Y, W, H, r); x.fillStyle = fill; x.fill(); }
-function sprinkles(seed, area) { const cols = [COL.glaze, COL.dough, COL.court, COL.cream, COL.ball]; let s = seed;
-  for (let i = 0; i < 26; i++) { s = (s * 9301 + 49297) % 233280; const r = s / 233280; const px = area[0] + r * area[2]; s = (s * 9301 + 49297) % 233280; const py = area[1] + (s / 233280) * area[3];
-    x.save(); x.translate(px, py); x.rotate(r * 6.28); rr(-16, -6, 32, 12, 6, cols[i % 5]); x.restore(); } }
+function sprinkles(seed, area) { const [ax, ay, aw, ah] = area; x.save(); x.strokeStyle = COL.glaze; x.globalAlpha = .55; x.lineWidth = 1.5; x.beginPath(); x.moveTo(ax, ay + ah / 2); x.lineTo(ax + aw, ay + ah / 2); x.stroke(); x.globalAlpha = 1; x.restore(); }
 function brand(dark) {
   x.drawImage(assets.logo, 70, 62, 84, 84);
-  txt("Dinkin’ Donut", 170, 112, { size: 38, color: dark ? COL.cream : COL.choco });
+  txt("Dink Different", 170, 112, { size: 38, color: dark ? COL.cream : COL.choco });
   txt("PICKLEBALL CLUB · DOHA", 172, 140, { size: 15, font: "DM Sans", color: dark ? COL.ball : COL.choco, track: 4 });
 }
-function footer(bg, fg) { rr(0, 1350 - 96, 1080, 96, 0, bg); txt("@dinkindonutqa", 70, 1350 - 38, { size: 26, font: "DM Sans", color: fg }); txt("Stay glazed.", 1010, 1350 - 38, { size: 30, color: fg, align: "right" }); }
+function footer(bg, fg) { rr(0, 1350 - 96, 1080, 96, 0, bg); txt("@dinkindonutqa", 70, 1350 - 38, { size: 26, font: "DM Sans", color: fg }); txt("Dink different.", 1010, 1350 - 38, { size: 30, color: fg, align: "right" }); }
 
 // ---------- templates ----------
 const TPL = {
@@ -134,36 +132,36 @@ const TPL = {
       rr(70, 1110, x.measureText(v.note).width + 120, 72, 36, COL.choco); txt(v.note, 110, 1157, { size: 30, font: "DM Sans", color: COL.ball, max: 480 });
       footer(COL.choco, COL.cream);
     },
-    caption: v => `Open play tonight, Dinkers. 🏓\n\n📅 ${v.date}\n⏰ ${v.time}\n📍 ${v.venue || "Venue: TBA"}\n\n${v.note}. Scan the QR at the court, join the queue and we’ll call you to your game.\n\nSweet game, soft hands. Stay glazed. 🍩\n\n${TAGS}`,
+    caption: v => `Open play tonight, Dinkers. 🏓\n\n📅 ${v.date}\n⏰ ${v.time}\n📍 ${v.venue || "Venue: TBA"}\n\n${v.note}. Scan the QR at the court, join the queue and we’ll call you to your game.\n\nPlay well. Dink different. Dink different.\n\n${TAGS}`,
   },
   recap: {
     fields: () => { const t = HALL?.top || []; return [["title", "Night", HALL?.title || "Open Play Night"], ["g1", "1st place", t[0]?.name || ""], ["g2", "2nd place", t[1]?.name || ""], ["g3", "3rd place", t[2]?.name || ""], ["games", "Games played", String(HALL?.games ?? "")], ["players", "Dinkers", String(HALL?.players ?? "")]]; },
     draw: async v => {
       rr(0, 0, 1080, 1350, 0, COL.choco); brand(true); sprinkles(7, [60, 170, 960, 120]);
-      txt("HALL OF GLAZE", 540, 290, { size: 22, font: "DM Sans", color: COL.glaze, align: "center", track: 8 });
+      txt("THE HONOURS BOARD", 540, 290, { size: 22, font: "DM Sans", color: COL.glaze, align: "center", track: 8 });
       txt(v.g1 ? `${v.g1} takes the gold` : "Tonight’s champions", 540, 380, { size: 74, color: COL.cream, align: "center", max: 960 });
       const spot = (img, name, cx, size, base, label, col) => { x.drawImage(img, cx - size / 2, base - size - 110, size, size);
         txt(label, cx, base - 70, { size: 16, font: "DM Sans", color: col, align: "center", track: 4 }); txt(name || "-", cx, base - 24, { size: size > 300 ? 52 : 38, color: COL.cream, align: "center", max: 300 }); };
-      rr(120, 1010, 260, 120, 18, "#4A3020"); rr(410, 960, 260, 170, 18, "#F5C542"); rr(700, 1040, 260, 90, 18, "#4A3020");
+      rr(120, 1010, 260, 120, 18, "#2A3756"); rr(410, 960, 260, 170, 18, "#F5C542"); rr(700, 1040, 260, 90, 18, "#2A3756");
       txt("2", 250, 1090, { size: 70, color: COL.cream, align: "center" }); txt("1", 540, 1070, { size: 90, color: COL.choco, align: "center" }); txt("3", 830, 1105, { size: 60, color: COL.cream, align: "center" });
-      spot(assets.silver, v.g2, 250, 230, 1010, "SILVER SPRINKLE", "#D9DDE3"); spot(assets.gold, v.g1, 540, 330, 960, "GOLD GLAZE", "#F5C542"); spot(assets.bronze, v.g3, 830, 210, 1040, "BRONZE BITE", "#D99A5B");
+      spot(assets.silver, v.g2, 250, 230, 1010, "SILVER", "#D9DDE3"); spot(assets.gold, v.g1, 540, 330, 960, "GOLD", "#F5C542"); spot(assets.bronze, v.g3, 830, 210, 1040, "BRONZE", "#D99A5B");
       txt([v.games && `${v.games} games`, v.players && `${v.players} Dinkers`].filter(Boolean).join("  ·  "), 540, 1200, { size: 32, font: "DM Sans", color: COL.ball, align: "center" });
       footer(COL.glaze, COL.choco);
     },
-    caption: v => `That’s a wrap on ${v.title}. 🍩\n\n🥇 ${v.g1 || "-"}\n🥈 ${v.g2 || "-"}\n🥉 ${v.g3 || "-"}\n\n${[v.games && v.games + " games", v.players && v.players + " Dinkers"].filter(Boolean).join(", ")} on court tonight. Thank you, Dinkers. See you next session.\n\nStay glazed.\n\n${TAGS} #HallOfGlaze`,
+    caption: v => `That’s a wrap on ${v.title}.\n\n🥇 ${v.g1 || "-"}\n🥈 ${v.g2 || "-"}\n🥉 ${v.g3 || "-"}\n\n${[v.games && v.games + " games", v.players && v.players + " Dinkers"].filter(Boolean).join(", ")} on court tonight. Thank you, Dinkers. See you next session.\n\nDink different.\n\n${TAGS} #HonoursBoard`,
   },
   jersey: {
-    fields: () => [["name", "Name on back", "ANGEL"], ["num", "Jersey number", "7"], ["way", "Colourway (glaze, court, midnight)", "midnight"], ["price", "Price", money(window.JERSEY?.price || 165)]],
+    fields: () => [["name", "Name on back", "ANGEL"], ["num", "Jersey number", "7"], ["way", "Colourway (glaze = brass, court, midnight)", "midnight"], ["price", "Price", money(window.JERSEY?.price || 165)]],
     draw: async v => {
       rr(0, 0, 1080, 1350, 0, COL.glaze); brand(false);
       const j = await svgImg(Jersey.render({ way: (v.way || "midnight").toLowerCase().trim(), side: "back", name: v.name, num: v.num, print: v.num ? "full" : "name" }));
-      x.save(); x.shadowColor = "rgba(59,36,22,.35)"; x.shadowBlur = 50; x.shadowOffsetY = 30; x.drawImage(j, 150, 220, 780, 878); x.restore();
-      txt("THE GLAZE JERSEY", 540, 1150, { size: 22, font: "DM Sans", color: COL.choco, align: "center", track: 8 });
+      x.save(); x.shadowColor = "rgba(29,40,64,.35)"; x.shadowBlur = 50; x.shadowOffsetY = 30; x.drawImage(j, 150, 220, 780, 878); x.restore();
+      txt("THE CLUB JERSEY", 540, 1150, { size: 22, font: "DM Sans", color: COL.choco, align: "center", track: 8 });
       txt("Your name. Your number.", 540, 1220, { size: 62, align: "center", max: 960 });
       footer(COL.choco, COL.cream);
       txt(`Pre-order · ${v.price}`, 540, 1350 - 38, { size: 28, font: "DM Sans", color: COL.ball, align: "center" });
     },
-    caption: v => `The Glaze Jersey is here. 🍩\n\nYour name, your number, glaze-dipped. Three colourways: Glaze, Court and Midnight. Built for open play and tournament day.\n\nPre-order now · ${v.price}\nBuild yours: link in bio, or DM us.\n\nStay glazed.\n\n${TAGS} #PickleballJersey`,
+    caption: v => `The Club Jersey is here.\n\nYour name, your number, club-made. Three colourways: Brass, Court and Midnight. Built for open play and tournament day.\n\nPre-order now · ${v.price}\nBuild yours: link in bio, or DM us.\n\nDink different.\n\n${TAGS} #PickleballJersey`,
   },
   card: {
     fields: () => [["head", "Headline", "Play 6. The 7th is on us."], ["sub", "Line under it", "Open play and DUPR games both count."]],
@@ -171,11 +169,11 @@ const TPL = {
       rr(0, 0, 1080, 1350, 0, COL.cream); brand(false); sprinkles(3, [60, 1000, 960, 160]);
       const [a, b] = v.head.split(". "); txt(a + (b ? "." : ""), 70, 330, { size: 120, max: 940 }); if (b) txt(b, 70, 460, { size: 92, color: COL.court, max: 940 });
       txt(v.sub, 70, 530, { size: 34, font: "DM Sans", w: 500, color: "#6E5240", max: 940 });
-      x.save(); x.shadowColor = "rgba(59,36,22,.3)"; x.shadowBlur = 40; x.shadowOffsetY = 24;
+      x.save(); x.shadowColor = "rgba(29,40,64,.3)"; x.shadowBlur = 40; x.shadowOffsetY = 24;
       x.translate(600, 900); x.rotate(0.08); x.drawImage(assets.cardB, -300, -120, 630, 360); x.rotate(-0.2); x.drawImage(assets.cardF, -420, -260, 630, 360); x.restore();
       footer(COL.choco, COL.cream);
     },
-    caption: v => `Meet the Glaze Card. 🍩\n\n${v.head} ${v.sub}\n\n1. Sign up (link in bio)\n2. Collect your card at any session\n3. Get a stamp every paid session\n\nStay glazed, Dinkers.\n\n${TAGS} #GlazeCard`,
+    caption: v => `Meet the Club Card.\n\n${v.head} ${v.sub}\n\n1. Sign up (link in bio)\n2. Collect your card at any session\n3. Get a stamp every paid session\n\nDink different, Dinkers.\n\n${TAGS} #ClubCard`,
   },
 };
 function money(n) { return `${Number(n).toLocaleString("en")} QAR`; }
@@ -187,7 +185,7 @@ function setTpl(t) {
   tpl = t; document.querySelectorAll("[data-t]").forEach(b => b.setAttribute("aria-selected", b.dataset.t === t));
   vals = Object.fromEntries(TPL[t].fields().map(([k, , d]) => [k, d]));
   $("fields").innerHTML = TPL[t].fields().map(([k, l]) => `<label>${l}<input data-k="${k}" value="${String(vals[k]).replace(/"/g, "&quot;")}"></label>`).join("");
-  if (t === "recap" && !HALL) $("status").textContent = "No published recap yet. End a session with “Put the top 3 in the Hall of Glaze” ticked, or type the names here.";
+  if (t === "recap" && !HALL) $("status").textContent = "No published recap yet. End a session with “Put the top 3 on the Honours Board” ticked, or type the names here.";
   else $("status").textContent = "";
   render(true);
 }
@@ -208,7 +206,7 @@ document.addEventListener("input", e => { const k = e.target.dataset.k; if (!k) 
 $("tabs").onclick = e => { const b = e.target.closest("[data-t]"); if (b) setTpl(b.dataset.t); };
 document.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { fmt = b.dataset.f; document.querySelectorAll("[data-f]").forEach(y => y.setAttribute("aria-pressed", y === b)); render(false); });
 const blob = () => new Promise(ok => cv.toBlob(ok, "image/png"));
-const fname = () => `dinkin-donut-${tpl}-${fmt}.png`;
+const fname = () => `dink-different-${tpl}-${fmt}.png`;
 async function copyCaption() { try { await navigator.clipboard.writeText($("caption").value); return true; } catch { $("caption").select(); return false; } }
 $("copy").onclick = async () => { $("status").textContent = (await copyCaption()) ? "Caption copied." : "Select the caption and copy it."; };
 $("save").onclick = async () => { const a = document.createElement("a"); a.href = URL.createObjectURL(await blob()); a.download = fname(); a.click(); $("status").textContent = "Image saved. Open Instagram and pick it from your photos."; };

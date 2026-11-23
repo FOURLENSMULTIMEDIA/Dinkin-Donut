@@ -1,34 +1,34 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Tournament · Dinkin' Donut</title>
+<title>Tournament · Dink Different</title>
 <meta name="description" content="Live brackets, registration and results.">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#1A110B">
+<meta name="theme-color" content="#12192A">
 <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/tenant.js"></script>
 <script src="/js/theme.js"></script>
 <style>
-body{background:#1A110B;color:#FFF6EA}
-.tn-nav{position:sticky;top:0;z-index:30;background:rgba(26,17,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,246,234,.08)}
+body{background:#12192A;color:#F4EFE3}
+.tn-nav{position:sticky;top:0;z-index:30;background:rgba(18,25,42,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(244,239,227,.08)}
 .tn-nav .wrap{display:flex;align-items:center;gap:14px;height:64px}
-.tn-nav .brand{color:#FFF6EA}
+.tn-nav .brand{color:#F4EFE3}
 .tn-nav .sp{margin-left:auto;display:flex;gap:8px}
-.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font:700 13px var(--body);border:1px solid rgba(255,246,234,.18);color:#FFF6EA;background:transparent;text-decoration:none;cursor:pointer}
-.chip.gold{background:#F5C542;border-color:#F5C542;color:#1A110B}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font:700 13px var(--body);border:1px solid rgba(244,239,227,.18);color:#F4EFE3;background:transparent;text-decoration:none;cursor:pointer}
+.chip.gold{background:#F5C542;border-color:#F5C542;color:#12192A}
 .hero{padding:56px 0 28px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end}
 .hero h1{font-size:clamp(44px,7vw,92px);line-height:.92;background:linear-gradient(100deg,#FFF1B3,#F5C542 40%,#E9B52C 60%,#FFF1B3);-webkit-background-clip:text;background-clip:text;color:transparent}
 .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-.meta span{padding:8px 14px;border-radius:999px;background:rgba(255,246,234,.06);font-weight:700;font-size:14px}
+.meta span{padding:8px 14px;border-radius:999px;background:rgba(244,239,227,.06);font-weight:700;font-size:14px}
 .st{display:inline-flex;align-items:center;gap:8px}.st i{width:9px;height:9px;border-radius:50%;background:#F5C542}
-.st.live i{background:#7BD9A0;animation:pl 1.8s infinite}@keyframes pl{70%{box-shadow:0 0 0 8px rgba(123,217,160,0)}0%{box-shadow:0 0 0 0 rgba(123,217,160,.6)}}
+.st.live i{background:#A9BCD0;animation:pl 1.8s infinite}@keyframes pl{70%{box-shadow:0 0 0 8px rgba(123,217,160,0)}0%{box-shadow:0 0 0 0 rgba(123,217,160,.6)}}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 26px}
-.tabs button{font:700 15px var(--body);padding:11px 18px;border-radius:999px;border:1px solid rgba(255,246,234,.16);background:transparent;color:#FFF6EA;cursor:pointer}
-.tabs button[aria-selected=true]{background:#FFF6EA;color:#1A110B}
+.tabs button{font:700 15px var(--body);padding:11px 18px;border-radius:999px;border:1px solid rgba(244,239,227,.16);background:transparent;color:#F4EFE3;cursor:pointer}
+.tabs button[aria-selected=true]{background:#F4EFE3;color:#12192A}
 .tabs small{opacity:.6;font-weight:500;margin-left:6px}
 /* champion */
 .champ{display:flex;align-items:center;gap:20px;padding:22px 26px;border-radius:24px;background:linear-gradient(120deg,rgba(245,197,66,.22),rgba(245,197,66,.05));border:1px solid rgba(245,197,66,.5);margin-bottom:26px;animation:cin .9s var(--ease-out) both}
@@ -38,60 +38,60 @@ body{background:#1A110B;color:#FFF6EA}
 .br{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:28px;overflow-x:auto;padding:6px 2px 24px;scroll-snap-type:x mandatory}
 .col{display:flex;flex-direction:column;justify-content:space-around;gap:16px;scroll-snap-align:start;min-height:100%}
 .col h3{font:700 12px var(--body);letter-spacing:.22em;text-transform:uppercase;color:#F5C542;margin-bottom:4px}
-.m{position:relative;border-radius:16px;background:rgba(255,246,234,.05);border:1px solid rgba(255,246,234,.1);overflow:hidden}
-.m.done{border-color:rgba(255,246,234,.18)}.m.final{border-color:rgba(245,197,66,.6);box-shadow:0 0 0 4px rgba(245,197,66,.08)}
+.m{position:relative;border-radius:16px;background:rgba(244,239,227,.05);border:1px solid rgba(244,239,227,.1);overflow:hidden}
+.m.done{border-color:rgba(244,239,227,.18)}.m.final{border-color:rgba(245,197,66,.6);box-shadow:0 0 0 4px rgba(245,197,66,.08)}
 .m .tm{display:flex;align-items:center;gap:10px;padding:11px 14px;font-weight:600}
-.m .tm+.tm{border-top:1px solid rgba(255,246,234,.07)}
+.m .tm+.tm{border-top:1px solid rgba(244,239,227,.07)}
 .m .tm span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .m .tm b{font:700 20px var(--display);min-width:26px;text-align:right}
-.m .tm.w{background:rgba(215,240,60,.1)}.m .tm.w b{color:#D7F03C}.m .tm.l{opacity:.55}
+.m .tm.w{background:rgba(226,210,166,.1)}.m .tm.w b{color:#E2D2A6}.m .tm.l{opacity:.55}
 .m .tm.tbd span{opacity:.4;font-style:italic}
 .m .info{display:flex;justify-content:space-between;padding:6px 14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.55;background:rgba(0,0,0,.2)}
 .m .hx{display:flex;gap:6px;padding:8px 10px;background:rgba(0,0,0,.25);align-items:center;flex-wrap:wrap}
-.m .hx input{width:54px;padding:7px 8px;border-radius:9px;border:1px solid rgba(255,246,234,.2);background:rgba(0,0,0,.3);color:#FFF6EA;font:700 15px var(--body);text-align:center}
+.m .hx input{width:54px;padding:7px 8px;border-radius:9px;border:1px solid rgba(244,239,227,.2);background:rgba(0,0,0,.3);color:#F4EFE3;font:700 15px var(--body);text-align:center}
 .m .hx input.c{width:64px;font-size:12px}
-.m .hx button{font:700 12px var(--body);padding:8px 10px;border-radius:9px;border:0;cursor:pointer;background:#D7F03C;color:#1A110B}
-.m .hx button.g{background:transparent;color:#FFF6EA;border:1px solid rgba(255,246,234,.2)}
+.m .hx button{font:700 12px var(--body);padding:8px 10px;border-radius:9px;border:0;cursor:pointer;background:#E2D2A6;color:#12192A}
+.m .hx button.g{background:transparent;color:#F4EFE3;border:1px solid rgba(244,239,227,.2)}
 /* round robin */
 .rr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:24px}
 table.sd{width:100%;border-collapse:collapse;font-size:15px}
-.sd th,.sd td{padding:12px 10px;text-align:left;border-bottom:1px solid rgba(255,246,234,.08)}.sd th{font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.6}
+.sd th,.sd td{padding:12px 10px;text-align:left;border-bottom:1px solid rgba(244,239,227,.08)}.sd th{font-size:11px;letter-spacing:.16em;text-transform:uppercase;opacity:.6}
 .sd tr:first-child td{color:#F5C542}
 .rrm{display:grid;gap:10px}
 @media (max-width:860px){.rr{grid-template-columns:1fr}.hero{grid-template-columns:1fr}}
 /* registration */
-.panel2{border-radius:28px;background:rgba(255,246,234,.04);border:1px solid rgba(255,246,234,.1);padding:clamp(20px,4vw,36px);margin:30px 0}
+.panel2{border-radius:28px;background:rgba(244,239,227,.04);border:1px solid rgba(244,239,227,.1);padding:clamp(20px,4vw,36px);margin:30px 0}
 .panel2 h2{font-size:clamp(28px,4vw,40px);margin-bottom:6px}
 .fgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
 .fgrid label{display:grid;gap:7px;font-weight:700;font-size:14px}
-.fgrid input,.fgrid select{font:500 16px var(--body);padding:13px 14px;border-radius:13px;border:1px solid rgba(255,246,234,.18);background:rgba(0,0,0,.25);color:#FFF6EA}
+.fgrid input,.fgrid select{font:500 16px var(--body);padding:13px 14px;border-radius:13px;border:1px solid rgba(244,239,227,.18);background:rgba(0,0,0,.25);color:#F4EFE3}
 .fgrid .full{grid-column:1/-1}
 @media (max-width:600px){.fgrid{grid-template-columns:1fr}}
-.err{color:#FF9CC5;font-weight:700;min-height:1.3em;margin:10px 0 0}
-.ok{color:#7BD9A0;font-weight:700}
-.empty{padding:40px 20px;text-align:center;border-radius:24px;border:1px dashed rgba(255,246,234,.18);opacity:.8}
+.err{color:#CDB07E;font-weight:700;min-height:1.3em;margin:10px 0 0}
+.ok{color:#A9BCD0;font-weight:700}
+.empty{padding:40px 20px;text-align:center;border-radius:24px;border:1px dashed rgba(244,239,227,.18);opacity:.8}
 /* host */
-.hostbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:14px;border-radius:18px;background:rgba(215,240,60,.08);border:1px solid rgba(215,240,60,.3);margin-bottom:20px}
-.hostbar b{color:#D7F03C;margin-right:6px}
-.hostbar input,.hostbar select{font:600 14px var(--body);padding:9px 11px;border-radius:10px;border:1px solid rgba(255,246,234,.2);background:rgba(0,0,0,.3);color:#FFF6EA}
+.hostbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:14px;border-radius:18px;background:rgba(226,210,166,.08);border:1px solid rgba(226,210,166,.3);margin-bottom:20px}
+.hostbar b{color:#E2D2A6;margin-right:6px}
+.hostbar input,.hostbar select{font:600 14px var(--body);padding:9px 11px;border-radius:10px;border:1px solid rgba(244,239,227,.2);background:rgba(0,0,0,.3);color:#F4EFE3}
 .tlist{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
-.tlist span{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,246,234,.06);font-weight:600;font-size:14px}
-.tlist button{border:0;background:none;color:#FF9CC5;cursor:pointer;font-weight:700}
+.tlist span{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(244,239,227,.06);font-weight:600;font-size:14px}
+.tlist button{border:0;background:none;color:#CDB07E;cursor:pointer;font-weight:700}
 body.tv .tn-nav,body.tv .panel2,body.tv .hostbar,body.tv footer{display:none!important}body.tv .hero{padding-top:24px}body.tv .m .tm{font-size:18px}
 </style>
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dinkin' Donut">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dink Different">
 <script src="/js/pwa.js" defer></script>
 </head>
 <body>
-<header class="tn-nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a><div class="sp"><a class="chip" href="?tv" id="tvLink">TV view</a><a class="chip gold" href="#register" id="regLink">Register a team</a></div></div></header>
+<header class="tn-nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dink Different</a><div class="sp"><a class="chip" href="?tv" id="tvLink">TV view</a><a class="chip gold" href="#register" id="regLink">Register a team</a></div></div></header>
 <main class="wrap">
   <section class="hero">
     <div>
       <div class="eyebrow" style="color:#F5C542" id="eyb">Tournament</div>
-      <h1 id="tName">The Glaze Cup.</h1>
+      <h1 id="tName">The Invitational.</h1>
       <div class="meta"><span class="st" id="tSt"><i></i>Registration open</span><span id="tDate" hidden></span><span id="tVen" hidden></span><span id="tFmt">Games to 11, win by 2</span></div>
     </div>
   </section>
@@ -114,7 +114,7 @@ body.tv .tn-nav,body.tv .panel2,body.tv .hostbar,body.tv footer{display:none!imp
     </form>
   </section>
 </main>
-<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dinkin’ Donut Pickleball Club · Stay glazed.</span><span><a href="/">Home</a> · <a href="/queue">Live queue</a></span></div></footer>
+<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dink Different Pickleball Club · Dink different.</span><span><a href="/">Home</a> · <a href="/queue">Live queue</a></span></div></footer>
 <script src="/js/common.js"></script>
 <script src="/js/celebrate.js"></script>
 <script>
@@ -148,7 +148,7 @@ function render() {
   if (!d) { $("board").innerHTML = `<div class="empty"><b style="font-family:var(--display);font-size:24px">The draw is coming.</b><br>Divisions and brackets appear here as soon as the host sets them up.</div>`; return; }
   let h = "";
   if (d.champion) {
-    h += `<div class="champ"><img src="/assets/donut-gold.svg" alt=""><div><small>${esc(d.name)} champions</small><b>${esc(nameOf(d, d.champion))}</b></div></div>`;
+    h += `<div class="champ"><img src="/assets/medal-gold.svg" alt=""><div><small>${esc(d.name)} champions</small><b>${esc(nameOf(d, d.champion))}</b></div></div>`;
     if (lastChamp[d.id] !== d.champion && lastChamp[d.id] !== undefined && window.celebrate) try {
       const f = d.format === "elim" ? d.matches.find(m => m.round === d.rounds) : d.matches.filter(m => m.winner).sort((x, y) => (y.at || 0) - (x.at || 0))[0];
       if (f) { const wA = f.winner === f.a; window.celebrate({ court: f.court || d.name, wn: [nameOf(d, f.winner)], ln: [nameOf(d, wA ? f.b : f.a)], ws: wA ? f.sa : f.sb, ls: wA ? f.sb : f.sa }); }
@@ -190,7 +190,7 @@ function hostbar() {
     ${d ? `<span style="flex-basis:100%"></span><span style="opacity:.8">${esc(d.name)}:</span>
       ${!d.matches.length ? `<input id="hP1" placeholder="Player 1"><input id="hP2" placeholder="Player 2"><button class="chip" data-h="addTeam">Add team</button><button class="chip" data-h="shuffle">Shuffle seeds</button><button class="chip gold" data-h="generate">Generate ${d.format === "rr" ? "schedule" : "bracket"}</button>`
         : `<button class="chip" data-h="resetBr">Reset bracket</button>`}
-      <button class="chip" data-h="rmDiv" style="color:#FF9CC5">Delete division</button>` : ""}`;
+      <button class="chip" data-h="rmDiv" style="color:#CDB07E">Delete division</button>` : ""}`;
 }
 async function act(body, okMsg) {
   if (busy) return; busy = true;
@@ -198,7 +198,7 @@ async function act(body, okMsg) {
   catch (e) { toast(e.message); if (e.j && e.j.signin) { tok = ""; } }
   busy = false;
 }
-function toast(t) { const d = document.createElement("div"); d.textContent = t; d.style.cssText = "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:99;padding:12px 18px;border-radius:14px;background:#FFF6EA;color:#1A110B;font-weight:700;box-shadow:0 14px 30px rgba(0,0,0,.35);max-width:92vw"; document.body.appendChild(d); setTimeout(() => d.remove(), 3400); }
+function toast(t) { const d = document.createElement("div"); d.textContent = t; d.style.cssText = "position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:99;padding:12px 18px;border-radius:14px;background:#F4EFE3;color:#12192A;font-weight:700;box-shadow:0 14px 30px rgba(0,0,0,.35);max-width:92vw"; document.body.appendChild(d); setTimeout(() => d.remove(), 3400); }
 
 document.addEventListener("click", e => {
   const tab = e.target.closest("[data-d]"); if (tab) { cur = Number(tab.dataset.d); render(); return; }

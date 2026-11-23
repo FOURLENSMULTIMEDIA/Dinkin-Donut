@@ -1,143 +1,76 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><title>Dinkin' Donut · Opening Soon</title>
+<html><head><meta charset="utf-8"><title>Dink Different · Opening Soon</title>
 <style>
-@font-face{font-family:Fredoka;font-weight:700;src:url(../assets/fonts/fredoka-700.woff2)}
-@font-face{font-family:Fredoka;font-weight:600;src:url(../assets/fonts/fredoka-600.woff2)}
-@font-face{font-family:"DM Sans";font-weight:500;src:url(../assets/fonts/dm-sans-500.woff2)}
+@font-face{font-family:Fraunces;font-weight:100 900;src:url(../assets/fonts/fraunces-normal.woff2)}
+@font-face{font-family:Fraunces;font-weight:100 900;font-style:italic;src:url(../assets/fonts/fraunces-italic.woff2)}
+@font-face{font-family:Fraunces;font-weight:100 900;src:url(../assets/fonts/fraunces-normal.woff2)}
 @font-face{font-family:"DM Sans";font-weight:700;src:url(../assets/fonts/dm-sans-700.woff2)}
-:root{--glaze:#FF5FA2;--ball:#D7F03C;--dough:#E8A95B;--court:#2F7A4F;--choco:#3B2416;--cream:#FFF6EA}
-*{margin:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:var(--choco)}
-#v{position:fixed;inset:0;overflow:hidden;background:var(--choco);font-family:"DM Sans";color:var(--cream)}
-.l{position:absolute;inset:0;display:grid;place-items:center;will-change:transform,opacity}
-.bg{position:absolute;inset:0}
-.h{font-family:Fredoka;font-weight:700;line-height:.92;letter-spacing:-.02em;text-align:center}
-.k{font-weight:700;letter-spacing:.32em;text-transform:uppercase;font-size:2.8vmin;text-align:center}
-.w{display:inline-block}
-svg{overflow:visible}
-#grain{position:absolute;inset:-50%;opacity:.07;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
-#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.45))}
-.court{position:absolute;inset:0;background:var(--court)}
-.court i{position:absolute;background:rgba(255,246,234,.35)}
-.shirts{display:flex;gap:2vmin;align-items:center;justify-content:center}
-.shirts>div{width:30vmin}
-.phone{width:30vmin;height:58vmin;border-radius:5vmin;background:#160d08;border:1vmin solid #241710;box-shadow:0 4vmin 8vmin rgba(0,0,0,.5);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2.4vmin;padding:3vmin}
-.pin{display:flex;gap:1.4vmin}.pin b{width:6vmin;height:8vmin;border-radius:1.6vmin;background:var(--cream);color:var(--choco);font-family:Fredoka;font-size:5vmin;display:grid;place-items:center}
-.score{display:flex;gap:3vmin;font-family:Fredoka;font-weight:700;font-size:22vmin;line-height:1}
-</style></head><body><div id="v">
-
-<!-- S1: ball drop -->
-<div class="l" id="s1"><svg id="ball" width="18vmin" height="18vmin" viewBox="-50 -50 100 100" style="width:18vmin;height:18vmin">
-  <circle r="46" fill="#D7F03C"/><g fill="#9DB020">
-  <circle cx="-20" cy="-18" r="5"/><circle cx="12" cy="-26" r="5"/><circle cx="26" cy="4" r="5"/><circle cx="-4" cy="6" r="5"/><circle cx="-28" cy="16" r="5"/><circle cx="8" cy="30" r="5"/></g>
-  <circle id="hole" r="0" fill="#3B2416"/></svg></div>
-<div class="l" id="shadow" style="place-items:end center;padding-bottom:30vh"><div style="width:16vmin;height:2vmin;border-radius:50%;background:rgba(0,0,0,.45);filter:blur(.6vmin)"></div></div>
-
-<!-- S2: line -->
-<div class="l" id="s2"><div class="h" style="font-size:9vmin;max-width:82vmin" id="l2"></div></div>
-
-<!-- S3: donut + logo -->
-<div class="l" id="s3"><div style="display:grid;place-items:center;gap:4vmin">
-  <img id="donut" src="../assets/logo.svg" alt="" style="width:46vmin;height:46vmin"><svg style="position:absolute;width:0;height:0"><path id="glz"/><g id="spr"></g></svg>
-  <div class="h" id="logo" style="font-size:13vmin;color:var(--cream)">Dinkin’<br><span style="color:var(--glaze)">Donut</span></div>
-</div></div>
-
-<!-- S4: phone -->
-<div class="l" id="s4"><div style="display:grid;place-items:center;gap:5vmin">
-  <div class="phone" id="phone"><div class="k" style="color:var(--ball);font-size:1.7vmin">Your Glaze Pass</div><div class="pin"><b>4</b><b>2</b><b>7</b></div><div style="font-family:Fredoka;font-size:3.4vmin">You’re up next</div><div style="width:70%;height:1.2vmin;border-radius:1vmin;background:#3a2a20;overflow:hidden"><div id="bar" style="height:100%;background:var(--glaze);width:0"></div></div></div>
-  <div class="h" style="font-size:8vmin" id="l4">Scan. Queue. <span style="color:var(--ball)">Play.</span></div>
-</div></div>
-
-<!-- S5: court score -->
-<div class="l" id="s5"><div class="court" id="crt"><i style="left:8%;right:8%;top:50%;height:.5vmin"></i><i style="left:50%;top:10%;bottom:10%;width:.5vmin"></i><i style="left:8%;right:8%;top:10%;height:.5vmin"></i><i style="left:8%;right:8%;bottom:10%;height:.5vmin"></i><i style="left:8%;top:10%;bottom:10%;width:.5vmin"></i><i style="right:8%;top:10%;bottom:10%;width:.5vmin"></i></div>
-  <div style="position:relative;display:grid;place-items:center;gap:3vmin;background:rgba(47,122,79,.92);padding:4vmin 6vmin;border-radius:4vmin"><div class="k" style="color:var(--ball)">Games to eleven</div><div class="score"><span id="sa">0</span><span style="opacity:.4">–</span><span id="sb">0</span></div><div class="h" style="font-size:7vmin" id="l5">Every level welcome.</div></div></div>
-
-<!-- S6: shirts -->
-<div class="l" id="s6"><div style="display:grid;place-items:center;gap:4vmin"><div class="shirts" id="shirts"></div><div class="h" style="font-size:7.5vmin" id="l6">Your kit. <span style="color:var(--glaze)">1 of 1.</span></div></div></div>
-
-<!-- S7: opening soon -->
-<div class="l" id="s7"><div class="bg" id="s7bg" style="background:var(--glaze)"></div>
-  <div style="position:relative;display:grid;place-items:center;gap:3vmin"><div class="k" style="color:var(--choco)" id="k7">Doha · Pickleball club</div><div class="h" style="font-size:20vmin;color:var(--choco)" id="l7">Opening<br>soon</div></div></div>
-
-<!-- S8: end card -->
-<div class="l" id="s8"><div style="display:grid;place-items:center;gap:3.2vmin">
-  <img src="../assets/logo.svg" alt="" style="width:24vmin;height:24vmin">
-  <div class="h" style="font-size:10vmin">Dinkin’ <span style="color:var(--glaze)">Donut</span></div>
-  <div style="font-family:Fredoka;font-weight:600;font-size:4.4vmin;color:var(--ball)">Sweet game, soft hands.</div>
-  <div class="k" style="opacity:.85;margin-top:2vmin">@dinkindonutqa · dinkindonut.asia</div>
-  <div style="font-family:Fredoka;font-size:3.4vmin;opacity:.7;margin-top:1vmin">Stay glazed.</div>
-</div></div>
-
-<div id="grain"></div><div id="vig"></div>
-</div>
-<script src="../js/jersey.js"></script>
-<script src="../js/mockup.js"></script>
+*{margin:0;box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden}
+#v{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 35%,#F7F0E2,#E2D5BA 85%);color:#1D2840;font-family:Fraunces,Georgia,serif;overflow:hidden}
+#navy{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 35%,#26334F,#10172A 85%);opacity:0}
+.l{position:absolute;inset:0;display:grid;place-items:center;text-align:center;opacity:0;padding:0 6vmin}
+.h{font-weight:800;line-height:1;letter-spacing:-.01em}
+.h i{font-style:italic;font-weight:700;color:#9C7A45}
+.k{font:700 1.7vmin "DM Sans",sans-serif;letter-spacing:.5em;text-transform:uppercase;color:#9C7A45}
+#rule{position:absolute;left:50%;top:50%;height:1px;width:0;background:#9C7A45;transform:translate(-50%,8vmin)}
+#frame{position:absolute;inset:2.4vmin;border:1px solid rgba(156,122,69,.5)}
+#markwrap{position:absolute;inset:0;display:grid;place-items:center;opacity:0}
+#mark{width:52vmin;height:52vmin;overflow:visible}
+.ln{display:block;opacity:0}
+#grain{position:absolute;inset:-50%;opacity:.28;mix-blend-mode:multiply;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .28 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E")}
+.url{display:inline-block;padding:1.8vmin 4vmin;border-radius:99vmin;background:#C9A86B;color:#10172A;font:700 2.6vmin "DM Sans",sans-serif;letter-spacing:.04em}
+*{font-variation-settings:"SOFT" 100,"WONK" 0}em,i{font-variation-settings:"SOFT" 100,"WONK" 1}</style></head><body><div id="v">
+<div id="navy"></div>
+<div id="frame"></div>
+<div class="l" id="s1"><div class="h" style="font-size:9vmin">Some clubs play <i>loud.</i></div></div>
+<div class="l" id="s2"><div class="h" style="font-size:12vmin">We play <i>well.</i></div></div>
+<div id="rule"></div>
+<div id="markwrap"><svg id="mark" viewBox="0 0 200 200">
+  <g fill="#1D2840" fill-rule="evenodd">
+    <path id="dR" d="M104 44h20a56 56 0 0 1 0 112h-20zM119 62h5a27 38 0 0 1 0 76h-5z"/>
+    <path id="dL" d="M96 44H76a56 56 0 0 0 0 112h20zM81 62h-5a27 38 0 0 0 0 76h5z"/>
+  </g>
+  <path id="net" d="M100 36v128" stroke="#9C7A45" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="130" stroke-dashoffset="130"/>
+  <path id="arc" d="M60 30q38-30 70-2" fill="none" stroke="#9C7A45" stroke-width="1.5" stroke-dasharray="1.5 4.5" stroke-linecap="round" opacity="0"/>
+  <g id="ball" opacity="0"><circle r="8.5" fill="#E3CF7E"/><g fill="#1D2840" opacity=".5"><circle cx="-2.8" cy="-2.8" r="1.3"/><circle cx="3" cy="-1.9" r="1.3"/><circle cx="0" cy="3.2" r="1.3"/><circle cx="-4" cy="2.8" r="1"/><circle cx="4.2" cy="3.2" r="1"/></g></g>
+</svg></div>
+<div class="l" id="s4"><div class="h" style="font-size:8vmin;display:grid;gap:2.4vmin">
+  <span class="ln" id="m1">Whites <i>welcome.</i></span><span class="ln" id="m2">A handshake <i>at the net.</i></span><span class="ln" id="m3">Everyone <i>in.</i></span></div></div>
+<div class="l" id="s5"><div style="display:grid;gap:3vmin;justify-items:center">
+  <div class="k">Pickleball Club · Doha · Est. MMXXVI</div>
+  <div class="h" style="font-size:15vmin">Dink <i>Different</i></div>
+  <div class="h" style="font-size:4.4vmin;font-style:italic;opacity:.8">Play well. Dink different.</div></div></div>
+<div class="l" id="s6" style="color:#F4EFE3"><div style="display:grid;gap:3.4vmin;justify-items:center">
+  <img src="../assets/logo.svg" style="width:22vmin;height:22vmin" alt="">
+  <div class="k" style="color:#C9A86B">Doha · pickleball club</div>
+  <div class="h" style="font-size:13vmin">Opening <i style="color:#C9A86B">soon.</i></div>
+  <div class="h" style="font-size:3.8vmin;font-style:italic;opacity:.85" id="f6a">Pre-register for the First Serve and get the members’ sticker.</div>
+  <div class="url" id="f6b">dinkindonut.asia/first-serve</div></div></div>
+<div id="grain"></div></div>
 <script>
-const $=id=>document.getElementById(id);
-const cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
-const r=(t,a,b)=>cl((t-a)/(b-a));
-const eo=x=>1-Math.pow(1-x,4), eio=x=>x<.5?8*x*x*x*x:1-Math.pow(-2*x+2,4)/2;
-const back=x=>{const c=1.7,d=c+1;return 1+d*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
-const show=(el,a,b,t,f=.35)=>{const v=Math.min(r(t,a,a+f),1-r(t,b-f,b));el.style.opacity=t<a||t>b?0:eo(v);return v};
-
-// words for S2
-const words="Something sweet is coming to Doha.".split(" ");
-$("l2").innerHTML=words.map((w,i)=>`<span class="w" id="w${i}" style="margin:0 .12em;${w.startsWith("sweet")?"color:#FF5FA2":""}">${w}</span>`).join(" ");
-// glaze drip path (seeded wave)
-let gp="M-50 -6";for(let a=180;a<=360;a+=6){const rad=a*Math.PI/180;gp+=`L${(50*Math.cos(rad)).toFixed(1)} ${(50*Math.sin(rad)).toFixed(1)}`}
-for(let a=0;a<=180;a+=12){const rad=a*Math.PI/180,R=44+((a/12)%2?-6:10)*Math.abs(Math.sin(a*.7));gp+=`L${(R*Math.cos(rad)).toFixed(1)} ${(R*Math.sin(rad)*.55).toFixed(1)}`}
-$("glz").setAttribute("d",gp+"Z");
-const cols=["#D7F03C","#FFF6EA","#2F7A4F","#E8A95B","#FFFFFF"];let sp="";
-for(let i=0;i<34;i++){const a=i*2.39996,R=24+(i*7.3%22),x=R*Math.cos(a),y=R*Math.sin(a)*.8-6;sp+=`<rect class="s" x="-4" y="-1.2" width="8" height="2.4" rx="1.2" fill="${cols[i%5]}" data-x="${x}" data-y="${y}" data-r="${(i*47)%180}"/>`}
-$("spr").innerHTML=sp;const sprs=[...document.querySelectorAll("#spr .s")];
-const J=window.Jersey;
-$("shirts").innerHTML=`<div>${Mockup.tee({way:Object.keys(J.WAYS)[0],side:"back",name:"DREW",num:"7"})}</div><div>${Mockup.pro({way:"bughaw",side:"back",name:"ANGEL",num:"11"})}</div><div>${Mockup.polo({way:Object.keys(J.POLO_WAYS)[0],side:"back",name:"ARAYKOH",num:"3"})}</div>`;
-const shirts=[...$("shirts").children];
-
-function seek(t){
-  // S1 ball drop and bounce 0-3.2
-  const s1=$("s1");s1.style.opacity=t<3.4?1:0;$("shadow").style.opacity=t<2.6?1:0;
-  let y;const g=r(t,0,1.1);
-  if(t<1.1)y=-60+60*g*g; else if(t<1.9){const u=r(t,1.1,1.9);y=-22*4*u*(1-u)}else{const u=r(t,1.9,2.4);y=-6*4*u*(1-u)}
-  const sq=t>1.05&&t<1.2?.82:1;
-  const zoom=t>2.4?1+eio(r(t,2.4,3.3))*14:1;
-  $("ball").style.transform=`translateY(${y}vh) scale(${1/sq*zoom},${sq*zoom}) rotate(${t*140}deg)`;
-  $("hole").setAttribute("r",t>2.4?eio(r(t,2.4,3.1))*60:0);
-  // S2 words 3.2-7.6
-  const s2=$("s2");s2.style.opacity=t>3.1&&t<7.7?1-r(t,7.3,7.7):0;
-  words.forEach((w,i)=>{const e=$("w"+i),u=eo(r(t,3.3+i*.32,3.8+i*.32));e.style.opacity=u;e.style.transform=`translateY(${(1-u)*40}%)`;e.style.filter=`blur(${(1-u)*8}px)`});
-  // S3 donut 7.6-12
-  const v3=show($("s3"),7.6,12.2,t,.4);
-  const dz=back(r(t,7.6,8.6));$("donut").style.transform=`scale(${dz}) rotate(${(1-cl(dz))*-20}deg)`;
-  false&&sprs.forEach((s,i)=>{const u=back(r(t,8.2+i*.025,8.8+i*.025));s.setAttribute("transform",`translate(${s.dataset.x*u} ${s.dataset.y*u-(1-u)*70}) rotate(${s.dataset.r})`);s.style.opacity=u>0?1:0});
-  const lu=eo(r(t,9,9.8));$("logo").style.opacity=lu;$("logo").style.transform=`translateY(${(1-lu)*6}vmin) scale(${.9+lu*.1})`;
-  // S4 phone 12-16.4
-  show($("s4"),12,16.6,t);
-  const pu=eo(r(t,12,12.9));$("phone").style.transform=`translateY(${(1-pu)*30}vmin) rotate(${(1-pu)*-8}deg)`;
-  $("bar").style.width=(eio(r(t,13,15.6))*100)+"%";
-  const l4=eo(r(t,12.5,13.3));$("l4").style.opacity=l4;$("l4").style.transform=`translateY(${(1-l4)*4}vmin)`;
-  // S5 court + score 16.4-21
-  show($("s5"),16.4,21.2,t,.3);
-  $("crt").style.transform=`scale(${1.25-.25*eo(r(t,16.4,17.6))})`;
-  const sa=Math.round(eio(r(t,16.9,19.4))*11),sb=Math.round(eio(r(t,16.9,19.2))*9);$("sa").textContent=sa;$("sb").textContent=sb;
-  $("sa").style.color=sa===11?"#D7F03C":"#FFF6EA";
-  const l5=eo(r(t,19.4,20.1));$("l5").style.opacity=l5;$("l5").style.transform=`translateY(${(1-l5)*4}vmin)`;
-  // S6 shirts 21-25.6
-  show($("s6"),21,25.8,t);
-  shirts.forEach((s,i)=>{const u=back(r(t,21.1+i*.22,21.9+i*.22));s.style.transform=`translateY(${(1-u)*40}vmin) rotate(${(i-1)*4*(u)}deg) scale(${i===1?1.08:1})`;s.style.opacity=cl(u*2)});
-  const l6=eo(r(t,22.2,23));$("l6").style.opacity=l6;
-  // S7 opening soon 25.6-30
-  const s7=$("s7");s7.style.opacity=t>25.6&&t<30.3?1:0;
-  const wipe=eio(r(t,25.6,26.3));$("s7bg").style.clipPath=`circle(${wipe*150}% at 50% 50%)`;
-  const o7=back(r(t,26.1,26.9));$("l7").style.transform=`scale(${o7}) rotate(${(1-cl(o7))*-6}deg)`;$("l7").style.opacity=cl(o7*2);
-  const pulse=t>27?1+.025*Math.sin((t-27)*Math.PI*2.2):1;$("l7").style.transform+=` scale(${pulse})`;
-  $("k7").style.opacity=eo(r(t,26.8,27.4));
-  // S8 end 30-34
-  const v8=eo(r(t,30,30.8));$("s8").style.opacity=v8;$("s8").style.transform=`scale(${.94+.06*v8})`;
-  if(t>30)s7.style.opacity=1-r(t,30,30.4);
-  // grain jitter
-  $("grain").style.transform=`translate(${(Math.floor(t*24)*37)%40-20}px,${(Math.floor(t*24)*53)%40-20}px)`;
+const $ = id => document.getElementById(id), cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), r = (t, a, b) => cl((t - a) / (b - a)), eo = x => 1 - Math.pow(1 - x, 4), io = x => x < .5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2;
+const win = (el, a, b, t, f = .5) => { const v = t < a || t > b ? 0 : Math.min(r(t, a, a + f), 1 - r(t, b - f, b)); el.style.opacity = eo(v); return v; };
+const TOTAL = 26;
+function seek(t) {
+  win($("s1"), .4, 4.2, t, .6); $("s1").style.transform = `translateY(${(1 - eo(r(t, .4, 1.4))) * 2}vmin)`;
+  win($("s2"), 4.4, 8.2, t, .6); $("s2").style.transform = `scale(${.97 + .03 * eo(r(t, 4.4, 5.6))})`;
+  $("rule").style.width = 44 * eo(r(t, .2, 1.6)) + "vmin"; $("rule").style.opacity = 1 - r(t, 7.6, 8.2);
+  // the mark assembles: the two D's meet, the net draws, the ball dinks over
+  win($("markwrap"), 8.2, 13.8, t, .4); const k = io(r(t, 8.4, 9.8));
+  $("dL").setAttribute("transform", `translate(${-70 * (1 - k)} 0)`); $("dR").setAttribute("transform", `translate(${70 * (1 - k)} 0)`);
+  $("net").setAttribute("stroke-dashoffset", 130 * (1 - eo(r(t, 9.6, 10.6))));
+  const u = io(r(t, 10.6, 12)), bx = 60 + 74 * u, by = 30 + 2 * u - 72 * u * (1 - u);
+  $("ball").setAttribute("transform", `translate(${bx} ${by})`); $("ball").setAttribute("opacity", t > 10.5 ? 1 : 0);
+  $("arc").setAttribute("opacity", r(t, 11.6, 12.2));
+  $("mark").style.transform = `scale(${1 - .06 * eo(r(t, 12, 13.8))})`;
+  win($("s4"), 13.8, 18.4, t, .4);
+  [["m1", 14], ["m2", 14.8], ["m3", 15.6]].forEach(([id, a]) => { const e = eo(r(t, a, a + .8)); $(id).style.opacity = e; $(id).style.transform = `translateY(${(1 - e) * 2}vmin)`; });
+  win($("s5"), 18.4, 22, t, .6); $("s5").style.letterSpacing = (1 - eo(r(t, 18.4, 20))) * .3 + "em";
+  $("navy").style.opacity = eo(r(t, 21.6, 22.4));
+  win($("s6"), 22, 26.5, t, .5); $("f6a").style.opacity = eo(r(t, 23, 23.8)); $("f6b").style.opacity = eo(r(t, 23.6, 24.4));
+  $("grain").style.transform = `translate(${(Math.floor(t * 24) * 37) % 40 - 20}px,${(Math.floor(t * 24) * 53) % 40 - 20}px)`;
+  $("grain").style.mixBlendMode = t > 22 ? "screen" : "multiply"; $("grain").style.opacity = t > 22 ? .1 : .28;
 }
-window.seek=seek;seek(0);
-if(!/[?&]render/.test(location.search)){let t0=performance.now();(function f(){seek(((performance.now()-t0)/1000)%34);requestAnimationFrame(f)})()}
+window.seek = seek; seek(0);
+if (!/[?&]render/.test(location.search)) { const t0 = performance.now(); (function f() { seek(((performance.now() - t0) / 1000) % TOTAL); requestAnimationFrame(f); })(); }
 </script></body></html>

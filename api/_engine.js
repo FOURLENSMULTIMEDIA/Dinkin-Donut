@@ -29,7 +29,7 @@ function newPlayer(S, name) {
   return (S.players[id] = { id, name, w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false });
 }
 
-// Glaze Pass: 3-digit PIN, unique among tonight's players
+// Club Pass: 3-digit PIN, unique among tonight's players
 function genPin(S) {
   const used = new Set(Object.values(S.players).map(p => p.pin).filter(Boolean));
   for (let i = 0; i < 200; i++) { const pin = String(100 + Math.floor(Math.random() * 900)); if (!used.has(pin)) return pin; }
@@ -45,7 +45,7 @@ function addPlayer(S, rawName, level, fromHost, pin) {
   if (!p && !fromHost) throw new Error("Your name isn’t on tonight’s list yet. Please see the host at the check-in table.");
   if (!p) p = newPlayer(S, name);
   if (!fromHost && S.requirePin !== false) {
-    if (!p.pin) throw new Error("You don’t have a Glaze Pass yet. Pay at the check-in table and we’ll WhatsApp you a PIN.");
+    if (!p.pin) throw new Error("You don’t have a Club Pass yet. Pay at the check-in table and we’ll WhatsApp you a PIN.");
     if ((p.pinFails || 0) >= MAX_PIN_TRIES) throw new Error("Too many wrong PINs. Please see the host at the check-in table.");
     if (!String(pin || "").replace(/\D/g, "")) throw new Error("Enter the 3-digit PIN we sent to your WhatsApp.");
     if (String(pin || "").replace(/\D/g, "") !== p.pin) {
@@ -165,7 +165,7 @@ const actions = {
   },
   // host
   add: (S, a) => ({ player: addPlayer(S, a.name, a.level, true) }),
-  // Paid at the door: record payment, create the player if needed, issue a fresh Glaze Pass PIN.
+  // Paid at the door: record payment, create the player if needed, issue a fresh Club Pass PIN.
   pass: (S, a) => {
     const n = clean(a.name); if (n.length < 2) throw new Error("Enter the player’s name.");
     const phone = String(a.phone || "").replace(/[^\d+]/g, "");
@@ -174,9 +174,9 @@ const actions = {
     p.phone = phone; p.pin = genPin(S); p.pinFails = 0;
     const lv = M.normLevel(a.level); if (lv) p.level = lv;
     const amt = Math.round(Number(a.amt) * 100) / 100, r = S.pay[p.id] || (S.pay[p.id] = { items: [] });
-    if (a.method === "free") { r.fee = 0; log(S, `${p.name} plays free tonight and got a Glaze Pass`); }
-    else if (a.method === "later") { log(S, `${p.name} got a Glaze Pass, paying later`); }
-    else { if (amt > 0) r.items.push({ amt, method: ["cash", "fawran", "card"].includes(a.method) ? a.method : "cash", ref: clean(a.ref), t: Date.now() }); log(S, `${p.name} paid and got a Glaze Pass`); }
+    if (a.method === "free") { r.fee = 0; log(S, `${p.name} plays free tonight and got a Club Pass`); }
+    else if (a.method === "later") { log(S, `${p.name} got a Club Pass, paying later`); }
+    else { if (amt > 0) r.items.push({ amt, method: ["cash", "fawran", "card"].includes(a.method) ? a.method : "cash", ref: clean(a.ref), t: Date.now() }); log(S, `${p.name} paid and got a Club Pass`); }
     return { id: p.id, name: p.name, pin: p.pin, phone: p.phone, amount: amt > 0 ? amt : (S.pay[p.id]?.items || []).reduce((x, i) => x + i.amt, 0) };
   },
   newPin: (S, a) => { const p = S.players[a.id]; if (!p) throw new Error("Player not found."); p.pin = genPin(S); p.pinFails = 0; return { id: p.id, name: p.name, pin: p.pin, phone: p.phone || "", amount: (S.pay[p.id]?.items || []).reduce((x, i) => x + i.amt, 0) }; },
@@ -240,7 +240,7 @@ const actions = {
     L.forEach(id => { const p = S.players[id]; p.l++; p.streak = p.streak < 0 ? p.streak - 1 : -1; p.pf += ls; p.pa += ws; });
     S.games++;
     S.lastResult = { t: Date.now(), court: c.id, w: W.slice(), l: L.slice(), wn: W.map(id => S.players[id]?.name), ln: L.map(id => S.players[id]?.name), ws, ls };
-    // Glaze Moments: highlights the TV and console celebrate
+    // Club Moments: highlights the TV and console celebrate
     const nm = ids => ids.map(id => S.players[id]?.name).join(" and "), gap = M.avgOf(S, L) - M.avgOf(S, W);
     const hot = W.map(id => S.players[id]).find(p => p && (p.streak === 3 || p.streak === 5 || p.streak === 7));
     let mo = null;
@@ -260,7 +260,7 @@ const actions = {
     if (S.rotation === "winstay" && teamStreak < S.maxWins && !capped) {
       c.streak = teamStreak; c.lastWinners = [...W].sort(); c.stayers = W.slice(); S.queue.push(...L);
     } else {
-      if (S.rotation === "winstay") log(S, `${names(S, W)} hit ${S.maxWins} wins and rotate off. Sweet run!`);
+      if (S.rotation === "winstay") log(S, `${names(S, W)} hit ${S.maxWins} wins and rotate off. Fine run!`);
       c.streak = 0; c.lastWinners = null; c.stayers = null; S.queue.push(...W, ...L);
     }
     c.teams = null; c.start = null;

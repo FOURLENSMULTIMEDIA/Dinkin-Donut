@@ -9,7 +9,7 @@ const VERIFY = process.env.WA_VERIFY_TOKEN || "";
 const last8 = p => String(p || "").replace(/\D/g, "").slice(-8);
 
 const HELP = [
-  "*Dinkin' Donut Pickleball Club*",
+  "*Dink Different Pickleball Club*",
   "",
   "Reply with one word:",
   "*STATUS*  your place in the queue",
@@ -55,7 +55,7 @@ async function reply(from, text) {
     return ["*On court now*", "", ...live.map(c => `Court ${c.id}: ${names(S, c.teams[0])} vs ${names(S, c.teams[1])}`), "", `${S.queue.length} waiting. Live board: ${SITE}/queue`].join("\n");
   }
   if (what === "thanks") return "You're welcome. See you on court.";
-  if (what === "help" && !p) return "Hi, welcome to Dinkin' Donut Pickleball Club. Pay at the check-in table and your queue PIN will arrive here.\n\n" + HELP;
+  if (what === "help" && !p) return "Hi, welcome to Dink Different Pickleball Club. Pay at the check-in table and your queue PIN will arrive here.\n\n" + HELP;
   if (what === "help" && p && p.pin) return [`Hi ${p.name}, here's your queue PIN for tonight: *${p.pin}*`, "", "Join the queue in one tap:", joinLink(p.name, p.pin), "", "Reply *STATUS* any time to see your place in line."].join("\n");
   if (what === "help") return `Hi ${p.name}.\n\n` + HELP;
 

@@ -1,5 +1,5 @@
 /**
- * Dinkin' Donut — Glaze Card loyalty sign-up form.
+ * Dink Different — Club Card loyalty sign-up form.
  *
  * Creates the Google Form, its response spreadsheet and the branded imagery in one run.
  * Usage: script.google.com → New project → paste this file → Run `createGlazeCardForm`.
@@ -13,27 +13,27 @@ const IMG = {
 };
 
 function createGlazeCardForm() {
-  const form = FormApp.create("Dinkin' Donut · Glaze Card Sign-up");
+  const form = FormApp.create("Dink Different · Club Card Sign-up");
 
   form
-    .setTitle('The Glaze Card')
+    .setTitle('The Club Card')
     .setDescription(
       "Play 6 sessions, get the 7th free.\n\n" +
-      "Sign up once and collect your Glaze Card at the check-in table on your next session. " +
+      "Sign up once and collect your Club Card at the check-in table on your next session. " +
       "You get one stamp for every paid session, open play or DUPR. Six stamps unlock a free session.\n\n" +
       "Takes about a minute."
     )
     .setConfirmationMessage(
-      "You're in. Welcome to the Glaze Card.\n\n" +
+      "You're in. Welcome to the Club Card.\n\n" +
       "Pick up your card at the check-in table next session and show it each time you play.\n" +
-      "Questions? WhatsApp +974 3076 3431 or DM @dinkindonutqa.\n\nStay glazed."
+      "Questions? WhatsApp +974 3076 3431 or DM @dinkindonutqa.\n\nDink different."
     )
     .setProgressBar(true)
     .setAllowResponseEdits(true)
     .setShowLinkToRespondAgain(false)
     .setCollectEmail(false);
 
-  addImage_(form, IMG.card, 'Your Glaze Card', 'Front and back. Six stamps, then your seventh session is on us.');
+  addImage_(form, IMG.card, 'Your Club Card', 'Front and back. Six stamps, then your seventh session is on us.');
 
   // About you
   form.addSectionHeaderItem().setTitle('About you');
@@ -83,7 +83,7 @@ function createGlazeCardForm() {
     .setHelpText('Optional. Find it in the DUPR app under your profile.');
 
   form.addCheckboxItem()
-    .setTitle('How did you hear about Dinkin’ Donut?')
+    .setTitle('How did you hear about Dink Different?')
     .setChoiceValues(['Instagram', 'A friend', 'WhatsApp group', 'Reclub', 'Walked past the courts'])
     .showOtherOption(true);
 
@@ -96,18 +96,18 @@ function createGlazeCardForm() {
   form.addPageBreakItem().setTitle('Card terms');
 
   form.addSectionHeaderItem()
-    .setTitle('How the Glaze Card works')
+    .setTitle('How the Club Card works')
     .setHelpText(
       '1. One stamp per paid session, open play or DUPR games.\n' +
       '2. Six stamps unlock one free session of either type.\n' +
       '3. The card is personal and must be shown at check-in to be stamped.\n' +
       '4. Lost cards can be replaced once; stamps are restored from our records where possible.\n' +
-      "5. Dinkin' Donut may update these terms; members will be told on WhatsApp."
+      "5. Dink Different may update these terms; members will be told on WhatsApp."
     );
 
   form.addCheckboxItem()
     .setTitle('Agreement')
-    .setChoiceValues(['I agree to the Glaze Card terms'])
+    .setChoiceValues(['I agree to the Club Card terms'])
     .setRequired(true);
 
   form.addMultipleChoiceItem()
@@ -116,7 +116,7 @@ function createGlazeCardForm() {
     .setRequired(true);
 
   // Responses → spreadsheet
-  const ss = SpreadsheetApp.create("Glaze Card · Members");
+  const ss = SpreadsheetApp.create("Club Card · Members");
   form.setDestination(FormApp.DestinationType.SPREADSHEET, ss.getId());
   SpreadsheetApp.flush();
   styleSheet_(ss);

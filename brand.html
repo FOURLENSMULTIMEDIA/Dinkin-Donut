@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dink Different · Brand Kit</title>
+<meta name="description" content="The Dink Different brand kit: crest, wordmark, colours, type, voice and downloads.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/logo.svg">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<style>
+:root{color-scheme:light}
+body{background:#EDE4D3;color:#1D2840}
+.k{font:700 11px/1 "DM Sans",sans-serif;letter-spacing:.36em;text-transform:uppercase;color:#9C7A45}
+.serif{font-family:Fraunces,Georgia,serif}
+.cover{min-height:92vh;display:grid;place-items:center;text-align:center;padding:64px 16px;position:relative}
+.cover:before{content:"";position:absolute;inset:18px;border:1px solid rgba(156,122,69,.5);pointer-events:none}
+.cover img{width:min(260px,58vw)}
+.cover h1{font:600 clamp(56px,10vw,128px)/.92 Fraunces,Georgia,serif;margin:28px 0 14px}
+.cover h1 i{color:#9C7A45}
+.cover p{font:italic 600 clamp(20px,2.6vw,28px) Fraunces,Georgia,serif;opacity:.8;margin:0}
+section.s{max-width:1120px;margin:0 auto;padding:88px 16px;border-top:1px solid rgba(156,122,69,.35)}
+.s h2{font:600 clamp(40px,6vw,68px)/1 Fraunces,Georgia,serif;margin:14px 0 18px}
+.s h2 i{color:#9C7A45}
+.s .lead{font-size:18px;line-height:1.7;max-width:62ch;color:#3A3E4E}
+.grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:36px}
+.tile{border-radius:18px;padding:34px;display:grid;place-items:center;min-height:260px;box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 18px 40px -22px rgba(29,40,64,.45)}
+.tile small{justify-self:start;align-self:end;font:600 12px "DM Sans";letter-spacing:.08em;opacity:.7;margin-top:18px}
+.t-beige{background:#F4ECDD}.t-navy{background:#1D2840;color:#EDE4D3}.t-linen{background:#E3D8C3}
+.tile img{max-width:72%;max-height:180px}
+.sw{border-radius:16px;overflow:hidden;background:#F8F3EA;box-shadow:0 18px 40px -26px rgba(29,40,64,.5)}
+.sw div{height:150px}
+.sw p{margin:0;padding:14px 16px 16px;font-size:13px;line-height:1.5}
+.sw b{display:block;font:600 22px Fraunces,Georgia,serif}
+.type{display:grid;gap:18px;grid-template-columns:1.3fr 1fr;margin-top:36px}
+@media(max-width:760px){.type{grid-template-columns:1fr}}
+.spec{background:#F8F3EA;border-radius:18px;padding:30px;box-shadow:0 18px 40px -26px rgba(29,40,64,.45)}
+.spec .big{font:600 clamp(64px,9vw,112px)/1 Fraunces,Georgia,serif}
+.spec .big i{color:#9C7A45}
+.spec .sans{font:500 clamp(40px,5vw,60px)/1 "DM Sans",sans-serif}
+.spec p{color:#5A5E6C;font-size:14px;margin:14px 0 0}
+.voice{display:grid;gap:18px;grid-template-columns:1fr 1fr;margin-top:36px}
+@media(max-width:760px){.voice{grid-template-columns:1fr}}
+.voice ul{margin:12px 0 0;padding-left:18px;line-height:1.9}
+table{width:100%;border-collapse:collapse;margin-top:30px;font-size:15px}
+td,th{text-align:left;padding:14px 10px;border-bottom:1px solid rgba(156,122,69,.3);vertical-align:top}
+th{font:700 11px "DM Sans";letter-spacing:.2em;text-transform:uppercase;color:#9C7A45}
+td:first-child{font:600 22px Fraunces,Georgia,serif;white-space:nowrap}
+.dl{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.dl a{display:inline-flex;gap:8px;align-items:center;padding:13px 18px;border-radius:999px;background:#1D2840;color:#EDE4D3;text-decoration:none;font:700 14px "DM Sans"}
+.dl a.ghost{background:transparent;color:#1D2840;box-shadow:inset 0 0 0 1.5px #1D2840}
+.rule{display:flex;align-items:center;gap:14px;justify-content:center;margin:18px 0}
+.rule:before,.rule:after{content:"";width:60px;height:1px;background:#9C7A45}
+.board{display:grid;gap:14px;grid-template-columns:repeat(6,1fr);grid-auto-rows:200px;margin-top:36px}
+.b{position:relative;border-radius:18px;overflow:hidden;display:grid;place-items:center;box-shadow:0 1px 0 rgba(255,255,255,.5) inset,0 20px 40px -26px rgba(29,40,64,.55)}
+.b>small{position:absolute;left:16px;bottom:12px;font:700 10px "DM Sans";letter-spacing:.22em;text-transform:uppercase;opacity:.65}
+.b-hero{grid-column:span 4;grid-row:span 2;background:radial-gradient(ellipse at 40% 30%,#F8F1E4,#E4D7BE)}.b-hero img{width:82%}
+.b-navy{grid-column:span 2;grid-row:span 2;background:#1D2840;color:#EDE4D3}
+.b-linen{grid-column:span 2;background:#E3D8C3}.b-linen img{max-height:80%;max-width:60%;width:auto!important}
+.b-pal{grid-column:span 2;display:flex;padding:0}.b-pal span{flex:1;height:100%}.b-pal small{color:#F4EFE3}
+.b-type{grid-column:span 2;background:#F8F3EA;gap:6px;align-content:center}
+.b-pattern{grid-column:span 2;grid-row:span 2;background:#1D2840 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='%239C7A45' stroke-width='1' opacity='.6'%3E%3Cpath d='M0 30h60M30 0v60'/%3E%3Crect x='10' y='10' width='40' height='40' rx='2'/%3E%3C/g%3E%3Ccircle cx='30' cy='30' r='3' fill='%23E3CF7E'/%3E%3C/svg%3E")}
+.b-tag{grid-column:span 2;grid-row:span 2;background:linear-gradient(160deg,#E9DDC6,#D9C9AA);gap:0;display:flex;justify-content:center;align-items:flex-start;padding-top:20px}
+.tag{position:relative;width:118px;height:220px;margin:0 6px;border-radius:10px;background:#1D2840;color:#F4EFE3;display:grid;justify-items:center;align-content:center;gap:10px;text-align:center;transform:rotate(-5deg);box-shadow:0 26px 30px -14px rgba(29,40,64,.55)}
+.tag i{position:absolute;top:14px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#E3D8C3;box-shadow:inset 0 2px 3px rgba(0,0,0,.3)}
+.tag:before{content:"";position:absolute;top:-80px;left:50%;width:1.5px;height:96px;background:#9C7A45;transform:rotate(8deg);transform-origin:bottom}
+.tag img{width:70px}.tag b{font:600 22px/1.05 Fraunces,Georgia,serif}.tag b em{color:#C9A86B}.tag span{font:700 9px "DM Sans";letter-spacing:.22em;text-transform:uppercase;opacity:.7}
+.tag.t2{background:#F4EFE3;color:#1D2840;transform:rotate(6deg) translateY(24px)}.tag.t2 i{background:#D6C8AC}
+.b-cap{grid-column:span 2;grid-row:span 2;background:radial-gradient(ellipse at 50% 40%,#F2EADB,#D9CBB0)}
+.cap{position:relative;width:250px;height:170px;transform:scale(.82);filter:drop-shadow(0 30px 24px rgba(29,40,64,.35))}
+.cap .crown{position:absolute;left:20px;top:0;width:200px;height:140px;border-radius:110px 110px 18px 18px;background:radial-gradient(ellipse at 40% 25%,#F8F3EA,#E2D6BF 70%,#CBBB9C);display:grid;place-items:center;overflow:hidden}
+.cap .crown:after{content:"";position:absolute;left:50%;top:0;width:1px;height:100%;background:rgba(29,40,64,.12);box-shadow:-60px 0 0 rgba(29,40,64,.08),60px 0 0 rgba(29,40,64,.08)}
+.cap .crown img{width:70px;margin-top:16px}
+.cap .brim{position:absolute;left:70px;right:-20px;bottom:10px;height:44px;border-radius:0 60px 60px 10px/0 44px 44px 10px;background:linear-gradient(180deg,#1D2840,#141C30);transform:skewX(-18deg)}
+.b-tote{grid-column:span 2;grid-row:span 2;background:linear-gradient(170deg,#E8DCC5,#CDBB98)}
+.tote{position:relative;width:170px;height:230px;filter:drop-shadow(0 26px 22px rgba(29,40,64,.35))}
+.tote .strap{position:absolute;left:40px;right:40px;top:0;height:80px;border:9px solid #1D2840;border-bottom:0;border-radius:50px 50px 0 0}
+.tote .bag{position:absolute;left:0;right:0;bottom:0;height:170px;background:#EFE6D4 repeating-linear-gradient(0deg,rgba(0,0,0,.025) 0 1px,transparent 1px 3px);border-radius:4px 4px 10px 10px;display:grid;justify-items:center;align-content:center;gap:8px;border-top:14px solid #1D2840}
+.tote .bag img{width:96px}.tote .bag span{font:italic 600 14px Fraunces,Georgia,serif;color:#1D2840}
+.b-phones{grid-column:span 4;grid-row:span 2;background:#D6C8AC;display:flex;gap:16px;justify-content:center;align-items:center}
+.ph{width:140px;height:270px;border-radius:24px;background:#1D2840;color:#F4EFE3;border:5px solid #0F1524;padding:22px 14px;display:grid;align-content:space-between;justify-items:start;box-shadow:0 26px 30px -16px rgba(29,40,64,.6)}
+.ph.l{background:#F4EFE3;color:#1D2840;transform:translateY(-10px)}.ph .k{font-size:7.5px;letter-spacing:.2em}
+.ph b{font-size:28px;line-height:1;font-weight:600}.ph b i{color:#C9A86B}.ph.l b i{color:#9C7A45}.ph img{width:36px}
+@media(max-width:900px){.board{grid-template-columns:repeat(2,1fr);grid-auto-rows:170px}.b{grid-column:span 2!important}.b-type,.b-pal,.b-linen,.b-pattern{grid-column:span 1!important}.b-phones{overflow:hidden}.ph{flex:none}}
+footer{text-align:center;padding:60px 16px 80px;font-size:13px;color:#6E6457}
+</style>
+</head>
+<body>
+<header class="cover">
+  <div>
+    <img src="/assets/brand/mark.svg" alt="Dink Different mark">
+    <div class="rule k">Brand kit · Edition I</div>
+    <h1>Dink <i>Different</i></h1>
+    <p>A pickleball club, the old-fashioned way.</p>
+  </div>
+</header>
+
+<section class="s">
+  <div class="k">01 · The idea</div>
+  <h2>Old-school manners. <i>Modern pickleball.</i></h2>
+  <p class="lead">Dink Different borrows the quiet confidence of the old tennis clubs: whites on court, a handshake at the net, a members’ board on the wall. Then it opens the gate to everyone. It feels expensive without trying, warm rather than exclusive, and it never shouts.</p>
+  <p class="lead">Three words for every decision: <b>Heritage. Warmth. Restraint.</b></p>
+</section>
+
+<section class="s board-wrap">
+  <div class="k">02 · Brand board</div>
+  <h2>The club, <i>at a glance</i></h2>
+  <div class="board">
+    <div class="b b-hero"><img src="/assets/brand/wordmark.svg" alt="Dink Different wordmark"><small>Primary logo</small></div>
+    <div class="b b-navy"><img src="/assets/logo.svg" alt="" style="width:62%"><small>Alternate · the badge</small></div>
+    <div class="b b-linen"><img src="/assets/brand/mark.svg" alt="" style="width:56%"><small>Submark · the Different D</small></div>
+    <div class="b b-pal"><span style="background:#EDE4D3"></span><span style="background:#D6C8AC"></span><span style="background:#B89B72"></span><span style="background:#9C7A45"></span><span style="background:#1D2840"></span><small>Palette</small></div>
+    <div class="b b-type"><div class="serif" style="font-size:64px;line-height:1">Aa <i style="color:#9C7A45">Aa</i></div><div style="font:500 15px 'DM Sans'">Fraunces · DM Sans</div><small>Type</small></div>
+    <div class="b b-pattern"><small style="color:#F4EFE3">Pattern · the court weave</small></div>
+    <div class="b b-tag"><div class="tag"><i></i><img src="/assets/brand/mark-ivory.svg" alt=""><b>Dink <em>Different</em></b><span>The Club Polo · M</span></div><div class="tag t2"><i></i><img src="/assets/brand/mark.svg" alt=""><b>Made for<br>the kitchen line</b><span>No. 07 / 20</span></div><small>Hang tags</small></div>
+    <div class="b b-cap"><div class="cap"><div class="crown"><img src="/assets/brand/mark.svg" alt=""></div><div class="brim"></div></div><small>The Club Cap</small></div>
+    <div class="b b-tote"><div class="tote"><div class="strap"></div><div class="bag"><img src="/assets/brand/badge-beige.svg" alt=""><span>Courtside since MMXXVI</span></div></div><small>Canvas court tote</small></div>
+    <div class="b b-phones"><div class="ph"><div class="k" style="color:#C9A86B">Open play · Thursday</div><b class="serif" style="font-weight:800">Whites<br><i>welcome.</i></b><img src="/assets/brand/mark-ivory.svg" alt=""></div><div class="ph l"><div class="k">The Honours Board</div><b class="serif" style="font-weight:800">Play well.<br><i>Dink different.</i></b><img src="/assets/brand/mark.svg" alt=""></div><div class="ph"><div class="k" style="color:#C9A86B">The Invitational</div><b class="serif" style="font-weight:800">A gentle<br><i>war.</i></b><img src="/assets/brand/mark-ivory.svg" alt=""></div><small>Stories</small></div>
+  </div>
+</section>
+
+<section class="s">
+  <div class="k">03 · The mark</div>
+  <h2>The <i>Different D</i></h2>
+  <p class="lead">Two D’s stand back to back, and one is flipped: that’s the different one. Together their bowls make a court seen from above, with the net in brass down the middle and a ball clearing it in a soft arc. That arc is the dink. Use the mark alone for buttons, embroidery and icons, the badge for kit and signage, and the wordmark for headers.</p>
+  <p class="lead">Leave clear space equal to the height of one D-bowl. The smallest size is 24 px on screen and 10 mm in print. Never recolour, stretch or outline the mark.</p>
+  <div class="grid">
+    <div class="tile t-beige"><img src="/assets/brand/mark.svg" alt=""><small>Mark · navy on beige</small></div>
+    <div class="tile t-navy"><img src="/assets/brand/mark-ivory.svg" alt=""><small>Mark · ivory on navy</small></div>
+    <div class="tile t-linen"><img src="/assets/brand/badge-beige.svg" alt=""><small>Badge · beige</small></div>
+  </div>
+</section>
+
+<section class="s">
+  <div class="k">04 · Colour</div>
+  <h2>Beige, navy <i>&amp; brass</i></h2>
+  <p class="lead">Beige carries every page. Navy is for text and the deep panels. Brass is the only accent: rules, italics, buttons on navy. Ball yellow appears only on the ball. Oxblood is kept for losses and warnings.</p>
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+    <div class="sw"><div style="background:#EDE4D3"></div><p><b>Oatmeal</b>#EDE4D3 · page</p></div>
+    <div class="sw"><div style="background:#F4EFE3"></div><p><b>Ivory</b>#F4EFE3 · on navy</p></div>
+    <div class="sw"><div style="background:#E3D8C3"></div><p><b>Linen</b>#E3D8C3 · panels</p></div>
+    <div class="sw"><div style="background:#D6C8AC"></div><p><b>Stone</b>#D6C8AC · lines</p></div>
+    <div class="sw"><div style="background:#B89B72"></div><p><b>Camel</b>#B89B72 · leather, kit</p></div>
+    <div class="sw"><div style="background:#9C7A45"></div><p><b>Brass</b>#9C7A45 · accent</p></div>
+    <div class="sw"><div style="background:#1D2840"></div><p><b>Club Navy</b>#1D2840 · ink</p></div>
+    <div class="sw"><div style="background:#E2D2A6"></div><p><b>Ball</b>#E2D2A6 · the ball only</p></div>
+    <div class="sw"><div style="background:#8E2F2F"></div><p><b>Oxblood</b>#8E2F2F · warnings</p></div>
+  </div>
+</section>
+
+<section class="s">
+  <div class="k">05 · Type</div>
+  <h2>Two <i>typefaces</i></h2>
+  <div class="type">
+    <div class="spec"><div class="k">Display · Fraunces, soft</div><div class="big">Aa <i>Aa</i></div><p>A classy bold serif with soft ball terminals. Use weight 800 for headlines and the swash italic in brass for the second thought (“Play well. <i>Dink different.</i>”). Always set it with the soft axis on, large, with tight leading.</p></div>
+    <div class="spec"><div class="k">Text · DM Sans</div><div class="sans">Aa</div><p>For body copy, buttons and labels. Small labels are set in capitals with wide tracking (.3em), like the engraving on a trophy.</p></div>
+  </div>
+</section>
+
+<section class="s">
+  <div class="k">06 · Voice</div>
+  <h2>How we <i>speak</i></h2>
+  <div class="voice">
+    <div class="spec"><div class="k">We say</div><ul><li>“Play well. Dink different.”</li><li>“Whites welcome. Everyone welcome.”</li><li>“A handshake at the net.”</li><li>“See you on court.”</li><li>“Members”, “Dinkers”, “the club”</li></ul></div>
+    <div class="spec"><div class="k">We avoid</div><ul><li>Shouting, all caps headlines, exclamation marks</li><li>Slang, puns and emoji in headlines</li><li>“Exclusive” or “elite”: we are classic, not closed</li><li>Neon colours, gradients and stickers</li><li>Calling it tennis: it is pickleball</li></ul></div>
+  </div>
+</section>
+
+<section class="s">
+  <div class="k">07 · Names</div>
+  <h2>The <i>club’s</i> vocabulary</h2>
+  <table>
+    <tr><th>Name</th><th>What it is</th></tr>
+    <tr><td>The Honours Board</td><td>Winners of every open-play night, as on a clubhouse wall.</td></tr>
+    <tr><td>The Invitational</td><td>Our tournament, with a 15-point final.</td></tr>
+    <tr><td>Club Card</td><td>The loyalty card, stamped each paid session.</td></tr>
+    <tr><td>Club Pass</td><td>Your 3-digit PIN for the night’s queue.</td></tr>
+    <tr><td>The Heirloom</td><td>The 1 of 1 kit design, shaped by your name. Only 20 made.</td></tr>
+    <tr><td>Soft Hands Academy</td><td>Paid coaching: lessons, Home Court drills, the Pro Track.</td></tr>
+    <tr><td>Courtcall</td><td>Our hosting software for other clubs. A separate, neutral brand.</td></tr>
+  </table>
+</section>
+
+<section class="s">
+  <div class="k">08 · Photography &amp; kit</div>
+  <h2>Real light, <i>real texture</i></h2>
+  <p class="lead">Golden-hour daylight, warm beige and cream tones, natural shadows and real materials: cable-knit, linen, cane, leather, canvas. Show people in whites and navy, paddles and a basket of balls. Never use stock-photo smiles, neon, or anything too clean. The site carries a fine paper grain so every page feels printed, not pixelated.</p>
+</section>
+
+<section class="s" id="downloads">
+  <div class="k">09 · Downloads</div>
+  <h2>Take it <i>with you</i></h2>
+  <div class="dl">
+    <a href="/assets/brand/dink-different-brand-kit.zip" download>Download the full kit (.zip)</a>
+    <a class="ghost" href="/assets/brand/mark.svg" download>Mark SVG</a>
+    <a class="ghost" href="/assets/logo.svg" download>Badge SVG</a>
+    <a class="ghost" href="/assets/brand/wordmark.svg" download>Wordmark SVG</a>
+    <a class="ghost" href="/assets/brand/wordmark-stacked.svg" download>Stacked wordmark SVG</a>
+    <a class="ghost" href="/assets/app/icon-1024.png" download>App icon 1024</a>
+  </div>
+</section>
+<footer>© Dink Different Pickleball Club · Designed &amp; Developed by Drew Nolasco &amp; Angel Flores</footer>
+</body>
+</html>

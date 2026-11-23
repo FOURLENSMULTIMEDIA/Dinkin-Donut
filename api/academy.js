@@ -1,6 +1,6 @@
 // Soft Hands Academy: paid coaching. Members unlock every lesson; the public sees a short preview.
 // Access: an Academy key (x-academy-key) from a card subscription or issued by the owner,
-// or the Dinkin' Donut host sign-in (x-host-token) for you and your team.
+// or the Dink Different host sign-in (x-host-token) for you and your team.
 //   GET  ?lessons                       list + access state
 //   GET  ?lesson=id                     full lesson for members, preview of the first lesson for everyone else
 //   POST { checkout:{ interval } }      Stripe Checkout (subscription) → { url }

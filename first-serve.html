@@ -1,17 +1,17 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>The First Serve · Dinkin' Donut</title>
-<meta name="description" content="Pre-register for Dinkin' Donut's first open play. The first 48 Dinkers get a numbered Founding Dinker sticker, free.">
-<meta name="theme-color" content="#FFF6EA">
-<meta property="og:title" content="The First Serve · Dinkin' Donut">
+<title>The First Serve · Dink Different</title>
+<meta name="description" content="Pre-register for Dink Different's first open play. The first 48 Dinkers get a numbered Founding Dinker sticker, free.">
+<meta name="theme-color" content="#F4EFE3">
+<meta property="og:title" content="The First Serve · Dink Different">
 <meta property="og:description" content="48 numbered spots for our first open play. Reserve yours and collect a free Founding Dinker sticker.">
 <meta property="og:image" content="/assets/video/opening-soon-poster.jpg">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/theme.js"></script>
 <script src="/js/motion.js" defer></script>
@@ -27,7 +27,7 @@
 
 /* sticker on its backing sheet */
 .sheet{position:relative;aspect-ratio:1;max-width:460px;width:100%;margin-inline:auto;border-radius:28px;background:
-  repeating-linear-gradient(135deg,transparent 0 14px,rgba(59,36,22,.035) 14px 15px),var(--sunk);border:1px solid var(--line);display:grid;place-items:center;perspective:900px}
+  repeating-linear-gradient(135deg,transparent 0 14px,rgba(29,40,64,.035) 14px 15px),var(--sunk);border:1px solid var(--line);display:grid;place-items:center;perspective:900px}
 .sheet::after{content:"BACKING · PEEL HERE";position:absolute;bottom:14px;left:0;right:0;text-align:center;font:700 10px var(--body);letter-spacing:.3em;color:var(--muted);opacity:.6}
 .stk{position:relative;width:82%;aspect-ratio:1;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.16,1,.3,1);will-change:transform}
 .stk svg{width:100%;height:100%;display:block}
@@ -47,7 +47,7 @@
 .dots{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:6px}
 .dots i{aspect-ratio:1;border-radius:50%;border:2px solid var(--line);position:relative;transition:background .4s,border-color .4s}
 .dots i.on{border-color:var(--glaze);background:radial-gradient(circle,var(--bg) 0 28%,var(--glaze) 30%)}
-.dots i.me{border-color:var(--ball);background:radial-gradient(circle,var(--bg) 0 28%,var(--ball) 30%);box-shadow:0 0 0 3px rgba(215,240,60,.35)}
+.dots i.me{border-color:var(--ball);background:radial-gradient(circle,var(--bg) 0 28%,var(--ball) 30%);box-shadow:0 0 0 3px rgba(226,210,166,.35)}
 
 /* form */
 .card{margin-top:64px;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,5vw,64px);background:var(--deep);color:var(--cream);border-radius:32px;padding:clamp(24px,5vw,56px)}
@@ -60,15 +60,15 @@
 .steps span{opacity:.75;font-size:15px}
 form{display:grid;gap:16px;align-content:start}
 label{display:grid;gap:8px;font-weight:700;font-size:14px}
-form input{font:500 17px var(--body);padding:15px 16px;border-radius:14px;border:2px solid rgba(255,246,234,.16);background:rgba(255,246,234,.06);color:var(--cream)}
-form input::placeholder{color:rgba(255,246,234,.4)}
+form input{font:500 17px var(--body);padding:15px 16px;border-radius:14px;border:2px solid rgba(244,239,227,.16);background:rgba(244,239,227,.06);color:var(--cream)}
+form input::placeholder{color:rgba(244,239,227,.4)}
 .lv{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 .lv label{display:block}
 .lv input{position:absolute;opacity:0;pointer-events:none}
-.lv span{display:block;text-align:center;padding:12px 6px;border-radius:12px;border:2px solid rgba(255,246,234,.16);font-weight:700;font-size:14px;cursor:pointer;transition:.2s}
+.lv span{display:block;text-align:center;padding:12px 6px;border-radius:12px;border:2px solid rgba(244,239,227,.16);font-weight:700;font-size:14px;cursor:pointer;transition:.2s}
 .lv input:checked+span{background:var(--ball);border-color:var(--ball);color:var(--choco)}
 .lv input:focus-visible+span{outline:3px solid var(--glaze);outline-offset:2px}
-.err{color:#FF9CC5;font-weight:700;min-height:1.4em;margin:0}
+.err{color:#CDB07E;font-weight:700;min-height:1.4em;margin:0}
 .fine{font-size:13px;opacity:.6;margin:0}
 form .btn{padding:17px 22px;font-size:16px}
 
@@ -96,11 +96,11 @@ form .btn{padding:17px 22px;font-size:16px}
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dinkin' Donut">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dink Different">
 <script src="/js/pwa.js" defer></script>
 </head>
 <body>
-<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a><a class="btn pink sm" href="#reserve" id="navCta">Reserve a spot</a></div></nav>
+<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dink Different</a><a class="btn pink sm" href="#reserve" id="navCta">Reserve a spot</a></div></nav>
 <main class="wrap">
   <section class="fs-hero">
     <div>
@@ -165,7 +165,7 @@ form .btn{padding:17px 22px;font-size:16px}
     <div style="overflow-x:auto"><table><thead><tr><th>Nº</th><th>Name</th><th>WhatsApp</th><th>Level</th><th>Pass</th><th>Sticker</th></tr></thead><tbody id="hb"></tbody></table></div>
   </section>
 </main>
-<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dinkin’ Donut Pickleball Club · Stay glazed.</span><div data-contact style="flex-direction:row;flex-wrap:wrap"></div><span><a href="/">Home</a> · <a href="/queue">Live queue</a> · <a href="/loyalty">Glaze Card</a></span></div><div class="wrap credits" style="margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,246,234,.14);font-size:13px;letter-spacing:.04em;opacity:.75">Designed &amp; Developed by <b style="font-family:Fredoka,sans-serif;font-weight:700;letter-spacing:0;color:#FF5FA2">Drew Nolasco</b> &amp; <b style="font-family:Fredoka,sans-serif;font-weight:700;letter-spacing:0;color:#FF5FA2">Angel Flores</b></div></footer>
+<footer class="footer"><div class="wrap" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:space-between"><span>© Dink Different Pickleball Club · Dink different.</span><div data-contact style="flex-direction:row;flex-wrap:wrap"></div><span><a href="/">Home</a> · <a href="/queue">Live queue</a> · <a href="/loyalty">Club Card</a></span></div><div class="wrap credits" style="margin-top:18px;padding-top:18px;border-top:1px solid rgba(244,239,227,.14);font-size:13px;letter-spacing:.04em;opacity:.75">Designed &amp; Developed by <b style="font-family:Fraunces,sans-serif;font-weight:700;letter-spacing:0;color:#9C7A45">Drew Nolasco</b> &amp; <b style="font-family:Fraunces,sans-serif;font-weight:700;letter-spacing:0;color:#9C7A45">Angel Flores</b></div></footer>
 <script src="/js/config.js"></script>
 <script src="/js/contact.js"></script>
 <script src="/js/sticker.js"></script>
@@ -218,7 +218,7 @@ function showPass(p, fresh) {
   $("pCode").textContent = p.code;
   $("pNote").textContent = p.wait ? "All 48 numbered spots are taken. If one opens up, it’s yours, and we’ll message you on WhatsApp." : "Show this pass at check-in on opening night to collect your sticker. We’ll message you on WhatsApp with the date and venue.";
   $("navCta").textContent = "My pass"; $("navCta").href = "#pass";
-  $("share").href = "https://wa.me/?text=" + encodeURIComponent(`I just reserved Founding Dinker Nº ${no || "WL"} for Dinkin' Donut's first open play. 48 numbered spots, each with a 1-of-1 sticker. Get yours: ${location.origin}/first-serve`);
+  $("share").href = "https://wa.me/?text=" + encodeURIComponent(`I just reserved Founding Dinker Nº ${no || "WL"} for Dink Different's first open play. 48 numbered spots, each with a 1-of-1 sticker. Get yours: ${location.origin}/first-serve`);
   if (fresh) { const s = $("mine"); s.classList.remove("peel"); void s.offsetWidth; s.classList.add("peel"); $("pass").scrollIntoView({ behavior: "smooth", block: "center" }); }
 }
 if (me && me.code) { showPass(me, false); fetch("/api/founders?pass=" + me.code).then(r => r.ok ? r.json() : null).then(j => { if (j && j.pass) showPass(j.pass, false); else if (j === null) { /* removed by host */ } }).catch(() => {}); }

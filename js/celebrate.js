@@ -1,22 +1,22 @@
-// Winner reveal: glaze pours down, score counts up, names rise, sprinkles burst.
+// Winner reveal: a racing-green panel draws down, score counts up, names rise, brass confetti.
 // celebrate(result, { size: "tv" | "card", onDone })
 (function () {
   var css = document.createElement("style");
   css.textContent = [
-    ".win-fx{position:fixed;inset:0;z-index:90;display:grid;place-items:center;overflow:hidden;pointer-events:none;font-family:Fredoka,ui-rounded,system-ui,sans-serif;color:#3B2416}",
-    ".win-fx .glaze{position:absolute;inset:0;background:#FF5FA2;transform:translateY(-110%);animation:wf-pour .75s cubic-bezier(.76,0,.24,1) forwards}",
-    ".win-fx .glaze svg{position:absolute;left:0;top:100%;width:100%;height:9vh}",
+    ".win-fx{position:fixed;inset:0;z-index:90;display:grid;place-items:center;overflow:hidden;pointer-events:none;font-family:Fraunces,Georgia,serif;color:#F4EFE3}",
+    ".win-fx .glaze{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#2A3858,#12192A 80%);border-bottom:2px solid #C9A86B;transform:translateY(-110%);animation:wf-pour .75s cubic-bezier(.76,0,.24,1) forwards}",
+    ".win-fx .glaze svg{display:none}",
     ".win-fx.out .glaze{animation:wf-lift .6s cubic-bezier(.76,0,.24,1) forwards}",
     ".win-fx .card{position:relative;text-align:center;opacity:0;animation:wf-in .6s .55s cubic-bezier(.16,1,.3,1) forwards}",
     ".win-fx.out .card{animation:wf-fade .3s forwards}",
-    ".win-fx .court{font:700 clamp(12px,1.5vw,22px) 'DM Sans',sans-serif;letter-spacing:.42em;text-transform:uppercase}",
-    ".win-fx .score{font-weight:700;font-size:clamp(80px,17vw,260px);line-height:.9;font-variant-numeric:tabular-nums;margin:.1em 0 .05em;color:#3B2416}",
-    ".win-fx .score span{color:#3B2416;opacity:.55;margin:0 .06em}",
-    ".win-fx .names{font-weight:700;font-size:clamp(28px,4.4vw,72px);line-height:1.05;overflow:hidden}",
+    ".win-fx .court{color:#C9A86B;font:700 clamp(12px,1.5vw,22px) 'DM Sans',sans-serif;letter-spacing:.42em;text-transform:uppercase}",
+    ".win-fx .score{font-weight:700;font-size:clamp(80px,17vw,260px);line-height:.9;font-variant-numeric:tabular-nums lining-nums;margin:.1em 0 .05em;color:#F4EFE3}",
+    ".win-fx .score span{color:#C9A86B;opacity:.8;margin:0 .06em}",
+    ".win-fx .names{font-style:italic;font-weight:600;font-size:clamp(28px,4.4vw,72px);line-height:1.05;overflow:hidden}",
     ".win-fx .names div{transform:translateY(110%);animation:wf-rise .55s 1.25s cubic-bezier(.16,1,.3,1) forwards}",
     ".win-fx .bar{height:clamp(5px,.6vw,10px);background:linear-gradient(90deg,#F5C542,#FFF1B3,#E9B52C);border-radius:99px;margin:.35em auto 0;width:0;animation:wf-bar .6s 1.6s ease-out forwards}",
     ".win-fx .lose{font:600 clamp(14px,1.6vw,26px) 'DM Sans',sans-serif;opacity:0;animation:wf-fadein .5s 1.9s forwards;margin-top:.5em}",
-    ".win-fx i{position:absolute;width:clamp(8px,.9vw,16px);height:clamp(22px,2.4vw,40px);border-radius:99px;left:50%;top:50%;opacity:0;animation:wf-burst 1.4s var(--d) cubic-bezier(.1,.7,.3,1) forwards}",
+    ".win-fx i{position:absolute;width:clamp(8px,.9vw,16px);height:clamp(8px,.9vw,16px);border-radius:50%;left:50%;top:50%;opacity:0;animation:wf-burst 1.4s var(--d) cubic-bezier(.1,.7,.3,1) forwards}",
     ".win-fx.card-size{position:absolute;border-radius:inherit}",
     ".win-fx.card-size .score{font-size:64px}.win-fx.card-size .names{font-size:24px}.win-fx.card-size .court{font-size:10px}",
     "@keyframes wf-pour{to{transform:translateY(0)}}@keyframes wf-lift{from{transform:translateY(0)}to{transform:translateY(-110%)}}",
@@ -33,9 +33,9 @@
     opt = opt || {};
     var host = opt.into || document.body, d = document.createElement("div");
     d.className = "win-fx" + (opt.into ? " card-size" : "");
-    var cols = ["#D7F03C", "#3B2416", "#FFF6EA", "#2F7A4F", "#E8A95B"], sp = "";
+    var cols = ["#E2D2A6", "#C9A86B", "#F4EFE3", "#E2D3AE", "#C9A86B"], sp = "";
     for (var k = 0; k < 34; k++) sp += '<i style="background:' + cols[k % 5] + ';--r:' + Math.round(k * 360 / 34 + Math.random() * 8) + 'deg;--dist:' + (opt.into ? 90 + Math.random() * 80 : 220 + Math.random() * 280) + 'px;--d:' + (1.2 + Math.random() * .25).toFixed(2) + 's"></i>';
-    d.innerHTML = '<div class="glaze"><svg viewBox="0 0 1200 70" preserveAspectRatio="none"><path fill="#FF5FA2" d="M0 0h1200v18c-30 0-40 42-70 42s-30-30-60-30-40 52-80 52-30-42-60-42-50 30-90 30-40-40-80-40-30 30-60 30-40-20-70-20-40 44-80 44-30-34-60-34-40 20-80 20-30-30-60-30-50 40-90 40-30-30-60-30-40 24-60 24V0z"/></svg></div>' +
+    d.innerHTML = '<div class="glaze"><svg viewBox="0 0 1200 70" preserveAspectRatio="none"><path fill="#9C7A45" d="M0 0h1200v18c-30 0-40 42-70 42s-30-30-60-30-40 52-80 52-30-42-60-42-50 30-90 30-40-40-80-40-30 30-60 30-40-20-70-20-40 44-80 44-30-34-60-34-40 20-80 20-30-30-60-30-50 40-90 40-30-30-60-30-40 24-60 24V0z"/></svg></div>' +
       sp + '<div class="card"><div class="court">Court ' + r.court + ' · Final</div>' +
       '<div class="score"><b class="a">0</b><span>–</span><b class="b">0</b></div>' +
       '<div class="names"><div>' + esc((r.wn || []).join(" & ")) + ' win</div></div><div class="bar"></div>' +

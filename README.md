@@ -1,6 +1,6 @@
-# Dinkin' Donut · Pickleball Club
+# Dink Different · Pickleball Club
 
-Club website + live court queue for open-play nights in Doha. Sweet game, soft hands.
+Club website + live court queue for open-play nights. Play well. Dink different.
 
 | Page | Who it's for |
 |---|---|
@@ -8,8 +8,8 @@ Club website + live court queue for open-play nights in Doha. Sweet game, soft h
 | `/queue` | Players: scan the QR, type a name, see your position and court |
 | `/host` | Hosts (PIN): run courts, record wins + scores, reorder queue, CSV export |
 | `/tv` | A TV/laptop at the venue: big live board with QR |
-| `/merch` | Club shop: Glaze Jersey and Clubhouse Polo builder (name, number, colourway, size), shop film, WhatsApp ordering |
-| `/loyalty` | Glaze Card loyalty programme: play 6, get the 7th free |
+| `/merch` | Club shop: Club Jersey and Clubhouse Polo builder (name, number, colourway, size), shop film, WhatsApp ordering |
+| `/loyalty` | Club Card loyalty programme: play 6, get the 7th free |
 | `/dupr` | DUPR rated games, sends players to your Reclub page |
 
 Every page has a Light / Auto / Dark switch in the top bar (Auto follows the phone's setting).
@@ -53,7 +53,7 @@ Once Vercel is connected to this GitHub repo, every change pushed (or uploaded) 
 ## Host console extras
 - **Tonight's list**: only names on the list can join the queue from their phone. Paste names one per line.
 - **Payments**: session fee, per-player fee overrides, cash / Fawran / card, balance and remaining. Payment data is only returned to a signed-in host; public pages never receive it.
-- **End session**: publishes the top 3 to the **Hall of Glaze** on the homepage and keeps the list of names for next time.
+- **End session**: publishes the top 3 to the **The Honours Board** on the homepage and keeps the list of names for next time.
 
 ## Merch
 Jersey and polo artwork is generated in code (`js/jersey.js`). Prices, sizes and specs live in `js/merch.js`.
@@ -69,11 +69,11 @@ Host console → **Matching**:
 
 Players choose their level when they join; hosts can tap the level tag on any name to change it. Each live game shows *Even*, *Close* or *Uneven*.
 
-## Glaze Card members
+## Club Card members
 Google Form sign-ups sync to the host console (`api/members.js`). Setup: `google-form/SETUP.md`. Needs `MEMBERS_SECRET` in Vercel.
 
-## Glaze Pass (PIN to join)
-When someone pays, use **Payments → Paid? Send a Glaze Pass** in the host console: name, WhatsApp number, amount, method.
+## Club Pass (PIN to join)
+When someone pays, use **Payments → Paid? Send a Club Pass** in the host console: name, WhatsApp number, amount, method.
 It records the payment and creates a 3-digit PIN. Players join the queue with their name + PIN (5 tries, then they see the host).
 Untick **PIN to join** in the console bar to switch it off for a casual night.
 
@@ -100,5 +100,5 @@ Players who reach their share move to *Done for tonight* and their phone thanks 
 
 ## Post Studio (Instagram)
 `/studio` (linked from the host console). Ready-made posts in the club's brand, filled from live data:
-open play tonight, session recap (Hall of Glaze), Glaze Jersey, Glaze Card. Post 4:5 or Story 9:16.
+open play tonight, session recap (The Honours Board), Club Jersey, Club Card. Post 4:5 or Story 9:16.
 On a phone, **Share to Instagram** opens the share sheet with the image and copies the caption.

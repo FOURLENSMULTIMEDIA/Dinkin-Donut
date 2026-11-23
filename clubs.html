@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <style>
-:root{--ink:#0E1311;--ink2:#151C19;--line:rgba(237,242,236,.1);--fg:#EDF2EC;--mute:rgba(237,242,236,.62);--lime:#D7F03C;--court:#2F7A4F;--pink:#FF5FA2;--paper:#F4F6F1;--d:"Bricolage Grotesque",system-ui,sans-serif;--b:"DM Sans",system-ui,sans-serif;--e:cubic-bezier(.16,1,.3,1)}
+:root{--ink:#0E1311;--ink2:#151C19;--line:rgba(237,242,236,.1);--fg:#EDF2EC;--mute:rgba(237,242,236,.62);--lime:#E2D2A6;--court:#4C6A8A;--pink:#9C7A45;--paper:#F4F6F1;--d:"Bricolage Grotesque",system-ui,sans-serif;--b:"DM Sans",system-ui,sans-serif;--e:cubic-bezier(.16,1,.3,1)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--ink);color:var(--fg);font:16px/1.6 var(--b);-webkit-font-smoothing:antialiased}
 a{color:inherit}h1,h2,h3{font-family:var(--d);font-weight:800;line-height:1;letter-spacing:-.03em;margin:0}
 .w{max-width:1180px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left))}
@@ -45,11 +45,11 @@ a{color:inherit}h1,h2,h3{font-family:var(--d);font-weight:800;line-height:1;lett
 .film-s{padding-bottom:40px}
 .film{border-radius:28px;overflow:hidden;border:1px solid var(--line);box-shadow:0 50px 100px rgba(0,0,0,.5);background:#000}
 .film video{display:block;width:100%;aspect-ratio:16/9}
-.f{position:relative;overflow:hidden}.f::before{content:"";position:absolute;inset:0;background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(215,240,60,.10),transparent 60%);opacity:0;transition:opacity .3s}.f:hover::before{opacity:1}
+.f{position:relative;overflow:hidden}.f::before{content:"";position:absolute;inset:0;background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(226,210,166,.10),transparent 60%);opacity:0;transition:opacity .3s}.f:hover::before{opacity:1}
 footer .back{font-weight:700;text-decoration:none;color:var(--fg)}footer .back:hover{color:var(--lime)}
 /* hero */
 .hero{padding:84px 0 40px;position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;inset:-20% -10% auto;height:620px;background:radial-gradient(600px 300px at 75% 30%,rgba(215,240,60,.13),transparent 70%),radial-gradient(500px 300px at 10% 0%,rgba(47,122,79,.25),transparent 70%);pointer-events:none}
+.hero::before{content:"";position:absolute;inset:-20% -10% auto;height:620px;background:radial-gradient(600px 300px at 75% 30%,rgba(226,210,166,.13),transparent 70%),radial-gradient(500px 300px at 10% 0%,rgba(47,122,79,.25),transparent 70%);pointer-events:none}
 .hero .w{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:56px;align-items:center}
 .hero h1{font-size:clamp(46px,7vw,88px)}.hero h1 em{font-style:normal;color:var(--lime)}
 .hero p.l{font-size:19px;color:var(--mute);max-width:46ch;margin:22px 0 30px}
@@ -62,7 +62,7 @@ footer .back{font-weight:700;text-decoration:none;color:var(--fg)}footer .back:h
 .board{border-radius:26px;background:linear-gradient(180deg,#18211D,#111714);border:1px solid var(--line);padding:18px;box-shadow:0 40px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.04);transform:perspective(1400px) rotateY(-8deg) rotateX(3deg);transition:transform .8s var(--e)}
 .board:hover{transform:none}
 .bt{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-weight:700}
-.bt .dot{width:8px;height:8px;border-radius:50%;background:#7BD9A0;animation:p 1.8s infinite}@keyframes p{70%{box-shadow:0 0 0 8px rgba(123,217,160,0)}0%{box-shadow:0 0 0 0 rgba(123,217,160,.6)}}
+.bt .dot{width:8px;height:8px;border-radius:50%;background:#A9BCD0;animation:p 1.8s infinite}@keyframes p{70%{box-shadow:0 0 0 8px rgba(123,217,160,0)}0%{box-shadow:0 0 0 0 rgba(123,217,160,.6)}}
 .bt small{margin-left:auto;color:var(--mute);font-weight:600}
 .courts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .ct{border-radius:16px;background:var(--court);padding:12px;position:relative;overflow:hidden;min-height:132px}
@@ -75,7 +75,7 @@ footer .back{font-weight:700;text-decoration:none;color:var(--fg)}footer .back:h
 .ct .t.win span:last-child{color:var(--lime)}
 .q{margin-top:12px;display:grid;gap:6px}
 .q div{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:rgba(237,242,236,.05);font-size:14px;font-weight:600}
-.q div i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:700 11px var(--b);font-style:normal;background:rgba(215,240,60,.15);color:var(--lime)}
+.q div i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:700 11px var(--b);font-style:normal;background:rgba(226,210,166,.15);color:var(--lime)}
 .q div em{margin-left:auto;font-style:normal;font-size:12px;color:var(--mute)}
 @media(max-width:520px){.courts{grid-template-columns:repeat(2,minmax(0,1fr))}.courts .ct:nth-child(3){display:none}.board{transform:none}}
 
@@ -85,7 +85,7 @@ section{padding:96px 0}
 /* features */
 .feat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .f{padding:26px;border-radius:22px;background:var(--ink2);border:1px solid var(--line);transition:border-color .3s,transform .3s var(--e)}
-.f:hover{border-color:rgba(215,240,60,.35);transform:translateY(-3px)}
+.f:hover{border-color:rgba(226,210,166,.35);transform:translateY(-3px)}
 .f svg{width:28px;height:28px;color:var(--lime)}.f h3{font-size:22px;margin:18px 0 8px;letter-spacing:-.02em}.f p{margin:0;color:var(--mute);font-size:15px}
 .feat{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:1100px){.feat{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:900px){.feat{grid-template-columns:1fr 1fr}}@media(max-width:560px){.feat{grid-template-columns:1fr}}
 
@@ -94,12 +94,12 @@ section{padding:96px 0}
 .vs>div{padding:28px;border-radius:24px;border:1px solid var(--line)}
 .vs h3{font-size:22px;margin-bottom:16px}.vs ul{list-style:none;padding:0;margin:0;display:grid;gap:12px}
 .vs li{display:flex;gap:12px;color:var(--mute)}.vs li::before{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px}
-.vs-a li::before{content:"×";background:rgba(255,95,162,.15);color:#FF9CC5}
-.vs-b{background:linear-gradient(160deg,rgba(215,240,60,.12),transparent 60%);border-color:rgba(215,240,60,.35)!important}.vs-b li{color:var(--fg)}.vs-b li::before{content:"✓";background:var(--lime);color:var(--ink)}
+.vs-a li::before{content:"×";background:rgba(156,122,69,.15);color:#CDB07E}
+.vs-b{background:linear-gradient(160deg,rgba(226,210,166,.12),transparent 60%);border-color:rgba(226,210,166,.35)!important}.vs-b li{color:var(--fg)}.vs-b li::before{content:"✓";background:var(--lime);color:var(--ink)}
 .calc{margin-top:14px;display:grid;grid-template-columns:1.2fr 1fr;gap:14px;padding:28px;border-radius:24px;background:var(--ink2);border:1px solid var(--line)}
 .calc h3{font-size:26px;margin:10px 0 18px}.calc label{display:grid;gap:8px;margin-bottom:16px;font-weight:700}
 .calc output{color:var(--lime);font-family:var(--d);font-size:20px}
-.calc input[type=range]{width:100%;accent-color:#D7F03C;padding:0;border:0;background:none}
+.calc input[type=range]{width:100%;accent-color:#E2D2A6;padding:0;border:0;background:none}
 .calc-out{display:grid;align-content:center;justify-items:start;gap:8px;padding:24px;border-radius:20px;background:#0B100E}
 .calc-out b#cH{font:800 clamp(64px,9vw,104px)/1 var(--d);color:var(--lime);letter-spacing:-.04em}
 .calc-out span{font-weight:700;font-size:18px}.calc-out small{color:var(--mute);font-size:15px;margin-bottom:10px}
@@ -109,7 +109,7 @@ section{padding:96px 0}
 /* steps */
 .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;counter-reset:s}
 .st{padding:28px;border-radius:22px;border:1px solid var(--line);position:relative}
-.st::before{counter-increment:s;content:"0" counter(s);font:800 54px var(--d);color:rgba(215,240,60,.18);position:absolute;right:20px;top:12px}
+.st::before{counter-increment:s;content:"0" counter(s);font:800 54px var(--d);color:rgba(226,210,166,.18);position:absolute;right:20px;top:12px}
 .st h3{font-size:22px;margin-bottom:10px}.st p{margin:0;color:var(--mute)}
 .st.sec{background:linear-gradient(160deg,rgba(37,211,102,.12),transparent 60%)}
 @media(max-width:860px){.steps{grid-template-columns:1fr}}
@@ -149,18 +149,18 @@ input,select{font:500 16px var(--b);padding:14px 15px;border-radius:13px;border:
 input:focus,select:focus{outline:none;border-color:var(--lime)}
 .slug{display:flex;align-items:center;border-radius:13px;border:1px solid rgba(237,242,236,.16);background:rgba(0,0,0,.25);overflow:hidden}
 .slug span{padding:0 0 0 15px;color:var(--mute);white-space:nowrap;font-size:15px}.slug input{border:0;background:transparent;padding-left:2px}
-.av{font-size:13px;font-weight:700;min-height:1.2em}.av.ok{color:#7BD9A0}.av.no{color:#FF9CC5}
+.av{font-size:13px;font-weight:700;min-height:1.2em}.av.ok{color:#A9BCD0}.av.no{color:#CDB07E}
 .sw{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .sw button{width:34px;height:34px;border-radius:50%;border:2px solid transparent;cursor:pointer;box-shadow:inset 0 0 0 2px rgba(0,0,0,.15)}
 .sw button[aria-pressed=true]{border-color:var(--fg);transform:scale(1.08)}
 .sw input[type=color]{width:38px;height:38px;padding:0;border:0;background:none;border-radius:50%}
 .drop{display:flex;align-items:center;gap:14px;padding:12px;border-radius:14px;border:1px dashed rgba(237,242,236,.25);cursor:pointer}
 .drop img{width:48px;height:48px;border-radius:50%;object-fit:cover;background:rgba(237,242,236,.06)}
-.err{color:#FF9CC5;font-weight:700;margin:0;min-height:1.3em}
+.err{color:#CDB07E;font-weight:700;margin:0;min-height:1.3em}
 .fine{font-size:13px;color:var(--mute);margin:0}
 /* preview */
 .pv{position:sticky;top:90px;display:grid;gap:14px}
-.phone{width:min(300px,100%);margin:0 auto;border-radius:38px;border:8px solid #222A26;background:#FFF6EA;color:#2A1B10;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.45)}
+.phone{width:min(300px,100%);margin:0 auto;border-radius:38px;border:8px solid #222A26;background:#F4EFE3;color:#2A1B10;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.45)}
 .ph-top{display:flex;align-items:center;gap:10px;padding:16px;border-bottom:1px solid #EFE2D2;font:700 15px var(--b)}
 .ph-top img{width:30px;height:30px;border-radius:50%}
 .ph-b{padding:18px 16px 22px;display:grid;gap:12px}
@@ -172,7 +172,7 @@ input:focus,select:focus{outline:none;border-color:var(--lime)}
 @media(max-width:900px){.su{grid-template-columns:1fr}.pv{position:static;order:-1}}
 
 /* done */
-.done{padding:clamp(22px,4vw,40px);border-radius:28px;background:var(--ink2);border:1px solid rgba(215,240,60,.35);display:grid;gap:18px}
+.done{padding:clamp(22px,4vw,40px);border-radius:28px;background:var(--ink2);border:1px solid rgba(226,210,166,.35);display:grid;gap:18px}
 .done h3{font-size:clamp(28px,4vw,40px)}
 .links{display:grid;gap:8px}
 .links a{display:flex;justify-content:space-between;gap:10px;padding:14px 16px;border-radius:14px;background:rgba(237,242,236,.05);text-decoration:none;font-weight:700;overflow-wrap:anywhere}
@@ -195,8 +195,8 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
 .own th,.own td{text-align:left;padding:12px 8px;border-bottom:1px solid var(--line);vertical-align:top}
 .own th{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)}
 .pill{display:inline-block;padding:3px 9px;border-radius:999px;font-weight:700;font-size:12px}
-.pill.pending{background:rgba(255,95,162,.18);color:#FF9CC5}.pill.approved{background:rgba(127,211,255,.16);color:#9FDBFF}.pill.trial{background:rgba(215,240,60,.16);color:var(--lime)}
-.pill.active{background:rgba(123,217,160,.18);color:#7BD9A0}.pill.expired,.pill.lapsed,.pill.suspended{background:rgba(237,242,236,.08);color:var(--mute)}
+.pill.pending{background:rgba(156,122,69,.18);color:#CDB07E}.pill.approved{background:rgba(127,211,255,.16);color:#9FDBFF}.pill.trial{background:rgba(226,210,166,.16);color:var(--lime)}
+.pill.active{background:rgba(123,217,160,.18);color:#A9BCD0}.pill.expired,.pill.lapsed,.pill.suspended{background:rgba(237,242,236,.08);color:var(--mute)}
 .acts{display:flex;flex-wrap:wrap;gap:6px}
 .acts button,.acts a,.acts select{font:700 12px var(--b);padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(237,242,236,.04);color:var(--fg);cursor:pointer;text-decoration:none;width:auto}
 .acts .go{background:#25D366;color:#06301A;border-color:#25D366}
@@ -210,11 +210,11 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dinkin' Donut">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dink Different">
 <script src="/js/pwa.js" defer></script>
 </head>
 <body>
-<div class="topbar"><div class="w"><a href="/"><span aria-hidden="true">←</span> Back to Dinkin’ Donut</a><span>A Dinkin’ Donut company · For clubs worldwide</span></div></div>
+<div class="topbar"><div class="w"><a href="/"><span aria-hidden="true">←</span> Back to Dink Different</a><span>A Dink Different company · For clubs worldwide</span></div></div>
 <header class="nav"><div class="w"><a class="logo" href="/clubs"><i></i>Courtcall</a><nav><a href="#film">Film</a><a href="#features">Features</a><a href="#why">Why Courtcall</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></nav><a class="btn lime" href="#start" style="padding:11px 18px">Get started</a></div></header>
 
 <main id="site">
@@ -224,7 +224,7 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
     <h1>Open play, run like the <em>big clubs</em> do.</h1>
     <p class="l">Players check in with a QR code. Courtcall picks fair games, tracks scores to 11 and calls the next match on your court TV. You just play host.</p>
     <div class="ctas"><a class="btn lime" href="#start">Get your club on Courtcall</a><button class="btn ghost" type="button" id="playFilm"><span class="pl-i" aria-hidden="true"></span>Watch the film · 36s</button></div>
-    <div class="proof"><img src="/assets/logo.svg" alt="">Built and battle-tested every week at Dinkin’ Donut, Doha.</div>
+    <div class="proof"><img src="/assets/logo.svg" alt="">Built and battle-tested every week at Dink Different, Doha.</div>
   </div>
   <div class="board" aria-hidden="true">
     <div class="bt"><i class="dot"></i>Live · Thursday Open Play<small id="clock">8:42 PM</small></div>
@@ -237,7 +237,7 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
   </div>
 </div></section>
 
-<div class="marq" aria-hidden="true"><div class="mq"><span>QR check-in</span><i></i><span>Fair matchmaking</span><i></i><span>Live scores to 11</span><i></i><span>Court announcer</span><i></i><span>Host console</span><i></i><span>Your colours</span><i></i><span>No app to install</span><i></i><span>Built in Doha</span><i></i><span>QR check-in</span><i></i><span>Fair matchmaking</span><i></i><span>Live scores to 11</span><i></i><span>Court announcer</span><i></i><span>Host console</span><i></i><span>Your colours</span><i></i><span>No app to install</span><i></i><span>Built in Doha</span><i></i></div></div>
+<div class="marq" aria-hidden="true"><div class="mq"><span>QR check-in</span><i></i><span>Fair matchmaking</span><i></i><span>Live scores to 11</span><i></i><span>Court announcer</span><i></i><span>Host console</span><i></i><span>Your colours</span><i></i><span>No app to install</span><i></i><span>Built</span><i></i><span>QR check-in</span><i></i><span>Fair matchmaking</span><i></i><span>Live scores to 11</span><i></i><span>Court announcer</span><i></i><span>Host console</span><i></i><span>Your colours</span><i></i><span>No app to install</span><i></i><span>Built</span><i></i></div></div>
 <section id="film" class="film-s"><div class="w">
   <div class="sh reveal"><div class="k">The film</div><h2>From group-chat chaos to a night that runs itself.</h2></div>
   <div class="film reveal"><video id="filmV" controls playsinline preload="metadata" poster="/assets/video/courtcall-poster.jpg"><source src="/assets/video/courtcall-16x9.mp4" type="video/mp4"></video></div>
@@ -327,7 +327,7 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
           <div style="display:flex;flex-wrap:wrap;gap:10px"><a class="btn wa" id="wa1" target="_blank" rel="noopener">Choose my plan on WhatsApp</a><a class="btn ghost" id="wa2" target="_blank" rel="noopener">Use our 2nd number</a></div>
           <small style="color:var(--mute)">Request code <b id="dReq"></b></small>
         </div>
-        <div class="next" id="cardBox" style="background:linear-gradient(150deg,rgba(215,240,60,.14),rgba(215,240,60,.02));border-color:rgba(215,240,60,.35)">
+        <div class="next" id="cardBox" style="background:linear-gradient(150deg,rgba(226,210,166,.14),rgba(226,210,166,.02));border-color:rgba(226,210,166,.35)">
           <b>Or switch on instantly by card</b>
           <span style="color:var(--mute)">Secure checkout by Stripe. Your club goes live the moment payment completes, and invoices arrive by email.</span>
           <div style="display:flex;flex-wrap:wrap;gap:10px"><button class="btn lime" type="button" id="payNow">Pay by card · monthly</button><button class="btn ghost" type="button" id="payYear">Pay yearly · 2 months free</button></div>
@@ -355,7 +355,7 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
 
 <section id="faq"><div class="w" style="max-width:860px">
   <div class="sh"><div class="k">Questions</div><h2>Good to know.</h2></div>
-  <details><summary>Can I see it before I pay?</summary><p>Yes. Watch the film above, come and see it running live at a Dinkin’ Donut open play in Doha, or message us for a guided demo on WhatsApp.</p></details>
+  <details><summary>Can I see it before I pay?</summary><p>Yes. Watch the film above, come and see it running live at a Dink Different open play, or message us for a guided demo on WhatsApp.</p></details>
   <details><summary>Why do you switch clubs on personally?</summary><p>Every club on Courtcall is set up by a real person, so the platform stays fast and spam-free. It also means you have a direct line to us on WhatsApp from day one.</p></details>
   <details><summary>How do I pay?</summary><p>Message us on WhatsApp with the plan you want. In Qatar, pay by Fawran or bank transfer. Anywhere else, pay by international bank transfer; we send the details on WhatsApp. We switch your club on as soon as payment lands. Yearly plans get 2 months free.</p></details>
   <details><summary>Does it work in my country?</summary><p>Yes. Courtcall runs in any modern browser, on any phone, tablet, laptop or TV, anywhere in the world. Your players need nothing but their phone camera. We support clubs on WhatsApp in English.</p></details>
@@ -373,7 +373,7 @@ footer .w{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
   <p class="fine" style="margin-top:16px">When a club pays, pick their plan and press “Paid 1 mo” or “Paid 1 yr”. They go live at once. Then press “Send welcome” to WhatsApp them their links.</p>
 </section>
 
-<footer><div class="w"><span>© <span id="yr"></span> Courtcall · Made in Doha by the team behind <a href="/">Dinkin’ Donut</a></span><a class="back" href="/">← Back to Dinkin’ Donut</a><span>Designed &amp; Developed by Drew Nolasco &amp; Angel Flores</span></div></footer>
+<footer><div class="w"><span>© <span id="yr"></span> Courtcall · Made by the team behind <a href="/">Dink Different</a></span><a class="back" href="/">← Back to Dink Different</a><span>Designed &amp; Developed by Drew Nolasco &amp; Angel Flores</span></div></footer>
 
 <script>
 const $ = id => document.getElementById(id);
@@ -433,7 +433,7 @@ fetch("/api/clubs?stats").then(r => r.json()).then(j => {
 }).catch(() => {});
 
 // signup: swatches, slug check, logo, live preview
-const C1 = ["#FF5FA2", "#2F7A4F", "#1F4FD8", "#E4572E", "#7A3CF0", "#0E1311"], C2 = ["#D7F03C", "#FFD23F", "#7FD3FF", "#FFFFFF", "#FF9CC5", "#E8A95B"];
+const C1 = ["#9C7A45", "#4C6A8A", "#1F4FD8", "#E4572E", "#7A3CF0", "#0E1311"], C2 = ["#E2D2A6", "#FFD23F", "#7FD3FF", "#FFFFFF", "#CDB07E", "#C9B48A"];
 let col = C1[1], acc = C2[0], logo = "", slugTouched = false;
 function swatches(el, list, get, set) {
   el.innerHTML = list.map(c => `<button type="button" style="background:${c}" data-c="${c}" aria-label="${c}" aria-pressed="${c === get()}"></button>`).join("") + `<input type="color" value="${get()}" aria-label="Custom colour">`;
@@ -501,7 +501,7 @@ F.addEventListener("submit", async e => {
   go.disabled = false; go.textContent = "Create my club";
 });
 
-// Owner dashboard: /clubs?owner, needs the Dinkin' Donut host sign-in on this device
+// Owner dashboard: /clubs?owner, needs the Dink Different host sign-in on this device
 if (location.hash === "#film") setTimeout(() => document.getElementById("playFilm").click(), 400);
 if (/[?&]owner\b/.test(location.search)) {
   let tok = ""; try { tok = localStorage.getItem("dd-host-token") || ""; } catch {}
@@ -510,7 +510,7 @@ if (/[?&]owner\b/.test(location.search)) {
   const PH = { pending: "Waiting for payment", active: "Paid", lapsed: "Plan ended", suspended: "Suspended" };
   const day = d => new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
   function draw(j) {
-    if (j.error) { $("orows").innerHTML = `<tr><td colspan="5">Sign in to the Dinkin’ Donut host console on this device first, then reload.</td></tr>`; return; }
+    if (j.error) { $("orows").innerHTML = `<tr><td colspan="5">Sign in to the Dink Different host console on this device first, then reload.</td></tr>`; return; }
     const L = j.list, n = p => L.filter(c => c.access.phase === p).length;
     const mrr = L.filter(c => c.access.phase === "active").reduce((s, c) => s + ({ starter: 149, club: 299, venue: 549 }[c.plan] || 0) * (c.founding ? .5 : 1), 0);
     $("ost").innerHTML = [["Clubs", L.length], ["Waiting for payment", n("pending")], ["Paying", n("active")], ["Monthly revenue", Math.round(mrr) + " QAR"], ["Founding left", j.founding]].map(([k, v]) => `<div><b>${v}</b><small>${k}</small></div>`).join("");

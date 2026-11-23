@@ -1,4 +1,4 @@
-// WhatsApp delivery for Glaze Pass PINs and the club assistant.
+// WhatsApp delivery for Club Pass PINs and the club assistant.
 //
 // Automatic sending uses the WhatsApp Business Cloud API (Meta). Vercel variables:
 //   WA_TOKEN         permanent access token (System User token)
@@ -26,7 +26,7 @@ const qar = n => (Math.round(n * 100) / 100).toLocaleString("en", { maximumFract
 // Plain text only: emoji can arrive garbled through wa.me links on some devices.
 function passMessage({ name, pin, amount }) {
   return [
-    "*Dinkin' Donut Pickleball Club*",
+    "*Dink Different Pickleball Club*",
     "",
     `Hi ${name}, thank you. ` + (amount > 0 ? `Your payment of ${qar(amount)} is confirmed for tonight's session.` : "You're confirmed for tonight's session."),
     "",
@@ -55,7 +55,7 @@ async function graph(body) {
 // Free-form text: allowed within 24 hours of the player's last message to the club.
 const sendText = (to, text) => graph({ to: toIntl(to), type: "text", text: { body: text, preview_url: true } });
 
-// Glaze Pass. Business-initiated messages must use an approved template.
+// Club Pass. Business-initiated messages must use an approved template.
 async function sendPass({ name, pin, phone, amount }) {
   const text = passMessage({ name, pin, amount });
   const link = `https://wa.me/${toIntl(phone)}?text=${encodeURIComponent(text)}`;

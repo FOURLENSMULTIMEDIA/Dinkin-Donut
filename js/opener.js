@@ -1,4 +1,4 @@
-// Dinkin' Donut brand commercial (about 30 s). Scenes are HTML/CSS, timed here and synced to the music.
+// Dink Different brand commercial (about 30 s). Scenes are HTML/CSS, timed here and synced to the music.
 // Plays muted as a teaser when in view; Play starts from the top with sound.
 (function () {
   var root = document.getElementById("ad"); if (!root) return;

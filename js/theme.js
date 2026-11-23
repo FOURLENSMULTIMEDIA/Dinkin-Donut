@@ -5,7 +5,7 @@
   function apply(m) {
     if (m === "auto") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", m);
     var dark = m === "dark" || (m === "auto" && matchMedia("(prefers-color-scheme: dark)").matches);
-    var meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.content = dark ? "#1A110B" : "#FFF6EA";
+    var meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.content = dark ? "#12192A" : "#F4EFE3";
     document.querySelectorAll(".theme button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.mode === m); });
   }
   apply(get());

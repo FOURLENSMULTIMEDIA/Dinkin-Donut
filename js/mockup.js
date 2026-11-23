@@ -44,7 +44,7 @@
       "</defs>";
     s += '<g mask="url(#' + id + 'm)" style="isolation:isolate"><rect width="' + W + '" height="' + H + '" fill="#fff"/>';
     s += '<image href="' + src + '" xlink:href="' + src + '" width="' + W + '" height="' + H + '"/>';
-    // THE GLAZE POUR: a sweep of glaze poured from one shoulder across the body, generated from the name
+    // THE HEIRLOOM: a sweep of colour poured from one shoulder across the body, generated from the name
     var R2 = rng("pour|" + (o.name || code) + "|" + o.way), fromLeft = R2() < 0.5, flip = back ? !fromLeft : fromLeft;
     var x0 = flip ? -0.1 + R2() * 0.12 : 0.98 + R2() * 0.12, x1 = flip ? 0.55 + R2() * 0.45 : 0.45 - R2() * 0.45, bw = 0.2 + R2() * 0.12;
     var wob = function () { return (R2() - 0.5) * 0.18; };
@@ -79,9 +79,9 @@
       if (o.tag) s += '<text x="' + cx.toFixed(1) + '" y="' + (cy + cw * 0.85).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.012).toFixed(1) + '" fill="' + c.ink + '" opacity=".75" letter-spacing="' + (W * 0.004).toFixed(1) + '">' + esc(o.tag) + "</text>";
     } else {
       var mid = W / 2, name = String(o.name || "").toUpperCase().slice(0, 12), num = String(o.num == null ? "" : o.num).slice(0, 2);
-      s += '<text x="' + mid + '" y="' + (H * z.neck).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.013).toFixed(1) + '" fill="' + c.ink + '" opacity=".7" letter-spacing="' + (W * 0.006).toFixed(1) + '">DINKIN’ DONUT</text>';
+      s += '<text x="' + mid + '" y="' + (H * z.neck).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.013).toFixed(1) + '" fill="' + c.ink + '" opacity=".7" letter-spacing="' + (W * 0.006).toFixed(1) + '">DINK DIFFERENT</text>';
       if (name) s += '<text x="' + mid + '" y="' + (H * z.name).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * (name.length > 8 ? 0.036 : 0.042)).toFixed(1) + '" fill="' + c.ink + '" letter-spacing="' + (W * 0.02).toFixed(1) + '">' + esc(name) + "</text>";
-      if (num) s += '<text x="' + mid + '" y="' + (H * (z.num + z.numH * 0.8)).toFixed(1) + '" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="600" font-size="' + (H * z.numH).toFixed(1) + '" fill="' + c.ink + '" stroke="' + hair + '" stroke-width="' + (W * 0.004).toFixed(1) + '" paint-order="stroke">' + esc(num) + "</text>";
+      if (num) s += '<text x="' + mid + '" y="' + (H * (z.num + z.numH * 0.8)).toFixed(1) + '" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="600" font-size="' + (H * z.numH).toFixed(1) + '" fill="' + c.ink + '" stroke="' + hair + '" stroke-width="' + (W * 0.004).toFixed(1) + '" paint-order="stroke">' + esc(num) + "</text>";
       if (!name && !num) s += '<image filter="url(#' + id + 'em)" href="/assets/logo.svg" xlink:href="/assets/logo.svg" x="' + (mid - W * 0.06) + '" y="' + (H * 0.2) + '" width="' + W * 0.12 + '" height="' + W * 0.12 + '"/>';
       // the Kitchen Line: one hairline, and a ball whose spot is set by the player's name
       var r = rng(code + (o.name || "")), ly = H * z.line, bx = W * (0.5 + (r() - 0.5) * 0.36), br = W * 0.012;
@@ -89,13 +89,13 @@
       // woven code / edition tag at the hem
       var tw = W * (ed ? 0.2 : 0.12), th = H * 0.022, ty = H * z.tag;
       s += '<rect x="' + (mid - tw / 2).toFixed(1) + '" y="' + (ty - th / 2).toFixed(1) + '" width="' + tw.toFixed(1) + '" height="' + th.toFixed(1) + '" rx="' + (th * 0.2).toFixed(1) + '" fill="' + (ed ? gold : c.tip) + '"/>';
-      s += '<text x="' + mid + '" y="' + (ty + th * 0.3).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (th * 0.56).toFixed(1) + '" fill="' + (ed ? "#3B2416" : c.body) + '" letter-spacing="' + (th * 0.12).toFixed(1) + '">' + (ed ? "THE 20 · Nº " + (o.edNo ? String(o.edNo).padStart(2, "0") : "__") + " / 20" : esc(code)) + "</text>";
+      s += '<text x="' + mid + '" y="' + (ty + th * 0.3).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (th * 0.56).toFixed(1) + '" fill="' + (ed ? "#1D2840" : c.body) + '" letter-spacing="' + (th * 0.12).toFixed(1) + '">' + (ed ? "THE 20 · Nº " + (o.edNo ? String(o.edNo).padStart(2, "0") : "__") + " / 20" : esc(code)) + "</text>";
     }
     // woven hem flag (front left hem), gold for The 20
     if (!back) {
       var fx = W * z.flag[0], fy = H * z.flag[1], fw = W * 0.04, fh = H * 0.026;
       s += '<rect x="' + (fx - fw / 2).toFixed(1) + '" y="' + (fy - fh / 2).toFixed(1) + '" width="' + fw.toFixed(1) + '" height="' + fh.toFixed(1) + '" rx="' + (fh * 0.15).toFixed(1) + '" fill="' + (ed ? gold : c.tip) + '"/>';
-      s += '<text x="' + fx.toFixed(1) + '" y="' + (fy + fh * 0.3).toFixed(1) + '" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (fh * 0.62).toFixed(1) + '" fill="' + (ed ? "#3B2416" : c.body) + '">' + (ed ? "20" : "DD") + "</text>";
+      s += '<text x="' + fx.toFixed(1) + '" y="' + (fy + fh * 0.3).toFixed(1) + '" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="700" font-size="' + (fh * 0.62).toFixed(1) + '" fill="' + (ed ? "#1D2840" : c.body) + '">' + (ed ? "20" : "DD") + "</text>";
     }
     // the fabric's own folds over the print
     s += '<image href="' + src + '" xlink:href="' + src + '" width="' + W + '" height="' + H + '" opacity=".5" style="mix-blend-mode:multiply"/>';
@@ -113,24 +113,24 @@
   }
   var PAL = {
     WAYS: {
-      glaze: { label: "Glaze Rush", note: "Black · pink pour", body: "#0F0E12", sweep: "#FF3D8F", glow: "#FFC4DC", dots: "#FF5FA2", ink: "#FFFFFF", tip: "#FFFFFF", tip2: "#FF5FA2" },
-      court: { label: "Court Fade", note: "Green · lime pour", body: "#0F2419", sweep: "#2FA36B", glow: "#D7F03C", dots: "#D7F03C", ink: "#F3EDE2", tip: "#F3EDE2", tip2: "#D7F03C" },
-      midnight: { label: "Midnight Volt", note: "Navy · electric pour", body: "#0C1430", sweep: "#3A5BFF", glow: "#A9BAFF", dots: "#D7F03C", ink: "#FFFFFF", tip: "#FFFFFF", tip2: "#D7F03C" },
-      cream: { label: "Pearl", note: "White · navy pour", body: "#F4F2EE", sweep: "#1C2A5C", glow: "#7E93D6", dots: "#1C2A5C", ink: "#1C2A5C", tip: "#1C2A5C", tip2: "#FF5FA2" },
-      cocoa: { label: "Choco Glaze", note: "Chocolate · rose pour", body: "#24140C", sweep: "#E8487F", glow: "#F6C9A0", dots: "#D7F03C", ink: "#F6E9DA", tip: "#F6E9DA", tip2: "#E8487F" },
-      sage: { label: "Lime Shock", note: "Black · lime pour", body: "#0E110F", sweep: "#B9E02A", glow: "#F2FFB2", dots: "#D7F03C", ink: "#FFFFFF", tip: "#FFFFFF", tip2: "#D7F03C" },
-      blush: { label: "Sunset", note: "Plum · orange pour", body: "#1C0F22", sweep: "#FF5A36", glow: "#FFC07A", dots: "#FF5FA2", ink: "#FFF1E6", tip: "#FFF1E6", tip2: "#FF8A4C" },
+      glaze: { label: "Clubhouse Navy", note: "Navy · brass pour", body: "#1B2440", sweep: "#C9A86B", glow: "#EADBB8", dots: "#EDE4D3", ink: "#F4EFE3", tip: "#F4EFE3", tip2: "#C9A86B" },
+      court: { label: "Oatmeal", note: "Oatmeal · navy pour", body: "#E6DAC4", sweep: "#1D2840", glow: "#8A97B8", dots: "#9C7A45", ink: "#1D2840", tip: "#1D2840", tip2: "#9C7A45" },
+      midnight: { label: "Midnight Ivory", note: "Midnight · ivory pour", body: "#10162A", sweep: "#EDE4D3", glow: "#FFFFFF", dots: "#C9A86B", ink: "#F4EFE3", tip: "#F4EFE3", tip2: "#C9A86B" },
+      cream: { label: "Pearl", note: "Pearl · navy pour", body: "#F6F3EC", sweep: "#1D2840", glow: "#B89B72", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#9C7A45" },
+      cocoa: { label: "Camel", note: "Camel · ivory pour", body: "#B89B72", sweep: "#F4EFE3", glow: "#FFF7E6", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#F4EFE3" },
+      sage: { label: "Stone", note: "Stone · oxblood pour", body: "#CFC2A8", sweep: "#8E2F2F", glow: "#E2B7A6", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#8E2F2F" },
+      blush: { label: "Oxblood", note: "Oxblood · sand pour", body: "#4A1A1E", sweep: "#E6D3A8", glow: "#FFF1D6", dots: "#C9A86B", ink: "#F1EBDD", tip: "#F1EBDD", tip2: "#C9A86B" },
     },
     PRO_WAYS: {
-      bughaw: { label: "Bughaw", note: "Navy · royal & gold", body: "#0D1733", sweep: "#2D63FF", glow: "#F2C14E", dots: "#F2C14E", ink: "#FFFFFF", tip: "#FFFFFF", tip2: "#F2C14E" },
-      perlas: { label: "Perlas", note: "Pearl · navy & gold", body: "#F5F3EE", sweep: "#16245A", glow: "#C9A14A", dots: "#16245A", ink: "#16245A", tip: "#16245A", tip2: "#C9A14A" },
-      pula: { label: "Pula", note: "Claret · fire red", body: "#2E0A12", sweep: "#E3243B", glow: "#FFB199", dots: "#F2C14E", ink: "#FFF1E6", tip: "#FFF1E6", tip2: "#F2C14E" },
-      glazepro: { label: "Gubat", note: "Forest · emerald", body: "#0B1F16", sweep: "#1FAF6E", glow: "#BFF5D6", dots: "#F2C14E", ink: "#F3EDE2", tip: "#F3EDE2", tip2: "#F2C14E" },
+      bughaw: { label: "Regatta", note: "Navy · ivory & brass", body: "#16213F", sweep: "#F4EFE3", glow: "#C9A86B", dots: "#C9A86B", ink: "#FFFFFF", tip: "#FFFFFF", tip2: "#C9A86B" },
+      perlas: { label: "Perlas", note: "Pearl · navy & brass", body: "#F5F3EE", sweep: "#16245A", glow: "#B89B72", dots: "#16245A", ink: "#16245A", tip: "#16245A", tip2: "#9C7A45" },
+      pula: { label: "Claret", note: "Claret · brass", body: "#3A1216", sweep: "#C9A86B", glow: "#F1DDB0", dots: "#C9A86B", ink: "#F1EBDD", tip: "#F1EBDD", tip2: "#C9A86B" },
+      glazepro: { label: "Sandstone", note: "Sand · navy", body: "#D9CAAE", sweep: "#1D2840", glow: "#9C7A45", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#9C7A45" },
     },
     POLO_WAYS: {
-      clubhouse: { label: "Clubhouse", note: "White · court green", body: "#F4F2EE", sweep: "#1F6B47", glow: "#9ED9B4", dots: "#1F6B47", ink: "#14301F", tip: "#14301F", tip2: "#FF5FA2" },
-      night: { label: "Night", note: "Black · lime", body: "#0E0F10", sweep: "#9FD12A", glow: "#F2FFB2", dots: "#D7F03C", ink: "#FFFFFF", tip: "#FFFFFF", tip2: "#D7F03C" },
-      glaze: { label: "Glaze", note: "Black · pink", body: "#120E12", sweep: "#FF3D8F", glow: "#FFC4DC", dots: "#FF5FA2", ink: "#FFFFFF", tip: "#FFFFFF", tip2: "#FF5FA2" },
+      clubhouse: { label: "Clubhouse", note: "Ivory · navy", body: "#F4F2EE", sweep: "#1D2840", glow: "#8A97B8", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#9C7A45" },
+      night: { label: "Night", note: "Navy · brass", body: "#141C33", sweep: "#C9A86B", glow: "#EADBB8", dots: "#EDE4D3", ink: "#FFFFFF", tip: "#FFFFFF", tip2: "#C9A86B" },
+      glaze: { label: "Camel", note: "Camel · navy", body: "#B89B72", sweep: "#1D2840", glow: "#5B6788", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#F4EFE3" },
     },
   };
   function applyPalette() { var J = window.Jersey; if (!J) return; Object.keys(PAL).forEach(function (k) { var m = J[k]; if (!m) return; Object.keys(PAL[k]).forEach(function (w) { if (m[w]) Object.assign(m[w], PAL[k][w]); }); }); }

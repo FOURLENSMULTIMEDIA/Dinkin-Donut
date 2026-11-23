@@ -13,12 +13,12 @@ WhatsApp only allows automatic messages through Meta's WhatsApp Business Platfor
 - Meta charges a small fee per business-initiated message (the PIN). Replies inside a conversation the player started are free. Add a payment method when Meta asks.
 
 ## 1. Create the app
-1. Go to https://business.facebook.com and create a **Business portfolio** for Dinkin' Donut (skip if you have one).
+1. Go to https://business.facebook.com and create a **Business portfolio** for Dink Different (skip if you have one).
 2. Go to https://developers.facebook.com → **My Apps** → **Create app** → use case **Other** → type **Business** → link it to the portfolio.
 3. On the app page, add the **WhatsApp** product.
 
 ## 2. Connect the club number
-1. **WhatsApp → API Setup** → **Add phone number**. Display name: *Dinkin' Donut Pickleball Club*. Verify by SMS or call.
+1. **WhatsApp → API Setup** → **Add phone number**. Display name: *Dink Different Pickleball Club*. Verify by SMS or call.
 2. Copy the **Phone number ID** shown under the number. This is `WA_PHONE_ID`.
 
 ## 3. Create a permanent token
@@ -32,7 +32,7 @@ WhatsApp only allows automatic messages through Meta's WhatsApp Business Platfor
 - Category: **Utility**
 - Name: `glaze_pass`
 - Language: **English**
-- Header (text): `Dinkin' Donut Pickleball Club`
+- Header (text): `Dink Different Pickleball Club`
 - Body:
 ```
 Hi {{1}}, thank you. Your payment of {{2}} is confirmed for tonight's session.
@@ -66,7 +66,7 @@ Settings → Environment Variables (Production), then **Redeploy**:
 | `WA_VERIFY_TOKEN` | your phrase from step 5 |
 
 ## 7. Test
-1. Host console → Payments → **Paid? Send a Glaze Pass** with your own number. The message should arrive within seconds and the console will say *Sent automatically*.
+1. Host console → Payments → **Paid? Send a Club Pass** with your own number. The message should arrive within seconds and the console will say *Sent automatically*.
 2. From your phone, message the club number **STATUS**. You should get your queue position back.
 
 If anything fails, the console falls back to opening WhatsApp with the message ready, so you're never stuck at the check-in table.

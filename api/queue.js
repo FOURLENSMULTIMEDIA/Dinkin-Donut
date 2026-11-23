@@ -12,7 +12,7 @@ function publicView(S) {
   return { ...rest, players };
 }
 
-// Snapshot of the session for the website's Hall of Glaze.
+// Snapshot of the session for the website's The Honours Board.
 function hallEntry(S) {
   const played = Object.values(S.players).filter(p => p.w + p.l > 0)
     .sort((a, b) => b.w - a.w || (b.w / (b.w + b.l)) - (a.w / (a.w + a.l)) || (b.pf - b.pa) - (a.pf - a.pa) || a.name.localeCompare(b.name));
@@ -92,7 +92,7 @@ async function handle(req, res, club) {
     });
     let result = out.result || {};
     if (!isHost && result.player) { const { pin, phone, pinFails, ...safe } = result.player; result = { player: safe }; }
-    // Glaze Pass: try to send automatically; otherwise the console opens WhatsApp with the message ready
+    // Club Pass: try to send automatically; otherwise the console opens WhatsApp with the message ready
     if (!club && isHost && (a.type === "pass" || a.type === "newPin") && result.pin) result = { ...result, ...(await sendPass(result)) };
     return res.status(200).json(tag({ ...(isHost ? out.state : publicView(out.state)), host: isHost, persistent: hasDb(), result }));
   } catch (e) {

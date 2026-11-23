@@ -1,4 +1,4 @@
-// Tournament API (Dinkin' Donut and every Courtcall club).
+// Tournament API (Dink Different and every Courtcall club).
 //   GET  [?club=slug]                    public bracket (host token → full view with phones)
 //   POST {type:"register", ...}          public team sign-up while registration is open
 //   POST {type:..., ...} + host token    setup, divisions, teams, generate, score, clearScore, court, reset
@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
 };
 
 async function handle(req, res, club) {
-  const fresh = () => Object.assign(base(), { name: club ? `${club.name} Open` : "The Glaze Cup" });
+  const fresh = () => Object.assign(base(), { name: club ? `${club.name} Open` : "The Invitational" });
   const host = club ? isClubHost(req, club) : ddHost(req);
   if (req.method === "GET") {
     const S = (await getDoc("tournament", null)) || fresh();

@@ -1,5 +1,5 @@
 /**
- * Dinkin' Donut — Glaze Card sync.
+ * Dink Different — Club Card sync.
  * Sends every sign-up from the Google Form to the website's members database,
  * so hosts can issue cards and stamp sessions from the host console.
  *
@@ -14,11 +14,11 @@ const SITE = 'https://dinkindonut.asia';
 const MEMBERS_SECRET = 'PASTE_SECRET_HERE';
 
 const CONFIRMATION =
-  "You're in. Welcome to the Glaze Card.\n\n" +
-  "You can collect your card in person at any Dinkin' Donut session. " +
+  "You're in. Welcome to the Club Card.\n\n" +
+  "You can collect your card in person at any Dink Different session. " +
   "Just give your name at the check-in table.\n\n" +
   "One stamp per paid session, open play or DUPR. Six stamps and your seventh session is on us.\n\n" +
-  "Questions? WhatsApp +974 3076 3431 or DM @dinkindonutqa.\n\nStay glazed.";
+  "Questions? WhatsApp +974 3076 3431 or DM @dinkindonutqa.\n\nDink different.";
 
 function setup() {
   const form = FormApp.openById(FORM_ID);

@@ -1,6 +1,6 @@
 // Club settings. Edit this file to update club details across the whole site.
 window.CLUB = {
-  name: "Dinkin' Donut",
+  name: "Dink Different",
   city: "Doha",
   venue: "Venue: TBA — stay tuned",   // e.g. "Aspire Zone, Court 3" once confirmed
   mapUrl: "",                          // Google Maps link once the venue is locked
@@ -14,11 +14,11 @@ window.CLUB = {
   currency: "QAR",
   shopFawran: "+974 3020 3100",       // merch payments: Fawran goes to this number
 
-  // Glaze Card loyalty sign-up (Google Form short link, see google-form/SETUP.md)
+  // Club Card loyalty sign-up (Google Form short link, see google-form/SETUP.md)
   loyaltyFormUrl: "https://docs.google.com/forms/d/1TqgQPkL9SCaWjwWpEvg3VU1uV5ERvEHyLesmacjYezY/viewform",
 
-  // The Glaze Cup tournament. Leave the date empty for "coming soon"; set it (Doha time) to show a countdown.
-  tournament: { name: "The Glaze Cup", date: "", registerUrl: "" },   // e.g. date: "2026-12-18T19:00:00+03:00"
+  // The Invitational tournament. Leave the date empty for "coming soon"; set it (Doha time) to show a countdown.
+  tournament: { name: "The Invitational", date: "", registerUrl: "" },   // e.g. date: "2026-12-18T19:00:00+03:00"
   // The First Serve: our first open play. Pre-registered Dinkers get a numbered sticker. Leave date empty for "date announced soon".
   firstServe: { date: "", venue: "" },   // e.g. date: "2026-12-05T20:00:00+03:00", venue: "Aspire Zone, Court 3"
 

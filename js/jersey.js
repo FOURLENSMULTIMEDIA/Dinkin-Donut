@@ -1,13 +1,13 @@
-// Glaze Jersey renderer. Parametric SVG: colourway, side, name, number.
+// Club Jersey renderer. Parametric SVG: colourway, side, name, number.
 (function () {
   var WAYS = {
-    glaze:    { label: "Glaze", note: "Home", yoke: "#FF6FAB", yokeDeep: "#E2558F", body: "#D7F03C", bodyDeep: "#B8D02A", sleeve: "#3B2416", trim: "#FF6FAB", ink: "#3B2416", hole: "#3B2416", num: "#3B2416", numLine: "#FF6FAB" , yokeInk: "#3B2416" },
-    court:    { label: "Court", note: "Away", yoke: "#2F7A4F", yokeDeep: "#24613E", body: "#FBF4EA", bodyDeep: "#EADFCF", sleeve: "#2F7A4F", trim: "#D7F03C", ink: "#2F7A4F", hole: "#2F7A4F", num: "#2F7A4F", numLine: "#FBF4EA" , yokeInk: "#FBF4EA" },
-    midnight: { label: "Midnight", note: "Tournament", yoke: "#FF6FAB", yokeDeep: "#E2558F", body: "#2A1A10", bodyDeep: "#1C110A", sleeve: "#1C110A", trim: "#D7F03C", ink: "#FBF4EA", hole: "#FBF4EA", num: "#D7F03C", numLine: "#2A1A10" , yokeInk: "#3B2416" },
-    cream:    { label: "Cream", note: "Minimal", yoke: "#E9D9C2", yokeDeep: "#D9C4A6", body: "#FBF6EE", bodyDeep: "#EDE3D4", sleeve: "#FBF6EE", trim: "#3B2416", ink: "#3B2416", hole: "#3B2416", num: "#3B2416", numLine: "#FBF6EE" , yokeInk: "#3B2416" },
-    cocoa:    { label: "Cocoa", note: "Tonal", yoke: "#4A3020", yokeDeep: "#3E2819", body: "#3B2416", bodyDeep: "#2A1A10", sleeve: "#3B2416", trim: "#D7F03C", ink: "#E9D9C2", hole: "#E9D9C2", num: "#D7F03C", numLine: "#3B2416" , yokeInk: "#E9D9C2" },
-    sage:     { label: "Sage", note: "Soft", yoke: "#FBF6EE", yokeDeep: "#E9DFCF", body: "#B9CDB3", bodyDeep: "#A2B99B", sleeve: "#9DB596", trim: "#3B2416", ink: "#2C4A33", hole: "#2C4A33", num: "#2C4A33", numLine: "#B9CDB3" , yokeInk: "#2C4A33" },
-    blush:    { label: "Blush", note: "Soft", yoke: "#3B2416", yokeDeep: "#2A1A10", body: "#F6CFDE", bodyDeep: "#EDB8CC", sleeve: "#F6CFDE", trim: "#3B2416", ink: "#3B2416", hole: "#3B2416", num: "#3B2416", numLine: "#F6CFDE" , yokeInk: "#F6CFDE" },
+    glaze:    { label: "Brass", note: "Home", yoke: "#9C7A45", yokeDeep: "#7E6034", body: "#F4EFE3", bodyDeep: "#E6DAC4", sleeve: "#1D2840", trim: "#9C7A45", ink: "#1D2840", hole: "#1D2840", num: "#1D2840", numLine: "#B8955C" , yokeInk: "#1D2840" },
+    court:    { label: "Ivory & Navy", note: "Away", yoke: "#1D2840", yokeDeep: "#141C30", body: "#F3EEE2", bodyDeep: "#EADFCF", sleeve: "#1D2840", trim: "#C9A86B", ink: "#1D2840", hole: "#1D2840", num: "#1D2840", numLine: "#F3EEE2" , yokeInk: "#F3EEE2" },
+    midnight: { label: "Midnight", note: "Tournament", yoke: "#C9A86B", yokeDeep: "#9C7A45", body: "#161F33", bodyDeep: "#10162A", sleeve: "#10162A", trim: "#E2D2A6", ink: "#F3EEE2", hole: "#F3EEE2", num: "#E2D2A6", numLine: "#161F33" , yokeInk: "#1D2840" },
+    cream:    { label: "Cream", note: "Minimal", yoke: "#E0D7C3", yokeDeep: "#D9C4A6", body: "#FBF6EE", bodyDeep: "#EDE3D4", sleeve: "#FBF6EE", trim: "#1D2840", ink: "#1D2840", hole: "#1D2840", num: "#1D2840", numLine: "#FBF6EE" , yokeInk: "#1D2840" },
+    cocoa:    { label: "Navy Tonal", note: "Tonal", yoke: "#2A3756", yokeDeep: "#222C45", body: "#1D2840", bodyDeep: "#161F33", sleeve: "#1D2840", trim: "#E2D2A6", ink: "#E0D7C3", hole: "#E0D7C3", num: "#E2D2A6", numLine: "#1D2840" , yokeInk: "#E0D7C3" },
+    sage:     { label: "Stone", note: "Soft", yoke: "#FBF6EE", yokeDeep: "#E9DFCF", body: "#D6C8AC", bodyDeep: "#C9B896", sleeve: "#C9B896", trim: "#1D2840", ink: "#1D2840", hole: "#1D2840", num: "#1D2840", numLine: "#D6C8AC" , yokeInk: "#2C4A33" },
+    blush:    { label: "Oatmeal", note: "Soft", yoke: "#1D2840", yokeDeep: "#161F33", body: "#EDE4D3", bodyDeep: "#E3D8C3", sleeve: "#EDE4D3", trim: "#1D2840", ink: "#1D2840", hole: "#1D2840", num: "#1D2840", numLine: "#EDE4D3" , yokeInk: "#E6D8BC" },
   };
 
   var uid = 0;
@@ -25,13 +25,9 @@
   var BODY_BACK = "M152 34Q200 46 248 34L316 54L380 122L350 172L314 154L312 392L318 404Q262 434 200 436Q138 434 82 404L88 392L86 154L50 172L20 122L84 54Z";
   var SLEEVE_L = "M150 34L82 54L16 120L48 174L84 152Q114 88 156 38Z";
   var SLEEVE_R = "M250 34L318 54L384 120L352 174L316 152Q286 88 244 38Z";
-  // Drip edge of the glaze yoke, left to right, then back across the shoulders
-  // Minimal glaze edge: a smooth band with three drips, the centre one longest
+  // Yoke: a clean heritage band across the shoulders with a gentle chevron at the centre
   function drip(y) {
-    return "M40 " + (y - 140) + "L360 " + (y - 140) + "L360 " + y +
-      "C330 " + (y + 2) + " 300 " + (y - 4) + " 268 " + y + "C254 " + (y + 2) + " 252 " + (y + 22) + " 242 " + (y + 22) + "C232 " + (y + 22) + " 232 " + (y + 4) + " 220 " + (y + 4) +
-      "C210 " + (y + 4) + " 210 " + (y + 46) + " 200 " + (y + 46) + "C190 " + (y + 46) + " 190 " + (y + 4) + " 180 " + (y + 4) +
-      "C168 " + (y + 4) + " 168 " + (y + 16) + " 158 " + (y + 16) + "C148 " + (y + 16) + " 146 " + (y + 2) + " 132 " + y + "C100 " + (y - 4) + " 70 " + (y + 2) + " 40 " + y + "Z";
+    return "M40 " + (y - 140) + "L360 " + (y - 140) + "L360 " + y + "L212 " + y + "L200 " + (y + 12) + "L188 " + y + "L40 " + y + "Z";
   }
 
   var HOLES_BASE = [[110,250],[150,236],[196,262],[246,240],[292,256],[124,300],[172,292],[222,306],[270,296],[102,350],[148,342],[198,356],[250,344],[298,352],[128,394],[178,388],[230,396],[278,390]];
@@ -52,7 +48,7 @@
       '<pattern id="' + id + 'mesh" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r=".9" fill="#000" opacity=".1"/></pattern>' +
       '</defs>';
     // contact shadow
-    s += '<ellipse cx="200" cy="428" rx="150" ry="14" fill="#3B2416" opacity=".28" filter="url(#' + id + 'sh)"/>';
+    s += '<ellipse cx="200" cy="428" rx="150" ry="14" fill="#1D2840" opacity=".28" filter="url(#' + id + 'sh)"/>';
     s += '<g clip-path="url(#' + id + 'c)">';
     s += '<rect width="400" height="450" fill="' + w.body + '"/>';
     // tonal pickleball holes, sublimated into the body
@@ -60,7 +56,7 @@
     s += '<g fill="' + w.hole + '" opacity=".07">' + HOLES.map(function (h) { return '<ellipse cx="' + h[0].toFixed(1) + '" cy="' + (h[1] + (back ? -8 : 0)).toFixed(1) + '" rx="' + h[2].toFixed(1) + '" ry="' + (h[2] * 0.83).toFixed(1) + '"/>'; }).join("") + '</g>';
     // side mesh panels
     s += '<path d="M82 154L118 160L112 414L77 412Z" fill="url(#' + id + 'mesh)"/><path d="M318 154L282 160L288 414L323 412Z" fill="url(#' + id + 'mesh)"/>';
-    // glaze yoke with drips + drip shadow
+    // yoke band + soft shadow
     s += '<path d="' + drip(yokeY) + '" fill="#000" opacity=".12" transform="translate(0 3)" filter="url(#' + id + 'b)"/>';
     s += '<path d="' + drip(yokeY) + '" fill="' + w.yoke + '"/>';
     s += '<path d="' + drip(yokeY) + '" fill="none" stroke="' + w.yokeDeep + '" stroke-width="1.5" opacity=".8"/>';
@@ -75,22 +71,22 @@
     } else {
       var mode = o.print || "full";
       s += '<image href="/assets/logo.svg" x="188" y="44" width="24" height="24"/>';
-      s += '<text x="200" y="' + (mode === "plain" ? 100 : 92) + '" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="15" letter-spacing="1" fill="' + (w.yokeInk || w.ink) + '">Dinkin’ Donut</text>';
+      s += '<text x="200" y="' + (mode === "plain" ? 100 : 92) + '" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="700" font-size="15" letter-spacing="1" fill="' + (w.yokeInk || w.ink) + '">Dink Different</text>';
       s += '<text x="200" y="' + (mode === "plain" ? 112 : 104) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="6.5" letter-spacing="3.2" fill="' + (w.yokeInk || w.ink) + '" opacity=".8">PICKLEBALL CLUB · DOHA</text>';
       var esc = function (t) { return t.replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
       if (mode === "plain") {
         // Plain back: oversized crest and wordmark
         s += '<circle cx="200" cy="262" r="62" fill="#000" opacity=".14" filter="url(#' + id + 'b)"/><image href="/assets/logo.svg" x="136" y="196" width="128" height="128"/>';
-        s += '<text x="200" y="364" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="24" fill="' + w.ink + '">Dinkin’ Donut</text>';
+        s += '<text x="200" y="364" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="700" font-size="24" fill="' + w.ink + '">Dink Different</text>';
       } else if (mode === "name") {
-        s += '<text x="200" y="262" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (name.length > 8 ? 40 : 52) + '" fill="' + w.num + '" stroke="' + w.numLine + '" stroke-width="3" paint-order="stroke" stroke-linejoin="round">' + esc(name || "YOUR NAME") + '</text>';
+        s += '<text x="200" y="262" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="700" font-size="' + (name.length > 8 ? 40 : 52) + '" fill="' + w.num + '" stroke="' + w.numLine + '" stroke-width="3" paint-order="stroke" stroke-linejoin="round">' + esc(name || "YOUR NAME") + '</text>';
       } else {
         s += '<text x="200" y="182" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (name.length > 9 ? 21 : 25) + '" letter-spacing="' + (name.length > 9 ? 3 : 6) + '" fill="' + w.ink + '">' + esc(name || "YOUR NAME") + '</text>';
-        var n = num || "00", big = '<text x="200" y="300" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="104" ';
+        var n = num || "00", big = '<text x="200" y="300" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="700" font-size="104" ';
         s += big + 'fill="none" stroke="' + w.numLine + '" stroke-width="7" stroke-linejoin="round" opacity=".9">' + n + '</text>';
         s += big + 'fill="' + w.num + '">' + n + '</text>';
       }
-      s += '<text x="200" y="372" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="7" letter-spacing="4" fill="' + w.ink + '" opacity=".7">STAY GLAZED</text>';
+      s += '<text x="200" y="372" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="7" letter-spacing="4" fill="' + w.ink + '" opacity=".7">DINK DIFFERENT</text>';
       if (name) s += hemTag(200, 404, sd.code, w.ink);
     }
     // side vents
@@ -118,9 +114,9 @@
 
   // Court Polo: tapered performance polo, quarter zip, contrast yoke with piping, mesh side panels.
   var POLO_WAYS = {
-    clubhouse: { label: "Clubhouse", note: "Cream & court", body: "#FBF2E4", yoke: "#2F7A4F", side: "#2F7A4F", collar: "#2F7A4F", tipA: "#FF5FA2", tipB: "#D7F03C", pipe: "#FF5FA2", ink: "#2F7A4F", inkOnYoke: "#FFF6EA", zip: "#FF5FA2" },
-    night:     { label: "Night", note: "Choco & glaze", body: "#3B2416", yoke: "#24160D", side: "#24160D", collar: "#FBF2E4", tipA: "#FF5FA2", tipB: "#D7F03C", pipe: "#FF5FA2", ink: "#FBF2E4", inkOnYoke: "#FBF2E4", zip: "#D7F03C" },
-    glaze:     { label: "Glaze", note: "Pink & choco", body: "#FF6FAB", yoke: "#3B2416", side: "#3B2416", collar: "#3B2416", tipA: "#D7F03C", tipB: "#FBF2E4", pipe: "#D7F03C", ink: "#3B2416", inkOnYoke: "#FBF2E4", zip: "#D7F03C" },
+    clubhouse: { label: "Clubhouse", note: "Ivory & navy", body: "#F1EBDD", yoke: "#1D2840", side: "#1D2840", collar: "#1D2840", tipA: "#9C7A45", tipB: "#E2D2A6", pipe: "#9C7A45", ink: "#1D2840", inkOnYoke: "#F4EFE3", zip: "#9C7A45" },
+    night:     { label: "Night", note: "Navy & brass", body: "#1D2840", yoke: "#161F33", side: "#161F33", collar: "#F1EBDD", tipA: "#9C7A45", tipB: "#E2D2A6", pipe: "#9C7A45", ink: "#F1EBDD", inkOnYoke: "#F1EBDD", zip: "#E2D2A6" },
+    glaze:     { label: "Camel", note: "Camel & navy", body: "#B89B72", yoke: "#1D2840", side: "#1D2840", collar: "#1D2840", tipA: "#E2D2A6", tipB: "#F1EBDD", pipe: "#E2D2A6", ink: "#1D2840", inkOnYoke: "#F1EBDD", zip: "#E2D2A6" },
   };
   var P_BODY = "M160 40C176 50 224 50 240 40L300 56C318 60 330 70 338 84L374 152L332 174L312 142C312 170 314 200 310 240C308 300 314 360 318 404Q262 418 200 420Q138 418 82 404C86 360 92 300 90 240C86 200 88 170 88 142L68 174L26 152L62 84C70 70 82 60 100 56Z";
   function renderPolo(o) {
@@ -136,7 +132,7 @@
       '<pattern id="' + id + 'mesh" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1" fill="#000" fill-opacity=".28"/></pattern>' +
       '<filter id="' + id + 'b"><feGaussianBlur stdDeviation="5"/></filter><filter id="' + id + 'sh" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur stdDeviation="12"/></filter>' +
       '<filter id="' + id + 'emb"><feDropShadow dx="0" dy="1" stdDeviation=".6" flood-color="#000" flood-opacity=".5"/></filter></defs>';
-    s += '<ellipse cx="200" cy="430" rx="140" ry="13" fill="#3B2416" opacity=".3" filter="url(#' + id + 'sh)"/>';
+    s += '<ellipse cx="200" cy="430" rx="140" ry="13" fill="#1D2840" opacity=".3" filter="url(#' + id + 'sh)"/>';
     s += '<g clip-path="url(#' + id + 'c)"><rect width="400" height="450" fill="' + w.body + '"/>';
     var dots = ""; for (var di = 0; di < 22; di++) dots += '<circle cx="' + (110 + sd.rng() * 180).toFixed(1) + '" cy="' + (190 + sd.rng() * 190).toFixed(1) + '" r="' + (1 + sd.rng() * 1.8).toFixed(1) + '"/>';
     s += '<g fill="' + w.pipe + '" opacity=".25">' + dots + '</g>';
@@ -160,7 +156,7 @@
       // crest + chest line
       s += '<g filter="url(#' + id + 'emb)"><image href="/assets/logo.svg" x="244" y="146" width="36" height="36"/></g><circle cx="262" cy="164" r="18.5" fill="none" stroke="#000" stroke-opacity=".22" stroke-dasharray="1.1 1.1" stroke-width=".8"/>';
     } else {
-      s += '<text x="200" y="80" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="19" fill="' + w.inkOnYoke + '" filter="url(#' + id + 'emb)">Dinkin’ Donut</text>';
+      s += '<text x="200" y="80" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="700" font-size="19" fill="' + w.inkOnYoke + '" filter="url(#' + id + 'emb)">Dink Different</text>';
       s += '<text x="200" y="91" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="6" letter-spacing="3" fill="' + w.inkOnYoke + '" opacity=".8">PICKLEBALL CLUB · DOHA</text>';
       if (name && o.print !== "plain") { s += '<text x="200" y="146" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="13" letter-spacing="5" fill="' + w.ink + '" filter="url(#' + id + 'emb)">' + esc(name.toUpperCase()) + '</text>'; s += hemTag(200, 404, sd.code, w.ink); }
       s += '<rect x="188" y="44" width="24" height="9" rx="2" fill="' + w.pipe + '"/>';
@@ -185,10 +181,10 @@
 
   // Mabuhay Polo: pickleball polo with a curved shoulder yoke, gold piping, banig weave and a sun-and-stars signature.
   var PRO_WAYS = {
-    bughaw: { label: "Bughaw", note: "Royal blue", body: "#123A8A", deep: "#0E2F70", sash: "#F7F2EA", sash2: "#E9B82E", trim: "#C8102E", collar: "#F7F2EA", ink: "#F7F2EA", num: "#F7F2EA", numLine: "#C8102E", yokeInk: "#123A8A" },
-    perlas: { label: "Perlas", note: "Pearl white", body: "#F7F2EA", deep: "#E4D8C6", sash: "#123A8A", sash2: "#E9B82E", trim: "#C8102E", collar: "#123A8A", ink: "#123A8A", num: "#123A8A", numLine: "#E9B82E", yokeInk: "#F7F2EA" },
-    pula: { label: "Pula", note: "Red", body: "#B3172B", deep: "#931224", sash: "#F7F2EA", sash2: "#E9B82E", trim: "#123A8A", collar: "#F7F2EA", ink: "#F7F2EA", num: "#F7F2EA", numLine: "#E9B82E", yokeInk: "#B3172B" },
-    glazepro: { label: "Glaze Pro", note: "Club", body: "#D7F03C", deep: "#B8D02A", sash: "#FF6FAB", sash2: "#3B2416", trim: "#3B2416", collar: "#3B2416", ink: "#3B2416", num: "#3B2416", numLine: "#FF6FAB", yokeInk: "#3B2416" },
+    bughaw: { label: "Regatta", note: "Navy", body: "#16213F", deep: "#111A33", sash: "#F7F2EA", sash2: "#C9A86B", trim: "#8E2F2F", collar: "#F7F2EA", ink: "#F7F2EA", num: "#F7F2EA", numLine: "#C9A86B", yokeInk: "#16213F" },
+    perlas: { label: "Perlas", note: "Pearl white", body: "#F7F2EA", deep: "#E4D8C6", sash: "#1D2840", sash2: "#C9A86B", trim: "#8E2F2F", collar: "#1D2840", ink: "#1D2840", num: "#1D2840", numLine: "#C9A86B", yokeInk: "#F7F2EA" },
+    pula: { label: "Claret", note: "Claret", body: "#5A1A22", deep: "#46141A", sash: "#F7F2EA", sash2: "#C9A86B", trim: "#1D2840", collar: "#F7F2EA", ink: "#F7F2EA", num: "#F7F2EA", numLine: "#C9A86B", yokeInk: "#5A1A22" },
+    glazepro: { label: "Sandstone", note: "Sand", body: "#D9CAAE", deep: "#C9B896", sash: "#9C7A45", sash2: "#1D2840", trim: "#1D2840", collar: "#1D2840", ink: "#1D2840", num: "#1D2840", numLine: "#B8955C", yokeInk: "#1D2840" },
   };
 
   var PRO_BODY = "M146 40Q200 60 254 40L318 56L380 124L348 172L314 156L312 392L318 404Q262 434 200 436Q138 434 82 404L88 392L86 156L52 172L20 124L82 56Z";
@@ -210,7 +206,7 @@
       '<radialGradient id="' + id + 'hl" cx=".42" cy=".3" r=".55"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
       '<filter id="' + id + 'n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" seed="5"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 0.14"/></feComponentTransfer></filter>' +
       '<filter id="' + id + 'b"><feGaussianBlur stdDeviation="5"/></filter><filter id="' + id + 'sh" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur stdDeviation="12"/></filter></defs>';
-    s += '<ellipse cx="200" cy="430" rx="150" ry="13" fill="#3B2416" opacity=".28" filter="url(#' + id + 'sh)"/>';
+    s += '<ellipse cx="200" cy="430" rx="150" ry="13" fill="#1D2840" opacity=".28" filter="url(#' + id + 'sh)"/>';
     s += '<g clip-path="url(#' + id + 'c)"><rect width="400" height="450" fill="' + w.body + '"/><rect width="400" height="450" fill="url(#' + id + 'lat)" opacity=".55"/>';
     // diagonal sash: wearer's right shoulder to left hip (mirrored on the back)
     // Curved shoulder yoke with gold piping
@@ -234,7 +230,7 @@
       for (var r = 0; r < 8; r++) sun += '<path d="M-1.6 -7L0 -12.5L1.6 -7Z" transform="rotate(' + (r * 45) + ')"/>';
       var star = function (x, y) { return '<path transform="translate(' + x + ' ' + y + ') scale(.9)" d="M0 -3.4L.9 -1.1L3.3 -1L1.4 .5L2.1 2.8L0 1.5L-2.1 2.8L-1.4 .5L-3.3 -1L-.9 -1.1Z"/>'; };
       sun += star(-20, -6) + star(20, -6) + star(0, 18) + '</g>';
-      s += sun + '<text x="200" y="94" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="6.5" letter-spacing="3.2" fill="' + (w.yokeInk || w.ink) + '" opacity=".9">DINKIN’ DONUT · MABUHAY</text>';
+      s += sun + '<text x="200" y="94" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="6.5" letter-spacing="3.2" fill="' + (w.yokeInk || w.ink) + '" opacity=".9">DINK DIFFERENT · MABUHAY</text>';
       if (mode === "plain") s += '<image href="/assets/logo.svg" x="150" y="190" width="100" height="100"/>';
       else {
         s += '<text x="200" y="' + (mode === "name" ? 250 : 150) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (mode === "name" ? 40 : (name.length > 9 ? 22 : 26)) + '" letter-spacing="' + (mode === "name" ? 4 : 5) + '" fill="' + w.ink + '">' + esc(name || "YOUR NAME") + '</text>';

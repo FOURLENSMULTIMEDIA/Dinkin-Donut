@@ -1,4 +1,4 @@
-// Glaze Card members.
+// Club Card members.
 //   POST from Google Forms (Apps Script) with header x-members-secret: upsert one or many sign-ups.
 //   GET / POST from the host console with a signed host session (x-host-token): list, issue cards, stamps, notes.
 const crypto = require("crypto");

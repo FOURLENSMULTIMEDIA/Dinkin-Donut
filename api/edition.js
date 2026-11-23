@@ -1,7 +1,7 @@
 // "The 20": the numbered 1-of-1 edition. Only 20 shirts are ever made.
 //   GET                          { cap, taken, left }
 //   POST { claim:{ name, ref, product, way } }   → { no }  holds the next free number for 48 h (same ref keeps its number)
-//   Owner (Dinkin' Donut host token): GET ?list, POST { paid:no } | { release:no }
+//   Owner (Dink Different host token): GET ?list, POST { paid:no } | { release:no }
 const { getDoc, setDoc, withLock } = require("./_store");
 const { isHost } = require("./_auth");
 

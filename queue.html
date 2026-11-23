@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Live Queue · Dinkin' Donut</title>
+<title>Live Queue · Dink Different</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/tenant.js"></script>
 <script src="/js/theme.js"></script>
@@ -22,25 +22,32 @@
 .levels{border:0;padding:0;margin:4px 0 0;display:flex;gap:8px;flex-wrap:wrap;width:100%}
 .levels legend{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--dough)}.levels legend span{font-weight:500;opacity:.8}
 .levels input{position:absolute;opacity:0}
-.levels label span{display:inline-block;padding:9px 14px;border-radius:999px;border:2px solid rgba(255,246,234,.35);font-weight:700;font-size:14px;cursor:pointer}
-.levels input:checked+span{background:var(--cream);color:#3B2416;border-color:var(--cream)}
+.levels label span{display:inline-block;padding:9px 14px;border-radius:999px;border:2px solid rgba(244,239,227,.35);font-weight:700;font-size:14px;cursor:pointer}
+.levels input:checked+span{background:var(--cream);color:#1D2840;border-color:var(--cream)}
 .levels input:focus-visible+span{outline:3px solid var(--glaze);outline-offset:2px}
-.eta{display:inline-flex;gap:6px;align-items:center;background:rgba(255,246,234,.12);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px}
+.eta{display:inline-flex;gap:6px;align-items:center;background:rgba(244,239,227,.12);border-radius:999px;padding:6px 12px;font-weight:700;font-size:14px}
 .lv{font-size:12px;margin-left:4px}
 .pinrow{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:center;width:100%}
 .pinlbl{grid-column:1/-1;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--dough)}
 .pins{display:flex;gap:10px}
-.pd{width:62px;height:62px;flex:none;text-align:center;font:700 30px var(--display)!important;border-radius:50%!important;border:0!important;background:var(--ball);color:#3B2416;box-shadow:inset 0 0 0 7px var(--glaze),inset 0 0 0 9px #3B2416;padding:0!important;caret-color:#3B2416}
-.pd:focus{outline:3px solid #FFF6EA;outline-offset:3px}
+.pd{width:56px;height:68px;flex:none;text-align:center;font:600 34px var(--display)!important;border-radius:10px!important;border:1px solid rgba(201,168,107,.7)!important;background:linear-gradient(180deg,#F8F3EA,#E9DFCC);color:#1D2840;box-shadow:inset 0 2px 3px rgba(29,40,64,.18),0 1px 0 rgba(255,255,255,.12);padding:0!important;caret-color:#9C7A45}
+.pd:focus{outline:3px solid #F4EFE3;outline-offset:3px}
 .pinrow small{opacity:.75;font-size:13px}
 .shake{animation:shake .4s}@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-.share{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:6px}.share i{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,246,234,.45)}.share i.on{background:var(--ball);border-color:var(--ball)}.share span{margin-left:6px;font-weight:700;font-size:13px;opacity:.85}
-.gcpromo{display:grid!important;grid-template-columns:96px 1fr auto;gap:14px;align-items:center;text-decoration:none;background:#FFF6EA!important;color:#3B2416}.gcpromo[hidden]{display:none!important}.gcpromo img{width:96px;border-radius:8px;transform:rotate(-6deg);box-shadow:0 8px 16px rgba(59,36,22,.2)}.gcpromo b{display:block;font:700 18px var(--display)}.gcpromo span{font-size:14px}
+.share{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:6px}.share i{width:16px;height:16px;border-radius:50%;border:2px solid rgba(244,239,227,.45)}.share i.on{background:var(--ball);border-color:var(--ball)}.share span{margin-left:6px;font-weight:700;font-size:13px;opacity:.85}
+.gcpromo{display:grid!important;grid-template-columns:96px 1fr auto;gap:14px;align-items:center;text-decoration:none;background:#F4EFE3!important;color:#1D2840}.gcpromo[hidden]{display:none!important}.gcpromo img{width:96px;border-radius:8px;transform:rotate(-6deg);box-shadow:0 8px 16px rgba(29,40,64,.2)}.gcpromo b{display:block;font:700 18px var(--display)}.gcpromo span{font-size:14px}
 @media (max-width:480px){.gcpromo{grid-template-columns:72px 1fr}.gcpromo img{width:72px}.gcpromo .btn{grid-column:1/-1;justify-self:start}}
 .me .err{color:#FFB3CF;font-weight:600;margin:0}
 .ticket{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
-.ticket .big{font:700 clamp(64px,16vw,110px)/1 var(--display);color:var(--ball);font-variant-numeric:tabular-nums}
+.ticket .big{font:700 clamp(64px,16vw,110px)/1 var(--display);color:var(--ball);font-variant-numeric:tabular-nums lining-nums}
 .ticket.call{animation:glow 1.2s ease-in-out infinite alternate}
+.invite{position:relative;margin:4px 0 14px;padding:26px 20px 22px;text-align:center;border-radius:6px;background:linear-gradient(180deg,#FBF7EF,#EDE3CF);color:#1D2840;box-shadow:0 0 0 1px rgba(156,122,69,.6) inset,0 0 0 6px #FBF7EF inset,0 0 0 7px rgba(156,122,69,.45) inset,0 26px 40px -18px rgba(0,0,0,.55);animation:inv-in .9s cubic-bezier(.16,1,.3,1) both}
+.invite img{width:46px;height:46px;display:block;margin:0 auto 10px}
+.invite small{display:block;font:italic 600 17px/1.3 var(--display);opacity:.85;max-width:26ch;margin:0 auto}
+.invite .big{display:block;font:600 clamp(60px,17vw,96px)/1 var(--display);margin:10px 0 6px;letter-spacing:-.01em}
+.invite i{display:block;width:60px;height:1px;background:#9C7A45;margin:0 auto 12px}
+.invite p{margin:0;font-size:15px;line-height:1.5}.invite em{display:block;margin-top:12px;font:italic 600 15px var(--display);color:#9C7A45}
+@keyframes inv-in{from{opacity:0;transform:translateY(20px) rotate(-2deg) scale(.96)}to{opacity:1;transform:none}}
 .me.oncourt{background:var(--glaze)}
 .me.oncourt .big{color:var(--cream)}
 .me.upnext{background:var(--court)}
@@ -59,12 +66,12 @@ ol.q{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 ol.q li{display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
 ol.q li.next{border-color:var(--glaze)}
 ol.q li.you{background:var(--ball);border-color:var(--ball);color:var(--choco)}
-ol.q .n{font:700 14px var(--display);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--dough);color:#3B2416;flex:none}
+ol.q .n{font:700 14px var(--display);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--dough);color:#1D2840;flex:none}
 ol.q li.next .n{background:var(--glaze);color:#fff}
 ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .muted{color:var(--muted)}
 .tablewrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:15px}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums lining-nums;font-size:15px}
 th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px;border-bottom:2px solid var(--line)}
 td{padding:9px 8px;border-bottom:1px solid var(--line)}
 .r{text-align:right}.w{color:var(--win);font-weight:700}.l{color:var(--loss);font-weight:700}
@@ -73,19 +80,19 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
 .streak.hot{background:var(--glaze);color:#fff}
 [data-conn="off"]::after{content:" · reconnecting…";color:var(--loss)}
 .log{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px;color:var(--muted);max-height:300px;overflow:auto}
-.sprinkle{position:fixed;top:-20px;width:6px;height:16px;border-radius:4px;pointer-events:none;z-index:99;animation:fall 1.6s ease-in forwards}
+.sprinkle{position:fixed;top:-20px;width:9px;height:9px;border-radius:50%;pointer-events:none;z-index:99;animation:fall 1.6s ease-in forwards}
 @keyframes fall{to{transform:translateY(105vh) rotate(540deg)}}
 .preq{display:grid;gap:6px;margin-top:14px;font-weight:700;font-size:14px}.preq span{font-weight:500;opacity:.7}
-.preq input{font:500 16px var(--body);padding:12px 14px;border-radius:14px;border:2px solid rgba(255,246,234,.18);background:rgba(255,246,234,.06);color:inherit}
+.preq input{font:500 16px var(--body);padding:12px 14px;border-radius:14px;border:2px solid rgba(244,239,227,.18);background:rgba(244,239,227,.06);color:inherit}
 </style>
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dinkin' Donut">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dink Different">
 <script src="/js/pwa.js" defer></script>
 </head>
 <body>
-<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dinkin’ Donut</a><span class="chip" style="margin-left:auto" data-conn="on"><span class="live-dot"></span>Live</span></div></nav>
+<nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dink Different</a><span class="chip" style="margin-left:auto" data-conn="on"><span class="live-dot"></span>Live</span></div></nav>
 <main class="wrap page">
   <section class="me" id="me">
     <div class="eyebrow" style="color:var(--dough)" id="nightName">Open Play Night</div>
@@ -95,7 +102,7 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
       <label for="name" class="sr" hidden>Your name</label>
       <input id="name" placeholder="Your name (e.g. Angel K.)" maxlength="24" required>
       <div class="pinrow" id="pinRow">
-        <span class="pinlbl">Glaze Pass PIN</span>
+        <span class="pinlbl">Club Pass PIN</span>
         <div class="pins" role="group" aria-label="3-digit PIN from WhatsApp">
           <input class="pd" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="PIN digit 1" autocomplete="one-time-code">
           <input class="pd" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="PIN digit 2">
@@ -128,8 +135,8 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
   <section class="panel" id="standings"><h2>Live standings <span class="muted" style="font:500 13px var(--body)">Wins, then win %</span></h2>
     <div class="tablewrap"><table><thead><tr><th>#</th><th>Dinker</th><th class="r">W</th><th class="r">L</th><th class="r">Win %</th><th class="r">+/-</th><th class="r">Streak</th></tr></thead><tbody id="table"></tbody></table></div>
   </section>
-  <a class="panel gcpromo" id="gcPromo" href="/loyalty" hidden><img src="/assets/loyalty/card-front.png" alt=""><span><b>Not a Glaze Card member yet?</b>Sign up free. Six stamps and your 7th session is on us.</span><span class="btn pink sm">Sign up</span></a>
-  <a class="panel" href="/dupr" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--court);color:#FFF6EA;border:0"><span><b style="font:700 22px var(--display)">Want rated games?</b><br>DUPR sessions are booked on Reclub.</span><span class="btn lime sm">DUPR games →</span></a>
+  <a class="panel gcpromo" id="gcPromo" href="/loyalty" hidden><img src="/assets/loyalty/card-front.png" alt=""><span><b>Not a Club Card member yet?</b>Sign up free. Six stamps and your 7th session is on us.</span><span class="btn pink sm">Sign up</span></a>
+  <a class="panel" href="/dupr" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--court);color:#F4EFE3;border:0"><span><b style="font:700 22px var(--display)">Want rated games?</b><br>DUPR sessions are booked on Reclub.</span><span class="btn lime sm">DUPR games →</span></a>
   <section class="panel"><h2>Game log</h2><ul class="log" id="log"></ul></section>
 </main>
 
@@ -174,8 +181,8 @@ try { const n = localStorage.getItem("dd-name"); if (n) $("name").value = n; } c
 
 function sprinkles() {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  const cols = ["#FF5FA2", "#D7F03C", "#E8A95B", "#2F7A4F", "#FFF6EA"];
-  for (let i = 0; i < 40; i++) {
+  const cols = ["#C9A86B", "#E3CF7E", "#F4EFE3", "#9C7A45", "#E3CF7E"];
+  for (let i = 0; i < 24; i++) {
     const s = document.createElement("i"); s.className = "sprinkle";
     s.style.left = Math.random() * 100 + "vw"; s.style.background = cols[i % 5];
     s.style.animationDelay = Math.random() * .5 + "s"; document.body.appendChild(s); setTimeout(() => s.remove(), 2400);
@@ -216,8 +223,7 @@ function renderMe() {
   if (court) {
     phase = "court" + court.id; box.classList.add("oncourt");
     const mine = court.teams.findIndex(t => t.includes(meId));
-    html = `<div class="eyebrow" style="color:var(--cream)">You’re playing</div><div class="ticket call"><span class="big">Court ${court.id}</span></div>
-      <p style="margin:0">With <b>${DD.team(S, court.teams[mine].filter(x => x !== meId)) || "solo"}</b> vs <b>${DD.team(S, court.teams[1 - mine])}</b></p>${rec}`;
+    html = `<div class="invite"><img src="/assets/brand/mark.svg" alt=""><small>Dink Different requests the pleasure of your company on</small><span class="big">Court ${court.id}</span><i></i><p>With <b>${DD.team(S, court.teams[mine].filter(x => x !== meId)) || "solo"}</b><br>versus <b>${DD.team(S, court.teams[1 - mine])}</b></p><em>Play well. Shake hands at the net.</em></div>${rec}`;
   } else if (staying) {
     phase = "stay"; box.classList.add("upnext");
     html = `<div class="eyebrow" style="color:var(--ball)">Winners stay</div><h1>Stay on Court ${staying.id}</h1><p style="margin:0">Your next opponents are on their way.</p>${rec}`;

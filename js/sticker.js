@@ -9,12 +9,12 @@
   }
   // Four finishes; the name decides which one you get.
   var FIN = [
-    { key: "choco", label: "Choco", bg: "#3B2416", ring: "#4E3222", ink: "#FFF6EA", acc: "#FF5FA2", plate: "#D7F03C", plateInk: "#3B2416" },
-    { key: "glaze", label: "Glaze", bg: "#FF5FA2", ring: "#F24C93", ink: "#FFF6EA", acc: "#3B2416", plate: "#3B2416", plateInk: "#FFF6EA" },
-    { key: "court", label: "Court", bg: "#2F7A4F", ring: "#286B45", ink: "#FFF6EA", acc: "#D7F03C", plate: "#FF5FA2", plateInk: "#FFFFFF" },
-    { key: "cream", label: "Cream", bg: "#FFF6EA", ring: "#F6E6D0", ink: "#3B2416", acc: "#FF5FA2", plate: "#3B2416", plateInk: "#D7F03C" },
+    { key: "choco", label: "Racing Green", bg: "#1D2840", ring: "#2A3756", ink: "#F4EFE3", acc: "#9C7A45", plate: "#E2D2A6", plateInk: "#1D2840" },
+    { key: "glaze", label: "Brass", bg: "#9C7A45", ring: "#F24C93", ink: "#F4EFE3", acc: "#1D2840", plate: "#1D2840", plateInk: "#F4EFE3" },
+    { key: "court", label: "Court", bg: "#4C6A8A", ring: "#286B45", ink: "#F4EFE3", acc: "#E2D2A6", plate: "#9C7A45", plateInk: "#FFFFFF" },
+    { key: "cream", label: "Cream", bg: "#F4EFE3", ring: "#F6E6D0", ink: "#1D2840", acc: "#9C7A45", plate: "#1D2840", plateInk: "#E2D2A6" },
   ];
-  var SPR = ["#FF5FA2", "#D7F03C", "#FFF6EA", "#E8A95B", "#2F7A4F", "#7FD3FF"];
+  var SPR = ["#9C7A45", "#E2D2A6", "#F4EFE3", "#C9B48A", "#4C6A8A", "#7FD3FF"];
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
 
   function svg(p, logoHref, fontCss) {
@@ -26,7 +26,7 @@
     s += '<defs>' + (fontCss ? '<style>' + fontCss + '</style>' : '') +
       '<path id="' + id + 't" d="M250 250m-178 0a178 178 0 1 1 356 0"/>' +
       '<path id="' + id + 'b" d="M250 250m-196 0a196 196 0 0 0 392 0"/>' +
-      '<filter id="' + id + 'sh" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#3B2416" flood-opacity=".28"/></filter>' +
+      '<filter id="' + id + 'sh" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#1D2840" flood-opacity=".28"/></filter>' +
       '<clipPath id="' + id + 'c"><circle cx="250" cy="250" r="222"/></clipPath></defs>';
     // die-cut white border
     s += '<circle cx="250" cy="250" r="240" fill="#FFFFFF" filter="url(#' + id + 'sh)"/>';
@@ -46,10 +46,10 @@
     // logo
     if (logoHref) s += '<image href="' + logoHref + '" xlink:href="' + logoHref + '" x="180" y="128" width="140" height="140"/>';
     // name
-    s += '<text x="250" y="312" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="' + (first.length > 8 ? 34 : 42) + '" fill="' + f.ink + '">' + esc(first) + '</text>';
+    s += '<text x="250" y="312" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="700" font-size="' + (first.length > 8 ? 34 : 42) + '" fill="' + f.ink + '">' + esc(first) + '</text>';
     // number plate
     s += '<g transform="translate(250 352)"><rect x="-62" y="-22" width="124" height="44" rx="22" fill="' + f.plate + '"/>' +
-      '<text y="9" text-anchor="middle" font-family="Fredoka, sans-serif" font-weight="700" font-size="26" fill="' + f.plateInk + '">Nº ' + no + '<tspan font-size="14" opacity=".7" dx="4">/48</tspan></text></g>';
+      '<text y="9" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="700" font-size="26" fill="' + f.plateInk + '">Nº ' + no + '<tspan font-size="14" opacity=".7" dx="4">/48</tspan></text></g>';
     s += '</svg>';
     return { svg: s, finish: f.label };
   }
@@ -66,8 +66,8 @@
   // Self-contained PNG (logo and fonts embedded) for saving to the phone.
   function png(p, size) {
     size = size || 1500;
-    return Promise.all([b64("/assets/logo.svg", "image/svg+xml"), b64("/assets/fonts/fredoka-700.woff2", "font/woff2"), b64("/assets/fonts/dm-sans-700.woff2", "font/woff2")]).then(function (d) {
-      var css = '@font-face{font-family:Fredoka;font-weight:700;src:url(' + d[1] + ')}@font-face{font-family:"DM Sans";font-weight:700;src:url(' + d[2] + ')}';
+    return Promise.all([b64("/assets/logo.svg", "image/svg+xml"), b64("/assets/fonts/fraunces-normal.woff2", "font/woff2"), b64("/assets/fonts/dm-sans-700.woff2", "font/woff2")]).then(function (d) {
+      var css = '@font-face{font-family:Fraunces;font-weight:700;src:url(' + d[1] + ')}@font-face{font-family:"DM Sans";font-weight:700;src:url(' + d[2] + ')}';
       var markup = svg(p, d[0], css).svg;
       return new Promise(function (ok, no) {
         var img = new Image();

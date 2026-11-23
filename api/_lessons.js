@@ -107,7 +107,7 @@ const LESSONS = [
       { dur: 4.5, cam: SIDE, kitchen: "both", cap: "They *drive* the ball hard at you.", players: [{ x: -10, from: "ready", to: "block" }, { x: 8, dir: -1, from: "attackBack", to: "attackThru", dim: true, t0: 0, t1: 0.2 }], ball: { from: [7.4, 3.6], to: [-9, 2.4], apex: 4, apexAt: 0.3, t0: 0.15, t1: 0.7 } },
       { dur: 4.5, cam: CLOSE, cap: "Loosen your grip and *block.* No backswing.", players: [{ x: -9.5, from: "block" }], callout: { kind: "grip", value: 2, at: "wrist", label: "ABSORB", pos: [0.74, 0.28] } },
       { dur: 5, cam: SIDE, kitchen: "right", cap: "The pace *dies* on your paddle, and the ball drops into their kitchen.", players: [{ x: -10, from: "block" }, opp("ready", 8)], ball: { from: [-9.2, 2.4], to: [4.2, 0], apex: 3.7, apexAt: 0.45, t0: 0.1, t1: 0.9, showApex: true, bounce: true } },
-      { dur: 4, cam: SIDE, kitchen: "both", cap: "That's *soft* *hands.* Sweet game.", players: [{ x: -8, from: "ready" }, opp("ready", 7.6)] },
+      { dur: 4, cam: SIDE, kitchen: "both", cap: "That's *soft* *hands.* Good game.", players: [{ x: -8, from: "ready" }, opp("ready", 7.6)] },
     ],
   },
   {
@@ -141,7 +141,7 @@ LESSONS.push(
       { dur: 4.5, cam: SIDE, tag: "rule", cap: "In doubles, the score has *three* numbers.", hud: [["SERVING TEAM", 4, ""], ["RECEIVING TEAM", 2, ""], ["SERVER", 1, ""]], players: [{ x: -21, from: "stand", label: "SERVER" }, opp("ready", 21)] },
       { dur: 4.5, cam: SIDE, tag: "rule", cap: "Only the *serving* team scores. Win a rally while receiving, and you earn the serve.", players: [{ x: -21, from: "ready" }, opp("ready", 21)], hud: [["SERVING TEAM", 5, ""], ["RECEIVING TEAM", 2, ""], ["SERVER", 1, ""]] },
       { dur: 4.5, cam: SIDE, tag: "why", cap: "The game starts at 0-0-*2.* The first serving team gets only one server.", hud: [["SERVING TEAM", 0, ""], ["RECEIVING TEAM", 0, ""], ["SERVER", 2, ""]], players: [{ x: -21, from: "stand" }, opp("ready", 21)] },
-      { dur: 5, cam: SIDE, tag: "rule", cap: "Your score *even?* The first server serves from the right. Odd: from the left.", players: [{ x: -21, from: "stand" }], callout: MAP([{ pts: [[-21, 5], [12, -5]], col: "#FF4D86", label: "SERVE", t0: 0.3, t1: 0.9 }], [{ at: [-21, 5], col: "#D7F03C", label: "EVEN" }, { at: [-21, -5], col: "rgba(236,240,246,.5)", label: "ODD" }], "WHERE THE FIRST SERVER STANDS") },
+      { dur: 5, cam: SIDE, tag: "rule", cap: "Your score *even?* The first server serves from the right. Odd: from the left.", players: [{ x: -21, from: "stand" }], callout: MAP([{ pts: [[-21, 5], [12, -5]], col: "#8E6E3E", label: "SERVE", t0: 0.3, t1: 0.9 }], [{ at: [-21, 5], col: "#E2D2A6", label: "EVEN" }, { at: [-21, -5], col: "rgba(236,240,246,.5)", label: "ODD" }], "WHERE THE FIRST SERVER STANDS") },
       { dur: 4, cam: SIDE, tag: "tip", cap: "Call the *whole* score before every serve. Loud and clear.", players: [{ x: -21, from: "serveBack" }, opp("ready", 21)] },
     ],
   },
@@ -153,9 +153,9 @@ LESSONS.push(
     mistakes: [["Gap down the middle", "Both players stay wide: easy winner through the middle."], ["One up, one back", "Diagonal gap: the opponents hit to the open angle."]],
     quiz: [["The ball goes to your partner's sideline. What do you do?", ["Stay where you are", "Shift toward it with your partner"], 1], ["Who usually takes a ball down the middle?", ["The forehand", "Whoever is taller", "Nobody"], 0]],
     scenes: [
-      { dur: 5, cam: SIDE, tag: "dont", cap: "Two players standing still leave a *gap* in the middle.", players: [{ x: -8, from: "ready" }, opp("ready", 8)], callout: MAP([{ pts: [[7, 2], [-12, 0]], col: "#FF4D86", label: "WINNER", ball: true, t0: 0.3, t1: 0.9 }], [{ at: [-8, 7], label: "YOU" }, { at: [-8, -7], label: "PARTNER" }], "THE GAP") },
-      { dur: 5.5, cam: SIDE, tag: "do", cap: "Shadow each other. The ball goes *wide,* you both shift.", players: [{ x: -8, from: "ready" }, opp("dinkThru", 8)], callout: MAP([{ pts: [[-8, 7], [-8, 8.5]], col: "#D7F03C", label: "YOU", t0: 0.2, t1: 0.7 }, { pts: [[-8, -3], [-8, 1.5]], col: "#D7F03C", label: "PARTNER", t0: 0.2, t1: 0.7 }, { pts: [[7, 3], [-6, 9]], col: "#FF4D86", ball: true, t0: 0, t1: 0.5 }], [], "SHIFT TOGETHER") },
-      { dur: 5, cam: SIDE, tag: "do", cap: "Move *up* together and back together. About 10 feet apart.", players: [{ x: -8, from: "ready" }], hud: [["PARTNER SPACING", 10, "FT"]], callout: MAP([{ pts: [[-18, 5], [-8, 5]], col: "#D7F03C", t0: 0, t1: 0.7 }, { pts: [[-18, -5], [-8, -5]], col: "#D7F03C", t0: 0, t1: 0.7 }], [], "UP AS ONE", [0.5, 0.26]) },
+      { dur: 5, cam: SIDE, tag: "dont", cap: "Two players standing still leave a *gap* in the middle.", players: [{ x: -8, from: "ready" }, opp("ready", 8)], callout: MAP([{ pts: [[7, 2], [-12, 0]], col: "#8E6E3E", label: "WINNER", ball: true, t0: 0.3, t1: 0.9 }], [{ at: [-8, 7], label: "YOU" }, { at: [-8, -7], label: "PARTNER" }], "THE GAP") },
+      { dur: 5.5, cam: SIDE, tag: "do", cap: "Shadow each other. The ball goes *wide,* you both shift.", players: [{ x: -8, from: "ready" }, opp("dinkThru", 8)], callout: MAP([{ pts: [[-8, 7], [-8, 8.5]], col: "#E2D2A6", label: "YOU", t0: 0.2, t1: 0.7 }, { pts: [[-8, -3], [-8, 1.5]], col: "#E2D2A6", label: "PARTNER", t0: 0.2, t1: 0.7 }, { pts: [[7, 3], [-6, 9]], col: "#8E6E3E", ball: true, t0: 0, t1: 0.5 }], [], "SHIFT TOGETHER") },
+      { dur: 5, cam: SIDE, tag: "do", cap: "Move *up* together and back together. About 10 feet apart.", players: [{ x: -8, from: "ready" }], hud: [["PARTNER SPACING", 10, "FT"]], callout: MAP([{ pts: [[-18, 5], [-8, 5]], col: "#E2D2A6", t0: 0, t1: 0.7 }, { pts: [[-18, -5], [-8, -5]], col: "#E2D2A6", t0: 0, t1: 0.7 }], [], "UP AS ONE", [0.5, 0.26]) },
       { dur: 4.5, cam: SIDE, tag: "tip", cap: "Ball down the middle? The *forehand* takes it. Call 'mine' early.", players: [{ x: -8, from: "attackBack", to: "attackThru" }, opp("block", 8)] },
     ],
   },
@@ -195,8 +195,8 @@ LESSONS.push(
     mistakes: [["Landing in the kitchen", "Fault, even if the volley wins."], ["Telegraphing", "Moving too early lets them hit cross-court."]],
     quiz: [["Can you touch the kitchen during an Erne?", ["Yes, if you jump", "No, never"], 1], ["Where do you hit an Erne from?", ["Outside the sideline, beside the kitchen", "Inside the kitchen"], 0]],
     scenes: [
-      { dur: 5, cam: SIDE, kitchen: "both", tag: "why", cap: "They keep dinking down *your* sideline.", players: [{ x: -7.6, from: "ready" }, { x: 7.6, dir: -1, from: "dinkBack", to: "dinkThru", dim: true }], callout: MAP([{ pts: [[6, 9], [-4, 9.5]], col: "#FF4D86", ball: true, label: "DINK", t0: 0.2, t1: 0.8 }], [{ at: [-8, 7], label: "YOU" }], "DOWN THE LINE") },
-      { dur: 5.5, cam: SIDE, tag: "do", cap: "Step *around* the kitchen, outside the sideline. Never through it.", players: [{ x: -7.6, from: "ready" }], callout: MAP([{ pts: [[-8, 7], [-8, 11], [-1, 11]], col: "#D7F03C", label: "ERNE PATH", t0: 0.1, t1: 0.8 }], [], "AROUND, NOT THROUGH", [0.5, 0.12]) },
+      { dur: 5, cam: SIDE, kitchen: "both", tag: "why", cap: "They keep dinking down *your* sideline.", players: [{ x: -7.6, from: "ready" }, { x: 7.6, dir: -1, from: "dinkBack", to: "dinkThru", dim: true }], callout: MAP([{ pts: [[6, 9], [-4, 9.5]], col: "#8E6E3E", ball: true, label: "DINK", t0: 0.2, t1: 0.8 }], [{ at: [-8, 7], label: "YOU" }], "DOWN THE LINE") },
+      { dur: 5.5, cam: SIDE, tag: "do", cap: "Step *around* the kitchen, outside the sideline. Never through it.", players: [{ x: -7.6, from: "ready" }], callout: MAP([{ pts: [[-8, 7], [-8, 11], [-1, 11]], col: "#E2D2A6", label: "ERNE PATH", t0: 0.1, t1: 0.8 }], [], "AROUND, NOT THROUGH", [0.5, 0.12]) },
       { dur: 4.5, cam: SIDE, tag: "rule", cap: "Volley it from *outside* the court, right beside the net. Legal.", players: [{ x: -1.2, from: "block", to: "attackThru" }, opp("dinkThru", 7.6)], ball: { from: [6.8, 1], to: [-0.8, 3], apex: 3.5, apexAt: 0.6, t0: 0, t1: 0.5 } },
       { dur: 4, cam: SIDE, tag: "dont", cap: "Touch the kitchen or its line at any point: *fault.*", players: [{ x: -4, from: "attackThru" }], kitchen: "left" },
     ],
@@ -209,8 +209,8 @@ LESSONS.push(
     mistakes: [["Forcing it", "Only when the ball is well outside the sideline."], ["Aiming over the net", "If you're that wide, the post is your path."]],
     quiz: [["Does an ATP have to go over the net?", ["Yes", "No, it can go around the post"], 1], ["Can an ATP be lower than the net?", ["Yes", "No"], 0]],
     scenes: [
-      { dur: 5, cam: SIDE, tag: "why", cap: "A sharp, wide dink pulls you *outside* the sideline.", players: [{ x: -7.6, from: "ready" }, { x: 7.6, dir: -1, from: "dinkBack", to: "dinkThru", dim: true }], callout: MAP([{ pts: [[6, 4], [-4, 10.5], [-9, 13]], col: "#FF4D86", ball: true, label: "WIDE DINK", t0: 0.1, t1: 0.9 }], [], "PULLED WIDE") },
-      { dur: 5.5, cam: SIDE, tag: "rule", cap: "Hit it *around* the post. It doesn't have to go over the net.", players: [{ x: -7.6, from: "attackBack", to: "attackThru" }], callout: MAP([{ pts: [[-9, 13], [0, 12.4], [9, 5]], col: "#D7F03C", ball: true, label: "AROUND THE POST", t0: 0.15, t1: 0.9 }], [], "LEGAL", [0.5, 0.12]) },
+      { dur: 5, cam: SIDE, tag: "why", cap: "A sharp, wide dink pulls you *outside* the sideline.", players: [{ x: -7.6, from: "ready" }, { x: 7.6, dir: -1, from: "dinkBack", to: "dinkThru", dim: true }], callout: MAP([{ pts: [[6, 4], [-4, 10.5], [-9, 13]], col: "#8E6E3E", ball: true, label: "WIDE DINK", t0: 0.1, t1: 0.9 }], [], "PULLED WIDE") },
+      { dur: 5.5, cam: SIDE, tag: "rule", cap: "Hit it *around* the post. It doesn't have to go over the net.", players: [{ x: -7.6, from: "attackBack", to: "attackThru" }], callout: MAP([{ pts: [[-9, 13], [0, 12.4], [9, 5]], col: "#E2D2A6", ball: true, label: "AROUND THE POST", t0: 0.15, t1: 0.9 }], [], "LEGAL", [0.5, 0.12]) },
       { dur: 4.5, cam: SIDE, tag: "tip", cap: "It can even stay *below* net height. It just has to land in.", players: [{ x: -7.6, from: "attackThru" }, opp("ready", 7.6)], hud: [["NET HEIGHT, POST", 36, "IN"], ["ATP HEIGHT LIMIT", 0, "NONE"]] },
     ],
   }
@@ -287,8 +287,8 @@ LESSONS.push(
     quiz: [["Does stacking change who serves?", ["Yes", "No, it only changes where you play after"], 1], ["When does the receiving team switch?", ["After the return", "Before the serve"], 0]],
     scenes: [
       { dur: 5.5, cam: SIDE, tag: "why", cap: "You both want your *forehands* in the middle.", players: [{ x: -8, from: "ready" }], callout: MAP([], [{ at: [-8, 5], label: "FH" }, { at: [-8, -5], label: "FH" }], "FOREHANDS IN THE MIDDLE") },
-      { dur: 6, cam: SIDE, tag: "rule", cap: "Serve from the correct side, then *slide.* Your partner crosses behind.", players: [{ x: -21, from: "serveBack", to: "serveThru", t0: 0, t1: 0.2 }], callout: MAP([{ pts: [[-21, 5], [-21, -4]], col: "#D7F03C", label: "SERVER SLIDES", t0: 0.35, t1: 0.9 }, { pts: [[-21, 9], [-21, 5]], col: "#E8A95B", label: "PARTNER", t0: 0.35, t1: 0.9 }, { pts: [[-20, 5], [15, -5]], col: "#FF4D86", ball: true, t0: 0.05, t1: 0.4 }], [], "SERVING TEAM STACK") },
-      { dur: 5, cam: SIDE, tag: "rule", cap: "Receiving? Return deep, then *switch* as it travels.", players: [{ x: -21, from: "dropBack", to: "dropThru", t0: 0, t1: 0.2 }], callout: MAP([{ pts: [[-21, -5], [-8, 5]], col: "#D7F03C", label: "RETURNER", t0: 0.3, t1: 0.9 }, { pts: [[-12, 5], [-8, -5]], col: "#E8A95B", label: "PARTNER", t0: 0.3, t1: 0.9 }], [], "RECEIVING TEAM STACK") },
+      { dur: 6, cam: SIDE, tag: "rule", cap: "Serve from the correct side, then *slide.* Your partner crosses behind.", players: [{ x: -21, from: "serveBack", to: "serveThru", t0: 0, t1: 0.2 }], callout: MAP([{ pts: [[-21, 5], [-21, -4]], col: "#E2D2A6", label: "SERVER SLIDES", t0: 0.35, t1: 0.9 }, { pts: [[-21, 9], [-21, 5]], col: "#C9B48A", label: "PARTNER", t0: 0.35, t1: 0.9 }, { pts: [[-20, 5], [15, -5]], col: "#8E6E3E", ball: true, t0: 0.05, t1: 0.4 }], [], "SERVING TEAM STACK") },
+      { dur: 5, cam: SIDE, tag: "rule", cap: "Receiving? Return deep, then *switch* as it travels.", players: [{ x: -21, from: "dropBack", to: "dropThru", t0: 0, t1: 0.2 }], callout: MAP([{ pts: [[-21, -5], [-8, 5]], col: "#E2D2A6", label: "RETURNER", t0: 0.3, t1: 0.9 }, { pts: [[-12, 5], [-8, -5]], col: "#C9B48A", label: "PARTNER", t0: 0.3, t1: 0.9 }], [], "RECEIVING TEAM STACK") },
     ],
   },
   {
@@ -299,8 +299,8 @@ LESSONS.push(
     mistakes: [["Going too early", "They see you and hit behind you."], ["Poaching low balls", "You hit up from an awkward position."]],
     quiz: [["Which ball should you poach?", ["High and floating toward the middle", "Low and at your partner's feet"], 0], ["After poaching, where do you stay?", ["On your new side", "Run back"], 0]],
     scenes: [
-      { dur: 5, cam: SIDE, tag: "why", cap: "A *floater* heads to your partner, through the middle.", players: [{ x: -8, from: "ready" }, opp("dinkThru", 7.6)], callout: MAP([{ pts: [[7, -3], [-8, -5]], col: "#FF4D86", ball: true, label: "FLOATER", t0: 0.2, t1: 0.9 }], [{ at: [-8, 5], label: "YOU" }, { at: [-8, -6], label: "PARTNER" }], "THE CHANCE") },
-      { dur: 5, cam: SIDE, tag: "do", cap: "Go as their paddle *commits.* Cross and finish at the feet.", players: [{ x: -7.6, from: "attackBack", to: "attackThru" }, opp("block", 7.6)], callout: MAP([{ pts: [[-8, 5], [-7, -3]], col: "#D7F03C", label: "POACH", t0: 0.1, t1: 0.6 }, { pts: [[-8, -6], [-9, 5]], col: "#E8A95B", label: "PARTNER FILLS", t0: 0.3, t1: 0.9 }], [], "SWITCH SIDES") },
+      { dur: 5, cam: SIDE, tag: "why", cap: "A *floater* heads to your partner, through the middle.", players: [{ x: -8, from: "ready" }, opp("dinkThru", 7.6)], callout: MAP([{ pts: [[7, -3], [-8, -5]], col: "#8E6E3E", ball: true, label: "FLOATER", t0: 0.2, t1: 0.9 }], [{ at: [-8, 5], label: "YOU" }, { at: [-8, -6], label: "PARTNER" }], "THE CHANCE") },
+      { dur: 5, cam: SIDE, tag: "do", cap: "Go as their paddle *commits.* Cross and finish at the feet.", players: [{ x: -7.6, from: "attackBack", to: "attackThru" }, opp("block", 7.6)], callout: MAP([{ pts: [[-8, 5], [-7, -3]], col: "#E2D2A6", label: "POACH", t0: 0.1, t1: 0.6 }, { pts: [[-8, -6], [-9, 5]], col: "#C9B48A", label: "PARTNER FILLS", t0: 0.3, t1: 0.9 }], [], "SWITCH SIDES") },
     ],
   },
   {
@@ -311,9 +311,9 @@ LESSONS.push(
     mistakes: [["Same dink every time", "They settle in; no openings."], ["Attacking from the pattern too early", "Only attack balls above the net."]],
     quiz: [["Why dink cross-court?", ["Lower net and longer court", "Because it's faster"], 0], ["What opens after pulling them wide?", ["The middle", "Nothing"], 0]],
     scenes: [
-      { dur: 5.5, cam: SIDE, tag: "do", cap: "Cross-court to the *backhand.* Lower net, longer court.", players: [{ x: -7.6, from: "dinkBack", to: "dinkThru" }, opp("ready", 7.6)], callout: MAP([{ pts: [[-7, 5], [5, -6]], col: "#FF4D86", ball: true, label: "CROSS", t0: 0.1, t1: 0.6 }], [], "STEP 1") },
-      { dur: 5.5, cam: SIDE, tag: "do", cap: "Then *straight* and wide. Make them reach.", players: [{ x: -7.6, from: "dinkBack", to: "dinkThru" }, opp("ready", 7.6)], callout: MAP([{ pts: [[-7, -5], [5, -9]], col: "#FF4D86", ball: true, label: "WIDE", t0: 0.1, t1: 0.6 }], [], "STEP 2") },
-      { dur: 5, cam: SIDE, kitchen: "both", tag: "do", cap: "Their reply pops *up.* Now attack the middle.", players: [{ x: -7.6, from: "attackBack", to: "attackThru", t0: 0.3, t1: 0.6 }, opp("block", 7.6)], callout: MAP([{ pts: [[-7, 0], [6, 0]], col: "#D7F03C", ball: true, label: "MIDDLE", t0: 0.4, t1: 0.9 }], [], "STEP 3") },
+      { dur: 5.5, cam: SIDE, tag: "do", cap: "Cross-court to the *backhand.* Lower net, longer court.", players: [{ x: -7.6, from: "dinkBack", to: "dinkThru" }, opp("ready", 7.6)], callout: MAP([{ pts: [[-7, 5], [5, -6]], col: "#8E6E3E", ball: true, label: "CROSS", t0: 0.1, t1: 0.6 }], [], "STEP 1") },
+      { dur: 5.5, cam: SIDE, tag: "do", cap: "Then *straight* and wide. Make them reach.", players: [{ x: -7.6, from: "dinkBack", to: "dinkThru" }, opp("ready", 7.6)], callout: MAP([{ pts: [[-7, -5], [5, -9]], col: "#8E6E3E", ball: true, label: "WIDE", t0: 0.1, t1: 0.6 }], [], "STEP 2") },
+      { dur: 5, cam: SIDE, kitchen: "both", tag: "do", cap: "Their reply pops *up.* Now attack the middle.", players: [{ x: -7.6, from: "attackBack", to: "attackThru", t0: 0.3, t1: 0.6 }, opp("block", 7.6)], callout: MAP([{ pts: [[-7, 0], [6, 0]], col: "#E2D2A6", ball: true, label: "MIDDLE", t0: 0.4, t1: 0.9 }], [], "STEP 3") },
     ],
   },
   {

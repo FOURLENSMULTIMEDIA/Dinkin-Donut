@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Host Console · Dinkin' Donut</title>
+<title>Host Console · Dink Different</title>
 <meta name="robots" content="noindex">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap">
 <link rel="stylesheet" href="/css/style.css">
 <script src="/js/tenant.js"></script>
 <script src="/js/theme.js"></script>
@@ -33,7 +33,7 @@
 .bar .sp{flex:1}
 .stats{display:flex;gap:10px;flex-wrap:wrap}
 .stat{background:var(--deep);color:var(--cream);border-radius:16px;padding:10px 16px;min-width:96px}
-.stat b{display:block;font:700 26px var(--display);color:var(--ball);font-variant-numeric:tabular-nums}
+.stat b{display:block;font:700 26px var(--display);color:var(--ball);font-variant-numeric:tabular-nums lining-nums}
 .stat span{font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 .cols{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px}
 @media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
@@ -43,7 +43,7 @@
 .ct{background:var(--court);color:var(--cream);border-radius:18px;padding:14px;display:grid;gap:8px}
 .ct.open{background:var(--sunk);color:var(--fg)}
 .ct h3{font-size:18px;display:flex;justify-content:space-between;align-items:center}.ct h3 span{font:500 13px var(--body)}
-.team{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:2px solid rgba(255,246,234,.3);border-radius:14px;padding:8px 10px}
+.team{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border:2px solid rgba(244,239,227,.3);border-radius:14px;padding:8px 10px}
 .team .nm{font-weight:700;overflow-wrap:anywhere;min-width:0}
 .score{width:56px;padding:6px 8px;text-align:center;border-radius:10px;font-weight:700}
 .vs{font:700 11px var(--display);letter-spacing:.3em;color:var(--ball);text-align:center}
@@ -52,58 +52,58 @@
 ol.q{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 ol.q li{display:flex;gap:6px;align-items:center;padding:7px 8px 7px 10px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
 ol.q li.next{border-color:var(--glaze)}
-ol.q .n{font:700 13px var(--display);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--dough);color:#3B2416;flex:none}
+ol.q .n{font:700 13px var(--display);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--dough);color:#1D2840;flex:none}
 ol.q li.next .n{background:var(--glaze);color:#fff}
 ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .ib{border:0;background:transparent;color:var(--muted);font-size:15px;padding:6px 7px;border-radius:8px;cursor:pointer}
 .ib:hover{background:var(--sunk);color:var(--fg)}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#3B2416;color:var(--cream);padding:12px 18px;border-radius:14px;font-weight:600;z-index:50;max-width:90vw}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#1D2840;color:var(--cream);padding:12px 18px;border-radius:14px;font-weight:600;z-index:50;max-width:90vw}
 .toast.bad{background:var(--loss)}
 .warn{background:#FFE7A8;color:var(--choco);border-radius:14px;padding:12px 14px;font-weight:600}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .muted{color:var(--muted);font-size:14px}
 .passgrid .methods{flex-wrap:wrap}
-.moment{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:14px;padding:14px 22px 14px 14px;border-radius:999px;color:#3B2416;font-family:var(--display);box-shadow:0 18px 40px rgba(0,0,0,.3);animation:momin .5s cubic-bezier(.16,1,.3,1)}
-.moment i{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:24px;background:#3B2416;color:var(--ball)}
+.moment{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:80;display:flex;align-items:center;gap:14px;padding:14px 22px 14px 14px;border-radius:999px;color:#1D2840;font-family:var(--display);box-shadow:0 18px 40px rgba(0,0,0,.3);animation:momin .5s cubic-bezier(.16,1,.3,1)}
+.moment i{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:24px;background:#1D2840;color:var(--ball)}
 .moment b{display:block;font-size:22px}.moment small{display:block;font:600 14px var(--body)}
 .moment.fire{background:#FF8A3D}.moment.upset{background:var(--ball)}.moment.bagel{background:var(--glaze);color:#fff}.moment.nail{background:#FFD66B}
 @keyframes momin{from{transform:translate(-50%,-30px);opacity:0}}
-.annbig{display:flex;align-items:center;gap:12px;border:0;cursor:pointer;border-radius:16px;padding:12px 18px;background:var(--glaze);color:#fff;text-align:left;box-shadow:0 8px 20px rgba(255,95,162,.35)}
+.annbig{display:flex;align-items:center;gap:12px;border:0;cursor:pointer;border-radius:16px;padding:12px 18px;background:var(--glaze);color:#fff;text-align:left;box-shadow:0 8px 20px rgba(156,122,69,.35)}
 .voicebox{display:flex;flex-direction:column;gap:6px;justify-content:center}.voicebox select{font-size:13px;padding:6px 8px}
 .annbig b{display:block;font:700 17px var(--display)}.annbig small{display:block;font-size:12px;opacity:.9}
-.annbig.on{background:#2F7A4F;box-shadow:none}
+.annbig.on{background:#4C6A8A;box-shadow:none}
 .annbig:not(.on) svg{animation:pulse2 1.6s infinite}
 .sharechip{font:700 12px var(--body);background:var(--ink);color:var(--on-ink);border-radius:999px;padding:6px 10px;white-space:nowrap}
 .sharechip:empty{display:none}
 .team{grid-template-columns:1fr 64px!important}
 .ct .score{width:64px;height:48px;font:700 24px var(--display)!important;text-align:center;border-radius:12px;padding:0}
-.autop{background:var(--ball);color:#3B2416!important;border-radius:999px;padding:6px 12px}
-.passform{display:grid;gap:12px;background:linear-gradient(135deg,#3B2416,#57351F);color:#FFF6EA;border-radius:20px;padding:16px}
+.autop{background:var(--ball);color:#1D2840!important;border-radius:999px;padding:6px 12px}
+.passform{display:grid;gap:12px;background:linear-gradient(135deg,#1D2840,#57351F);color:#F4EFE3;border-radius:20px;padding:16px}
 .passhead{display:flex;gap:12px;align-items:center}.passhead b{font:700 18px var(--display);display:block}.passhead small{opacity:.8;font-size:13px}
-.passmark{width:44px;height:44px;border-radius:50%;background:var(--ball);color:#3B2416;display:grid;place-items:center;font:700 20px var(--display);box-shadow:inset 0 0 0 9px var(--glaze),inset 0 0 0 11px #3B2416;flex:none}
+.passmark{width:44px;height:44px;border-radius:50%;background:var(--ball);color:#1D2840;display:grid;place-items:center;font:700 20px var(--display);box-shadow:inset 0 0 0 9px var(--glaze),inset 0 0 0 11px #1D2840;flex:none}
 .passgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.2fr) 110px;gap:8px}
 .passgrid .methods{grid-column:1/-1}
-.passform input{background:#FFF6EA;color:#3B2416;border-color:transparent}
-.passform .methods span{background:rgba(255,246,234,.1);color:#FFF6EA;border-color:rgba(255,246,234,.25)}
-.passform .methods input:checked+span{background:#FFF6EA;color:#3B2416;border-color:#FFF6EA}
+.passform input{background:#F4EFE3;color:#1D2840;border-color:transparent}
+.passform .methods span{background:rgba(244,239,227,.1);color:#F4EFE3;border-color:rgba(244,239,227,.25)}
+.passform .methods input:checked+span{background:#F4EFE3;color:#1D2840;border-color:#F4EFE3}
 @media (max-width:600px){.passgrid{grid-template-columns:1fr 1fr}.passgrid input:first-child{grid-column:1/-1}}
 .passcard{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;border:2px dashed var(--glaze);border-radius:18px;padding:12px 14px;background:var(--surface)}
 .passcard .digits{display:flex;gap:6px;margin-bottom:6px}
-.passqr{width:140px;height:140px;background:#FFF6EA;border-radius:14px;padding:8px}.passqr svg{width:100%;height:100%}
+.passqr{width:140px;height:140px;background:#F4EFE3;border-radius:14px;padding:8px}.passqr svg{width:100%;height:100%}
 @media (max-width:600px){.passcard{grid-template-columns:auto 1fr}.passcard > .row{grid-column:1/-1;flex-direction:row!important}}
-.qrfull{position:fixed;inset:0;z-index:70;background:rgba(26,17,11,.75);display:grid;place-items:center;padding:20px}
-.qrbox{background:#FFF6EA;color:#3B2416;border-radius:28px;padding:28px;text-align:center;display:grid;gap:12px;justify-items:center;max-width:420px;width:100%}
+.qrfull{position:fixed;inset:0;z-index:70;background:rgba(18,25,42,.75);display:grid;place-items:center;padding:20px}
+.qrbox{background:#F4EFE3;color:#1D2840;border-radius:28px;padding:28px;text-align:center;display:grid;gap:12px;justify-items:center;max-width:420px;width:100%}
 .qrbox h2{font-size:34px}.qrbox #bigQr{width:min(320px,70vw);aspect-ratio:1}.qrbox #bigQr svg{width:100%;height:100%}
 .qrbox p{margin:0;font-size:18px}.qrbox p b{font:700 26px var(--display);letter-spacing:.2em}
-.passcard .digits i{width:40px;height:48px;border-radius:12px;background:#3B2416;color:var(--ball);display:grid;place-items:center;font:700 26px var(--display);font-style:normal}
+.passcard .digits i{width:40px;height:48px;border-radius:12px;background:#1D2840;color:var(--ball);display:grid;place-items:center;font:700 26px var(--display);font-style:normal}
 .passcard small{color:var(--muted)}
-.pinchip{font:700 12px var(--body);letter-spacing:.12em;background:#3B2416;color:var(--ball);border-radius:8px;padding:4px 8px;white-space:nowrap}
+.pinchip{font:700 12px var(--body);letter-spacing:.12em;background:#1D2840;color:var(--ball);border-radius:8px;padding:4px 8px;white-space:nowrap}
 .mfilter{display:flex;flex-wrap:wrap;gap:6px}
 .mfilter button{border:2px solid var(--line);background:var(--surface);color:var(--fg);font:700 13px var(--body);padding:8px 12px;border-radius:12px;cursor:pointer}
 .mfilter button[aria-pressed="true"]{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
 .mlist{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:560px;overflow:auto}
 .mlist li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--bg)}
-.mlist .cardno{width:56px;height:36px;border-radius:8px;background:#3B2416;color:var(--ball);display:grid;place-items:center;font:700 14px var(--display);font-variant-numeric:tabular-nums}
+.mlist .cardno{width:56px;height:36px;border-radius:8px;background:#1D2840;color:var(--ball);display:grid;place-items:center;font:700 14px var(--display);font-variant-numeric:tabular-nums lining-nums}
 .mlist .cardno.none{background:var(--sunk);color:var(--muted);font:700 10px var(--body);letter-spacing:.06em}
 .mlist .who b{font-size:16px}.mlist .who small{display:block;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
 .mlist .who a{color:inherit}
@@ -112,32 +112,32 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 .stampbar button{width:22px;height:22px;border-radius:50%;border:1.5px dashed #C9A98C;background:transparent;cursor:pointer;padding:0}
 .stampbar button.on{border:0;background:var(--glaze)}
 .stampbar .free{width:auto;height:22px;border-radius:999px;padding:0 8px;font:700 10px var(--body);letter-spacing:.06em;border:1.5px solid var(--ball);color:var(--fg)}
-.stampbar .free.ready{background:var(--ball);color:#3B2416;border-color:var(--ball);animation:pulse2 1.6s infinite}
+.stampbar .free.ready{background:var(--ball);color:#1D2840;border-color:var(--ball);animation:pulse2 1.6s infinite}
 @media (max-width:700px){.mlist li{grid-template-columns:auto minmax(0,1fr)}.mlist .acts{grid-column:1/-1;justify-content:flex-start}}
 .lvchip{border:0;border-radius:8px;font:700 11px var(--body);letter-spacing:.08em;padding:5px 8px;cursor:pointer;min-width:44px}
-.lvchip.beginner,.lvdot.beginner{background:#7FD3A3;color:#123B24}.lvchip.intermediate,.lvdot.intermediate{background:#FFD66B;color:#3B2416}.lvchip.advanced,.lvdot.advanced{background:var(--glaze);color:#fff}.lvchip.none{background:var(--sunk);color:var(--muted)}
+.lvchip.beginner,.lvdot.beginner{background:#7FD3A3;color:#123B24}.lvchip.intermediate,.lvdot.intermediate{background:#FFD66B;color:#1D2840}.lvchip.advanced,.lvdot.advanced{background:var(--glaze);color:#fff}.lvchip.none{background:var(--sunk);color:var(--muted)}
 .lvdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px;box-shadow:0 0 0 1.5px rgba(255,255,255,.6)}
 .bal{font:700 10px var(--body);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px}
-.bal.even{background:var(--ball);color:#3B2416}.bal.close{background:#FFD66B;color:#3B2416}.bal.uneven{background:#FF8DB6;color:#3B2416}
+.bal.even{background:var(--ball);color:#1D2840}.bal.close{background:#FFD66B;color:#1D2840}.bal.uneven{background:#E39A8A;color:#1D2840}
 .roster{list-style:none;margin:0;padding:0;display:grid;gap:6px;max-height:420px;overflow:auto}
 .roster li{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg);flex-wrap:wrap}
 .roster .nm{flex:1;font-weight:700;min-width:120px;overflow-wrap:anywhere}
 .pill{font:700 11px var(--body);letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:999px;background:var(--sunk);color:var(--muted);white-space:nowrap}
-.pill.court{background:var(--court);color:#FFF6EA}.pill.queue{background:var(--glaze);color:#fff}.pill.break{background:var(--dough);color:#3B2416}
-.pill.paid{background:var(--court);color:#FFF6EA}.pill.part{background:#FFD66B;color:#3B2416}.pill.unpaid{background:var(--loss);color:#fff}.pill.free{background:var(--ball);color:#3B2416}
+.pill.court{background:var(--court);color:#F4EFE3}.pill.queue{background:var(--glaze);color:#fff}.pill.break{background:var(--dough);color:#1D2840}
+.pill.paid{background:var(--court);color:#F4EFE3}.pill.part{background:#FFD66B;color:#1D2840}.pill.unpaid{background:var(--loss);color:#fff}.pill.free{background:var(--ball);color:#1D2840}
 .paystats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
 .paystats div{border-radius:16px;padding:10px 12px;background:var(--sunk)}
-.paystats b{display:block;font:700 20px var(--display);font-variant-numeric:tabular-nums}
+.paystats b{display:block;font:700 20px var(--display);font-variant-numeric:tabular-nums lining-nums}
 .paystats span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .paystats .due{background:var(--loss);color:#fff}.paystats .due span{color:#fff;opacity:.85}
-.paystats .got{background:var(--court);color:#FFF6EA}.paystats .got span{color:#FFF6EA;opacity:.85}
+.paystats .got{background:var(--court);color:#F4EFE3}.paystats .got span{color:#F4EFE3;opacity:.85}
 .payform{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--sunk);border-radius:16px;padding:10px}
 .methods{display:flex;gap:4px}
 .methods input{position:absolute;opacity:0}
 .methods span{display:inline-block;padding:8px 10px;border-radius:10px;border:2px solid var(--line);font-weight:700;font-size:13px;cursor:pointer;background:var(--surface)}
 .methods input:checked+span{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
 .methods input:focus-visible+span{outline:3px solid var(--glaze)}
-.paytable{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+.paytable{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums lining-nums}
 .paytable th{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px;border-bottom:2px solid var(--line)}
 .paytable td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
 .paytable .r{text-align:right}
@@ -150,11 +150,11 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 @media (max-width:1000px){.cols-money{grid-template-columns:minmax(0,1fr)}}
 .paytable td.r{white-space:nowrap}
 .items button{white-space:nowrap}
-.recap{position:fixed;inset:0;z-index:60;background:rgba(26,17,11,.55);display:grid;place-items:center;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px));overflow:auto}
+.recap{position:fixed;inset:0;z-index:60;background:rgba(18,25,42,.55);display:grid;place-items:center;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px));overflow:auto}
 .rbox{background:var(--bg);border-radius:28px;padding:28px;max-width:560px;width:100%;display:grid;gap:14px;box-shadow:0 30px 80px rgba(0,0,0,.35)}
 .rbox h2{font-size:40px}
 .rstats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.rstats div{background:var(--ball);color:#3B2416;border-radius:18px;padding:12px;text-align:center;font-weight:700;font-size:13px}
+.rstats div{background:var(--ball);color:#1D2840;border-radius:18px;padding:12px;text-align:center;font-weight:700;font-size:13px}
 .rstats b{display:block;font:700 32px var(--display)}
 .awards{display:grid;gap:8px}
 .awards div{display:grid;grid-template-columns:1fr auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
@@ -167,7 +167,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/assets/app/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dinkin' Donut">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Dink Different">
 <script src="/js/pwa.js" defer></script>
 </head>
 <body>
@@ -206,7 +206,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
     <label for="gameLimit">Games each</label><select id="gameLimit"><option value="auto">Auto</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="0">No limit</option></select>
     <span class="sharechip" id="shareChip"></span>
     <label for="sessionEnd">Ends</label><input id="sessionEnd" type="time" style="width:110px">
-    <label for="autoClose" title="If you forget to end the night, it closes itself: results go to the Hall of Glaze, regulars stay on the roster">Auto-reset</label><select id="autoClose"><option value="3">After 3 h idle</option><option value="1">After 1 h idle</option><option value="2">After 2 h idle</option><option value="4">After 4 h idle</option><option value="6">After 6 h idle</option><option value="0">Off</option></select>
+    <label for="autoClose" title="If you forget to end the night, it closes itself: results go to the Honours Board, regulars stay on the roster">Auto-reset</label><select id="autoClose"><option value="3">After 3 h idle</option><option value="1">After 1 h idle</option><option value="2">After 2 h idle</option><option value="4">After 4 h idle</option><option value="6">After 6 h idle</option><option value="0">Off</option></select>
     <label for="target">Game to</label><select id="target"><option value="11">11 points</option><option value="15">15 points</option><option value="21">21 points</option></select>
     <label class="row muted" style="gap:6px"><input type="checkbox" id="requirePin"> PIN to join</label>
     <label for="match">Matching</label><select id="match"><option value="smart">Smart match</option><option value="record">Winners vs Winners</option><option value="mix">Winner + Loser teams</option><option value="levels">Level courts</option><option value="order">Queue order</option></select>
@@ -244,7 +244,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
   <section class="panel" id="payPanel">
     <h2>Payments <span class="muted">Only visible in this console</span></h2>
     <form class="passform" id="passForm" autocomplete="off">
-      <div class="passhead"><span class="passmark" aria-hidden="true">3</span><div><b>Paid? Send a Glaze Pass</b><small>Records the payment and sends a 3-digit queue PIN to their WhatsApp.</small></div></div>
+      <div class="passhead"><span class="passmark" aria-hidden="true">3</span><div><b>Paid? Send a Club Pass</b><small>Records the payment and sends a 3-digit queue PIN to their WhatsApp.</small></div></div>
       <div class="passgrid">
         <input id="gpName" placeholder="Player name" aria-label="Player name" required list="gpNames">
         <datalist id="gpNames"></datalist>
@@ -277,7 +277,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
   </div>
 
   <section class="panel" id="membersPanel">
-    <h2>Glaze Card members <span class="muted" id="mInfo">Loading…</span></h2>
+    <h2>Club Card members <span class="muted" id="mInfo">Loading…</span></h2>
     <div class="paystats" id="mStats"></div>
     <div class="row">
       <input id="mFind" placeholder="Search name or phone" aria-label="Search members" style="flex:1;min-width:180px">
@@ -297,7 +297,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
       <a class="btn pink sm" href="/studio" target="_blank">Post Studio (Instagram)</a> <a class="btn lime sm" href="/first-serve?host" target="_blank">First Serve list</a> <a class="btn ghost sm" href="/clubs?owner" target="_blank">Courtcall clubs</a>
       <button class="btn ghost sm" id="csv" type="button">Download results (CSV)</button>
       <span id="resetZone"></span>
-      <span id="hallZone"><button class="btn ghost sm" id="hallClear" type="button">Clear Hall of Glaze</button></span>
+      <span id="hallZone"><button class="btn ghost sm" id="hallClear" type="button">Clear the Honours Board</button></span>
       <button class="btn ghost sm" id="logout" type="button">Sign out</button>
     </div>
   </section>
@@ -360,9 +360,9 @@ if (PIN) fetch("/api/queue?check", { headers: { "x-host-token": PIN } }).then(r 
 
 function render() {
   { let b = $("sleepNote"); const z = S.autoClosed;
-    if (z && !b) { b = document.createElement("div"); b.id = "sleepNote"; b.style.cssText = "margin:12px 0;padding:14px 16px;border-radius:16px;background:rgba(215,240,60,.12);border:1px solid rgba(215,240,60,.5);display:flex;gap:12px;align-items:center;flex-wrap:wrap"; document.querySelector(".bar").before(b); }
+    if (z && !b) { b = document.createElement("div"); b.id = "sleepNote"; b.style.cssText = "margin:12px 0;padding:14px 16px;border-radius:16px;background:rgba(226,210,166,.12);border:1px solid rgba(226,210,166,.5);display:flex;gap:12px;align-items:center;flex-wrap:wrap"; document.querySelector(".bar").before(b); }
     if (z) { const t = new Date(z.at).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" });
-      b.innerHTML = `<b style="font-size:20px">&#9790;</b><span style="flex:1;min-width:220px"><b>Sleep mode closed the last night for you</b> · ${t}<br><small class="muted">${z.why === "ended" ? "It was past the end time and the courts were quiet." : "Nothing happened for a while."} ${z.games} games saved to the Hall of Glaze. Regulars are still on the roster. Fresh night ready.</small></span><button class="btn ghost sm" type="button" id="sleepOk">Got it</button>`;
+      b.innerHTML = `<b style="font-size:20px">&#9790;</b><span style="flex:1;min-width:220px"><b>Sleep mode closed the last night for you</b> · ${t}<br><small class="muted">${z.why === "ended" ? "It was past the end time and the courts were quiet." : "Nothing happened for a while."} ${z.games} games saved to the Honours Board. Regulars are still on the roster. Fresh night ready.</small></span><button class="btn ghost sm" type="button" id="sleepOk">Got it</button>`;
       $("sleepOk").onclick = () => act({ type: "dismissAuto" }); }
     else if (b) b.remove(); }
   if (document.activeElement !== $("autoClose")) $("autoClose").value = String(S.autoClose ?? 3);
@@ -427,7 +427,7 @@ $("logout").onclick = logout;
 $("csv").onclick = () => {
   const rows = [["Rank", "Player", "Wins", "Losses", "Win %", "Points for", "Points against"], ...DD.ranked(S).map((p, i) => [i + 1, p.name, p.w, p.l, Math.round(DD.pct(p) * 100), p.pf, p.pa])];
   const blob = new Blob([rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dinkin-donut-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dink-different-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
 };
 
 function upNextCard(S, meId) {
@@ -469,7 +469,7 @@ function renderRoster() {
   $("roster").innerHTML = rows.length ? rows.map(p => {
     const [cls, label] = where(p.id), pay = payOf(p.id), active = cls === "court" || cls === "queue";
     return `<li><button class="lvchip ${p.level || "none"}" data-x="lvl" data-id="${p.id}" title="Tap to change level">${p.level ? LVL[p.level].short : "Set level"}</button><span class="nm">${DD.esc(p.name)}</span><button class="gchip ${p.g || ""}" data-x="g" data-id="${p.id}" title="Tap to set man / woman (for mixed doubles)">${p.g === "m" ? "M" : p.g === "f" ? "F" : "M/F"}</button>${(() => { const q = p.partner && S.players[p.partner]; if (q && q.partner === p.id) return `<button class="ptchip on" data-x="partner" data-id="${p.id}" title="Fixed partner. Tap to unlink">🤝 ${DD.esc(q.name)}</button>`; if (p.partnerReq) return `<button class="ptchip req" data-x="partner" data-id="${p.id}" data-req="${DD.esc(p.partnerReq)}" title="Partner request. Tap to link">Wants ${DD.esc(p.partnerReq)} · Link</button>`; return `<button class="ptchip" data-x="partner" data-id="${p.id}" title="Set a fixed partner">+ Partner</button>`; })()}<span class="pill ${cls}">${label}</span><span class="pill ${pay.status}">${STATUS[pay.status]}${pay.bal > 0 && pay.paid ? " · " + money(pay.bal) + " left" : ""}</span>
-      ${p.pin ? `<span class="pinchip" title="Glaze Pass PIN">PIN ${p.pin}</span><button class="ib" title="Resend PIN on WhatsApp" aria-label="Resend PIN to ${DD.esc(p.name)}" data-x="resend" data-id="${p.id}">${DD.icon("repeat", 14)}</button>` : ""}
+      ${p.pin ? `<span class="pinchip" title="Club Pass PIN">PIN ${p.pin}</span><button class="ib" title="Resend PIN on WhatsApp" aria-label="Resend PIN to ${DD.esc(p.name)}" data-x="resend" data-id="${p.id}">${DD.icon("repeat", 14)}</button>` : ""}
       ${active ? "" : `<button class="btn lime sm" data-x="checkin" data-id="${p.id}">Check in</button>`}
       ${active ? "" : `<button class="ib" title="Remove from list" aria-label="Remove ${DD.esc(p.name)} from list" data-x="remove" data-id="${p.id}">×</button>`}</li>`;
   }).join("") : `<li class="muted">${all.length ? "No names match." : "No names yet. Paste tonight’s players above."}</li>`;
@@ -537,7 +537,7 @@ $("payCsv").onclick = () => {
 };
 
 
-// Glaze Card members
+// Club Card members
 let MEM = null, mFilter = "todo";
 async function memReq(body) {
   const r = await fetch("/api/members", { method: body ? "POST" : "GET", headers: { "x-host-token": PIN, "Content-Type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
@@ -582,7 +582,7 @@ $("mFind").oninput = renderMembers;
 $("mRefresh").onclick = loadMembers;
 
 
-// Glaze Pass
+// Club Pass
 function bigQr(name, pin, url) {
   const d = document.createElement("div"); d.className = "qrfull"; d.setAttribute("role", "dialog");
   d.innerHTML = `<div class="qrbox"><div class="eyebrow">Scan with your phone camera</div><h2>${DD.esc(name)}</h2><div id="bigQr"></div><p>PIN <b>${pin}</b></p><button class="btn pink" type="button">Done</button></div>`;
@@ -592,7 +592,7 @@ function bigQr(name, pin, url) {
 function waLink(phone, name, pin, amount) {
   let d = String(phone || "").replace(/\D/g, ""); if (d.length === 8) d = "974" + d;
   const link = `${DD.queueUrl()}?n=${encodeURIComponent(name)}&p=${pin}`;
-  const text = [`*${window.CC && CC.club ? CC.club.name : "Dinkin' Donut Pickleball Club"}*`, "", `Hi ${name}, thank you. ` + (amount > 0 ? `Your payment of ${DD.qar(amount)} is confirmed for tonight's session.` : "You're confirmed for tonight's session."), "", `Your queue PIN: *${pin}*`, "", "Join the queue in one tap:", link, "", "Or scan the QR code at the court and enter your name and PIN.", "This PIN is valid for tonight only.", "", "See you on court."].join("\n");
+  const text = [`*${window.CC && CC.club ? CC.club.name : "Dink Different Pickleball Club"}*`, "", `Hi ${name}, thank you. ` + (amount > 0 ? `Your payment of ${DD.qar(amount)} is confirmed for tonight's session.` : "You're confirmed for tonight's session."), "", `Your queue PIN: *${pin}*`, "", "Join the queue in one tap:", link, "", "Or scan the QR code at the court and enter your name and PIN.", "This PIN is valid for tonight only.", "", "See you on court."].join("\n");
   return `https://wa.me/${d}?text=${encodeURIComponent(text)}`;
 }
 function showPass(r) {
@@ -667,10 +667,10 @@ document.addEventListener("click", e => {
 $("hallZone").addEventListener("click", async e => {
   const z = $("hallZone");
   if (e.target.id === "hallClear") z.innerHTML = '<span class="confirm"><b>Remove all winners from the website?</b><button class="btn pink sm" id="hallYes" type="button">Yes, clear</button><button class="btn ghost sm" id="hallNo" type="button">Keep</button></span>';
-  if (e.target.id === "hallNo") z.innerHTML = '<button class="btn ghost sm" id="hallClear" type="button">Clear Hall of Glaze</button>';
+  if (e.target.id === "hallNo") z.innerHTML = '<button class="btn ghost sm" id="hallClear" type="button">Clear the Honours Board</button>';
   if (e.target.id === "hallYes") {
-    try { await DD.send({ type: "clearHall" }, PIN); toast("Hall of Glaze cleared"); } catch (x) { toast(x.message, true); }
-    z.innerHTML = '<button class="btn ghost sm" id="hallClear" type="button">Clear Hall of Glaze</button>';
+    try { await DD.send({ type: "clearHall" }, PIN); toast("Honours Board cleared"); } catch (x) { toast(x.message, true); }
+    z.innerHTML = '<button class="btn ghost sm" id="hallClear" type="button">Clear the Honours Board</button>';
   }
 });
 const RESET_BTN = '<button class="btn pink sm" id="reset" type="button">End session</button>';
@@ -695,7 +695,7 @@ function showRecap() {
     ${live ? `<p class="warn">${live} game${live > 1 ? "s are" : " is"} still in progress and won’t be counted.</p>` : ""}
     ${(() => { const ids = Object.keys(S.players), due = ids.reduce((a, id) => a + Math.max(0, payOf(id).bal), 0), got = ids.reduce((a, id) => a + payOf(id).paid, 0);
       return `<div class="paystats"><div class="got"><span>Collected</span><b>${money(got)}</b></div><div class="${due > 0 ? "due" : ""}"><span>Still owed</span><b>${money(due)}</b></div></div>`; })()}
-    <label class="row muted"><input type="checkbox" id="rPub" checked> Put the top 3 in the Hall of Glaze on the website</label>
+    <label class="row muted"><input type="checkbox" id="rPub" checked> Put the top 3 on the Honours Board on the website</label>
     <label class="row muted"><input type="checkbox" id="rClr"> Also clear tonight’s list (otherwise names stay for next session)</label>
     <p class="muted">Download the results before you reset. Resetting clears players, the queue, scores and the log for everyone.</p>
     <div class="row"><button class="btn sm" id="rCsv">Download results (CSV)</button><button class="btn sm" id="rPay">Download payments (CSV)</button><button class="btn sm ghost" id="rCopy">Copy recap for Instagram</button><a class="btn sm ghost" href="/studio#recap" target="_blank">Make recap post</a></div>
@@ -708,7 +708,7 @@ function showRecap() {
     if (id === "rCsv") $("csv").click();
     if (id === "rPay") $("payCsv").click();
     if (id === "rCopy") {
-      const txt = `${S.nightTitle} recap\n${S.games} games · ${all.length} Dinkers\n${mvp ? `Dinker of the night: ${mvp.name} (${mvp.w}W)\n` : ""}Thank you, Dinkers. See you on court.\nStay glazed. 🍩`;
+      const txt = `${S.nightTitle} recap\n${S.games} games · ${all.length} Dinkers\n${mvp ? `Dinker of the night: ${mvp.name} (${mvp.w}W)\n` : ""}Thank you, Dinkers. See you on court.\nDink different. 🍩`;
       navigator.clipboard?.writeText(txt).then(() => ev.target.textContent = "Copied ✓").catch(() => ev.target.textContent = "Copy didn’t work");
     }
     if (id === "rReset") {

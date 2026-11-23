@@ -1,4 +1,4 @@
-// Shared helpers for every Dinkin' Donut page.
+// Shared helpers for every Dink Different page.
 
 // Line icons, 24px grid, 1.75 stroke. Inherit currentColor.
 const ICON_PATHS = {
@@ -54,7 +54,7 @@ window.DD = {
     const q = qrcode(0, "M"); q.addData(text); q.make();
     el.innerHTML = q.createSvgTag({ cellSize: Math.max(2, Math.floor(size / q.getModuleCount())), margin: 0, scalable: true });
     const svg = el.querySelector("svg"); svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "QR code to " + text);
-    svg.querySelectorAll("path,rect").forEach(n => { if (n.getAttribute("fill") === "#000000") n.setAttribute("fill", "#3B2416"); if (n.getAttribute("fill") === "#ffffff") n.setAttribute("fill", "transparent"); });
+    svg.querySelectorAll("path,rect").forEach(n => { if (n.getAttribute("fill") === "#000000") n.setAttribute("fill", "#1D2840"); if (n.getAttribute("fill") === "#ffffff") n.setAttribute("fill", "transparent"); });
   },
   queueUrl: () => location.origin + (window.CC ? window.CC.base : "/queue"),
   upNext: S => S && S.upNext ? S.upNext.teams.map(t => t.map(id => S.players[id]?.name || "?")) : null,

@@ -46,7 +46,7 @@ async function withLock(fn) {
   throw new Error("The queue is busy. Try again.");
 }
 
-// Hall of Glaze: winners of past sessions, newest first, last 30 kept.
+// The Honours Board: winners of past sessions, newest first, last 30 kept.
 async function loadHall() {
   if (!hasDb()) return memOf().hall;
   const raw = await redis(["GET", K("hall")]);

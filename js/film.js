@@ -57,7 +57,7 @@
       }, 1700);
     }
     if (i === 3) {
-      var row = [["glaze", "DREW", "10", "Glaze", "Home"], ["midnight", "ANGEL", "23", "Midnight", "Tournament"], ["court", "ARAYKOH", "4", "Court", "Away"]];
+      var row = [["glaze", "DREW", "10", "Brass", "Home"], ["midnight", "ANGEL", "23", "Midnight", "Tournament"], ["court", "ARAYKOH", "4", "Court", "Away"]];
       $("fRow").innerHTML = row.map(function (r) { return "<div>" + Mockup.tee({ way: r[0], side: "back", name: r[1], num: r[2] }) + "<small>" + r[4] + "</small><b>" + r[3] + "</b></div>"; }).join("");
     }
     if (i === 5) $("fSeven").innerHTML = ["glaze", "court", "midnight", "cream", "cocoa", "sage", "blush"].map(function (w) { return Mockup.tee({ way: w, side: "front" }); }).join("");
