@@ -51,7 +51,7 @@
       "#cc-badge b{color:" + c.accent + "}#cc-badge a{background:" + c.color + ";color:#fff;text-decoration:none;font-weight:700;padding:7px 12px;border-radius:999px}" +
       "#cc-pow{position:fixed;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:70;font:600 11px 'DM Sans',system-ui,sans-serif;letter-spacing:.06em;opacity:.55;color:inherit;text-decoration:none}";
     document.querySelectorAll("img[src='/assets/logo.svg']").forEach(function (i) { i.src = logo; i.style.borderRadius = "50%"; });
-    var ic = document.querySelector("link[rel=icon]"); if (ic) ic.href = logo;
+    document.querySelectorAll("link[rel~=icon]").forEach(function (ic) { ic.href = logo; ic.removeAttribute("type"); ic.removeAttribute("sizes"); });
     document.title = document.title.replace(/Dink Different/, c.name);
     document.querySelectorAll("a[href]").forEach(function (a) {
       var h = a.getAttribute("href");
