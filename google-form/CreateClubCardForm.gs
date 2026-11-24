@@ -19,24 +19,15 @@ function createClubCardForm() {
   form
     .setTitle('The Club Card')
     .setDescription(
-      "Play six. The seventh is on the club.
-
-" +
+      "Play six. The seventh is on the club.\n\n" +
       "Sign up once and collect your Club Card at the check-in table at your next session. " +
-      "Every paid session, open play or DUPR, earns a stamp. Six stamps and your seventh game is on the club.
-
-" +
+      "Every paid session, open play or DUPR, earns a stamp. Six stamps and your seventh game is on the club.\n\n" +
       "It takes about a minute."
     )
     .setConfirmationMessage(
-      "Welcome to the club.
-
-" +
-      "Collect your Club Card at the check-in table next session and show it each time you play.
-" +
-      "Questions? WhatsApp +974 3076 3431 or DM @dinkindonutqa.
-
-Play well. Dink different."
+      "Welcome to the club.\n\n" +
+      "Collect your Club Card at the check-in table next session and show it each time you play.\n" +
+      "Questions? WhatsApp +974 3076 3431 or DM @dinkindonutqa.\n\nPlay well. Dink different."
     )
     .setProgressBar(true)
     .setAllowResponseEdits(true)
