@@ -39,7 +39,7 @@ input{font:inherit;color:#F4EFE3;background:rgba(244,239,227,.06);border:1px sol
     <label>Name<input id="name"></label><label>Role<input id="role"></label>
     <label>Phone / WhatsApp<input id="phone"></label><label>Email (optional)<input id="email" placeholder="you@…"></label>
   </div>
-  <div class="sty" id="sty"><button type="button" data-s="badge" aria-pressed="true">With the badge</button><button type="button" data-s="wordmark" aria-pressed="false">With the wordmark</button></div>
+  <div class="sty" id="sty"><button type="button" data-s="badge" aria-pressed="true">Centred · crest</button><button type="button" data-s="wordmark" aria-pressed="false">Centred · wordmark</button><button type="button" data-s="classic" aria-pressed="false">Classic · crest left</button></div>
   <div class="mail"><div class="bar">New message · how it looks at the bottom of an email</div><div class="body">Hi there,<br><br>Looking forward to seeing you on court.<br><br>Best,<br><br><div id="sig"></div></div></div>
   <div class="cta"><button class="btn" type="button" id="copy">Copy signature</button><button class="btn ghost" type="button" id="dl">Download as .html</button></div>
   <div class="how">
@@ -66,20 +66,37 @@ $("sty").onclick = function (e) { var b = e.target.closest("[data-s]"); if (!b) 
 ["name", "role", "phone", "email"].forEach(function (id) { $(id).oninput = render; });
 var esc = function (s) { return String(s || "").replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
 function sig() {
-  var n = esc($("name").value), r = esc($("role").value), ph = esc($("phone").value), em = esc($("email").value), tel = ph.replace(/[^+\d]/g, "");
-  var A = 'style="color:#1D2840;text-decoration:none"';
-  var logo = style === "badge"
-    ? '<img src="' + IMG + '/assets/email/badge.png" width="76" height="76" alt="Dink Different" style="display:block;margin:0 auto;border:0;width:76px;height:76px">'
-    : '<img src="' + IMG + '/assets/email/wordmark.png" width="230" alt="Dink Different" style="display:block;margin:0 auto;border:0;width:230px;height:auto">';
-  return '<table cellpadding="0" cellspacing="0" border="0" align="center" role="presentation" style="margin:18px auto 0;border-collapse:collapse;text-align:center;width:340px;max-width:100%;font-family:Georgia,\'Times New Roman\',serif;color:#1D2840">' +
-    '<tr><td align="center" style="padding:0 0 14px">' + logo + "</td></tr>" +
-    '<tr><td align="center" style="font-family:Georgia,serif;font-size:21px;font-weight:bold;line-height:26px;color:#1D2840">' + n + "</td></tr>" +
-    '<tr><td align="center" style="font-family:Georgia,serif;font-size:14px;font-style:italic;line-height:20px;color:#9C7A45">' + r + "</td></tr>" +
-    '<tr><td align="center" style="padding:14px 0 12px"><table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center"><tr><td width="64" height="1" style="font-size:0;line-height:0;background:#C9A86B">&nbsp;</td></tr></table></td></tr>' +
-    '<tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#1D2840;letter-spacing:.5px">' + (ph ? '<a href="https://wa.me/' + tel.replace("+", "") + '" ' + A + ">" + ph + "</a>" : "") + (ph && em ? " &nbsp;·&nbsp; " : "") + (em ? '<a href="mailto:' + em + '" ' + A + ">" + em + "</a>" : "") + "</td></tr>" +
-    '<tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#1D2840"><a href="https://instagram.com/dinkdifferentqa" ' + A + '>@dinkdifferentqa</a> &nbsp;·&nbsp; <a href="' + SITE + '" ' + A + ">dinkindonut.asia</a></td></tr>" +
-    '<tr><td align="center" style="padding-top:10px;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:16px;font-weight:bold;letter-spacing:3px;color:#9C7A45"><a href="' + RECLUB + '" style="color:#9C7A45;text-decoration:none">JOIN ON RECLUB · CODE AX3ND</a></td></tr>' +
-    '<tr><td align="center" style="padding-top:8px;font-family:Georgia,serif;font-size:13px;font-style:italic;line-height:18px;color:#1D2840">Play well. Dink different.</td></tr></table>';
+  var n = esc($("name").value), r = esc($("role").value), ph = esc($("phone").value), em = esc($("email").value), tel = ph.replace(/[^\d]/g, "");
+  var NAVY = "#1D2840", IV = "#F4EFE3", BR = "#C9A86B", MUTE = "#C9CDD8", SERIF = "Georgia,'Times New Roman',serif", SANS = "Arial,Helvetica,sans-serif";
+  var a = function (href, txt, col) { return '<a href="' + href + '" style="color:' + (col || IV) + ';text-decoration:none">' + txt + "</a>"; };
+  var contacts = [ph ? a("https://wa.me/" + tel, ph) : "", em ? a("mailto:" + em, em) : ""].filter(Boolean).join('<span style="color:' + BR + '">&nbsp;&nbsp;·&nbsp;&nbsp;</span>');
+  var web = a("https://instagram.com/dinkdifferentqa", "@dinkdifferentqa") + '<span style="color:' + BR + '">&nbsp;&nbsp;·&nbsp;&nbsp;</span>' + a(SITE, "dinkindonut.asia");
+  var rule = function (w) { return '<table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center"><tr><td width="' + w + '" height="1" bgcolor="' + BR + '" style="font-size:0;line-height:0;background:' + BR + '">&nbsp;</td></tr></table>'; };
+  if (style === "classic") {
+    return '<table cellpadding="0" cellspacing="0" border="0" role="presentation" width="520" bgcolor="' + NAVY + '" style="width:520px;max-width:100%;background:' + NAVY + ';border-collapse:separate;border:1px solid ' + BR + ';border-radius:6px;margin:16px 0 0">' +
+      '<tr><td style="padding:22px 24px" bgcolor="' + NAVY + '"><table cellpadding="0" cellspacing="0" border="0" role="presentation" width="100%"><tr>' +
+      '<td width="96" valign="middle" align="center" style="padding-right:22px"><img src="' + IMG + '/assets/email/badge.png" width="88" height="88" alt="Dink Different" style="display:block;border:0;width:88px;height:88px"></td>' +
+      '<td width="1" bgcolor="' + BR + '" style="background:' + BR + ';font-size:0;line-height:0">&nbsp;</td>' +
+      '<td valign="middle" style="padding-left:22px">' +
+        '<div style="font-family:' + SERIF + ';font-size:20px;line-height:24px;font-weight:bold;color:' + IV + '">' + n + "</div>" +
+        '<div style="font-family:' + SERIF + ';font-size:14px;line-height:20px;font-style:italic;color:' + BR + ';padding-top:2px">' + r + "</div>" +
+        '<div style="font-family:' + SANS + ';font-size:12px;line-height:19px;color:' + MUTE + ';padding-top:10px">' + (contacts ? contacts + "<br>" : "") + web + "</div>" +
+        '<div style="font-family:' + SANS + ';font-size:10px;line-height:16px;font-weight:bold;letter-spacing:2px;padding-top:8px">' + a(RECLUB, "RECLUB · CLUB CODE AX3ND", BR) + "</div>" +
+      "</td></tr></table></td></tr>" +
+      '<tr><td bgcolor="#141B2E" style="background:#141B2E;padding:9px 24px;border-radius:0 0 6px 6px;font-family:' + SERIF + ';font-size:12px;font-style:italic;color:' + BR + ';text-align:center">Dink Different Pickleball Club · Doha, Qatar · Play well. Dink different.</td></tr></table>';
+  }
+  var top = style === "wordmark"
+    ? '<img src="' + IMG + '/assets/email/wordmark-ivory.png" width="220" alt="Dink Different" style="display:block;margin:0 auto;border:0;width:220px;height:auto">'
+    : '<img src="' + IMG + '/assets/email/badge.png" width="80" height="80" alt="Dink Different" style="display:block;margin:0 auto;border:0;width:80px;height:80px">';
+  return '<table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" width="380" bgcolor="' + NAVY + '" style="width:380px;max-width:100%;margin:16px auto 0;background:' + NAVY + ';border:1px solid ' + BR + ';border-radius:6px;border-collapse:separate;text-align:center">' +
+    '<tr><td align="center" bgcolor="' + NAVY + '" style="padding:26px 26px 0;border-radius:6px 6px 0 0">' + top + "</td></tr>" +
+    '<tr><td align="center" style="padding:16px 26px 0;font-family:' + SERIF + ';font-size:21px;line-height:26px;font-weight:bold;color:' + IV + '">' + n + "</td></tr>" +
+    '<tr><td align="center" style="padding:3px 26px 0;font-family:' + SERIF + ';font-size:14px;line-height:20px;font-style:italic;color:' + BR + '">' + r + "</td></tr>" +
+    '<tr><td align="center" style="padding:16px 0 14px">' + rule(56) + "</td></tr>" +
+    (contacts ? '<tr><td align="center" style="padding:0 26px;font-family:' + SANS + ';font-size:12px;line-height:20px;color:' + MUTE + '">' + contacts + "</td></tr>" : "") +
+    '<tr><td align="center" style="padding:2px 26px 0;font-family:' + SANS + ';font-size:12px;line-height:20px;color:' + MUTE + '">' + web + "</td></tr>" +
+    '<tr><td align="center" style="padding:12px 26px 22px;font-family:' + SANS + ';font-size:10px;line-height:16px;font-weight:bold;letter-spacing:2px">' + a(RECLUB, "RECLUB · CLUB CODE AX3ND", BR) + "</td></tr>" +
+    '<tr><td align="center" bgcolor="#141B2E" style="background:#141B2E;padding:10px 26px;border-radius:0 0 6px 6px;font-family:' + SERIF + ';font-size:12px;font-style:italic;color:' + BR + '">Play well. Dink different.</td></tr></table>';
 }
 function render() { $("sig").innerHTML = sig(); }
 function toast(t) { $("toast").textContent = t; $("toast").classList.add("on"); setTimeout(function () { $("toast").classList.remove("on"); }, 2200); }
