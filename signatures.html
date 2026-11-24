@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Email Signatures · Dink Different</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/fonts.css">
+<style>
+@font-face{font-family:"DM Sans";font-weight:500;src:url(/assets/fonts/dm-sans-500.woff2)}@font-face{font-family:"DM Sans";font-weight:700;src:url(/assets/fonts/dm-sans-700.woff2)}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#2E3D60,#141B2E 60%);color:#F4EFE3;font:16px/1.5 "DM Sans",system-ui,sans-serif;min-height:100vh}
+.wrap{max-width:980px;margin:0 auto;padding:max(20px,env(safe-area-inset-top)) 16px 80px}
+header{display:flex;gap:14px;align-items:center}header img{width:44px}
+h1{font:800 clamp(32px,6vw,50px)/1 Fraunces,Georgia,serif;font-variation-settings:"SOFT" 100;margin:0}h1 i{color:#C9A86B;font-weight:700}
+.k{font:700 11px "DM Sans";letter-spacing:.32em;text-transform:uppercase;color:#C9A86B}
+p.lead{color:rgba(244,239,227,.75);margin:14px 0 26px;max-width:60ch}
+.who{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}.who button,.sty button{border:1px solid rgba(201,168,107,.5);background:transparent;color:inherit;font:700 14px "DM Sans";padding:10px 16px;border-radius:999px;cursor:pointer}
+.who button[aria-pressed=true],.sty button[aria-pressed=true]{background:#C9A86B;color:#141B2E}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+label{display:grid;gap:6px;font-size:13px;color:rgba(244,239,227,.7)}
+input{font:inherit;color:#F4EFE3;background:rgba(244,239,227,.06);border:1px solid rgba(201,168,107,.35);border-radius:12px;padding:12px 14px}
+.sty{display:flex;gap:8px;margin:18px 0}
+.mail{margin-top:10px;background:#fff;color:#222;border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.mail .bar{background:#F1F3F4;padding:12px 18px;font:500 13px system-ui;color:#5F6368;border-bottom:1px solid #E3E3E3}
+.mail .body{padding:28px 22px 40px;font:15px/1.6 Arial,sans-serif;color:#202124}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btn{border:0;border-radius:999px;padding:15px 24px;font:700 15px "DM Sans";cursor:pointer;background:#C9A86B;color:#141B2E}.btn.ghost{background:transparent;color:#F4EFE3;box-shadow:inset 0 0 0 1.5px rgba(201,168,107,.6)}
+.how{margin-top:34px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.how div{border:1px solid rgba(201,168,107,.3);border-radius:16px;padding:16px 18px;font-size:14px;color:rgba(244,239,227,.8)}.how b{display:block;color:#F4EFE3;font:800 18px Fraunces,serif;font-variation-settings:"SOFT" 100;margin-bottom:6px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#C9A86B;color:#141B2E;font-weight:700;padding:12px 20px;border-radius:999px;opacity:0;transition:.3s}.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><img src="/assets/brand/mark-ivory.svg" alt=""><div><div class="k">The Committee</div><h1>Email <i>signatures</i></h1></div></header>
+  <p class="lead">Choose a person or type your details, tap <b>Copy signature</b>, then paste it into your email app's signature settings. It's centred, works in Gmail, Outlook and Apple Mail, and the images load from dinkindonut.asia.</p>
+  <div class="who" id="who"></div>
+  <div class="grid">
+    <label>Name<input id="name"></label><label>Role<input id="role"></label>
+    <label>Phone / WhatsApp<input id="phone"></label><label>Email (optional)<input id="email" placeholder="you@…"></label>
+  </div>
+  <div class="sty" id="sty"><button type="button" data-s="badge" aria-pressed="true">With the badge</button><button type="button" data-s="wordmark" aria-pressed="false">With the wordmark</button></div>
+  <div class="mail"><div class="bar">New message · how it looks at the bottom of an email</div><div class="body">Hi there,<br><br>Looking forward to seeing you on court.<br><br>Best,<br><br><div id="sig"></div></div></div>
+  <div class="cta"><button class="btn" type="button" id="copy">Copy signature</button><button class="btn ghost" type="button" id="dl">Download as .html</button></div>
+  <div class="how">
+    <div><b>Gmail</b>Settings (the gear) → See all settings → General → Signature → Create new → paste → Save changes at the bottom.</div>
+    <div><b>Outlook</b>Settings → Mail → Compose and reply → Email signature → paste → Save.</div>
+    <div><b>Apple Mail (Mac)</b>Mail → Settings → Signatures → + → paste. Untick “Always match my default message font”.</div>
+    <div><b>iPhone Mail</b>Settings → Mail → Signature → paste, then shake the phone and choose Undo once if the formatting gets stripped.</div>
+  </div>
+</div>
+<div class="toast" id="toast">Copied. Paste it into your signature settings.</div>
+<script>
+var SITE = "https://dinkindonut.asia", RECLUB = "https://reclub.co/clubs/@dink-different-cyuiuw?at=N7OIK377";
+var PEOPLE = [
+  { n: "Drew Nolasco", r: "Organiser · The Committee", p: "+974 3076 3431", e: "" },
+  { n: "Angel Flores", r: "Organiser · The Committee", p: "+974 3072 3503", e: "" },
+  { n: "Court Captain", r: "Court Captain · The Committee", p: "+974 3076 3431", e: "" },
+  { n: "Dink Different", r: "Pickleball Club · Doha, Qatar", p: "+974 3076 3431", e: "" },
+];
+var $ = function (id) { return document.getElementById(id); }, style = "badge";
+$("who").innerHTML = PEOPLE.map(function (p, i) { return '<button type="button" data-i="' + i + '" aria-pressed="' + (i === 0) + '">' + p.n + "</button>"; }).join("");
+function load(i) { var p = PEOPLE[i]; $("name").value = p.n; $("role").value = p.r; $("phone").value = p.p; $("email").value = p.e; render(); document.querySelectorAll("#who button").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.i == i); }); }
+$("who").onclick = function (e) { var b = e.target.closest("[data-i]"); if (b) load(+b.dataset.i); };
+$("sty").onclick = function (e) { var b = e.target.closest("[data-s]"); if (!b) return; style = b.dataset.s; document.querySelectorAll("#sty button").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); render(); };
+["name", "role", "phone", "email"].forEach(function (id) { $(id).oninput = render; });
+var esc = function (s) { return String(s || "").replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+function sig() {
+  var n = esc($("name").value), r = esc($("role").value), ph = esc($("phone").value), em = esc($("email").value), tel = ph.replace(/[^+\d]/g, "");
+  var A = 'style="color:#1D2840;text-decoration:none"';
+  var logo = style === "badge"
+    ? '<img src="' + SITE + '/assets/email/badge.png" width="76" height="76" alt="Dink Different" style="display:block;margin:0 auto;border:0;width:76px;height:76px">'
+    : '<img src="' + SITE + '/assets/email/wordmark.png" width="230" alt="Dink Different" style="display:block;margin:0 auto;border:0;width:230px;height:auto">';
+  return '<table cellpadding="0" cellspacing="0" border="0" align="center" role="presentation" style="margin:0 auto;border-collapse:collapse;text-align:center;font-family:Georgia,\'Times New Roman\',serif;color:#1D2840">' +
+    '<tr><td align="center" style="padding:0 0 12px">' + logo + "</td></tr>" +
+    '<tr><td align="center" style="font-family:Georgia,serif;font-size:21px;font-weight:bold;line-height:26px;color:#1D2840">' + n + "</td></tr>" +
+    '<tr><td align="center" style="font-family:Georgia,serif;font-size:14px;font-style:italic;line-height:20px;color:#9C7A45">' + r + "</td></tr>" +
+    '<tr><td align="center" style="padding:12px 0"><table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center"><tr><td width="64" height="1" style="font-size:0;line-height:0;background:#C9A86B">&nbsp;</td></tr></table></td></tr>' +
+    '<tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#1D2840;letter-spacing:.5px">' + (ph ? '<a href="https://wa.me/' + tel.replace("+", "") + '" ' + A + ">" + ph + "</a>" : "") + (ph && em ? " &nbsp;·&nbsp; " : "") + (em ? '<a href="mailto:' + em + '" ' + A + ">" + em + "</a>" : "") + "</td></tr>" +
+    '<tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#1D2840"><a href="https://instagram.com/dinkdifferentqa" ' + A + '>@dinkdifferentqa</a> &nbsp;·&nbsp; <a href="' + SITE + '" ' + A + ">dinkindonut.asia</a></td></tr>" +
+    '<tr><td align="center" style="padding-top:8px;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:16px;font-weight:bold;letter-spacing:3px;color:#9C7A45"><a href="' + RECLUB + '" style="color:#9C7A45;text-decoration:none">JOIN ON RECLUB · CODE AX3ND</a></td></tr>' +
+    '<tr><td align="center" style="padding-top:6px;font-family:Georgia,serif;font-size:13px;font-style:italic;line-height:18px;color:#1D2840">Play well. Dink different.</td></tr></table>';
+}
+function render() { $("sig").innerHTML = sig(); }
+function toast(t) { $("toast").textContent = t; $("toast").classList.add("on"); setTimeout(function () { $("toast").classList.remove("on"); }, 2200); }
+$("copy").onclick = function () { var h = sig();
+  if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([h], { type: "text/html" }), "text/plain": new Blob([$("name").value + "\n" + $("role").value + "\nDink Different · dinkindonut.asia"], { type: "text/plain" }) })]).then(function () { toast("Copied. Paste it into your signature settings."); }, fallback);
+  else fallback();
+  function fallback() { var r = document.createRange(); r.selectNode($("sig")); var s = getSelection(); s.removeAllRanges(); s.addRange(r); try { document.execCommand("copy"); toast("Copied. Paste it into your signature settings."); } catch (e) { toast("Select the signature and copy it."); } s.removeAllRanges(); } };
+$("dl").onclick = function () { var b = new Blob(['<!doctype html><meta charset="utf-8"><body style="margin:24px">' + sig() + "</body>"], { type: "text/html" }), a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "signature-" + ($("name").value || "dink-different").toLowerCase().replace(/\W+/g, "-") + ".html"; a.click(); };
+load(0);
+</script>
+</body>
+</html>
