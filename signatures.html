@@ -39,7 +39,8 @@ input{font:inherit;color:#F4EFE3;background:rgba(244,239,227,.06);border:1px sol
     <label>Name<input id="name"></label><label>Role<input id="role"></label>
     <label>Phone / WhatsApp<input id="phone"></label><label>Email (optional)<input id="email" placeholder="you@…"></label>
   </div>
-  <div class="sty" id="sty"><button type="button" data-s="badge" aria-pressed="true">Centred · crest</button><button type="button" data-s="wordmark" aria-pressed="false">Centred · wordmark</button><button type="button" data-s="classic" aria-pressed="false">Classic · crest left</button></div>
+  <div class="sty" id="sty"><button type="button" data-s="badge" aria-pressed="true">Centred · crest</button><button type="button" data-s="wordmark" aria-pressed="false">Centred · wordmark</button><button type="button" data-s="classic" aria-pressed="false">Classic · crest left</button><button type="button" data-s="banner" aria-pressed="false">Banner · hello</button></div>
+  <div id="bannerOpts" hidden style="margin:-4px 0 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center"><label class="btn ghost" style="cursor:pointer">Add your photo<input type="file" id="photo" accept="image/*" hidden></label><button class="btn ghost" type="button" id="noPhoto">Use the crest</button><button class="btn" type="button" id="png">Download banner (PNG)</button><span style="font-size:13px;color:rgba(244,239,227,.65)">Square photos work best and stay on your device. With your own photo: download the PNG, then insert it as an image in your email signature settings and link it to dinkindonut.asia.</span></div>
   <div class="mail"><div class="bar">New message · how it looks at the bottom of an email</div><div class="body">Hi there,<br><br>Looking forward to seeing you on court.<br><br>Best,<br><br><div id="sig"></div></div></div>
   <div class="cta"><button class="btn" type="button" id="copy">Copy signature</button><button class="btn ghost" type="button" id="dl">Download as .html</button></div>
   <div class="how">
@@ -65,13 +66,58 @@ $("who").onclick = function (e) { var b = e.target.closest("[data-i]"); if (b) l
 $("sty").onclick = function (e) { var b = e.target.closest("[data-s]"); if (!b) return; style = b.dataset.s; document.querySelectorAll("#sty button").forEach(function (x) { x.setAttribute("aria-pressed", x === b); }); render(); };
 ["name", "role", "phone", "email"].forEach(function (id) { $(id).oninput = render; });
 var esc = function (s) { return String(s || "").replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+
+// ---------- Banner signature: a wide navy card in the style of a personal letterhead ----------
+var photoImg = null, crestImg = new Image(); crestImg.src = "/assets/logo.svg";
+var ML = new Path2D("M96 44H76a56 56 0 0 0 0 112h20zM81 62h-5a27 38 0 0 0 0 76h5z"), MR = new Path2D("M104 44h20a56 56 0 0 1 0 112h-20zM119 62h5a27 38 0 0 1 0 76h-5z");
+function bannerCanvas() {
+  var W = 1200, H = 300, c = document.createElement("canvas"); c.width = W; c.height = H; var x = c.getContext("2d");
+  var g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, "#26334F"); g.addColorStop(1, "#141B2E"); x.fillStyle = g; x.fillRect(0, 0, W, H);
+  var rg = x.createRadialGradient(420, 40, 0, 420, 40, 620); rg.addColorStop(0, "rgba(60,80,120,.45)"); rg.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = rg; x.fillRect(0, 0, W, H);
+  // the giant Different D, bleeding off the left edge
+  x.save(); x.translate(-150, -44); x.scale(2.35, 2.35); x.fillStyle = "#F4EFE3"; x.fill(ML, "evenodd"); x.fill(MR, "evenodd");
+  x.strokeStyle = "#C9A86B"; x.lineWidth = 2.4; x.lineCap = "round"; x.beginPath(); x.moveTo(100, 36); x.lineTo(100, 164); x.stroke();
+  x.setLineDash([1.6, 4.6]); x.lineWidth = 1.4; x.beginPath(); x.moveTo(60, 30); x.quadraticCurveTo(98, 0, 130, 28); x.stroke(); x.setLineDash([]);
+  x.fillStyle = "#E3CF7E"; x.beginPath(); x.arc(134, 32, 8.5, 0, 7); x.fill(); x.restore();
+  var name = ($("name").value || "").trim(), first = name.split(/\s+/)[0] || "there", club = /^dink different$/i.test(name);
+  var T = function (t, X, Y, f, col, al) { x.font = f; x.fillStyle = col; x.textAlign = al || "left"; x.fillText(t, X, Y); };
+  // greeting
+  T("Hello,", 300, 118, "800 62px Fraunces", "#F4EFE3");
+  var l2a = club ? "from " : "I’m ", l2b = club ? "the club." : first + ".", fs = 62; x.font = "italic 700 " + fs + "px Fraunces";
+  while (fs > 40 && (x.measureText(l2a).width + x.measureText(l2b).width) > 330) { fs -= 2; x.font = "italic 700 " + fs + "px Fraunces"; }
+  T(l2a, 300, 186, "800 " + fs + "px Fraunces", "#F4EFE3"); var w1 = (x.font = "800 " + fs + "px Fraunces", x.measureText(l2a).width); T(l2b, 300 + w1, 186, "italic 700 " + fs + "px Fraunces", "#C9A86B");
+  // role pill
+  var role = ($("role").value || "").toUpperCase(); x.font = "700 13px 'DM Sans'"; try { x.letterSpacing = "2.5px"; } catch (e) {}
+  var pw = Math.min(330, x.measureText(role).width + 58); x.strokeStyle = "rgba(201,168,107,.75)"; x.lineWidth = 1.5; x.beginPath(); x.roundRect(300, 214, pw, 34, 17); x.stroke();
+  x.fillStyle = "#C9A86B"; x.beginPath(); x.arc(320, 231, 5, 0, 7); x.fill(); T(role, 334, 236, "700 13px 'DM Sans'", "#F4EFE3"); try { x.letterSpacing = "0px"; } catch (e) {}
+  // divider + details
+  x.fillStyle = "rgba(201,168,107,.55)"; x.fillRect(660, 70, 1.5, 160);
+  var rows = [["N:", club ? "Dink Different Pickleball Club" : (name || "Your Name")], ["P:", $("phone").value || "+974 3076 3431"], ["A:", "Doha, Qatar"], ["W:", "dinkindonut.asia"]];
+  rows.forEach(function (r, i) { var Y = 96 + i * 42; T(r[0], 690, Y, "700 19px 'DM Sans'", "#C9A86B"); x.font = "500 19px 'DM Sans'"; var v = r[1]; while (x.measureText(v).width > 290 && v.length > 4) v = v.slice(0, -2) + "…"; T(v, 728, Y, "500 19px 'DM Sans'", "#F4EFE3"); });
+  // circle: photo or crest
+  var cx = 1100, cy = 150, R = 86; x.save(); x.beginPath(); x.arc(cx, cy, R, 0, 7); x.closePath(); x.clip();
+  if (photoImg) { var sc = Math.max(2 * R / photoImg.width, 2 * R / photoImg.height); x.drawImage(photoImg, cx - photoImg.width * sc / 2, cy - photoImg.height * sc / 2, photoImg.width * sc, photoImg.height * sc); }
+  else if (crestImg.complete) x.drawImage(crestImg, cx - R, cy - R, 2 * R, 2 * R);
+  x.restore(); x.strokeStyle = "#C9A86B"; x.lineWidth = 3; x.beginPath(); x.arc(cx, cy, R + 7, 0, 7); x.stroke();
+  // bottom rule
+  x.fillStyle = "#C9A86B"; x.fillRect(0, H - 8, W, 8);
+  return c;
+}
+function bannerFile() { var n = ($("name").value || "").toLowerCase(); return /drew/.test(n) ? "drew" : /angel/.test(n) ? "angel" : /^dink different$/.test(n) ? "club" : ""; }
 function sig() {
   var n = esc($("name").value), r = esc($("role").value), ph = esc($("phone").value), em = esc($("email").value), tel = ph.replace(/[^\d]/g, "");
-  var NAVY = "#1D2840", IV = "#F4EFE3", BR = "#C9A86B", MUTE = "#C9CDD8", SERIF = "Georgia,'Times New Roman',serif", SANS = "Arial,Helvetica,sans-serif";
+  var keepLocal = !!window._keepLocal, NAVY = "#1D2840", IV = "#F4EFE3", BR = "#C9A86B", MUTE = "#C9CDD8", SERIF = "Georgia,'Times New Roman',serif", SANS = "Arial,Helvetica,sans-serif";
   var a = function (href, txt, col) { return '<a href="' + href + '" style="color:' + (col || IV) + ';text-decoration:none">' + txt + "</a>"; };
   var contacts = [ph ? a("https://wa.me/" + tel, ph) : "", em ? a("mailto:" + em, em) : ""].filter(Boolean).join('<span style="color:' + BR + '">&nbsp;&nbsp;·&nbsp;&nbsp;</span>');
   var web = a("https://instagram.com/dinkdifferentqa", "@dinkdifferentqa") + '<span style="color:' + BR + '">&nbsp;&nbsp;·&nbsp;&nbsp;</span>' + a(SITE, "dinkindonut.asia");
   var rule = function (w) { return '<table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center"><tr><td width="' + w + '" height="1" bgcolor="' + BR + '" style="font-size:0;line-height:0;background:' + BR + '">&nbsp;</td></tr></table>'; };
+  if (style === "banner") {
+    var hosted = !photoImg && bannerFile() && !keepLocal ? IMG + "/assets/email/banner-" + bannerFile() + ".png" : (window._bannerURL || "");
+    var img = '<img src="' + (hosted || bannerCanvas().toDataURL("image/png")) + '" width="600" alt="' + n + ' · Dink Different" style="display:block;width:600px;max-width:100%;height:auto;border:0;border-radius:6px">';
+    return '<table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" width="600" style="width:600px;max-width:100%;margin:16px auto 0;border-collapse:collapse">' +
+      '<tr><td><a href="' + SITE + '" style="text-decoration:none">' + img + "</a></td></tr>" +
+      '<tr><td align="center" style="padding:10px 0 0;font-family:' + SANS + ';font-size:12px;line-height:18px;color:' + NAVY + '">' + (ph ? a("https://wa.me/" + tel, "WhatsApp " + ph, NAVY) + "&nbsp;&nbsp;·&nbsp;&nbsp;" : "") + a("https://instagram.com/dinkdifferentqa", "@dinkdifferentqa", NAVY) + "&nbsp;&nbsp;·&nbsp;&nbsp;" + a(RECLUB, "Reclub code AX3ND", "#9C7A45") + "</td></tr></table>";
+  }
   if (style === "classic") {
     return '<table cellpadding="0" cellspacing="0" border="0" role="presentation" width="520" bgcolor="' + NAVY + '" style="width:520px;max-width:100%;background:' + NAVY + ';border-collapse:separate;border:1px solid ' + BR + ';border-radius:6px;margin:16px 0 0">' +
       '<tr><td style="padding:22px 24px" bgcolor="' + NAVY + '"><table cellpadding="0" cellspacing="0" border="0" role="presentation" width="100%"><tr>' +
@@ -98,7 +144,12 @@ function sig() {
     '<tr><td align="center" style="padding:12px 26px 22px;font-family:' + SANS + ';font-size:10px;line-height:16px;font-weight:bold;letter-spacing:2px">' + a(RECLUB, "RECLUB · CLUB CODE AX3ND", BR) + "</td></tr>" +
     '<tr><td align="center" bgcolor="#141B2E" style="background:#141B2E;padding:10px 26px;border-radius:0 0 6px 6px;font-family:' + SERIF + ';font-size:12px;font-style:italic;color:' + BR + '">Play well. Dink different.</td></tr></table>';
 }
-function render() { $("sig").innerHTML = sig(); }
+function render() { $("bannerOpts").hidden = style !== "banner"; $("sig").innerHTML = sig(); }
+$("photo").onchange = function (e) { var f = e.target.files[0]; if (!f) return; var im = new Image(); im.onload = function () { photoImg = im; render(); }; im.src = URL.createObjectURL(f); };
+$("noPhoto").onclick = function () { photoImg = null; $("photo").value = ""; render(); };
+$("png").onclick = function () { bannerCanvas().toBlob(function (b) { var a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "dink-different-signature-" + (($("name").value || "banner").toLowerCase().replace(/\W+/g, "-")) + ".png"; a.click(); }, "image/png"); };
+crestImg.onload = function () { render(); };
+if (document.fonts && document.fonts.load) Promise.all([document.fonts.load("800 40px Fraunces"), document.fonts.load("italic 700 40px Fraunces"), document.fonts.load("700 16px 'DM Sans'"), document.fonts.load("500 16px 'DM Sans'")]).then(render);
 function toast(t) { $("toast").textContent = t; $("toast").classList.add("on"); setTimeout(function () { $("toast").classList.remove("on"); }, 2200); }
 $("copy").onclick = function () { var keep = IMG; IMG = SITE; var h = sig(); IMG = keep;
   if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([h], { type: "text/html" }), "text/plain": new Blob([$("name").value + "\n" + $("role").value + "\nDink Different · dinkindonut.asia"], { type: "text/plain" }) })]).then(function () { toast("Copied. Paste it into your signature settings."); }, fallback);
