@@ -30,7 +30,8 @@ WhatsApp only allows automatic messages through Meta's WhatsApp Business Platfor
 ## 4. Create the PIN message template
 **WhatsApp Manager → Message templates → Create template**
 - Category: **Utility**
-- Name: `glaze_pass`
+- Name: `club_pass`
+  (Already approved `glaze_pass` earlier? It keeps working. Create `club_pass` with the text below, and once Meta approves it, change `WA_TEMPLATE` in Vercel to `club_pass`.)
 - Language: **English**
 - Header (text): `Dink Different Pickleball Club`
 - Body:
@@ -43,7 +44,7 @@ Join the queue in one tap: {{4}}
 
 Or scan the QR code at the court and enter your name and PIN. This PIN is valid for tonight only.
 ```
-- Footer: `See you on court.`
+- Footer: `Play well. Dink different.`
 - Sample values: `Drew`, `50 QAR`, `405`, `https://dinkindonut.asia/queue?n=Drew&p=405`
 
 Submit. Utility templates are usually approved within minutes to a few hours.
@@ -51,7 +52,7 @@ Submit. Utility templates are usually approved within minutes to a few hours.
 ## 5. Turn on the assistant (webhook)
 1. App → **WhatsApp → Configuration → Webhook → Edit**.
 2. Callback URL: `https://dinkindonut.asia/api/whatsapp`
-3. Verify token: make up a phrase, e.g. `glaze-2026` (this is `WA_VERIFY_TOKEN`). Add it to Vercel **first** (step 6) and redeploy, then click **Verify and save**.
+3. Verify token: make up a phrase, e.g. `club-2026` (this is `WA_VERIFY_TOKEN`). Add it to Vercel **first** (step 6) and redeploy, then click **Verify and save**.
 4. Under **Webhook fields**, subscribe to **messages**.
 
 ## 6. Add the settings in Vercel
@@ -61,7 +62,7 @@ Settings → Environment Variables (Production), then **Redeploy**:
 |---|---|
 | `WA_TOKEN` | token from step 3 |
 | `WA_PHONE_ID` | Phone number ID from step 2 |
-| `WA_TEMPLATE` | `glaze_pass` |
+| `WA_TEMPLATE` | `club_pass` |
 | `WA_LANG` | `en` |
 | `WA_VERIFY_TOKEN` | your phrase from step 5 |
 

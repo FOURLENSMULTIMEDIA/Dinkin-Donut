@@ -16,7 +16,7 @@
 .page{padding-block:24px 60px;display:grid;gap:20px}
 .me{background:var(--deep);color:var(--cream);border-radius:28px;padding:26px;display:grid;gap:14px}
 .me h1{font-size:clamp(30px,6vw,46px)}
-.me h1 span{color:var(--ball)}
+.me h1 span{font-style:italic;font-weight:700;color:#C9A86B}
 .me form{display:flex;gap:10px;flex-wrap:wrap}
 .me input{flex:1 1 200px;font-size:18px}
 .levels{border:0;padding:0;margin:4px 0 0;display:flex;gap:8px;flex-wrap:wrap;width:100%}
@@ -135,7 +135,7 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
   <section class="panel" id="standings"><h2>Live standings <span class="muted" style="font:500 13px var(--body)">Wins, then win %</span></h2>
     <div class="tablewrap"><table><thead><tr><th>#</th><th>Dinker</th><th class="r">W</th><th class="r">L</th><th class="r">Win %</th><th class="r">+/-</th><th class="r">Streak</th></tr></thead><tbody id="table"></tbody></table></div>
   </section>
-  <a class="panel gcpromo" id="gcPromo" href="/loyalty" hidden><img src="/assets/loyalty/card-front.png" alt=""><span><b>Not a Club Card member yet?</b>Sign up free. Six stamps and your 7th session is on us.</span><span class="btn pink sm">Sign up</span></a>
+  <a class="panel gcpromo" id="gcPromo" href="/loyalty" hidden><img src="/assets/loyalty/card-front.png" alt=""><span><b>Not a Club Card member yet?</b>Sign up free. Six stamps and your seventh session is on the club.</span><span class="btn pink sm">Sign up</span></a>
   <a class="panel" href="/dupr" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--court);color:#F4EFE3;border:0"><span><b style="font:700 22px var(--display)">Want rated games?</b><br>DUPR sessions are booked on Reclub.</span><span class="btn lime sm">DUPR games →</span></a>
   <section class="panel"><h2>Game log</h2><ul class="log" id="log"></ul></section>
 </main>

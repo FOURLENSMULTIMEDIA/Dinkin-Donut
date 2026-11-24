@@ -13,7 +13,7 @@
   var uid = 0;
   // 1 of 1: a pattern seed and a short code derived from the name, so every personalised shirt is unique
   function seed(str) {
-    var h = 2166136261 >>> 0, t = String(str || "DINKIN").toUpperCase();
+    var h = 2166136261 >>> 0, t = String(str || "DINK").toUpperCase();
     for (var i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
     var a = h || 1, rng = function () { a ^= a << 13; a >>>= 0; a ^= a >> 17; a ^= a << 5; a >>>= 0; return a / 4294967296; };
     return { rng: rng, code: "DD-" + (h >>> 16).toString(16).toUpperCase().padStart(4, "0") };

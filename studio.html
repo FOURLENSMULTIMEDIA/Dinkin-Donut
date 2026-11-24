@@ -164,7 +164,7 @@ const TPL = {
     caption: v => `The Club Jersey is here.\n\nYour name, your number, club-made. Three colourways: Brass, Court and Midnight. Built for open play and tournament day.\n\nPre-order now · ${v.price}\nBuild yours: link in bio, or DM us.\n\nDink different.\n\n${TAGS} #PickleballJersey`,
   },
   card: {
-    fields: () => [["head", "Headline", "Play 6. The 7th is on us."], ["sub", "Line under it", "Open play and DUPR games both count."]],
+    fields: () => [["head", "Headline", "Play six. The seventh is on the club."], ["sub", "Line under it", "Open play and DUPR games both count."]],
     draw: async v => {
       rr(0, 0, 1080, 1350, 0, COL.cream); brand(false); sprinkles(3, [60, 1000, 960, 160]);
       const [a, b] = v.head.split(". "); txt(a + (b ? "." : ""), 70, 330, { size: 120, max: 940 }); if (b) txt(b, 70, 460, { size: 92, color: COL.court, max: 940 });

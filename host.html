@@ -287,7 +287,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
       <button class="btn ghost sm" id="mRefresh" type="button">Refresh</button>
     </div>
     <ul class="mlist" id="mList"></ul>
-    <p class="muted" id="mHelp" hidden>No sign-ups yet. Connect the Google Form with <code>google-form/GlazeCardSync.gs</code> (see SETUP.md) and new sign-ups appear here automatically.</p>
+    <p class="muted" id="mHelp" hidden>No sign-ups yet. Connect the Google Form with <code>google-form/ClubCardSync.gs</code> (see SETUP.md) and new sign-ups appear here automatically.</p>
   </section>
 
   <section class="panel">
@@ -533,7 +533,7 @@ $("payCsv").onclick = () => {
   const rows = [["Player", "Checked in", "Fee", "Paid", "Cash", "Fawran", "Card", "Balance", "Status", "References"],
     ...Object.keys(S.players).map(id => { const p = payOf(id); return [S.players[id].name, S.players[id].in ? "yes" : "no", p.fee, p.paid, p.cash, p.fawran, p.card, p.bal, STATUS[p.status], p.r.items.map(i => i.ref).filter(Boolean).join(" ")]; })];
   const blob = new Blob([rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n")], { type: "text/csv" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dinkin-payments-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `dink-different-payments-${new Date().toISOString().slice(0, 10)}.csv`; a.click();
 };
 
 

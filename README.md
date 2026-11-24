@@ -44,7 +44,7 @@ HOST_PIN=yourpin npm run dev   # http://localhost:3000 , in-memory queue
 ## How the queue works
 - Players join at the back. Open courts take the next 4 (doubles) or 2 (singles).
 - After a game the losers go to the back. **Winners stay a maximum of 2 games** (kitchen rule #2; changeable in the host console), then rotate.
-- Standings: wins → win % → point difference. Players' phones buzz + sprinkle when they're up next or called to a court.
+- Standings: wins → win % → point difference. Players' phones buzz, and they get an engraved court invitation when they're called.
 - **End session** (host console) shows the night recap: games, Dinker of the night, best point difference, most games. Download the CSV or copy an Instagram recap, then reset for the next session.
 
 ## Auto-deploy

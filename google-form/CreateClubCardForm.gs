@@ -2,7 +2,8 @@
  * Dink Different — Club Card loyalty sign-up form.
  *
  * Creates the Google Form, its response spreadsheet and the branded imagery in one run.
- * Usage: script.google.com → New project → paste this file → Run `createGlazeCardForm`.
+ * Usage: script.google.com → New project → paste this file → Run `createClubCardForm`.
+ * Already have the old form? Run `rebrandExistingForm` instead: it keeps every response and updates the text and card image.
  * Authorise when prompted. The form and sheet links are printed in the execution log.
  */
 
@@ -12,28 +13,37 @@ const IMG = {
   card: SITE + '/assets/loyalty/form-card-preview.png',
 };
 
-function createGlazeCardForm() {
+function createClubCardForm() {
   const form = FormApp.create("Dink Different · Club Card Sign-up");
 
   form
     .setTitle('The Club Card')
     .setDescription(
-      "Play 6 sessions, get the 7th free.\n\n" +
-      "Sign up once and collect your Club Card at the check-in table on your next session. " +
-      "You get one stamp for every paid session, open play or DUPR. Six stamps unlock a free session.\n\n" +
-      "Takes about a minute."
+      "Play six. The seventh is on the club.
+
+" +
+      "Sign up once and collect your Club Card at the check-in table at your next session. " +
+      "Every paid session, open play or DUPR, earns a stamp. Six stamps and your seventh game is on the club.
+
+" +
+      "It takes about a minute."
     )
     .setConfirmationMessage(
-      "You're in. Welcome to the Club Card.\n\n" +
-      "Pick up your card at the check-in table next session and show it each time you play.\n" +
-      "Questions? WhatsApp +974 3076 3431 or DM @dinkindonutqa.\n\nDink different."
+      "Welcome to the club.
+
+" +
+      "Collect your Club Card at the check-in table next session and show it each time you play.
+" +
+      "Questions? WhatsApp +974 3076 3431 or DM @dinkindonutqa.
+
+Play well. Dink different."
     )
     .setProgressBar(true)
     .setAllowResponseEdits(true)
     .setShowLinkToRespondAgain(false)
     .setCollectEmail(false);
 
-  addImage_(form, IMG.card, 'Your Club Card', 'Front and back. Six stamps, then your seventh session is on us.');
+  addImage_(form, IMG.card, 'Your Club Card', 'Front and back. Six stamps, then your seventh session is on the club.');
 
   // About you
   form.addSectionHeaderItem().setTitle('About you');
@@ -61,7 +71,7 @@ function createGlazeCardForm() {
     .setChoiceValues(['Doha', 'Al Rayyan', 'Lusail', 'Al Wakrah', 'Al Daayen', 'Umm Salal', 'Al Khor', 'Other']);
 
   // Your game
-  form.addPageBreakItem().setTitle('Your game').setHelpText('Helps our court captains build balanced games.');
+  form.addPageBreakItem().setTitle('Your game').setHelpText('Helps our court captains build fair, friendly games.');
 
   form.addMultipleChoiceItem()
     .setTitle('How would you describe your level?')
@@ -147,4 +157,38 @@ function styleSheet_(ss) {
     .setBackground('#3B2416').setFontColor('#FFF6EA').setFontWeight('bold').setFontFamily('DM Sans');
   sh.getRange(2, last - 1, 500, 1).insertCheckboxes();
   sh.setColumnWidths(1, last, 170);
+}
+
+
+/**
+ * Rebrand the form you already have, without losing a single response.
+ * Paste your form's edit link below, then Run `rebrandExistingForm`.
+ * Header image: Google does not allow scripts to change it, so in the form click the palette icon
+ * (Customise theme) → Header → Choose image → Upload → assets/loyalty/form-header.png,
+ * and set the theme colour to #1D2840 (navy) and the background to #EDE4D3 (beige).
+ */
+const EXISTING_FORM_URL = 'PASTE-YOUR-FORM-EDIT-LINK-HERE';
+
+function rebrandExistingForm() {
+  const form = FormApp.openByUrl(EXISTING_FORM_URL);
+  form.setTitle('The Club Card')
+    .setDescription(
+      "Play six. The seventh is on the club.\n\n" +
+      "Sign up once and collect your Club Card at the check-in table at your next session. " +
+      "Every paid session, open play or DUPR, earns a stamp. Six stamps and your seventh game is on the club.\n\n" +
+      "It takes about a minute."
+    )
+    .setConfirmationMessage(
+      "Welcome to the club.\n\n" +
+      "Collect your Club Card at the check-in table next session and show it each time you play.\n" +
+      "Questions? WhatsApp +974 3076 3431 or DM @dinkindonutqa.\n\nPlay well. Dink different."
+    );
+  // Swap the old card picture for the new Club Card
+  form.getItems(FormApp.ItemType.IMAGE).forEach(function (it) { form.deleteItem(it); });
+  const img = form.addImageItem()
+    .setImage(UrlFetchApp.fetch(IMG.card))
+    .setTitle('Your Club Card')
+    .setHelpText('Front and back. Six stamps, then your seventh session is on the club.');
+  form.moveItem(img.getIndex(), 0);
+  Logger.log('Rebranded: ' + form.getPublishedUrl());
 }

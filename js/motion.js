@@ -32,7 +32,7 @@
       io.observe(h);
     });
 
-    // Hero donut leans toward the pointer (desktop)
+    // Hero badge leans toward the pointer (desktop)
     var mark = document.querySelector(".hero .mark img");
     if (mark && matchMedia("(hover: hover)").matches) {
       var tx = 0, ty = 0, x = 0, y = 0, raf = 0;

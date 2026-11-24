@@ -6,7 +6,7 @@
   $("fPrice").textContent = price + " QAR";
   var SHOTS = [3200, 2600, 5200, 3800, 3200, 4200, 4200, 5000, 4000, 3800], TOTAL = SHOTS.reduce(function (a, b) { return a + b; }, 0);
   // Soundtrack: "Trailer" by nastelbom (Pixabay Content License), cut so the drop lands on the lineup reveal.
-  var music = new Audio("/assets/audio/glaze-film.mp3"); music.preload = "auto"; music.volume = 0.85;
+  var music = new Audio("/assets/audio/club-film.mp3"); music.preload = "auto"; music.volume = 0.85;
   var playing = false, muted = true, t0 = 0, elapsed = 0, raf, timers = [], cur = -1, ctx;
 
   var ICON = {

@@ -1,3 +1,5 @@
+> **Rebranding from the old Glaze Card form?** You don't need a new form. Open `CreateClubCardForm.gs`, paste your form's edit link into `EXISTING_FORM_URL`, and run `rebrandExistingForm`. Every response is kept. Then upload the new header (`assets/loyalty/form-header.png`) in **Customise theme**, and set the colours to navy `#1D2840` and beige `#EDE4D3`. If you use the sync script, replace it with `ClubCardSync.gs`: the logic and settings are the same.
+
 # Club Card: Google Form setup
 
 Everything for the loyalty sign-up: the form, the member spreadsheet, the card and the poster.
@@ -8,8 +10,8 @@ Check that this loads: https://dinkindonut.asia/assets/loyalty/form-card-preview
 
 ## 2. Create the form (2 minutes)
 1. Open https://script.google.com and sign in with the club Google account.
-2. **New project** → delete the sample code → paste `CreateLoyaltyForm.gs`.
-3. Choose `createGlazeCardForm` in the toolbar → **Run** → allow the permissions.
+2. **New project** → delete the sample code → paste `CreateClubCardForm.gs`.
+3. Choose `createClubCardForm` in the toolbar → **Run** → allow the permissions.
 4. Open **Execution log**. Copy the *Short link*. That's the sign-up link.
 
 ## 3. Brand it (Google doesn't allow this from a script)
@@ -26,7 +28,7 @@ poster QR code (which points to `/loyalty`) then lead straight to the form.
 ## 5. Print
 | File | Use |
 |---|---|
-| `assets/loyalty/glaze-card-print.pdf` | Card front + back, 3.5 × 2 in. Ask the printer for 350gsm matte, rounded corners. |
+| `assets/loyalty/club-card-print.pdf` | Card front + back, 3.5 × 2 in. Ask the printer for 350gsm matte, rounded corners. |
 | `assets/loyalty/card-front.png`, `card-back.png` | 1050 × 600 px (300 dpi) for printers who want images |
 | `assets/loyalty/signup-poster-A4.pdf` | Check-in table poster |
 | `assets/loyalty/form-header.png` | Google Form header, 1600 × 400 |
@@ -42,7 +44,7 @@ Write the member number on the card when you hand it over. Stamp the circle and 
 Every sign-up appears in **Host console → Club Card members**, where you give out cards, stamp sessions and redeem free games.
 
 1. **Vercel** → Settings → Environment Variables → add `MEMBERS_SECRET` with the secret you were given → **Redeploy**.
-2. Open https://script.google.com → **New project** → paste `GlazeCardSync.gs`.
+2. Open https://script.google.com → **New project** → paste `ClubCardSync.gs`.
 3. Replace `PASTE_SECRET_HERE` with the same secret. Save.
 4. Choose **setup** in the toolbar → **Run** → allow the permissions.
 
