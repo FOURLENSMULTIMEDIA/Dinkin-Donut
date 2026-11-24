@@ -40,6 +40,13 @@
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:12px;align-content:start;min-width:0}
 .panel h2{font-size:22px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .courts{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.ready{margin:12px 0;padding:0 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}
+.ready summary{list-style:none;display:flex;gap:10px;align-items:center;padding:14px 0;cursor:pointer}.ready summary::-webkit-details-marker{display:none}
+.ready summary b{font:700 17px var(--display)}.ready summary .muted{font-size:13px;margin-left:auto}
+.rd-dot{width:10px;height:10px;border-radius:50%;flex:none;background:#4C8A5A}.rd-dot.rd-warn{background:#C9A86B}.rd-dot.rd-bad{background:#8E2F2F;box-shadow:0 0 0 4px rgba(142,47,47,.18)}
+.rd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;padding-bottom:12px}
+.rd{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:var(--sunk);font-size:13px;line-height:1.4}.rd .rd-dot{margin-top:5px}.rd b{display:block;font-size:14px}
+.rd.rd-bad{background:rgba(142,47,47,.1)}.rd.rd-warn{background:rgba(201,168,107,.14)}.rd-links{display:flex;gap:8px;flex-wrap:wrap;padding-bottom:14px}
 .fairplay{margin:12px 0;padding:12px 14px;border-radius:16px;background:var(--surface);border:1px solid var(--line)}.fp-h{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}.fp-h b{font:700 17px var(--display)}.fp-h span{font-size:13px}
 .fp-r{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:4px}.fp{padding:5px 10px;border-radius:999px;background:var(--sunk);font-size:13px}.fp b{font-variant-numeric:tabular-nums lining-nums}.fp.warm{background:#E9D9B0;color:#1D2840}.fp.hot{background:#8E2F2F;color:#FBF7EF}.fp.short{background:#1D2840;color:#E2D2A6}
 .ct{background:var(--court);color:var(--cream);border-radius:18px;padding:14px;display:grid;gap:8px}
@@ -362,6 +369,7 @@ if (PIN) fetch("/api/queue?check", { headers: { "x-host-token": PIN } }).then(r 
 
 function render() {
   fairPlay();
+  readyCheck();
   { let b = $("sleepNote"); const z = S.autoClosed;
     if (z && !b) { b = document.createElement("div"); b.id = "sleepNote"; b.style.cssText = "margin:12px 0;padding:14px 16px;border-radius:16px;background:rgba(226,210,166,.12);border:1px solid rgba(226,210,166,.5);display:flex;gap:12px;align-items:center;flex-wrap:wrap"; document.querySelector(".bar").before(b); }
     if (z) { const t = new Date(z.at).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" });
@@ -682,6 +690,30 @@ $("resetZone").addEventListener("click", e => {
   if (e.target.id === "reset") { showRecap(); }
 });
 // Fair Play Watch: who has waited longest, and who is short of games
+// Ready to host? A pre-night check: green means good, amber means worth a look, red needs fixing.
+function readyCheck() {
+  let el = $("ready");
+  if (!el) { el = document.createElement("details"); el.id = "ready"; el.className = "ready"; const st = document.querySelector(".stats"); if (!st) return; st.before(el);
+    try { el.open = localStorage.getItem("dd-ready-open") !== "0"; } catch (e) { el.open = true; }
+    el.addEventListener("toggle", () => { try { localStorage.setItem("dd-ready-open", el.open ? "1" : "0"); } catch (e) {} }); }
+  const live = S.courts.filter(c => c.teams).length, base = location.pathname.replace(/\/host$/, "") || "", origin = location.origin;
+  const qUrl = origin + (base || "") + (base ? "" : "/queue"), tvUrl = origin + (base ? base + "/tv" : "/tv");
+  const items = [
+    [S.persistent ? "ok" : "bad", "Saving", S.persistent ? "Database connected: nothing is lost if the server restarts." : "No database: the night resets if the server restarts. Connect Upstash Redis in Vercel."],
+    [S.courts.length ? "ok" : "bad", "Courts", S.courts.length + " court" + (S.courts.length === 1 ? "" : "s") + " set up" + (live ? " · " + live + " live" : "")],
+    [S.fee ? "ok" : "warn", "Session fee", S.fee ? money(S.fee) + " per player" : "Not set. Free night? Otherwise set it under Payments."],
+    [S.fawran ? "ok" : "warn", "Fawran", S.fawran ? "Payments go to " + DD.esc(S.fawran) : "No Fawran number yet: add it under Payments."],
+    [(S.sessionEnd || 1440) !== 1440 ? "ok" : "warn", "End time", (S.sessionEnd || 1440) !== 1440 ? "Last games are planned around your end time." : "Set tonight’s end time so game limits work out fairly."],
+    [S.autoClose !== 0 ? "ok" : "warn", "Auto-reset", S.autoClose !== 0 ? "On: a forgotten night closes itself." : "Off: remember to end the session yourself."],
+    [S.requirePin !== false ? "ok" : "warn", "Club Pass PIN", S.requirePin !== false ? "Players need their PIN to join." : "Anyone with the link can join."],
+    [(S.waAuto || S.waFree) ? "ok" : "warn", "WhatsApp", (S.waAuto || S.waFree) ? "PINs send automatically." : "PINs open WhatsApp for you to send."],
+  ];
+  const bad = items.filter(i => i[0] === "bad").length, warn = items.filter(i => i[0] === "warn").length;
+  el.innerHTML = `<summary><span class="rd-dot rd-${bad ? "bad" : warn ? "warn" : "ok"}"></span><b>Ready to host?</b><span class="muted">${bad ? bad + " to fix" : warn ? "All set · " + warn + " to review" : "Everything’s set for tonight"}</span></summary>
+    <div class="rd-grid">${items.map(i => `<div class="rd rd-${i[0]}"><span class="rd-dot rd-${i[0]}"></span><span><b>${i[1]}</b>${i[2]}</span></div>`).join("")}</div>
+    <div class="rd-links"><a class="btn sm" href="${tvUrl}" target="_blank" rel="noopener">Open the TV board</a><button class="btn sm ghost" type="button" id="rdCopy">Copy the player link</button><a class="btn sm ghost" href="/assets/brand/Dink-Different-Court-Kit.zip">Court signs &amp; QR stand</a></div>`;
+  $("rdCopy").onclick = () => navigator.clipboard?.writeText(qUrl).then(() => toast("Player link copied: " + qUrl), () => toast(qUrl));
+}
 function fairPlay() {
   let el = $("fairPlay");
   if (!el) { el = document.createElement("div"); el.id = "fairPlay"; el.className = "fairplay"; const st = document.querySelector(".stats"); if (!st) return; st.after(el); }

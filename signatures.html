@@ -51,7 +51,7 @@ input{font:inherit;color:#F4EFE3;background:rgba(244,239,227,.06);border:1px sol
 </div>
 <div class="toast" id="toast">Copied. Paste it into your signature settings.</div>
 <script>
-var SITE = "https://dinkindonut.asia", RECLUB = "https://reclub.co/clubs/@dink-different-cyuiuw?at=N7OIK377";
+var SITE = "https://dinkindonut.asia", IMG = /^(localhost|127\.)/.test(location.hostname) ? location.origin : SITE, RECLUB = "https://reclub.co/clubs/@dink-different-cyuiuw?at=N7OIK377";
 var PEOPLE = [
   { n: "Drew Nolasco", r: "Organiser · The Committee", p: "+974 3076 3431", e: "" },
   { n: "Angel Flores", r: "Organiser · The Committee", p: "+974 3072 3503", e: "" },
@@ -69,25 +69,25 @@ function sig() {
   var n = esc($("name").value), r = esc($("role").value), ph = esc($("phone").value), em = esc($("email").value), tel = ph.replace(/[^+\d]/g, "");
   var A = 'style="color:#1D2840;text-decoration:none"';
   var logo = style === "badge"
-    ? '<img src="' + SITE + '/assets/email/badge.png" width="76" height="76" alt="Dink Different" style="display:block;margin:0 auto;border:0;width:76px;height:76px">'
-    : '<img src="' + SITE + '/assets/email/wordmark.png" width="230" alt="Dink Different" style="display:block;margin:0 auto;border:0;width:230px;height:auto">';
-  return '<table cellpadding="0" cellspacing="0" border="0" align="center" role="presentation" style="margin:0 auto;border-collapse:collapse;text-align:center;font-family:Georgia,\'Times New Roman\',serif;color:#1D2840">' +
-    '<tr><td align="center" style="padding:0 0 12px">' + logo + "</td></tr>" +
+    ? '<img src="' + IMG + '/assets/email/badge.png" width="76" height="76" alt="Dink Different" style="display:block;margin:0 auto;border:0;width:76px;height:76px">'
+    : '<img src="' + IMG + '/assets/email/wordmark.png" width="230" alt="Dink Different" style="display:block;margin:0 auto;border:0;width:230px;height:auto">';
+  return '<table cellpadding="0" cellspacing="0" border="0" align="center" role="presentation" style="margin:18px auto 0;border-collapse:collapse;text-align:center;width:340px;max-width:100%;font-family:Georgia,\'Times New Roman\',serif;color:#1D2840">' +
+    '<tr><td align="center" style="padding:0 0 14px">' + logo + "</td></tr>" +
     '<tr><td align="center" style="font-family:Georgia,serif;font-size:21px;font-weight:bold;line-height:26px;color:#1D2840">' + n + "</td></tr>" +
     '<tr><td align="center" style="font-family:Georgia,serif;font-size:14px;font-style:italic;line-height:20px;color:#9C7A45">' + r + "</td></tr>" +
-    '<tr><td align="center" style="padding:12px 0"><table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center"><tr><td width="64" height="1" style="font-size:0;line-height:0;background:#C9A86B">&nbsp;</td></tr></table></td></tr>' +
+    '<tr><td align="center" style="padding:14px 0 12px"><table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center"><tr><td width="64" height="1" style="font-size:0;line-height:0;background:#C9A86B">&nbsp;</td></tr></table></td></tr>' +
     '<tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#1D2840;letter-spacing:.5px">' + (ph ? '<a href="https://wa.me/' + tel.replace("+", "") + '" ' + A + ">" + ph + "</a>" : "") + (ph && em ? " &nbsp;·&nbsp; " : "") + (em ? '<a href="mailto:' + em + '" ' + A + ">" + em + "</a>" : "") + "</td></tr>" +
     '<tr><td align="center" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:20px;color:#1D2840"><a href="https://instagram.com/dinkdifferentqa" ' + A + '>@dinkdifferentqa</a> &nbsp;·&nbsp; <a href="' + SITE + '" ' + A + ">dinkindonut.asia</a></td></tr>" +
-    '<tr><td align="center" style="padding-top:8px;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:16px;font-weight:bold;letter-spacing:3px;color:#9C7A45"><a href="' + RECLUB + '" style="color:#9C7A45;text-decoration:none">JOIN ON RECLUB · CODE AX3ND</a></td></tr>' +
-    '<tr><td align="center" style="padding-top:6px;font-family:Georgia,serif;font-size:13px;font-style:italic;line-height:18px;color:#1D2840">Play well. Dink different.</td></tr></table>';
+    '<tr><td align="center" style="padding-top:10px;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:16px;font-weight:bold;letter-spacing:3px;color:#9C7A45"><a href="' + RECLUB + '" style="color:#9C7A45;text-decoration:none">JOIN ON RECLUB · CODE AX3ND</a></td></tr>' +
+    '<tr><td align="center" style="padding-top:8px;font-family:Georgia,serif;font-size:13px;font-style:italic;line-height:18px;color:#1D2840">Play well. Dink different.</td></tr></table>';
 }
 function render() { $("sig").innerHTML = sig(); }
 function toast(t) { $("toast").textContent = t; $("toast").classList.add("on"); setTimeout(function () { $("toast").classList.remove("on"); }, 2200); }
-$("copy").onclick = function () { var h = sig();
+$("copy").onclick = function () { var keep = IMG; IMG = SITE; var h = sig(); IMG = keep;
   if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([h], { type: "text/html" }), "text/plain": new Blob([$("name").value + "\n" + $("role").value + "\nDink Different · dinkindonut.asia"], { type: "text/plain" }) })]).then(function () { toast("Copied. Paste it into your signature settings."); }, fallback);
   else fallback();
   function fallback() { var r = document.createRange(); r.selectNode($("sig")); var s = getSelection(); s.removeAllRanges(); s.addRange(r); try { document.execCommand("copy"); toast("Copied. Paste it into your signature settings."); } catch (e) { toast("Select the signature and copy it."); } s.removeAllRanges(); } };
-$("dl").onclick = function () { var b = new Blob(['<!doctype html><meta charset="utf-8"><body style="margin:24px">' + sig() + "</body>"], { type: "text/html" }), a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "signature-" + ($("name").value || "dink-different").toLowerCase().replace(/\W+/g, "-") + ".html"; a.click(); };
+$("dl").onclick = function () { var keep = IMG; IMG = SITE; var out = sig(); IMG = keep; var b = new Blob(['<!doctype html><meta charset="utf-8"><body style="margin:24px">' + out + "</body>"], { type: "text/html" }), a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "signature-" + ($("name").value || "dink-different").toLowerCase().replace(/\W+/g, "-") + ".html"; a.click(); };
 load(0);
 </script>
 </body>

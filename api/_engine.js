@@ -297,7 +297,7 @@ const actions = {
   },
   toFront: (S, a) => { if (S.queue.includes(a.id)) S.queue = [a.id, ...S.queue.filter(id => id !== a.id)]; },
   bench: (S, a) => actions.leave(S, a),
-  unbench: (S, a) => { if (S.bench.includes(a.id)) { S.bench = S.bench.filter(id => id !== a.id); S.queue.push(a.id); } },
+  unbench: (S, a) => { if (S.bench.includes(a.id)) { S.bench = S.bench.filter(id => id !== a.id); if (!busy(S).has(a.id) && !S.queue.includes(a.id)) S.queue.push(a.id); } },
   removePlayer: (S, a) => {
     if (busy(S).has(a.id)) throw new Error("Finish or cancel their game first.");
     S.queue = S.queue.filter(id => id !== a.id); S.bench = S.bench.filter(id => id !== a.id);
@@ -331,11 +331,22 @@ const actions = {
 
 const PUBLIC = new Set(["join", "leave"]);
 
+// Safety net after every action: one place per player. Someone on a court is never also queued;
+// a player on break stays off the queue (if they're mid-game, they finish it and then rest).
+function tidy(S) {
+  const on = busy(S), seen = new Set(), ok = id => S.players[id];
+  S.bench = [...new Set(S.bench)].filter(ok);
+  const rest = new Set(S.bench);
+  S.queue = S.queue.filter(id => ok(id) && !on.has(id) && !rest.has(id) && !seen.has(id) && seen.add(id));
+  S.done = [...new Set(S.done || [])].filter(id => ok(id) && !on.has(id) && !rest.has(id) && !seen.has(id));
+}
+
 function apply(S, a) {
   const fn = actions[a.type];
   if (!fn) throw new Error("Unknown action.");
   const out = fn(S, a) || {};
   const next = out && out.v !== undefined && out.players ? out : S; // reset returns a new state
+  tidy(next);
   applyLimit(next);
   if (next.autopilot !== false && !["cancel", "removeCourt", "reset"].includes(a.type)) next.courts.forEach(c => fillCourt(next, c));
   next.upNext = previewNext(next);
