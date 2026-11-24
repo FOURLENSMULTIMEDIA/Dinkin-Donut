@@ -1,4 +1,4 @@
-@font-face{font-family:Fraunces;font-style:normal;font-weight:100 900;font-display:swap;src:url(/assets/fonts/fraunces-normal.woff2) format("woff2")}@font-face{font-family:Fraunces;font-style:italic;font-weight:100 900;font-display:swap;src:url(/assets/fonts/fraunces-italic.woff2) format("woff2")}
+@font-face{font-family:Archivo;font-style:normal;font-weight:100 900;font-stretch:62% 125%;font-display:swap;src:url(/assets/fonts/archivo-var.woff2) format("woff2")}@font-face{font-family:Fraunces;font-style:normal;font-weight:100 900;font-display:swap;src:url(/assets/fonts/fraunces-normal.woff2) format("woff2")}@font-face{font-family:Fraunces;font-style:italic;font-weight:100 900;font-display:swap;src:url(/assets/fonts/fraunces-italic.woff2) format("woff2")}
 /* Dink Different — beige carries every page, navy for ink, brass is the only accent. */
 :root{
   --glaze:#9C7A45; --glaze-deep:#7E6034; --ball:#E2D2A6; --dough:#C9B48A; --court:#2C3A5A; --choco:#1D2840; --cream:#F4EFE3;

@@ -61,6 +61,7 @@
     } else {
       s += '<path d="M150 66 Q200 58 250 66 L246 82 Q200 74 154 82 Z" fill="' + w.collar + '"/>';
       s += '<text x="200" y="104" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="6.5" letter-spacing="3" fill="' + w.ink + '" opacity=".7">DINK DIFFERENT</text>';
+      if (o.print === "social" && window.ClubTee) s += window.ClubTee.PRINTS.social(200, 146, 232, { body: w.top, ink: w.ink, acc: w.tip2 }, id + "so", ["DINK DIFFERENT · COURTSIDE SOCIAL", "PICKLEBALL CLUB · DOHA", "Soft hands,", "good company."]);
       if (o.name && o.print !== "plain") s += '<text x="200" y="140" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="15" letter-spacing="7" fill="' + w.ink + '">' + esc(String(o.name).toUpperCase().slice(0, 12)) + "</text>";
     }
     s += "</g></svg>";

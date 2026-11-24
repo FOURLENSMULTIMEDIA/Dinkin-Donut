@@ -161,7 +161,7 @@
 .ctc-h{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:28px}
 .ctc-h h2{font-size:clamp(34px,5vw,58px);max-width:16ch}.ctc-h h2 span{font-style:italic;font-weight:700;color:#9C7A45}
 .ctc-h .note{max-width:46ch;margin:0}
-.ctc-grid{display:grid;gap:16px;grid-template-columns:repeat(5,minmax(0,1fr))}@media(max-width:1100px){.ctc-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:760px){.ctc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.ctc-grid{grid-template-columns:1fr}}
+.ctc-grid{display:grid;gap:16px;grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:1100px){.ctc-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:760px){.ctc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.ctc-grid{grid-template-columns:1fr}}
 .ct{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:14px 14px 18px;display:grid;gap:10px;box-shadow:0 20px 40px -30px rgba(29,40,64,.45)}
 .ct .pic{position:relative;border-radius:16px;background:radial-gradient(ellipse at 50% 35%,#FBF7EF,#E6DAC4);aspect-ratio:1;display:grid;place-items:center;overflow:hidden}
 .ct .pic svg{width:92%;height:auto;display:block}
@@ -283,8 +283,8 @@
   <div class="chart" id="chart"></div>
 
   <section class="ctc" id="clubhouse">
-    <div class="ctc-h"><div><div class="eyebrow">Drop 02 · The Clubhouse Collection</div><h2>Old-school whites, <span>pickleball manners.</span></h2></div>
-      <p class="note">Five heavyweight cotton tees cut like the ones from the old lawn and racquet clubs. 240 gsm combed cotton, garment-dyed for a lived-in softness, a woven neck label, and artwork printed soft into the fabric. Made in small runs.</p></div>
+    <div class="ctc-h"><div><div class="eyebrow">Drop 02 · The Clubhouse Collection · Series III</div><h2>Printed like the old clubs, <span>played like the new.</span></h2></div>
+      <p class="note">Eighteen graphic tees drawn in the club’s own hand: a painted court map, a real halftone ball, the House Rules, the 0–0–2 call, game to eleven and more. 240 gsm combed cotton, garment-dyed, screen-printed in water-based inks, with a woven neck label. Made in small runs.</p></div>
     <div class="ctc-grid" id="ctcGrid"></div>
   </section>
 
@@ -338,6 +338,8 @@ function photo(kind, o, ways, vec) {
   const code = (vec({ ...o, side: "back" }).match(/DD-[0-9A-F]{4}/) || ["DD-0000"])[0];
   return window.Mockup ? Mockup.render(kind, { ...o, code }, ways) : vec(o);
 }
+// Graphic back prints on the polo and the Court Set (same artwork as the Clubhouse Collection)
+const GRAPHIC = { court: "Court Map back print", social: "Courtside Social back print" };
 const PRODUCTS = {
   set: { ...window.SET, ways: CourtSet.WAYS, draw: o => CourtSet.render(o), defWay: "navy" },
   jersey: { ...window.JERSEY, ways: J.WAYS, draw: o => photo("tee", o, J.WAYS, J.render), defWay: "glaze" },
@@ -373,10 +375,10 @@ function renderPanel() {
   $("fits").innerHTML = p.fits.map((f, i) => `<button type="button" data-fit="${i}" aria-pressed="${o.fit === i}">${f}</button>`).join("");
   $("sizes").innerHTML = p.sizes.map(z => `<button type="button" data-size="${z}" aria-pressed="${o.size === z}">${z}</button>`).join("");
   $("nm").value = o.name; $("no").value = o.num;
-  const showName = o.print !== "plain", showNum = (st.p === "jersey" || st.p === "pro") && o.print === "full";
+  const gfx = GRAPHIC[o.print], showName = o.print !== "plain", showNum = (st.p === "jersey" || st.p === "pro") && o.print === "full";
   $("fields").hidden = !showName; $("numWrap").hidden = !showNum;
   $("fields").style.gridTemplateColumns = showNum ? "" : "1fr";
-  $("hint").textContent = !showName ? ((st.p === "jersey" || st.p === "pro") ? "Plain back with the oversized Dink Different crest." : "Crest and club name only.") : (st.p === "jersey" || st.p === "pro") ? (showNum ? "Name and number printed on the back for free. Up to 12 letters, numbers 0 to 99." : "Your name, large across the back. Up to 12 letters.") : "Embroidered under the club name on the back. Up to 12 letters.";
+  $("hint").textContent = gfx ? gfx + " across the back, in the club’s inks. Add a name above it if you like (optional)." : !showName ? ((st.p === "jersey" || st.p === "pro") ? "Plain back with the oversized Dink Different crest." : "Crest and club name only.") : (st.p === "jersey" || st.p === "pro") ? (showNum ? "Name and number printed on the back for free. Up to 12 letters, numbers 0 to 99." : "Your name, large across the back. Up to 12 letters.") : "Embroidered under the club name on the back. Up to 12 letters.";
   $("qv").textContent = st.qty;
   $("specs").innerHTML = p.specs.map(([t, d]) => `<div><b>${t}</b><p>${d}</p></div>`).join("");
   $("chart").innerHTML = `<table><caption>Approximate chest width laid flat, in cm. Between sizes? Go one up for a relaxed fit.</caption><tr><th>Size</th>${Object.keys(p.sizeChart).map(k => `<th>${k}</th>`).join("")}</tr><tr><td><b>Chest</b></td>${Object.values(p.sizeChart).map(v => `<td>${v}</td>`).join("")}</tr></table>`;
@@ -414,12 +416,13 @@ function describe(l) {
   if (PRODUCTS[l.p].club) return [PRODUCTS[l.p].ways[l.way].label, "Size " + l.size].join(" · ");
   const p = PRODUCTS[l.p], w = p.ways[l.way], bits = [w.label, p.fits[l.fit], "Size " + l.size];
   if (l.print === "plain") bits.push((l.p === "jersey" || l.p === "pro") ? "Plain back" : "No name");
+  else if (GRAPHIC[l.print]) bits.push(GRAPHIC[l.print] + (l.name ? " · Name: " + l.name : ""));
   else bits.push((l.p === "jersey" || l.p === "pro") && l.print === "full" ? `Name: ${l.name || "-"} · Number: ${l.num || "-"}` : `Name: ${l.name || "-"}`);
   return bits.join(" · ");
 }
 function addLine() {
   const o = cur();
-  if (o.print !== "plain" && !o.name.trim()) { $("nm").focus(); $("hint").textContent = "Add a name, or choose " + ((st.p === "jersey" || st.p === "pro") ? "“Plain back”." : "“No name”."); return null; }
+  if (o.print !== "plain" && !GRAPHIC[o.print] && !o.name.trim()) { $("nm").focus(); $("hint").textContent = "Add a name, or choose " + ((st.p === "jersey" || st.p === "pro") ? "“Plain back”." : "“No name”."); return null; }
   if ((st.p === "jersey" || st.p === "pro") && o.print === "full" && o.num === "") { $("no").focus(); $("hint").textContent = "Add your jersey number, or choose “Name only”."; return null; }
   if (o.edition && !o.name.trim()) { $("nm").focus(); $("hint").textContent = "The 20 needs a name on the back."; return null; }
   const line = { edition: !!o.edition, p: st.p, way: o.way, print: o.print, name: o.print === "plain" ? "" : o.name.trim().toUpperCase(), num: (st.p === "jersey" || st.p === "pro") && o.print === "full" ? o.num : "", fit: o.fit, size: o.size, qty: o.edition ? 1 : st.qty };
@@ -440,7 +443,7 @@ const bagTotal = lines => lines.reduce((a, l) => a + l.qty * unit(l), 0);
 const orderText = (lines, who) => {
   const ref = orderRef(), items = lines.map(l => { const p = PRODUCTS[l.p], w = p.ways[l.way];
     if (p.club) return `${l.qty} × ${p.name} - ${money(l.qty * unit(l))}\n   ${w.label} · Size ${l.size}`;
-    const back = l.print === "plain" ? ((l.p === "jersey" || l.p === "pro") ? "Plain back" : "No name") : ((l.p === "jersey" || l.p === "pro") && l.print === "full" ? `Back: ${l.name} · No. ${l.num}` : `Name: ${l.name}`);
+    const back = GRAPHIC[l.print] ? GRAPHIC[l.print] + (l.name ? ` · Name: ${l.name}` : "") : l.print === "plain" ? ((l.p === "jersey" || l.p === "pro") ? "Plain back" : "No name") : ((l.p === "jersey" || l.p === "pro") && l.print === "full" ? `Back: ${l.name} · No. ${l.num}` : `Name: ${l.name}`);
     return `${l.qty} × ${p.name}${l.edition ? ` · *THE 20 · Nº ${String(l.edNo || "__").padStart(2, "0")} / ${ED.cap}*` : ""} - ${money(l.qty * unit(l))}\n   ${w.label} · ${p.fits[l.fit]} · Size ${l.size}\n   ${back}`; }).join("\n\n");
   return [`*Dink Different · Shop order*`, `Order ref: *${ref}*`, `Name: ${who || "-"}`, "", items, "", `*Total: ${money(bagTotal(lines))}*`, "",
     `Payment: Fawran to ${FAWRAN}`, `Transfer note: ${ref}`, `Receipt: attached below`, "",
@@ -503,7 +506,7 @@ $("teamBtn").href = `https://wa.me/${WA}?text=${encodeURIComponent("Hi Dink Diff
 // The Clubhouse Collection cards
 const ctState = {};
 function ctCard(k) {
-  const d = ClubTee.DESIGNS[k], s = ctState[k] || (ctState[k] = { way: d.way, side: "front", size: "M" });
+  const d = ClubTee.DESIGNS[k], s = ctState[k] || (ctState[k] = { way: d.way, side: d.hero || "front", size: "M" });
   return `<article class="ct" data-k="${k}"><div class="pic">${ClubTee.render(k, s)}<button class="flip" type="button" data-flip="${k}">${s.side === "front" ? "See the back" : "See the front"}</button></div>
     <div class="row" style="justify-content:space-between;align-items:baseline"><h3>${esc(d.name.replace(/^The /, ""))}</h3><span class="pr">${money(d.price)}</span></div>
     <p>${esc(d.blurb)}</p>

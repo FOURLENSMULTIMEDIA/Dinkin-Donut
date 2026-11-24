@@ -56,10 +56,11 @@
     var path = "M" + P(L[0][0], L[0][1]) + " C" + P(L[1][0], L[1][1]) + " " + P(L[2][0], L[2][1]) + " " + P(L[3][0], L[3][1]) + " L" + P(Rt[3][0], Rt[3][1]) + " C" + P(Rt[2][0], Rt[2][1]) + " " + P(Rt[1][0], Rt[1][1]) + " " + P(Rt[0][0], Rt[0][1]) + "Z";
     var core = band(0), corePath = "M" + P(core[0][0], core[0][1]) + " C" + P(core[1][0], core[1][1]) + " " + P(core[2][0], core[2][1]) + " " + P(core[3][0], core[3][1]);
     s += '<g style="mix-blend-mode:multiply"><rect width="' + W + '" height="' + H + '" fill="' + c.body + '"/>';
-    s += '<path d="' + path + '" fill="' + c.sweep + '" filter="url(#' + id + 'b1)" opacity=".95"/>';
-    s += '<path d="' + corePath + '" fill="none" stroke="' + (ed ? "#F6E3A1" : c.glow) + '" stroke-width="' + (W * bw * 0.32).toFixed(1) + '" stroke-linecap="round" filter="url(#' + id + 'b2)" opacity=".85"/>';
+    var clean = o.print === "court"; // the Court Map sits on a clean body, no pour
+    if (!clean) s += '<path d="' + path + '" fill="' + c.sweep + '" filter="url(#' + id + 'b1)" opacity=".95"/>';
+    if (!clean) s += '<path d="' + corePath + '" fill="none" stroke="' + (ed ? "#F6E3A1" : c.glow) + '" stroke-width="' + (W * bw * 0.32).toFixed(1) + '" stroke-linecap="round" filter="url(#' + id + 'b2)" opacity=".85"/>';
     // liquid flow lines along the pour
-    for (var fl = -2; fl <= 2; fl++) { var b3 = band(fl * 0.17); s += '<path d="M' + P(b3[0][0], b3[0][1]) + " C" + P(b3[1][0], b3[1][1]) + " " + P(b3[2][0], b3[2][1]) + " " + P(b3[3][0], b3[3][1]) + '" fill="none" stroke="' + c.glow + '" stroke-width="' + (W * 0.0035).toFixed(1) + '" opacity="' + (0.16 + Math.abs(fl) * 0.03) + '" filter="url(#' + id + 'b0)"/>'; }
+    for (var fl = -2; fl <= 2 && !clean; fl++) { var b3 = band(fl * 0.17); s += '<path d="M' + P(b3[0][0], b3[0][1]) + " C" + P(b3[1][0], b3[1][1]) + " " + P(b3[2][0], b3[2][1]) + " " + P(b3[3][0], b3[3][1]) + '" fill="none" stroke="' + c.glow + '" stroke-width="' + (W * 0.0035).toFixed(1) + '" opacity="' + (0.16 + Math.abs(fl) * 0.03) + '" filter="url(#' + id + 'b0)"/>'; }
     // pickleball halftone rising from the hem
     s += '<g fill="' + c.sweep + '" mask="url(#' + id + 'hm)" opacity=".7"><rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'pq)"/></g>';
     s += '</g>';
@@ -82,7 +83,8 @@
       s += '<text x="' + mid + '" y="' + (H * z.neck).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.013).toFixed(1) + '" fill="' + c.ink + '" opacity=".7" letter-spacing="' + (W * 0.006).toFixed(1) + '">DINK DIFFERENT</text>';
       if (name) s += '<text x="' + mid + '" y="' + (H * z.name).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * (name.length > 8 ? 0.036 : 0.042)).toFixed(1) + '" fill="' + c.ink + '" letter-spacing="' + (W * 0.02).toFixed(1) + '">' + esc(name) + "</text>";
       if (num) s += '<text x="' + mid + '" y="' + (H * (z.num + z.numH * 0.8)).toFixed(1) + '" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="600" font-size="' + (H * z.numH).toFixed(1) + '" fill="' + c.ink + '" stroke="' + hair + '" stroke-width="' + (W * 0.004).toFixed(1) + '" paint-order="stroke">' + esc(num) + "</text>";
-      if (!name && !num) s += '<image filter="url(#' + id + 'em)" href="/assets/logo.svg" xlink:href="/assets/logo.svg" x="' + (mid - W * 0.06) + '" y="' + (H * 0.2) + '" width="' + W * 0.12 + '" height="' + W * 0.12 + '"/>';
+      if (o.print === "court" && window.ClubTee) s += window.ClubTee.PRINTS.court(mid, H * 0.225, W * 0.82, { body: c.body, ink: c.ink, acc: c.tip2 }, id + "cm");
+      else if (!name && !num) s += '<image filter="url(#' + id + 'em)" href="/assets/logo.svg" xlink:href="/assets/logo.svg" x="' + (mid - W * 0.06) + '" y="' + (H * 0.2) + '" width="' + W * 0.12 + '" height="' + W * 0.12 + '"/>';
       // the Kitchen Line: one hairline, and a ball whose spot is set by the player's name
       var r = rng(code + (o.name || "")), ly = H * z.line, bx = W * (0.5 + (r() - 0.5) * 0.36), br = W * 0.012;
 

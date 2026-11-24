@@ -30,8 +30,9 @@ window.POLO = {
   leadTime: "Made to order. Ready in about 3 weeks.",
   fits: ["Men’s fit", "Women’s fit"],
   sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
-  prints: [["name", "Embroidered name"], ["plain", "No name"]],
+  prints: [["name", "Embroidered name"], ["court", "Court Map back"], ["plain", "No name"]],
   specs: [
+    ["Court Map back print", "Optional: the club’s painted, annotated court across the back, screen-printed in two inks."],
     ["Quarter-zip placket", "Zip it up for the clubhouse, open it for match play."],
     ["Mesh side panels", "Contrast mesh with brass piping keeps you cool on court."],
     ["Tapered athletic cut", "Shaped through the body, split hem so it moves with you."],
@@ -93,9 +94,10 @@ window.SET = {
   status: "preorder",
   leadTime: "Made to order. Ready in about 3 weeks.",
   fits: ["Women’s fit"],
-  prints: [["name", "Name on back"], ["plain", "No name"]],
+  prints: [["name", "Name on back"], ["social", "Courtside Social"], ["plain", "No name"]],
   sizes: ["XS", "S", "M", "L", "XL"],
   specs: [
+    ["Courtside Social print", "Optional: three line-drawn balls inside an arch of type across the back of the top."],
     ["Open Johnny collar", "A contrast collar that lies flat and frames the neckline, with fine tipping."],
     ["Fitted, not tight", "Princess seams and a curved hem that sits just over the skirt’s waistband."],
     ["Pleated court skirt", "Box pleats that move with you, a tipped hem and built-in shorts with a ball pocket."],
