@@ -23,6 +23,6 @@ window.CLUB = {
   firstServe: { date: "", venue: "" },   // e.g. date: "2026-12-05T20:00:00+03:00", venue: "Aspire Zone, Court 3"
 
   // DUPR-rated games are booked on Reclub
-  reclubUrl: "",                       // your club page, e.g. "https://reclub.co/clubs/dinkin-donut"
+  reclubUrl: "https://reclub.co/clubs/@dink-different-cyuiuw?at=N7OIK377",                       // your club page, e.g. "https://reclub.co/clubs/dinkin-donut"
   duprClubUrl: "",                     // optional: your DUPR club page
 };
