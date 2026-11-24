@@ -6,7 +6,7 @@
     midnight: { label: "Midnight", note: "Tournament", yoke: "#C9A86B", yokeDeep: "#9C7A45", body: "#161F33", bodyDeep: "#10162A", sleeve: "#10162A", trim: "#E2D2A6", ink: "#F3EEE2", hole: "#F3EEE2", num: "#E2D2A6", numLine: "#161F33" , yokeInk: "#1D2840" },
     cream:    { label: "Cream", note: "Minimal", yoke: "#E0D7C3", yokeDeep: "#D9C4A6", body: "#FBF6EE", bodyDeep: "#EDE3D4", sleeve: "#FBF6EE", trim: "#1D2840", ink: "#1D2840", hole: "#1D2840", num: "#1D2840", numLine: "#FBF6EE" , yokeInk: "#1D2840" },
     cocoa:    { label: "Navy Tonal", note: "Tonal", yoke: "#2A3756", yokeDeep: "#222C45", body: "#1D2840", bodyDeep: "#161F33", sleeve: "#1D2840", trim: "#E2D2A6", ink: "#E0D7C3", hole: "#E0D7C3", num: "#E2D2A6", numLine: "#1D2840" , yokeInk: "#E0D7C3" },
-    sage:     { label: "Stone", note: "Soft", yoke: "#FBF6EE", yokeDeep: "#E9DFCF", body: "#D6C8AC", bodyDeep: "#C9B896", sleeve: "#C9B896", trim: "#1D2840", ink: "#1D2840", hole: "#1D2840", num: "#1D2840", numLine: "#D6C8AC" , yokeInk: "#2C4A33" },
+    sage:     { label: "Stone", note: "Soft", yoke: "#FBF6EE", yokeDeep: "#E9DFCF", body: "#D6C8AC", bodyDeep: "#C9B896", sleeve: "#C9B896", trim: "#1D2840", ink: "#1D2840", hole: "#1D2840", num: "#1D2840", numLine: "#D6C8AC" , yokeInk: "#1D2840" },
     blush:    { label: "Oatmeal", note: "Soft", yoke: "#1D2840", yokeDeep: "#161F33", body: "#EDE4D3", bodyDeep: "#E3D8C3", sleeve: "#EDE4D3", trim: "#1D2840", ink: "#1D2840", hole: "#1D2840", num: "#1D2840", numLine: "#EDE4D3" , yokeInk: "#E6D8BC" },
   };
 

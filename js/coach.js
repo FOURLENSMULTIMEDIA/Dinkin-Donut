@@ -78,7 +78,7 @@
     function drawCourt(sc, k) {
       var g = Y(0), s = S();
       // floor with perspective lines and the kitchen
-      var fg = ctx.createLinearGradient(0, g, 0, H); fg.addColorStop(0, "#4C6A8A"); fg.addColorStop(1, "#1E4F33"); ctx.fillStyle = fg; ctx.fillRect(0, g, W, H - g);
+      var fg = ctx.createLinearGradient(0, g, 0, H); fg.addColorStop(0, "#4C6A8A"); fg.addColorStop(1, "#2E4566"); ctx.fillStyle = fg; ctx.fillRect(0, g, W, H - g);
       ctx.strokeStyle = "rgba(244,239,227,.55)"; ctx.lineWidth = 1.4;
       [-22, -7, 7, 22].forEach(function (x) { ctx.beginPath(); ctx.moveTo(X(x), g); ctx.lineTo(X(x) + (x - cam.x) * s * 0.18, H); ctx.stroke(); });
       ctx.beginPath(); ctx.moveTo(0, g); ctx.lineTo(W, g); ctx.stroke();
@@ -107,7 +107,7 @@
       var g = Y(0), s = S(), lbl = function (txt, x, y, col) { ctx.fillStyle = col || "rgba(244,239,227,.75)"; ctx.font = "700 10px " + FONT; ctx.fillText(txt, x, y); };
       ctx.save(); ctx.globalAlpha = clamp(k * 4, 0, 1);
       ctx.strokeStyle = "rgba(244,239,227,.35)"; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, g); ctx.lineTo(W, g); ctx.stroke();
-      var hf = ctx.createLinearGradient(0, g, 0, H); hf.addColorStop(0, "#5A3A24"); hf.addColorStop(1, "#2E1D12"); ctx.fillStyle = hf; ctx.fillRect(0, g, W, H - g);
+      var hf = ctx.createLinearGradient(0, g, 0, H); hf.addColorStop(0, "#3A4A6A"); hf.addColorStop(1, "#1A2338"); ctx.fillStyle = hf; ctx.fillRect(0, g, W, H - g);
       (sc.props || []).forEach(function (p) {
         if (p.type === "wall") {
           ctx.fillStyle = "rgba(244,239,227,.08)"; ctx.fillRect(X(p.x), Y(9), W, 9 * s); line([X(p.x), Y(9)], [X(p.x), g], 2, "rgba(244,239,227,.7)");

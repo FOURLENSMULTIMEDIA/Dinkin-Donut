@@ -1,26 +1,113 @@
 {
   "name": "Dink Different",
-  "short_name": "Dink Different",
+  "short_name": "Dink Diff",
   "description": "Pickleball club: live queue, Soft Hands Academy coaching, Home Court drills and the rules made simple.",
   "id": "/",
   "start_url": "/?app=1",
   "scope": "/",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone"],
+  "display_override": [
+    "standalone"
+  ],
   "orientation": "any",
-  "background_color": "#F4EFE3",
+  "background_color": "#EDE4D3",
   "theme_color": "#1D2840",
-  "categories": ["sports", "education", "health"],
+  "categories": [
+    "sports",
+    "education",
+    "health"
+  ],
   "icons": [
-    { "src": "/assets/app/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/assets/app/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/assets/app/icon-1024.png", "sizes": "1024x1024", "type": "image/png" },
-    { "src": "/assets/app/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/assets/app/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/app/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/app/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
   ],
   "shortcuts": [
-    { "name": "Join the queue", "url": "/queue?app=1", "icons": [{ "src": "/assets/app/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Academy", "url": "/academy?app=1", "icons": [{ "src": "/assets/app/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Home Court drills", "url": "/academy?app=1#home", "icons": [{ "src": "/assets/app/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Host console", "url": "/host?app=1", "icons": [{ "src": "/assets/app/icon-192.png", "sizes": "192x192" }] }
+    {
+      "name": "Join the queue",
+      "short_name": "Queue",
+      "description": "Check in and see when you're up",
+      "url": "/queue?app=1",
+      "icons": [
+        {
+          "src": "/assets/app/sc/queue.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Soft Hands Academy",
+      "short_name": "Academy",
+      "description": "Lessons, drills and the rules",
+      "url": "/academy?app=1",
+      "icons": [
+        {
+          "src": "/assets/app/sc/academy.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Home Court drills",
+      "short_name": "Home Court",
+      "description": "Train at home with a paddle and a wall",
+      "url": "/academy?app=1#home",
+      "icons": [
+        {
+          "src": "/assets/app/sc/home.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Club Card",
+      "short_name": "Club Card",
+      "description": "Your stamps and sign-up",
+      "url": "/loyalty?app=1",
+      "icons": [
+        {
+          "src": "/assets/app/sc/card.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Host console",
+      "short_name": "Host",
+      "description": "Run tonight's courts",
+      "url": "/host?app=1",
+      "icons": [
+        {
+          "src": "/assets/app/sc/host.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
   ]
 }

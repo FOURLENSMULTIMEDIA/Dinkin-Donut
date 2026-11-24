@@ -18,10 +18,10 @@
   function quad(pts, fill) { x.beginPath(); pts.forEach(function (p, i) { i ? x.lineTo(p.x, p.y) : x.moveTo(p.x, p.y); }); x.closePath(); x.fillStyle = fill; x.fill(); }
 
   function court() {
-    var g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#12192A"); g.addColorStop(1, "#2B1C12"); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    var g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#12192A"); g.addColorStop(1, "#1A2338"); x.fillStyle = g; x.fillRect(0, 0, W, H);
     // stadium lights
     [[0.18, 0.02], [0.82, 0.02]].forEach(function (l) { var rg = x.createRadialGradient(W * l[0], H * l[1], 0, W * l[0], H * l[1], W * 0.45); rg.addColorStop(0, "rgba(244,239,227,.22)"); rg.addColorStop(1, "rgba(244,239,227,0)"); x.fillStyle = rg; x.fillRect(0, 0, W, H); });
-    quad([P(-1.35, -0.06), P(1.35, -0.06), P(1.35, 1.06), P(-1.35, 1.06)], "#235E3C");
+    quad([P(-1.35, -0.06), P(1.35, -0.06), P(1.35, 1.06), P(-1.35, 1.06)], "#2E4566");
     quad([P(-1, 0), P(1, 0), P(1, 1), P(-1, 1)], "#4C6A8A");
     quad([P(-1, NET - KITCHEN), P(1, NET - KITCHEN), P(1, NET + KITCHEN), P(-1, NET + KITCHEN)], "rgba(226,210,166,.18)");
     var c = "#F4EFE3";

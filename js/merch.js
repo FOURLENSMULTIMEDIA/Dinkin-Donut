@@ -59,9 +59,6 @@ window.PRO = {
 };
 
 window.MERCH = [
-  { id: "tee", name: "Heritage Classic Tee", price: 89, status: "soon", art: "tee",
-    blurb: "Heavyweight cotton, the Different D embroidered on the chest. Cut for court and café.",
-    colors: [["Cream", "#F4EFE3"], ["Brass", "#9C7A45"], ["Navy", "#1D2840"]], sizes: ["XS", "S", "M", "L", "XL", "XXL"] },
   { id: "hoodie", name: "Night Session Hoodie", price: 159, status: "soon", art: "hoodie",
     blurb: "For January nights when the breeze picks up. Brushed fleece, puff-print logo.",
     colors: [["Navy", "#1D2840"], ["Court", "#4C6A8A"], ["Cream", "#F4EFE3"]], sizes: ["S", "M", "L", "XL", "XXL"] },

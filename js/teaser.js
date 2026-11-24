@@ -1,6 +1,8 @@
 // Opening-soon commercial: plays full screen before the site, once per browser session.
 // Starts muted (browsers block sound until a tap), tap anywhere for sound, "Enter site" to skip.
 (function () {
+  // The installed app opens straight to the club, no film
+  if (/[?&]app=1/.test(location.search) || matchMedia("(display-mode: standalone)").matches || navigator.standalone) return;
   try { if (sessionStorage.getItem("dd-teaser")) return; sessionStorage.setItem("dd-teaser", "1"); } catch (e) { return; }
   window.DD_TEASER = true; // the short intro steps aside while this plays
   var tall = matchMedia("(orientation: portrait)").matches;

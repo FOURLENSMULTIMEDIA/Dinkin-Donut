@@ -3,10 +3,10 @@
 // Scripts, styles, fonts, images: served from the cache and refreshed in the background.
 // Academy content: network first, then the copy saved when you last watched it.
 // Live data (queue, payments, host actions) is never cached.
-const V = "dd-v3", CORE = [
-  "/", "/queue", "/academy", "/offline.html", "/css/style.css",
+const V = "dd-v4", CORE = [
+  "/", "/queue", "/academy", "/loyalty", "/offline.html", "/css/style.css", "/css/fonts.css", "/js/icons.js",
   "/js/common.js", "/js/config.js", "/js/theme.js", "/js/coach.js", "/js/pwa.js", "/js/social.js", "/js/motion.js", "/js/sound.js",
-  "/assets/logo.svg", "/assets/favicon.svg", "/assets/app/icon-192.png", "/assets/fonts/fraunces-normal.woff2", "/assets/fonts/dm-sans-700.woff2", "/assets/fonts/dm-sans-500.woff2",
+  "/assets/logo.svg", "/assets/favicon.svg", "/assets/app/icon-192.png", "/assets/fonts/fraunces-normal.woff2", "/assets/fonts/fraunces-italic.woff2", "/assets/brand/mark.svg", "/assets/fonts/dm-sans-700.woff2", "/assets/fonts/dm-sans-500.woff2",
 ];
 self.addEventListener("install", e => { e.waitUntil(caches.open(V).then(c => Promise.all(CORE.map(u => c.add(u).catch(() => {})))).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== V).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
