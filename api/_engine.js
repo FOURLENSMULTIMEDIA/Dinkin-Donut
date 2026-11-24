@@ -254,6 +254,7 @@ const actions = {
     c.lastFour = [...W, ...L].sort().join(",");
     const mins = Math.max(1, Math.round((Date.now() - c.start) / 60000));
     if (mins <= 45) { S.durSum = (S.durSum || 0) + mins; S.durN = (S.durN || 0) + 1; }
+    const endT = Date.now(); [...W, ...L].forEach(id => { const q = S.players[id]; if (q) q.lastEnd = endT; }); // Fair Play Watch: wait is measured from here
     log(S, `Court ${c.id}: ${names(S, W)} beat ${names(S, L)}${ws ? ` ${ws}–${ls}` : ""} (${mins} min)`);
     const teamStreak = c.lastWinners && c.lastWinners.join() === [...W].sort().join() ? c.streak + 1 : 1;
     const capped = S.limitNow && W.some(id => played(S.players[id]) >= S.limitNow);

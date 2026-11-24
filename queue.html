@@ -41,10 +41,15 @@
 .ticket{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .ticket .big{font:700 clamp(64px,16vw,110px)/1 var(--display);color:var(--ball);font-variant-numeric:tabular-nums lining-nums}
 .ticket.call{animation:glow 1.2s ease-in-out infinite alternate}
+.mynight{margin-top:18px;padding:16px 16px 14px;border-radius:16px;background:linear-gradient(180deg,#FBF7EF,#EDE3CF);color:#1D2840;box-shadow:inset 0 0 0 1px rgba(156,122,69,.5)}
+.mn-h{display:flex;justify-content:space-between;align-items:center;font:italic 700 20px var(--display);color:#1D2840}.mn-h img{width:30px;height:30px}
+.mn-s{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0 6px;text-align:center}
+.mn-s b{display:block;font:800 26px/1 var(--display);font-variant-numeric:tabular-nums lining-nums}.mn-s small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#6E6457}
+.mynight p{margin:6px 0 0;font-size:14px;color:#3A3E4E}.mn-tag{display:inline-block;margin-top:8px;padding:4px 10px;border-radius:999px;background:#1D2840;color:#E2D2A6;font:700 12px var(--body)}
 .invite{position:relative;margin:4px 0 14px;padding:26px 20px 22px;text-align:center;border-radius:6px;background:linear-gradient(180deg,#FBF7EF,#EDE3CF);color:#1D2840;box-shadow:0 0 0 1px rgba(156,122,69,.6) inset,0 0 0 6px #FBF7EF inset,0 0 0 7px rgba(156,122,69,.45) inset,0 26px 40px -18px rgba(0,0,0,.55);animation:inv-in .9s cubic-bezier(.16,1,.3,1) both}
 .invite img{width:46px;height:46px;display:block;margin:0 auto 10px}
 .invite small{display:block;font:italic 600 17px/1.3 var(--display);opacity:.85;max-width:26ch;margin:0 auto}
-.invite .big{display:block;font:600 clamp(60px,17vw,96px)/1 var(--display);margin:10px 0 6px;letter-spacing:-.01em}
+.invite .big{display:block;font:800 clamp(60px,17vw,96px)/1 var(--display);margin:10px 0 6px;letter-spacing:-.01em;color:#1D2840!important;text-shadow:none!important;-webkit-text-fill-color:#1D2840}
 .invite i{display:block;width:60px;height:1px;background:#9C7A45;margin:0 auto 12px}
 .invite p{margin:0;font-size:15px;line-height:1.5}.invite em{display:block;margin-top:12px;font:italic 600 15px var(--display);color:#9C7A45}
 @keyframes inv-in{from{opacity:0;transform:translateY(20px) rotate(-2deg) scale(.96)}to{opacity:1;transform:none}}
@@ -242,7 +247,17 @@ function renderMe() {
   }
   if (lastPhase && phase !== lastPhase && (phase.startsWith("court") || phase === "next")) { sprinkles(); buzz(); }
   lastPhase = phase;
-  box.innerHTML = html;
+  box.innerHTML = html + myNight(me);
+}
+// "Your night": a running scorecard, like a member's card at the clubhouse
+function myNight(me) {
+  const g = (me.w || 0) + (me.l || 0); if (!g) return "";
+  const diff = (me.pf || 0) - (me.pa || 0), mins = Math.max(1, Math.round((Date.now() - (me.joined || Date.now())) / 60000));
+  const pals = Object.entries(me.partners || {}).sort((a, b) => b[1] - a[1]).map(([id]) => S.players[id]?.name).filter(Boolean).slice(0, 3);
+  const best = me.streak >= 2 ? `<span class="mn-tag">${me.streak} wins in a row</span>` : "";
+  return `<div class="mynight"><div class="mn-h"><span>Your night</span><img src="/assets/brand/mark.svg" alt=""></div>
+    <div class="mn-s"><div><b>${g}</b><small>game${g === 1 ? "" : "s"}</small></div><div><b>${me.w || 0}</b><small>won</small></div><div><b>${diff > 0 ? "+" : ""}${diff}</b><small>points</small></div><div><b>${mins < 60 ? mins + "m" : Math.floor(mins / 60) + "h" + String(mins % 60).padStart(2, "0")}</b><small>at the club</small></div></div>
+    ${pals.length ? `<p>Partnered with <b>${pals.map(DD.esc).join(", ")}</b></p>` : ""}${best}</div>`;
 }
 
 let lastRes = null;

@@ -146,6 +146,24 @@
 .team p{opacity:.85;margin:10px 0 0;max-width:52ch}
 @media (max-width:700px){.team{grid-template-columns:1fr}}
 
+/* ---------- The Clubhouse Collection ---------- */
+.ctc{margin:90px 0 0}
+.ctc-h{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:28px}
+.ctc-h h2{font-size:clamp(34px,5vw,58px);max-width:16ch}.ctc-h h2 span{font-style:italic;font-weight:700;color:#9C7A45}
+.ctc-h .note{max-width:46ch;margin:0}
+.ctc-grid{display:grid;gap:16px;grid-template-columns:repeat(5,minmax(0,1fr))}@media(max-width:1100px){.ctc-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:760px){.ctc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:480px){.ctc-grid{grid-template-columns:1fr}}
+.ct{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:14px 14px 18px;display:grid;gap:10px;box-shadow:0 20px 40px -30px rgba(29,40,64,.45)}
+.ct .pic{position:relative;border-radius:16px;background:radial-gradient(ellipse at 50% 35%,#FBF7EF,#E6DAC4);aspect-ratio:1;display:grid;place-items:center;overflow:hidden}
+.ct .pic svg{width:92%;height:auto;display:block}
+.ct .flip{position:absolute;right:10px;bottom:10px;border:0;border-radius:999px;padding:7px 12px;font:700 12px var(--body);background:rgba(29,40,64,.86);color:#F4EFE3;cursor:pointer}
+.ct h3{font-size:20px;line-height:1.1}.ct .pr{font:700 14px var(--body);color:#9C7A45;white-space:nowrap}
+.ct p{margin:0;font-size:14px;color:var(--muted);line-height:1.5}
+.ct .sw{display:flex;gap:8px;flex-wrap:wrap}
+.ct .sw button{width:28px;height:28px;border-radius:50%;border:1px solid rgba(29,40,64,.25);cursor:pointer;padding:0}
+.ct .sw button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--bg),0 0 0 4px #9C7A45}
+.ct .row{display:flex;gap:8px;align-items:center}
+.ct select{padding:9px 12px;border-radius:12px;font-size:14px}
+.ct .cw{font-size:12px;color:var(--muted);letter-spacing:.04em}
 /* ---------- Coming soon ---------- */
 .soon-h{margin:70px 0 18px;display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap}
 .soon-h h2{font-size:clamp(28px,4vw,40px)}
@@ -254,6 +272,12 @@
   <section class="specs" id="specs"></section>
   <div class="chart" id="chart"></div>
 
+  <section class="ctc" id="clubhouse">
+    <div class="ctc-h"><div><div class="eyebrow">Drop 02 · The Clubhouse Collection</div><h2>Old-school whites, <span>pickleball manners.</span></h2></div>
+      <p class="note">Five heavyweight cotton tees cut like the ones from the old lawn and racquet clubs. 240 gsm combed cotton, garment-dyed for a lived-in softness, a woven neck label, and artwork printed soft into the fabric. Made in small runs.</p></div>
+    <div class="ctc-grid" id="ctcGrid"></div>
+  </section>
+
   <section class="team">
     <div><div class="eyebrow" style="color:var(--ball)">Teams and tournaments</div><h2>Kitting out a squad? <span>Let’s talk.</span></h2><p>Matching jerseys for your tournament team, with every player’s name and number. Message us with your team name and sizes and we’ll send a quote.</p></div>
     <a class="btn lime" id="teamBtn" href="https://wa.me/97430763431" target="_blank" rel="noopener">Get a team quote</a>
@@ -292,6 +316,7 @@
 <script src="/js/merch.js"></script>
 <script src="/js/jersey.js"></script>
 <script src="/js/mockup.js"></script>
+<script src="/js/clubtee.js"></script>
 <script src="/js/set.js"></script>
 <script>
 const $ = id => document.getElementById(id), C = window.CLUB, J = window.Jersey;
@@ -309,6 +334,10 @@ const PRODUCTS = {
   pro: { ...window.PRO, ways: J.PRO_WAYS, draw: o => photo("polo", { ...o, tag: "MABUHAY" }, J.PRO_WAYS, J.renderPro), defWay: "bughaw" },
   polo: { ...window.POLO, ways: J.POLO_WAYS, draw: o => photo("polo", o, J.POLO_WAYS, J.renderPolo), defWay: "clubhouse" },
 };
+// The Clubhouse Collection joins the bag like any other product
+const CT_FITS = ["Unisex fit"], CT_SIZES = ["XS", "S", "M", "L", "XL", "2XL"];
+Object.keys(ClubTee.DESIGNS).forEach(k => { const d = ClubTee.DESIGNS[k];
+  PRODUCTS["ct-" + k] = { name: d.name, price: d.price, club: true, fits: CT_FITS, sizes: CT_SIZES, ways: ClubTee.COLOURS, defWay: d.way, draw: o => ClubTee.render(k, o) }; });
 const ED = window.EDITION || { name: "The 20", cap: 20, extra: 60 }; let edLeft = ED.cap;
 const unit = l => PRODUCTS[l.p].price + (l.edition ? ED.extra : 0);
 const st = { p: "jersey", side: "front", qty: 1, jersey: { way: "glaze", print: "full", name: "", num: "", fit: 0, size: "M" }, pro: { way: "bughaw", print: "full", name: "", num: "", fit: 0, size: "M" }, polo: { way: "clubhouse", print: "name", name: "", num: "", fit: 0, size: "M" }, set: { way: "navy", print: "name", name: "", num: "", fit: 0, size: "S" } };
@@ -372,6 +401,7 @@ $("qp").onclick = () => { st.qty = Math.min(20, st.qty + 1); $("qv").textContent
 let bag = []; try { bag = JSON.parse(localStorage.getItem("dd-bag2")) || []; } catch {}
 const saveBag = () => { try { localStorage.setItem("dd-bag2", JSON.stringify(bag)); } catch {} };
 function describe(l) {
+  if (PRODUCTS[l.p].club) return [PRODUCTS[l.p].ways[l.way].label, "Size " + l.size].join(" · ");
   const p = PRODUCTS[l.p], w = p.ways[l.way], bits = [w.label, p.fits[l.fit], "Size " + l.size];
   if (l.print === "plain") bits.push((l.p === "jersey" || l.p === "pro") ? "Plain back" : "No name");
   else bits.push((l.p === "jersey" || l.p === "pro") && l.print === "full" ? `Name: ${l.name || "-"} · Number: ${l.num || "-"}` : `Name: ${l.name || "-"}`);
@@ -388,7 +418,7 @@ function addLine() {
 }
 function renderBag() {
   $("cnt").textContent = bag.reduce((a, l) => a + l.qty, 0);
-  $("lines").innerHTML = bag.length ? bag.map((l, i) => `<div class="line">${PRODUCTS[l.p].draw({ way: l.way, side: "back", name: l.name, num: l.num, print: l.print, edition: l.edition, edNo: l.edNo })}<div><b>${esc(PRODUCTS[l.p].name)}</b><br><small>${esc(describe(l))}</small><br><small>${money(PRODUCTS[l.p].price)}</small></div><div class="lq"><button data-q="${i}" data-d="-1" aria-label="One less">–</button><b class="tabnum">${l.qty}</b><button data-q="${i}" data-d="1" aria-label="One more">+</button></div></div>`).join("") : '<p class="empty">Your bag is empty.</p>';
+  $("lines").innerHTML = bag.length ? bag.map((l, i) => `<div class="line">${PRODUCTS[l.p].draw({ way: l.way, side: PRODUCTS[l.p].club ? "front" : "back", name: l.name, num: l.num, print: l.print, edition: l.edition, edNo: l.edNo })}<div><b>${esc(PRODUCTS[l.p].name)}</b><br><small>${esc(describe(l))}</small><br><small>${money(PRODUCTS[l.p].price)}</small></div><div class="lq"><button data-q="${i}" data-d="-1" aria-label="One less">–</button><b class="tabnum">${l.qty}</b><button data-q="${i}" data-d="1" aria-label="One more">+</button></div></div>`).join("") : '<p class="empty">Your bag is empty.</p>';
   $("total").textContent = money(bag.reduce((a, l) => a + l.qty * unit(l), 0));
   $("order").hidden = !bag.length;
 }
@@ -399,6 +429,7 @@ const bagTotal = lines => lines.reduce((a, l) => a + l.qty * unit(l), 0);
 // Plain text with WhatsApp bold; no emoji (they can arrive garbled through links)
 const orderText = (lines, who) => {
   const ref = orderRef(), items = lines.map(l => { const p = PRODUCTS[l.p], w = p.ways[l.way];
+    if (p.club) return `${l.qty} × ${p.name} - ${money(l.qty * unit(l))}\n   ${w.label} · Size ${l.size}`;
     const back = l.print === "plain" ? ((l.p === "jersey" || l.p === "pro") ? "Plain back" : "No name") : ((l.p === "jersey" || l.p === "pro") && l.print === "full" ? `Back: ${l.name} · No. ${l.num}` : `Name: ${l.name}`);
     return `${l.qty} × ${p.name}${l.edition ? ` · *THE 20 · Nº ${String(l.edNo || "__").padStart(2, "0")} / ${ED.cap}*` : ""} - ${money(l.qty * unit(l))}\n   ${w.label} · ${p.fits[l.fit]} · Size ${l.size}\n   ${back}`; }).join("\n\n");
   return [`*Dink Different · Shop order*`, `Order ref: *${ref}*`, `Name: ${who || "-"}`, "", items, "", `*Total: ${money(bagTotal(lines))}*`, "",
@@ -458,6 +489,28 @@ function refreshEd() { fetch("/api/edition").then(r => r.json()).then(j => { edL
 refreshEd();
 $("copy").onclick = () => navigator.clipboard?.writeText($("summary").textContent).catch(() => {});
 $("teamBtn").href = `https://wa.me/${WA}?text=${encodeURIComponent("Hi Dink Different! I'd like a team quote for Club Jerseys.\nTeam name:\nNumber of players:\nSizes:")}`;
+
+// The Clubhouse Collection cards
+const ctState = {};
+function ctCard(k) {
+  const d = ClubTee.DESIGNS[k], s = ctState[k] || (ctState[k] = { way: d.way, side: "front", size: "M" });
+  return `<article class="ct" data-k="${k}"><div class="pic">${ClubTee.render(k, s)}<button class="flip" type="button" data-flip="${k}">${s.side === "front" ? "See the back" : "See the front"}</button></div>
+    <div class="row" style="justify-content:space-between;align-items:baseline"><h3>${esc(d.name.replace(/^The /, ""))}</h3><span class="pr">${money(d.price)}</span></div>
+    <p>${esc(d.blurb)}</p>
+    <div class="row" style="justify-content:space-between"><div class="sw">${d.ways.map(w => `<button type="button" data-ctway="${k}|${w}" aria-pressed="${w === s.way}" aria-label="${ClubTee.COLOURS[w].label}" style="background:${ClubTee.COLOURS[w].body}"></button>`).join("")}</div><span class="cw">${ClubTee.COLOURS[s.way].label}</span></div>
+    <div class="row"><select data-size="${k}" aria-label="Size">${CT_SIZES.map(z => `<option${z === s.size ? " selected" : ""}>${z}</option>`).join("")}</select><button class="btn sm" type="button" data-add="${k}" style="flex:1">Add to bag</button></div></article>`;
+}
+function ctPaint(k) { const el = document.querySelector(`.ct[data-k="${k}"]`); if (el) el.outerHTML = ctCard(k); else $("ctcGrid").innerHTML = Object.keys(ClubTee.DESIGNS).map(ctCard).join(""); }
+$("ctcGrid").innerHTML = Object.keys(ClubTee.DESIGNS).map(ctCard).join("");
+$("ctcGrid").addEventListener("click", e => {
+  const f = e.target.closest("[data-flip]"), w = e.target.closest("[data-ctway]"), a = e.target.closest("[data-add]");
+  if (f) { const s = ctState[f.dataset.flip]; s.side = s.side === "front" ? "back" : "front"; ctPaint(f.dataset.flip); }
+  if (w) { const [k, way] = w.dataset.ctway.split("|"); ctState[k].way = way; ctPaint(k); }
+  if (a) { const k = a.dataset.add, s = ctState[k], line = { edition: false, p: "ct-" + k, way: s.way, print: "plain", name: "", num: "", fit: 0, size: s.size, qty: 1 };
+    const key = l => JSON.stringify({ ...l, qty: 0 }), ex = bag.find(l => key(l) === key(line)); ex ? ex.qty++ : bag.push(line); saveBag(); renderBag();
+    a.textContent = "Added"; setTimeout(() => { a.textContent = "Add to bag"; }, 1400); document.getElementById("bagBtn")?.classList.add("bump"); }
+});
+$("ctcGrid").addEventListener("change", e => { const z = e.target.closest("[data-size]"); if (z) ctState[z.dataset.size].size = z.value; });
 
 // Coming soon shelf
 const logo = (x, y, s) => `<image href="/assets/logo.svg" x="${x}" y="${y}" width="${s}" height="${s}"/>`;
