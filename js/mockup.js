@@ -37,7 +37,7 @@
     s += '<text x="' + cx + '" y="' + (y - sz * 0.95).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.017).toFixed(1) + '" letter-spacing="' + (W * 0.008).toFixed(1) + '" fill="' + ink + '">PICKLEBALL CLUB</text>';
     s += '<text x="' + cx + '" y="' + y.toFixed(1) + '" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-weight="700" font-size="' + sz.toFixed(1) + '" fill="' + ink + '" style="font-variation-settings:\'SOFT\' 100,\'WONK\' 1">Dink Different</text>';
     s += '<path d="M' + (cx - W * 0.25).toFixed(1) + " " + (y + sz * 0.2).toFixed(1) + "C" + (cx - W * 0.05).toFixed(1) + " " + (y + sz * 0.42).toFixed(1) + " " + (cx + W * 0.15).toFixed(1) + " " + (y + sz * 0.38).toFixed(1) + " " + (cx + W * 0.26).toFixed(1) + " " + (y + sz * 0.1).toFixed(1) + '" fill="none" stroke="' + acc + '" stroke-width="' + (W * 0.007).toFixed(1) + '" stroke-linecap="round"/>';
-    var bx = cx + W * 0.325, by = y - sz * 0.32, br = W * 0.016; s += '<circle cx="' + bx.toFixed(1) + '" cy="' + by.toFixed(1) + '" r="' + br.toFixed(1) + '" fill="' + ballCol + '"/>' + [[-.4, -.3], [.35, -.35], [0, .2], [-.3, .45], [.45, .3]].map(function (q) { return '<circle cx="' + (bx + q[0] * br).toFixed(1) + '" cy="' + (by + q[1] * br).toFixed(1) + '" r="' + (br * 0.12).toFixed(2) + '" fill="' + ink + '" opacity=".45"/>'; }).join("");
+    var bx = cx + W * 0.2, by = y - sz * 1.08, br = W * 0.016; s += '<circle cx="' + bx.toFixed(1) + '" cy="' + by.toFixed(1) + '" r="' + br.toFixed(1) + '" fill="' + ballCol + '"/>' + [[-.4, -.3], [.35, -.35], [0, .2], [-.3, .45], [.45, .3]].map(function (q) { return '<circle cx="' + (bx + q[0] * br).toFixed(1) + '" cy="' + (by + q[1] * br).toFixed(1) + '" r="' + (br * 0.12).toFixed(2) + '" fill="' + ink + '" opacity=".45"/>'; }).join("");
     s += '<text x="' + cx + '" y="' + (y + sz * 0.78).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.0125).toFixed(1) + '" letter-spacing="' + (W * 0.006).toFixed(1) + '" fill="' + ink + '">ESTABLISHED 2026 · DOHA</text>';
     [-1, 1].forEach(function (d) { s += '<g transform="translate(' + cx + " " + (y + sz * 1.18).toFixed(1) + ") rotate(" + d * 36 + ')" fill="' + acc + '"><rect x="' + (-W * 0.011).toFixed(1) + '" y="' + (-W * 0.046).toFixed(1) + '" width="' + (W * 0.022).toFixed(1) + '" height="' + (W * 0.029).toFixed(1) + '" rx="' + (W * 0.01).toFixed(1) + '"/><rect x="' + (-W * 0.0028).toFixed(1) + '" y="' + (-W * 0.019).toFixed(1) + '" width="' + (W * 0.0056).toFixed(1) + '" height="' + (W * 0.036).toFixed(1) + '"/></g>'; });
     return s; }
@@ -54,6 +54,7 @@
       // tonal piqué: tiny pickleball holes in a staggered grid, same colour family as the fabric
       '<pattern id="' + id + 'pq" width="26" height="22" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="3.1"/><circle cx="19" cy="17" r="3.1"/></pattern>' +
       '<pattern id="' + id + 'rib" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="1.6" height="4"/></pattern>' +
+      '<pattern id="' + id + 'dry" width="9" height="8" patternUnits="userSpaceOnUse"><circle cx="2.25" cy="2" r="1.15"/><circle cx="6.75" cy="6" r="1.15"/></pattern>' +
       (kind === "tee" ? '<linearGradient id="' + id + 'nf" gradientUnits="userSpaceOnUse" x1="' + W * 0.28 + '" x2="' + W * 0.62 + '"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>' +
         '<mask id="' + id + 'nk" maskUnits="userSpaceOnUse" x="0" y="0" width="' + W + '" height="' + H + '"><rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'nf)"/></mask>' +
         '<linearGradient id="' + id + 'nh" gradientUnits="userSpaceOnUse" x1="' + W * 0.22 + '" x2="' + W * 0.6 + '"><stop offset="0" stop-color="#000"/><stop offset=".45" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>' +
@@ -75,12 +76,12 @@
     // THE KNIT: tonal texture you'd see on real fabric (piqué on polos, a fine rib on the jersey, a banig weave on the Mabuhay)
     s += '<g style="mix-blend-mode:multiply"><rect width="' + W + '" height="' + H + '" fill="' + c.body + '"/>';
     if (kind === "polo") s += '<rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'pq)" opacity=".07"/>';
-    else s += '<rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'rib)" opacity=".06"/>';
+    else s += '<rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'dry)" opacity="' + (c.light ? ".09" : ".2") + '"/>'; // dry-fit bird-eye mesh
     if (o.tag) s += '<rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'bn)" opacity=".12"/>';
     s += "</g>";
     // fine double tipping on both cuffs
     var sw = (W * 0.0045).toFixed(1);
-    z.cuffs.forEach(function (cf) {
+    if (kind !== "tee") z.cuffs.forEach(function (cf) {
       s += '<path stroke="' + c.tip + '" stroke-width="' + sw + '" d="M' + P(cf[0][0], cf[0][1]) + " L" + P(cf[1][0], cf[1][1]) + '"/>';
       s += '<path stroke="' + hair + '" stroke-width="' + sw + '" d="M' + P(cf[0][0], cf[0][1] + 0.011) + " L" + P(cf[1][0], cf[1][1] + 0.011) + '"/>';
     });

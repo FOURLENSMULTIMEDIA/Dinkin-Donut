@@ -6,13 +6,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://dinkindonut.asia/merch">
 <meta property="og:title" content="Club Shop · Dink Different">
-<meta property="og:description" content="The Club Jersey and the Clubhouse Polo by Dink Different Pickleball Club, Doha. Personalise your name and jersey number. Pre-order now.">
+<meta property="og:description" content="The Club Jersey, the Court Set and the Clubhouse Collection by Dink Different Pickleball Club, Doha. Personalise your name and jersey number. Pre-order now.">
 <meta property="og:image" content="https://dinkindonut.asia/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Club Shop · Dink Different">
-<meta name="twitter:description" content="The Club Jersey and the Clubhouse Polo by Dink Different Pickleball Club, Doha. Personalise your name and jersey number. Pre-order now.">
+<meta name="twitter:description" content="The Club Jersey, the Court Set and the Clubhouse Collection by Dink Different Pickleball Club, Doha. Personalise your name and jersey number. Pre-order now.">
 <meta name="twitter:image" content="https://dinkindonut.asia/assets/og.png">
-<meta name="description" content="The Club Jersey and the Clubhouse Polo by Dink Different Pickleball Club, Doha. Personalise your name and jersey number. Pre-order now.">
+<meta name="description" content="The Club Jersey, the Court Set and the Clubhouse Collection by Dink Different Pickleball Club, Doha. Personalise your name and jersey number. Pre-order now.">
 <meta name="theme-color" content="#F4EFE3">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -234,7 +234,7 @@
     <div class="sc" data-s="1"><div class="dripwall"><svg viewBox="0 0 1200 70" preserveAspectRatio="none"><path fill="#9C7A45" d="M0 0h1200v20c-30 0-40 40-70 40s-30-30-60-30-40 50-80 50-30-40-60-40-50 30-90 30-40-40-80-40-30 30-60 30-40-20-70-20-40 44-80 44-30-34-60-34-40 20-80 20-30-30-60-30-50 40-90 40-30-30-60-30-40 24-60 24V0z"/></svg></div><div class="cap" style="color:#1D2840;position:relative"><small style="color:#1D2840">Introducing</small>Cut for the court.</div></div>
     <div class="sc" data-s="2"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage push"><div class="flip" id="fJ"></div></div><div class="tag"><span>Your name · your number</span><b id="fName">Made for you.</b></div></div>
     <div class="sc" data-s="3"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="row3" id="fRow"></div></div>
-    <div class="sc" data-s="4"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage push" id="fPolo"></div><div class="tag"><span>Also new</span>The Court Polo.</div></div>
+    <div class="sc" data-s="4"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage push" id="fPolo"></div><div class="tag"><span>For her</span>The Court Set.</div></div>
     <div class="sc" data-s="5"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="row7" id="fSeven"></div><div class="tag"><span>Seven colourways</span>One club.</div></div>
     <div class="sc" data-s="6"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage push" id="fPro"></div><div class="tag"><span>New · Drop 02</span>The Clubhouse Collection.</div></div>
     <div class="sc" data-s="7"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage"><div class="flip" id="fOne"></div></div><div class="tag"><span id="fOneTag">Your shirt</span>Your name. Your number.</div></div>
@@ -248,7 +248,7 @@
   <!-- Builder -->
   <div class="shop-h" id="build">
     <div><div class="eyebrow">Club shop · Drop 01</div><h2>Make it yours.</h2></div>
-    <div class="tabs" role="tablist" aria-label="Product"><button role="tab" aria-selected="true" data-p="jersey">Club Jersey</button><button role="tab" aria-selected="false" data-p="set">Court Set · Women</button><button role="tab" aria-selected="false" data-p="polo">Court Polo</button></div>
+    <div class="tabs" role="tablist" aria-label="Product"><button role="tab" aria-selected="true" data-p="jersey">Club Jersey</button><button role="tab" aria-selected="false" data-p="set">Court Set · Women</button></div>
   </div>
 
   <section class="builder">
@@ -344,7 +344,6 @@ const GRAPHIC = { court: "Court Map back print", social: "Courtside Social back 
 const PRODUCTS = {
   set: { ...window.SET, ways: CourtSet.WAYS, draw: o => CourtSet.render(o), defWay: "navy" },
   jersey: { ...window.JERSEY, ways: J.WAYS, draw: o => photo("tee", o, J.WAYS, J.render), defWay: "glaze" },
-  polo: { ...window.POLO, ways: J.POLO_WAYS, draw: o => photo("polo", o, J.POLO_WAYS, J.renderPolo), defWay: "clubhouse" },
 };
 // The Clubhouse Collection joins the bag like any other product
 const CT_FITS = ["Unisex fit"], CT_SIZES = ["XS", "S", "M", "L", "XL", "2XL"];
@@ -366,7 +365,7 @@ function renderPanel() {
   $("pName").textContent = p.name; $("pPrice").textContent = money(p.price + (o.edition ? ED.extra : 0));
   document.querySelectorAll("[data-ed]").forEach(b => { b.setAttribute("aria-pressed", String(!!o.edition) === String(b.dataset.ed === "1")); if (b.dataset.ed === "1") { b.disabled = edLeft <= 0 && !o.edition; b.textContent = edLeft <= 0 && !o.edition ? "The 20 · sold out" : `The 20 · numbered · +${ED.extra} QAR`; } });
   $("edLeft").textContent = edLeft > 0 ? `${edLeft} of ${ED.cap} left` : "Sold out"; $("leadTime").textContent = p.leadTime;
-  $("pLead").textContent = st.p === "set" ? "Our women’s court set. A fitted polo with an open contrast collar and fine tipping, over a pleated court skirt. Clean, classic, and very Dink Different." : st.p === "pro" ? "Our court polo." : st.p === "jersey" ? "Our pickleball performance tee: two balls in motion across the chest, the crest held sharp, and your number sprayed big on the back, fading into grain like a vintage team print. Name and number free." : "Built for court, sharp enough for the clubhouse. A soft piqué knit, fine tipping on the cuffs and a small embroidered crest.";
+  $("pLead").textContent = st.p === "set" ? "Our women’s court set. A fitted polo with an open contrast collar and fine tipping, over a pleated court skirt. Clean, classic, and very Dink Different." : st.p === "pro" ? "Our court polo." : st.p === "jersey" ? "Our dry-fit pickleball tee: moisture-wicking performance mesh, a varsity club lockup across the chest, and your number sprayed big on the back, fading into grain. Name and number free." : "Built for court, sharp enough for the clubhouse. A soft piqué knit, fine tipping on the cuffs and a small embroidered crest.";
   $("eds").closest(".opt").hidden = st.p === "set"; if (st.p === "set") o.edition = false;
   $("ways").innerHTML = Object.entries(p.ways).map(([k, w]) => `<button class="way" type="button" data-way="${k}" aria-pressed="${o.way === k}">${p.draw({ way: k, side: "front" })}<b>${w.label}</b><small>${w.note}</small></button>`).join("");
   $("wayName").textContent = p.ways[o.way].label;

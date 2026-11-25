@@ -22,7 +22,7 @@
     }
     if (has("s-wear") && window.Jersey) {
       var J = window.Jersey;
-      $("#adRack").innerHTML = Mockup.tee({ way: "glaze", side: "front" }) + Mockup.tee({ way: "cream", side: "front" }) + Mockup.tee({ way: "sage", side: "front" }) + Mockup.polo({ way: "night", side: "front" });
+      $("#adRack").innerHTML = Mockup.tee({ way: "glaze", side: "front" }) + Mockup.tee({ way: "cream", side: "front" }) + Mockup.tee({ way: "sage", side: "front" }) + Mockup.tee({ way: "court", side: "front" });
     }
     if (has("s-one") && window.Jersey) {
       var full = "ANGEL", box = $("#adOne"), tag = $("#adOneTag");

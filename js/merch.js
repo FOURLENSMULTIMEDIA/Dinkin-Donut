@@ -14,11 +14,11 @@ window.JERSEY = {
   specs: [
     ["Court cut", "Slim athletic fit with a curved shirt-tail hem and side vents."],
     ["The spray number", "Your number sprayed big across the back, fading into grain. Sublimated, so it never cracks."],
-    ["The rally", "Two balls in motion across the chest, with the crest embroidered sharp on top."],
-    ["Performance knit", "Lightweight, quick-dry fabric for Doha nights."],
+    ["The club lockup", "A varsity chest graphic: Pickleball Club over the Dink Different script, a ball and crossed paddles."],
+    ["Dry-fit performance mesh", "100% polyester bird-eye mesh, about 140 gsm. Moisture-wicking and quick-drying for Doha nights."],
     ["Full sublimation", "Colours are dyed into the fabric. They won't crack or peel."],
     ["Mesh side panels", "Airflow where you need it during long rallies."],
-    ["Raglan sleeves", "Cut for a full swing, overheads included."],
+    ["Clean sleeves", "Set-in sleeves cut for a full swing, no stripes, nothing to distract."],
   ],
   // Approximate chest width, laid flat (cm)
   sizeChart: { XS: 46, S: 49, M: 52, L: 55, XL: 58, "2XL": 61, "3XL": 64 },
