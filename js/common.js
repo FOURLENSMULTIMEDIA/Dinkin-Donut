@@ -29,13 +29,14 @@ window.DD = {
     });
     const j = await r.json().catch(() => ({ error: "Unexpected reply from server." }));
     if (!r.ok) { const e = new Error(j.error || "Something went wrong."); e.signin = Boolean(j.signin); throw e; }
+    if (j && j.v) DD.maxV = Math.max(DD.maxV || 0, j.v); // a slower, older poll must never overwrite this newer state
     return j;
   },
   // Poll the shared queue; slows down when the tab is hidden.
   live(onState, ms = 3000, pinFn) {
     let timer, last = -1;
     const run = async () => {
-      try { const S = await DD.get(pinFn && pinFn()); if (S.v !== last) { last = S.v; onState(S); } DD.status(true); }
+      try { const S = await DD.get(pinFn && pinFn()); if (S.v !== last && !(S.v < (DD.maxV || 0))) { last = S.v; DD.maxV = Math.max(DD.maxV || 0, S.v || 0); onState(S); } DD.status(true); }
       catch { DD.status(false); }
       timer = setTimeout(run, document.hidden ? ms * 4 : ms);
     };

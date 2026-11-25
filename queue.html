@@ -66,6 +66,7 @@
 .me.oncourt{background:var(--glaze)}
 .me.oncourt .big{color:var(--cream)}
 .me.upnext{background:var(--court)}
+.checkedin{margin-top:12px;padding:12px;border-radius:14px;background:#4F8D5B;color:#fff;text-align:center;font-weight:700}
 @keyframes glow{to{transform:scale(1.02)}}
 .cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px}
 @media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}}
@@ -138,6 +139,7 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
         <label><input type="radio" name="g" value="f"><span>Woman</span></label>
       </fieldset>
       <label class="preq">Playing with a partner? <span>(optional, the host confirms)</span><input id="partnerReq" maxlength="40" placeholder="Partner’s name"></label>
+      <label class="preq">WhatsApp <span>(optional, so the host can tell you when you’re up)</span><input id="waPhone" type="tel" inputmode="tel" maxlength="16" placeholder="e.g. 3076 3431"></label>
     </form>
     <p class="err" id="err" hidden></p>
   </section>
@@ -206,6 +208,13 @@ function sprinkles() {
     s.style.animationDelay = Math.random() * .5 + "s"; document.body.appendChild(s); setTimeout(() => s.remove(), 2400);
   }
 }
+function alertsOn() { try { return localStorage.getItem("dd-alerts") === "1" || ("Notification" in window && Notification.permission === "granted"); } catch { return false; } }
+function notify(title, body) {
+  try { if ("Notification" in window && Notification.permission === "granted" && document.hidden) { const n = new Notification(title, { body, icon: "/assets/app/icon-192.png", tag: "dd-turn", renotify: true, vibrate: [300, 120, 300] }); n.onclick = () => { window.focus(); n.close(); }; } } catch {}
+  try { if (document.hidden) document.title = "🔔 " + title + " · " + document.title.replace(/^🔔 [^·]*· /, ""); } catch {}
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) document.title = document.title.replace(/^🔔 [^·]*· /, ""); });
+setInterval(() => { const el = document.getElementById("callLeft"); if (!el || !S || !S.callTime) return; const cl = Math.round((+el.dataset.called + S.callTime * 60000 - Date.now()) / 1000); el.textContent = cl > 0 ? "Tap within " + Math.floor(cl / 60) + ":" + String(cl % 60).padStart(2, "0") + " or your spot goes to the next player" : "Hurry: the host can give your spot to the next player"; }, 1000);
 function buzz() {
   try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {}
   // Two-tone chime, audible over court noise
@@ -239,9 +248,11 @@ function renderMe() {
   const share = lim ? `<div class="share" aria-label="${gp} of ${lim} games played">${Array.from({ length: lim }, (_, i) => `<i class="${i < gp ? "on" : ""}"></i>`).join("")}<span>${Math.min(gp, lim)} of ${lim} games</span></div>` : "";
   const rec = `<p style="margin:0">Tonight: <b>${me.w}W · ${me.l}L</b>${me.streak > 1 ? ` · on a ${me.streak}-game streak` : ""}</p>${share}`;
   if (court) {
-    phase = "court" + court.id; box.classList.add("oncourt");
+    phase = "court" + court.id + ":" + ((court.calls && court.calls[meId]) || court.start); box.classList.add("oncourt");
     const mine = court.teams.findIndex(t => t.includes(meId));
-    html = `<div class="invite"><img src="/assets/brand/mark.svg" alt=""><small>Dink Different requests the pleasure of your company on</small><span class="big">Court ${court.id}</span><i></i><p>With <b>${DD.team(S, court.teams[mine].filter(x => x !== meId)) || "solo"}</b><br>versus <b>${DD.team(S, court.teams[1 - mine])}</b></p><em>Play well. Shake hands at the net.</em></div>${rec}`;
+    const hereNow = (court.here || []).includes(meId), calledAt = (court.calls && court.calls[meId]) || court.called || court.start, cl = S.callTime ? Math.round((calledAt + S.callTime * 60000 - Date.now()) / 1000) : 0;
+    var checkin = !S.callTime ? "" : hereNow ? `<div class="checkedin">✓ You’re checked in on Court ${court.id}</div>` : `<button class="btn lime" id="imHere" style="width:100%;margin-top:12px">I’m on court ✓</button><p class="muted" style="margin:6px 0 0;text-align:center" id="callLeft" data-called="${calledAt}">${cl > 0 ? "Tap within " + Math.floor(cl / 60) + ":" + String(cl % 60).padStart(2, "0") + " or your spot goes to the next player" : "Hurry: the host can give your spot to the next player"}</p>`;
+    html = `<div class="invite"><img src="/assets/brand/mark.svg" alt=""><small>Dink Different requests the pleasure of your company on</small><span class="big">Court ${court.id}</span><i></i><p>With <b>${DD.team(S, court.teams[mine].filter(x => x !== meId)) || "solo"}</b><br>versus <b>${DD.team(S, court.teams[1 - mine])}</b></p><em>Play well. Shake hands at the net.</em></div>${checkin}${rec}`;
   } else if (staying) {
     phase = "stay"; box.classList.add("upnext");
     html = `<div class="eyebrow" style="color:var(--ball)">Winners stay</div><h1>Stay on Court ${staying.id}</h1><p style="margin:0">Your next opponents are on their way.</p>${rec}`;
@@ -249,7 +260,7 @@ function renderMe() {
     phase = pos < need ? "next" : "wait"; if (pos < need) box.classList.add("upnext");
     html = `<div class="eyebrow" style="color:var(--ball)">${pos < need ? "Get your paddle ready" : "You’re in the queue"}</div>
       <div class="ticket"><span class="big">#${pos + 1}</span><div><b>${DD.esc(me.name)}</b> ${LV[me.level] || ""}<br>${pos < need ? "You’re on the next open court." : `${pos} ahead of you`}<br><span class="eta">${DD.icon("clock", 15)} ${eta(pos)}</span></div></div>
-      ${rec}<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost sm" id="leave">Take a break</button><button class="btn ghost sm" id="notme">Not ${DD.esc(me.name)}?</button></div>`;
+      ${rec}<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost sm" id="leave">Take a break</button>${alertsOn() ? "" : `<button class="btn ghost sm" id="alertsBtn">🔔 Alert me when I’m up</button>`}<button class="btn ghost sm" id="notme">Not ${DD.esc(me.name)}?</button></div>`;
   } else if ((S.done || []).includes(meId)) {
     phase = "done";
     html = `<div class="eyebrow" style="color:var(--ball)">Done for tonight</div><h1>That’s your ${lim} games, ${DD.esc(me.name)}.</h1><p style="margin:0">Thanks for playing. Everyone gets a fair share tonight. If a court opens up with nobody waiting, you’ll get a bonus game and this page will call you.</p>${rec}`;
@@ -258,7 +269,7 @@ function renderMe() {
     html = `<div class="eyebrow" style="color:var(--dough)">On a break</div><h1>Hi ${DD.esc(me.name)}</h1>${rec}
       <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn lime" id="rejoin">Back in the queue</button><button class="btn ghost sm" id="notme">Not ${DD.esc(me.name)}?</button></div>`;
   }
-  if (lastPhase && phase !== lastPhase && (phase.startsWith("court") || phase === "next")) { sprinkles(); buzz(); }
+  if (lastPhase && phase !== lastPhase && (phase.startsWith("court") || phase === "next")) { sprinkles(); buzz(); notify(phase === "next" ? "You’re up next" : "You’re on " + (court ? "Court " + court.id : "court"), phase === "next" ? "Get your paddle ready: you’re on the next open court." : "Head to the court now and tap “I’m on court”."); }
   lastPhase = phase;
   box.innerHTML = html + myNight(me);
 }
@@ -281,7 +292,7 @@ function render() {
   if (S.lastResult && lastRes !== null && S.lastResult.t !== lastRes && meId && S.lastResult.w.includes(meId)) { celebrate({ ...S.lastResult, wn: ["You"] }, { hold: 3000 }); buzz(); }
   lastRes = S.lastResult ? S.lastResult.t : 0;
   { const r = $("pinRow"); if (r) r.hidden = S.requirePin === false; }
-  $("nightName").textContent = S.nightTitle;
+  { const nn = $("nightName"); if (nn) nn.textContent = S.nightTitle; }
   if (meId) renderMe();
   const need = S.format * 2;
   $("games").textContent = `${S.games} game${S.games === 1 ? "" : "s"}`;
@@ -310,7 +321,7 @@ document.addEventListener("submit", async e => {
     const lvl = (document.querySelector("input[name=level]:checked") || {}).value;
     const pin = [...document.querySelectorAll(".pd")].map(i => i.value).join("");
     const g = (document.querySelector("input[name=g]:checked") || {}).value || "";
-    const st = await DD.send({ type: "join", name: $("name").value, level: lvl, pin, g, partnerReq: $("partnerReq").value });
+    const st = await DD.send({ type: "join", name: $("name").value, level: lvl, pin, g, partnerReq: $("partnerReq").value, phone: ($("waPhone") || {}).value || "" });
     try { localStorage.setItem("dd-pin", pin); } catch {}
     try { localStorage.setItem("dd-name", $("name").value); } catch {}
     buzz.prime = true; try { (window.__ac || (window.__ac = new (window.AudioContext || window.webkitAudioContext)())).resume(); } catch {}
@@ -321,7 +332,9 @@ document.addEventListener("submit", async e => {
 document.addEventListener("click", async e => {
   const id = e.target.id;
   if (id === "leave") { S = await DD.send({ type: "leave", id: meId }); render(); }
-  if (id === "rejoin") { let pin = ""; try { pin = localStorage.getItem("dd-pin") || ""; } catch {} try { S = await DD.send({ type: "join", name: S.players[meId].name, pin }); render(); } catch (x) { alertBox(x.message); } }
+  if (id === "rejoin") { try { S = await DD.send({ type: "back", id: meId }); if (!S.queue.includes(meId)) { let pin = ""; try { pin = localStorage.getItem("dd-pin") || ""; } catch {} S = await DD.send({ type: "join", name: S.players[meId].name, pin }); } render(); } catch (x) { alertBox(x.message); } }
+  if (id === "imHere") { try { S = await DD.send({ type: "here", id: meId }); render(); } catch (x) { alertBox(x.message); } }
+  if (id === "alertsBtn") { if ("Notification" in window) { try { await Notification.requestPermission(); } catch {} } try { localStorage.setItem("dd-alerts", "1"); } catch {} buzz(); render(); }
   if (id === "notme") { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} location.reload(); }
 });
 

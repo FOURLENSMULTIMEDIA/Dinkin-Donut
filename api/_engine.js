@@ -5,7 +5,7 @@ const MAX_LOG = 150;
 function fresh() {
   return {
     v: 0, updatedAt: Date.now(), nightTitle: "Open Play Night",
-    format: 2, rotation: "winstay", maxWins: 2, match: "smart", requirePin: true, autopilot: true, gameCap: 0, target: 11, gameLimit: "auto", sessionEnd: 1440, autoClose: 3, done: [],
+    format: 2, rotation: "winstay", maxWins: 2, match: "smart", requirePin: true, autopilot: true, callTime: 0, autoSwap: false, gameCap: 0, target: 11, gameLimit: "auto", sessionEnd: 1440, autoClose: 3, done: [],
     players: {}, queue: [], bench: [], games: 0, nextId: 1, durSum: 0, durN: 0,
     fee: 0, pay: {}, fawran: "+974 3020 3100",
     courts: [1, 2, 3].map(id => ({ id, teams: null, start: null, stayers: null, streak: 0 })),
@@ -85,7 +85,7 @@ function fillCourt(S, c) {
   S.queue = S.queue.filter(id => !incoming.includes(id));
   c.teams = stay.length ? [stay, incoming] : M.split(S, incoming, S.format);
   c.balance = M.quality(S, c.teams);
-  c.stayers = null; c.start = Date.now();
+  c.stayers = null; c.start = Date.now(); c.called = Date.now(); c.here = stay.slice(); c.calls = {}; incoming.forEach(id => { c.calls[id] = c.called; });
   log(S, `Court ${c.id}: ${names(S, c.teams[0])} vs ${names(S, c.teams[1])}${S.match !== "order" ? ` (${c.balance} match)` : ""}`);
 }
 
@@ -153,6 +153,7 @@ const actions = {
     const player = addPlayer(S, a.name, a.level, false, a.pin);
     const p = S.players[player.id];
     if (a.g === "m" || a.g === "f") p.g = a.g;
+    const ph = String(a.phone || "").replace(/[^\d+]/g, "").slice(0, 16); if (ph.replace(/\D/g, "").length >= 8) p.phone = ph;
     const req = clean(a.partnerReq || "").slice(0, 40);
     if (req && !p.partner) { p.partnerReq = req; log(S, `${p.name} asked to play with ${req}`); }
     return { player };
@@ -163,7 +164,26 @@ const actions = {
     if (!S.bench.includes(p.id)) S.bench.push(p.id);
     log(S, `${p.name} is taking a break`);
   },
+  // Check-in for a called game: the player taps "I'm on court" (or the host ticks them in)
+  here: (S, a) => { const c = S.courts.find(c => c.teams && c.teams.flat().includes(a.id)); if (!c) return; c.here = c.here || []; if (!c.here.includes(a.id)) { c.here.push(a.id); log(S, `${S.players[a.id].name} is on court ${c.id}`); } },
+  // Back from a break (or after a no-show): rejoin the queue
+  back: (S, a) => { const p = S.players[a.id]; if (!p || !S.bench.includes(p.id)) return; S.bench = S.bench.filter(id => id !== p.id); p.away = false; if (!busy(S).has(p.id) && !S.queue.includes(p.id)) S.queue.push(p.id); log(S, `${p.name} is back`); },
   // host
+  hostHere: (S, a) => { const c = court(S, a.court); c.here = c.here || []; c.here = c.here.includes(a.id) ? c.here.filter(x => x !== a.id) : c.here.concat(a.id); },
+  // No-show: swap the absent player for the next person in the queue. First time they go to the back of the queue;
+  // the second time they go on break until they tap "I'm back".
+  noShow: (S, a) => {
+    const c = court(S, a.court), p = S.players[a.id]; if (!c.teams || !p) throw new Error("That player isn’t on this court.");
+    const ti = c.teams.findIndex(t => t.includes(p.id)); if (ti < 0) throw new Error("That player isn’t on this court.");
+    const sub = S.queue.find(id => id !== p.id && !(S.players[id].noShows > 0) && !S.players[id].away) || S.queue.find(id => id !== p.id); if (!sub) throw new Error("Nobody is waiting to swap in yet.");
+    S.queue = S.queue.filter(id => id !== sub);
+    c.teams[ti] = c.teams[ti].map(id => id === p.id ? sub : id); c.here = (c.here || []).filter(id => id !== p.id); c.calls = c.calls || {}; delete c.calls[p.id]; c.calls[sub] = Date.now();
+    p.noShows = (p.noShows || 0) + 1;
+    if (p.noShows >= 2) { if (!S.bench.includes(p.id)) S.bench.push(p.id); p.away = true; log(S, `Court ${c.id}: ${p.name} didn’t show again and is on break. ${S.players[sub].name} plays instead`); }
+    else { S.queue.push(p.id); log(S, `Court ${c.id}: ${p.name} didn’t show, so ${S.players[sub].name} plays. ${p.name} goes to the back of the queue`); }
+    c.balance = M.quality(S, c.teams);
+    return { swapped: { out: p.id, in: sub, court: c.id } };
+  },
   add: (S, a) => ({ player: addPlayer(S, a.name, a.level, true) }),
   // Paid at the door: record payment, create the player if needed, issue a fresh Club Pass PIN.
   pass: (S, a) => {
@@ -308,6 +328,8 @@ const actions = {
     if (a.format && !S.courts.some(c => c.teams)) S.format = Number(a.format) === 1 ? 1 : 2;
     if (typeof a.requirePin === "boolean") S.requirePin = a.requirePin;
     if (typeof a.autopilot === "boolean") S.autopilot = a.autopilot;
+    if (a.callTime !== undefined) S.callTime = [0, 1, 2, 3, 5].includes(Number(a.callTime)) ? Number(a.callTime) : 0;
+    if (typeof a.autoSwap === "boolean") S.autoSwap = a.autoSwap;
     if (a.gameLimit !== undefined) S.gameLimit = a.gameLimit === "auto" ? "auto" : Math.max(0, Math.min(20, parseInt(a.gameLimit, 10) || 0));
     if (a.sessionEnd !== undefined) S.sessionEnd = Math.max(0, Math.min(1800, parseInt(a.sessionEnd, 10) || 1440));
     if (a.autoClose !== undefined) S.autoClose = [0, 1, 2, 3, 4, 6].includes(Number(a.autoClose)) ? Number(a.autoClose) : 3;
@@ -323,13 +345,13 @@ const actions = {
   reset: (S, a) => {
     const n = fresh();
     if (!a.clearRoster) Object.values(S.players).forEach(p => { n.players[p.id] = { id: p.id, name: p.name, level: p.level, g: p.g || "", w: 0, l: 0, streak: 0, pf: 0, pa: 0, joined: Date.now(), in: false }; });
-    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.mixed = !!S.mixed; n.requirePin = S.requirePin !== false; n.autopilot = S.autopilot !== false; n.gameCap = 0; n.target = S.target || 11; n.gameLimit = S.gameLimit ?? "auto"; n.sessionEnd = S.sessionEnd || 1440; n.autoClose = S.autoClose ?? 3;
+    n.nextId = S.nextId; n.fee = S.fee || 0; n.fawran = S.fawran || ""; n.format = S.format; n.rotation = S.rotation; n.maxWins = S.maxWins; n.match = S.match || "smart"; n.mixed = !!S.mixed; n.callTime = S.callTime || 0; n.autoSwap = !!S.autoSwap; n.requirePin = S.requirePin !== false; n.autopilot = S.autopilot !== false; n.gameCap = 0; n.target = S.target || 11; n.gameLimit = S.gameLimit ?? "auto"; n.sessionEnd = S.sessionEnd || 1440; n.autoClose = S.autoClose ?? 3;
     n.courts = S.courts.map(c => ({ id: c.id, teams: null, start: null, stayers: null, streak: 0, level: c.level || "any" }));
     return n;
   },
 };
 
-const PUBLIC = new Set(["join", "leave"]);
+const PUBLIC = new Set(["join", "leave", "here", "back"]);
 
 // Safety net after every action: one place per player. Someone on a court is never also queued;
 // a player on break stays off the queue (if they're mid-game, they finish it and then rest).

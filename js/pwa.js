@@ -11,8 +11,8 @@
 
   var css = document.createElement("style");
   css.textContent =
-    "#dd-install{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:12px;padding:10px 10px 10px 14px;border-radius:999px;background:#1D2840;color:#F4EFE3;font:600 14px 'DM Sans',system-ui,sans-serif;box-shadow:0 16px 40px rgba(0,0,0,.35);max-width:calc(100vw - 24px)}" +
-    "#dd-install img{width:32px;height:32px;border-radius:9px}#dd-install b{display:block;font-size:14px}#dd-install small{opacity:.7;font-size:12px}" +
+    "#dd-install{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:12px;padding:10px 10px 10px 14px;border-radius:22px;width:max-content;max-width:calc(100vw - 24px);box-sizing:border-box;background:#1D2840;color:#F4EFE3;font:600 14px 'DM Sans',system-ui,sans-serif;box-shadow:0 16px 40px rgba(0,0,0,.35);max-width:calc(100vw - 24px)}" +
+    "#dd-install>div,#dd-install>span{min-width:0}#dd-install img{width:32px;height:32px;border-radius:9px;flex:none}#dd-install .go{flex:none;white-space:nowrap}#dd-install b{display:block;font-size:14px}#dd-install small{opacity:.7;font-size:12px}" +
     "#dd-install .go{border:0;border-radius:999px;padding:10px 14px;background:#E2D2A6;color:#1D2840;font:700 13px 'DM Sans',system-ui;cursor:pointer}#dd-install .x{border:0;background:none;color:#F4EFE3;opacity:.6;font-size:18px;cursor:pointer;padding:4px 6px}" +
     "#dd-sheet{position:fixed;inset:0;z-index:95;background:rgba(14,20,34,.6);display:grid;align-items:end}#dd-sheet>div{background:#F4EFE3;color:#1D2840;border-radius:24px 24px 0 0;padding:24px 20px calc(24px + env(safe-area-inset-bottom,0px));font:16px/1.5 'DM Sans',system-ui;max-width:560px;margin:0 auto;width:100%}" +
     "#dd-sheet h3{font:700 24px Fraunces,system-ui;margin:0 0 6px}#dd-sheet ol{padding-left:20px;margin:12px 0}#dd-sheet li{margin:6px 0}#dd-sheet button{width:100%;border:0;border-radius:999px;padding:14px;background:#1D2840;color:#F4EFE3;font:700 15px 'DM Sans';margin-top:8px;cursor:pointer}" +
