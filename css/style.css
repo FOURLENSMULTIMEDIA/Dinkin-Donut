@@ -236,3 +236,9 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;o
 @media print{body::after{display:none}}
 /* Smallest phones: keep the menu bar inside the screen */
 @media (max-width:360px){.nav .wrap{gap:6px}.nav .btn-join{padding:9px 12px;font-size:13px;gap:6px}.nav .btn-join .jb{display:none}.brand img{width:32px;height:32px}}
+/* Menu bar with the language switch: tighter links, and fold them into Menu before they can collide */
+.navlinks a{padding:8px 9px}
+@media (max-width:1300px){.nav .navlinks{display:none}.nav .soundbtn{margin-left:auto}}
+html[dir=rtl] .nav .soundbtn{margin-left:0}
+@media (max-width:480px){.nav .wrap{gap:8px}.nav #dd-lang{width:34px!important;height:34px!important}}
+@media (max-width:1300px){.nav #dd-lang{margin-inline-start:auto}.nav #dd-lang + .soundbtn{margin-left:0!important;margin-inline-start:0!important}}
