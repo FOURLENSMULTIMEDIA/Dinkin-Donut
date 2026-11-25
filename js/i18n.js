@@ -7,7 +7,7 @@
     "First Serve": "الإرسال الأول", "Live courts": "الملاعب الآن", "Club Card": "بطاقة النادي", "Invitational": "البطولة", "Shop": "المتجر", "DUPR": "DUPR",
     "Menu": "القائمة", "Close": "إغلاق", "Join the queue": "انضم إلى الطابور", "The First Serve": "الإرسال الأول", "How a night runs": "كيف تسير الأمسية",
     "Kitchen rules": "قواعد المطبخ", "The Honours Board": "لوحة الشرف", "The Invitational": "البطولة", "DUPR games": "مباريات DUPR", "Contact": "تواصل معنا",
-    "Live": "مباشر", "Live now": "مباشر الآن", "Tap to join.": "اضغط للانضمام.", "Say hi": "قل مرحبًا", "Crew only": "للفريق فقط", "Host console": "لوحة المضيف",
+    "Live": "مباشر", "Live now": "مباشر الآن", "Tap to join.": "اضغط للانضمام.", "Say hi": "قل مرحبًا", "Crew only": "للفريق فقط", "Host console": "لوحة المضيف", "Organisers": "المنظمون", "Organisers · Clubhouse": "المنظمون · النادي", "PIN": "الرمز",
     "PIN required": "يتطلب رمزًا", "TV board": "شاشة الملعب", "For the court screen": "لشاشة الملعب", "Appearance": "المظهر", "Doha, Qatar": "الدوحة، قطر",
     "Dink Different · Doha": "Dink Different · الدوحة", "Dink Different Pickleball Club · Doha": "نادي Dink Different للبيكل بول · الدوحة",
     "Run your own club on Courtcall": "أدِر ناديك على Courtcall", "Get the app": "حمّل التطبيق", "Install Dink Different": "ثبّت Dink Different",
