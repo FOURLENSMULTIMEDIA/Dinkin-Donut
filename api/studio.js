@@ -9,6 +9,7 @@ const APP = require("./_studio_app");
 const fs = require("fs"), path = require("path");
 // Organiser files: kept in api/_org (never a public static file), served only with a valid organiser token.
 const FILES = [
+  ["Social media", "content-calendar.xlsx", "Content calendar (Excel)", "17 weeks of posts, stories and Reels: dates, Doha times, 4K download links, English and Arabic captions."],
   ["Guides", "brand-guidelines.pdf", "Brand guidelines for organisers", "How the brand works: logo, colours, type, voice, hosting."],
   ["Guides", "committee-code-A5.pdf", "The committee code", "How we look after players and each other. A5."],
   ["Guides", "night-run-sheet-A4.pdf", "Night run sheet", "Before, during and after an Open Play night. A4."],
@@ -58,7 +59,7 @@ module.exports = async (req, res) => {
       if (!valid(q.t) && !valid(req.headers["x-studio-token"])) return res.status(401).json({ error: "Organisers only." });
       const f = FILES.find(x => x[1] === q.file); if (!f) return res.status(404).json({ error: "Not found." });
       const buf = fs.readFileSync(path.join(__dirname, "_org", f[1]));
-      res.setHeader("Content-Type", "application/pdf"); res.setHeader("Content-Disposition", (q.dl ? "attachment" : "inline") + '; filename="dink-different-' + f[1] + '"'); res.setHeader("Content-Length", buf.length);
+      const pdf = /\.pdf$/.test(f[1]); res.setHeader("Content-Type", pdf ? "application/pdf" : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); res.setHeader("Content-Disposition", (q.dl || !pdf ? "attachment" : "inline") + '; filename="dink-different-' + f[1] + '"'); res.setHeader("Content-Length", buf.length);
       res.statusCode = 200; return res.end(buf);
     }
     if (req.method === "GET") {

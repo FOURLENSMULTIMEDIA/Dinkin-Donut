@@ -80,7 +80,7 @@ body.locked #hub{display:none}
       var groups = {}, n = 2; j.files.forEach(function (f) { (groups[f.group] = groups[f.group] || []).push(f); });
       $("files").innerHTML = Object.keys(groups).map(function (g) { n++; return '<h2><small>0' + (n - 1) + "</small>" + esc(g) + '</h2><div class="grid">' + groups[g].map(function (f) {
         var u = "/api/studio?file=" + encodeURIComponent(f.file) + "&t=" + encodeURIComponent(tok());
-        return '<div class="card"><b>' + esc(f.name) + "</b><span>" + esc(f.note) + '</span><div class="row"><a class="btn" href="' + u + '" target="_blank" rel="noopener">View</a><a class="btn ghost" href="' + u + '&dl=1">Download</a></div></div>'; }).join("") + "</div>"; }).join("");
+        return '<div class="card"><b>' + esc(f.name) + "</b><span>" + esc(f.note) + '</span><div class="row">' + (/\.pdf$/.test(f.file) ? '<a class="btn" href="' + u + '" target="_blank" rel="noopener">View</a><a class="btn ghost" href="' + u + '&dl=1">Download</a>' : '<a class="btn" href="' + u + '&dl=1">Download .xlsx</a>') + '</div></div>'; }).join("") + "</div>"; }).join("");
       document.body.classList.remove("locked"); $("gate").hidden = true;
     });
   }

@@ -3,7 +3,7 @@
 // Scripts, styles, fonts, images: served from the cache and refreshed in the background.
 // Academy content: network first, then the copy saved when you last watched it.
 // Live data (queue, payments, host actions) is never cached.
-const V = "dd-v19", CORE = [
+const V = "dd-v20", CORE = [
   "/", "/queue", "/academy", "/loyalty", "/offline.html", "/css/style.css", "/css/fonts.css", "/js/icons.js",
   "/js/common.js", "/js/i18n.js", "/js/config.js", "/js/theme.js", "/js/coach.js", "/js/pwa.js", "/js/social.js", "/js/motion.js", "/js/sound.js",
   "/assets/logo.svg", "/assets/favicon.svg", "/assets/app/icon-192.png", "/assets/fonts/fraunces-normal.woff2", "/assets/fonts/fraunces-italic.woff2", "/assets/brand/mark.svg", "/assets/fonts/dm-sans-700.woff2", "/assets/fonts/dm-sans-500.woff2",
@@ -14,7 +14,7 @@ self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Pr
 const save = (req, res) => { if (res && res.ok && res.type !== "opaque") { const c = res.clone(); caches.open(V).then(x => x.put(req, c)); } return res; };
 self.addEventListener("fetch", e => {
   const req = e.request, url = new URL(req.url);
-  if (req.method !== "GET" || url.origin !== location.origin) return;
+  if (req.method !== "GET" || url.origin !== location.origin || url.pathname.startsWith("/assets/social/")) return;
   // Academy lessons / drills / tips / rules: keep the last copy for offline
   if (url.pathname === "/api/academy" && !url.searchParams.has("keys")) {
     e.respondWith(fetch(req).then(r => save(req, r)).catch(() => caches.match(req).then(r => r || new Response(JSON.stringify({ error: "You're offline. Open this once online to save it for offline use.", offline: true }), { status: 503, headers: { "Content-Type": "application/json" } }))));
