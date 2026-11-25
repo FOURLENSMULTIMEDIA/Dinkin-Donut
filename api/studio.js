@@ -9,6 +9,10 @@ const APP = require("./_studio_app");
 const fs = require("fs"), path = require("path");
 // Organiser files: kept in api/_org (never a public static file), served only with a valid organiser token.
 const FILES = [
+  ["Planning tools", "venue-scorecard.xlsx", "Venue scorecard (Excel)", "Score candidate venues 1–5 on weighted criteria; must-haves flagged, ranked automatically."],
+  ["Planning tools", "opening-budget.xlsx", "Opening budget (Excel)", "Launch costs by category with contingency, plus a one-night break-even calculator."],
+  ["Planning tools", "sponsor-pipeline.xlsx", "Sponsor & partner pipeline (Excel)", "Every company, stage and next step, with weighted value and overdue flags."],
+  ["Planning tools", "founding-48-tracker.xlsx", "Founding 48 tracker (Excel)", "Offline founders list for check-in and sticker printing. Keep numbers private."],
   ["Social media", "content-calendar.xlsx", "Content calendar (Excel)", "17 weeks of posts, stories and Reels: dates, Doha times, 4K download links, English and Arabic captions."],
   ["Guides", "brand-guidelines.pdf", "Brand guidelines for organisers", "How the brand works: logo, colours, type, voice, hosting."],
   ["Guides", "committee-code-A5.pdf", "The committee code", "How we look after players and each other. A5."],
