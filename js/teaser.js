@@ -1,4 +1,4 @@
-// Opening-soon commercial: plays full screen before the site, once per browser session.
+// The Club Table commercial: plays full screen before the site, once per browser session.
 // Starts muted (browsers block sound until a tap), tap anywhere for sound, "Enter site" to skip.
 (function () {
   // The installed app opens straight to the club, no film
@@ -6,12 +6,12 @@
   try { if (sessionStorage.getItem("dd-teaser")) return; sessionStorage.setItem("dd-teaser", "1"); } catch (e) { return; }
   window.DD_TEASER = true; // the short intro steps aside while this plays
   var tall = matchMedia("(orientation: portrait)").matches;
-  var src = "/assets/video/opening-soon-" + (tall ? "9x16" : "16x9") + ".mp4";
+  var src = "/assets/video/club-table-" + (tall ? "9x16" : "16x9") + ".mp4";
   var css = document.createElement("style");
   css.textContent =
-    "#teaser{position:fixed;inset:0;z-index:1000;background:#1D2840;display:grid;place-items:center;transition:opacity .6s cubic-bezier(.76,0,.24,1),transform .6s cubic-bezier(.76,0,.24,1)}" +
+    "#teaser{position:fixed;inset:0;z-index:1000;background:#E4D9C3;display:grid;place-items:center;transition:opacity .6s cubic-bezier(.76,0,.24,1),transform .6s cubic-bezier(.76,0,.24,1)}" +
     "#teaser.bye{opacity:0;transform:scale(1.04);pointer-events:none}" +
-    "#teaser video{width:100%;height:100%;object-fit:contain;background:#1D2840}" +
+    "#teaser video{width:100%;height:100%;object-fit:contain;background:#E4D9C3}" +
     "#teaser .tb{position:absolute;left:0;right:0;bottom:calc(22px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;gap:10px;padding:0 16px}" +
     "#teaser button{font:700 15px 'DM Sans',system-ui,sans-serif;border:0;border-radius:999px;padding:13px 22px;cursor:pointer}" +
     "#teaser .snd{background:rgba(244,239,227,.14);color:#F4EFE3;backdrop-filter:blur(8px)}" +

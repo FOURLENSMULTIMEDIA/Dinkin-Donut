@@ -1,4 +1,4 @@
-// Frame Studio access for organisers.
+// Organiser access: the Organisers hub, its files and Frame Studio all open with one organiser PIN.
 // POST /api/studio?login {pin[, pin2]} -> { token } (or { step: 2 } when the host second PIN is needed)
 // GET  /api/studio with x-studio-token (or a signed-in host's x-host-token) -> the studio app code.
 // The studio PIN is STUDIO_PIN in Vercel, or the host second PIN (HOST_PIN_2) when STUDIO_PIN is not set.
@@ -6,6 +6,21 @@
 const crypto = require("crypto");
 const auth = require("./_auth");
 const APP = require("./_studio_app");
+const fs = require("fs"), path = require("path");
+// Organiser files: kept in api/_org (never a public static file), served only with a valid organiser token.
+const FILES = [
+  ["Guides", "brand-guidelines.pdf", "Brand guidelines for organisers", "How the brand works: logo, colours, type, voice, hosting."],
+  ["Guides", "committee-code-A5.pdf", "The committee code", "How we look after players and each other. A5."],
+  ["Guides", "night-run-sheet-A4.pdf", "Night run sheet", "Before, during and after an Open Play night. A4."],
+  ["Guides", "weekly-rota-A4.pdf", "Weekly rota", "Who hosts which night. A4 landscape."],
+  ["Guides", "organiser-ids.pdf", "Organiser IDs", "Every committee ID card, ready to print."],
+  ["Partners & clients", "partnership-deck.pdf", "Partnership deck", "For sponsors and partners. Fill in the [brackets] first."],
+  ["Partners & clients", "events-deck.pdf", "Events deck", "Corporate socials, team cups, parties, clinics."],
+  ["Tournament", "draw-sheet-A3.pdf", "Draw sheet", "16-player bracket. A3 landscape."],
+  ["Tournament", "scorecards-A4-2up.pdf", "Match scorecards", "Two per A4 sheet. Cut on the dashed line."],
+  ["Tournament", "court-schedule-A4.pdf", "Court schedule", "Order of play, 4 courts. A4."],
+  ["Tournament", "winner-certificate-A4.pdf", "Winner certificate", "Fill in by hand and sign. A4."],
+];
 
 const PIN = String(process.env.STUDIO_PIN || process.env.HOST_PIN_2 || "");
 const DAYS = 90;
@@ -31,6 +46,18 @@ module.exports = async (req, res) => {
       const r = auth.login(req, body); // no studio PIN yet: the host PINs open it
       if (r.step === 2) return res.status(200).json({ step: 2 });
       return res.status(200).json({ token: token(), days: DAYS });
+    }
+    const q = req.query || {};
+    if (req.method === "GET" && q.files !== undefined) {
+      if (!valid(req.headers["x-studio-token"]) && !auth.isHost(req)) return res.status(401).json({ error: "Organisers only." });
+      return res.status(200).json({ files: FILES.map(f => ({ group: f[0], file: f[1], name: f[2], note: f[3] })) });
+    }
+    if (req.method === "GET" && q.file !== undefined) {
+      if (!valid(q.t) && !valid(req.headers["x-studio-token"])) return res.status(401).json({ error: "Organisers only." });
+      const f = FILES.find(x => x[1] === q.file); if (!f) return res.status(404).json({ error: "Not found." });
+      const buf = fs.readFileSync(path.join(__dirname, "_org", f[1]));
+      res.setHeader("Content-Type", "application/pdf"); res.setHeader("Content-Disposition", (q.dl ? "attachment" : "inline") + '; filename="dink-different-' + f[1] + '"'); res.setHeader("Content-Length", buf.length);
+      res.statusCode = 200; return res.end(buf);
     }
     if (req.method === "GET") {
       if (!valid(req.headers["x-studio-token"]) && !auth.isHost(req)) return res.status(401).json({ error: "Organisers only." });

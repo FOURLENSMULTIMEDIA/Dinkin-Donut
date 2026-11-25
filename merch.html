@@ -89,8 +89,8 @@
 @keyframes blink{50%{opacity:0}}
 
 .film .row7{position:relative;z-index:2;display:flex;align-items:flex-end;justify-content:center;gap:1.2%;width:94%;margin-bottom:6%}
-.film .row7 .jersey{width:13%;height:auto;opacity:0;transform:translateY(40px);filter:drop-shadow(0 18px 22px rgba(0,0,0,.45))}
-.film .sc.on .row7 .jersey{animation:f7 .7s cubic-bezier(.16,1,.3,1) forwards}
+.film .row7 .jersey,.film .row7 .mock{width:21%;height:auto;opacity:0;transform:translateY(40px);filter:drop-shadow(0 18px 22px rgba(0,0,0,.45))}
+.film .sc.on .row7 .jersey,.film .sc.on .row7 .mock{animation:f7 .7s cubic-bezier(.16,1,.3,1) forwards}
 .film .sc.on .row7 .jersey:nth-child(2){animation-delay:.12s}.film .sc.on .row7 .jersey:nth-child(3){animation-delay:.24s}.film .sc.on .row7 .jersey:nth-child(4){animation-delay:.36s}.film .sc.on .row7 .jersey:nth-child(5){animation-delay:.48s}.film .sc.on .row7 .jersey:nth-child(6){animation-delay:.6s}.film .sc.on .row7 .jersey:nth-child(7){animation-delay:.72s}
 @keyframes f7{to{opacity:1;transform:none}}
 .film .s-pay{background:linear-gradient(160deg,#1D2840,#12192A)}
@@ -231,11 +231,11 @@
   <!-- Film -->
   <section class="film" id="film" aria-label="The Club Jersey film">
     <div class="sc" data-s="0"><div class="lights"></div><div class="court"></div><div class="cap"><small>Doha · 8 PM</small><span class="typed" id="t0"></span></div></div>
-    <div class="sc" data-s="1"><div class="dripwall"><svg viewBox="0 0 1200 70" preserveAspectRatio="none"><path fill="#9C7A45" d="M0 0h1200v20c-30 0-40 40-70 40s-30-30-60-30-40 50-80 50-30-40-60-40-50 30-90 30-40-40-80-40-30 30-60 30-40-20-70-20-40 44-80 44-30-34-60-34-40 20-80 20-30-30-60-30-50 40-90 40-30-30-60-30-40 24-60 24V0z"/></svg></div><div class="cap" style="color:#1D2840;position:relative"><small style="color:#1D2840">Introducing</small>Cut for the court.</div></div>
+    <div class="sc" data-s="1"><div class="dripwall"></div><div class="cap" style="color:#1D2840;position:relative"><small style="color:#1D2840">Introducing</small>Cut for the court.</div></div>
     <div class="sc" data-s="2"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage push"><div class="flip" id="fJ"></div></div><div class="tag"><span>Your name · your number</span><b id="fName">Made for you.</b></div></div>
     <div class="sc" data-s="3"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="row3" id="fRow"></div></div>
     <div class="sc" data-s="4"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage push" id="fPolo"></div><div class="tag"><span>For her</span>The Court Set.</div></div>
-    <div class="sc" data-s="5"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="row7" id="fSeven"></div><div class="tag"><span>Seven colourways</span>One club.</div></div>
+    <div class="sc" data-s="5"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="row7" id="fSeven"></div><div class="tag"><span>Four designs</span>One club.</div></div>
     <div class="sc" data-s="6"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage push" id="fPro"></div><div class="tag"><span>New · Drop 02</span>The Clubhouse Collection.</div></div>
     <div class="sc" data-s="7"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage"><div class="flip" id="fOne"></div></div><div class="tag"><span id="fOneTag">Your shirt</span>Your name. Your number.</div></div>
     <div class="sc s-pay" data-s="8"><div class="paycard"><div class="pc-top"><b>Fawran</b><span>Pay first</span></div><div class="pc-row"><small>Send to</small>+974 3020 3100</div><div class="pc-row"><small>Amount</small>165 QAR</div><div class="pc-row"><small>Reference</small>DD-1116-4831</div><div class="pc-ok">✓ Paid · order confirmed</div></div><div class="tag"><span>Checkout</span>Pay by Fawran. Pick up on court.</div></div

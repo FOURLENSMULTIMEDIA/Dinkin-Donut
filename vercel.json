@@ -74,6 +74,15 @@
           "value": "application/manifest+json"
         }
       ]
+    },
+    {
+      "source": "/organisers",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     }
   ],
   "rewrites": [
@@ -93,5 +102,10 @@
       "source": "/c/:slug/tournament",
       "destination": "/tournament"
     }
-  ]
+  ],
+  "functions": {
+    "api/studio.js": {
+      "includeFiles": "api/_org/**"
+    }
+  }
 }

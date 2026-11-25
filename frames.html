@@ -45,10 +45,7 @@ body.locked .wrap,body.locked .cta{display:none}
 </style>
 </head>
 <body class="locked">
-<div class="gate" id="gate" hidden><form id="gateForm" autocomplete="off"><img src="/assets/brand/mark-ivory.svg" alt="" width="64" height="64"><div class="k">Organisers only</div><h1>Frame <i>Studio</i></h1><p class="lead">Enter the studio PIN from the committee.</p>
-  <input id="gPin" type="password" inputmode="text" autocomplete="off" placeholder="Studio PIN" aria-label="Studio PIN" required>
-  <div id="g2" hidden><input id="gPin2" type="password" autocomplete="off" placeholder="Second PIN" aria-label="Second PIN"></div>
-  <button class="btn" type="submit">Open the studio</button><p class="note" id="gMsg" role="status"></p></form></div>
+<div class="gate" id="gate" hidden><div style="width:min(380px,100%);text-align:center"><img src="/assets/brand/mark-ivory.svg" alt="" width="64" height="64"><div class="k">Organisers only</div><h1>Frame <i>Studio</i></h1><p class="lead">Sign in once at the Clubhouse with the organiser PIN, and Frame Studio opens from there.</p><a class="btn" href="/organisers?next=/frames" style="display:inline-block;margin-top:14px;text-decoration:none">Go to the Clubhouse</a></div></div>
 <div class="wrap">
   <header><img src="/assets/brand/mark-ivory.svg" alt=""><div><div class="k">Dink Different · for the committee</div><h1>Frame <i>Studio</i></h1></div></header>
   <p class="lead">Turn your court photos into on-brand posts. Choose a layout, add photos, and save the slides. Panoramas join across the carousel, so post every slide in order.</p>
@@ -87,14 +84,7 @@ body.locked .wrap,body.locked .cta{display:none}
     return fetch("/api/studio", { headers: { "x-studio-token": tok(), "x-host-token": host() }, cache: "no-store" }).then(function (r) { if (!r.ok) throw r; return r.text(); })
       .then(function (code) { document.body.classList.remove("locked"); $("gate").hidden = true; (new Function("(" + code + ")();"))(); });
   }
-  var step2 = false;
-  $("gateForm").onsubmit = function (e) { e.preventDefault(); var b = { pin: $("gPin").value.trim() }; if (step2) b.pin2 = $("gPin2").value.trim(); $("gMsg").textContent = "Checking…";
-    fetch("/api/studio?login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(b) }).then(function (r) { return r.json().then(function (j) { return [r.ok, j]; }); })
-      .then(function (a) { var ok = a[0], j = a[1]; if (!ok) { $("gMsg").textContent = j.error || "That PIN didn’t work."; return; }
-        if (j.step === 2) { step2 = true; $("g2").hidden = false; $("gPin2").focus(); $("gMsg").textContent = "Now the second PIN."; return; }
-        try { localStorage.setItem(KEY, j.token); } catch (e) {} $("gMsg").textContent = ""; load().catch(function () { $("gMsg").textContent = "Couldn’t open the studio. Try again."; }); })
-      .catch(function () { $("gMsg").textContent = "No connection. Try again."; }); };
-  load().catch(function () { $("gate").hidden = false; $("gPin").focus(); });
+  load().catch(function () { $("gate").hidden = false; });
 })();
 </script>
 </body>

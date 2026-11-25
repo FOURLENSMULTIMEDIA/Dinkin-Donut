@@ -146,12 +146,6 @@
       s += '<rect x="' + (mid - tw / 2).toFixed(1) + '" y="' + (ty - th / 2).toFixed(1) + '" width="' + tw.toFixed(1) + '" height="' + th.toFixed(1) + '" rx="' + (th * 0.2).toFixed(1) + '" fill="' + (ed ? gold : c.tip) + '"/>';
       s += '<text x="' + mid + '" y="' + (ty + th * 0.3).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (th * 0.56).toFixed(1) + '" fill="' + (ed ? "#1D2840" : c.body) + '" letter-spacing="' + (th * 0.12).toFixed(1) + '">' + (ed ? "THE 20 · Nº " + (o.edNo ? String(o.edNo).padStart(2, "0") : "__") + " / 20" : esc(code)) + "</text>";
     }
-    // woven hem flag (front left hem), gold for The 20
-    if (!back) {
-      var fx = W * z.flag[0], fy = H * z.flag[1], fw = W * 0.04, fh = H * 0.026;
-      s += '<rect x="' + (fx - fw / 2).toFixed(1) + '" y="' + (fy - fh / 2).toFixed(1) + '" width="' + fw.toFixed(1) + '" height="' + fh.toFixed(1) + '" rx="' + (fh * 0.15).toFixed(1) + '" fill="' + (ed ? gold : c.tip) + '"/>';
-      s += '<text x="' + fx.toFixed(1) + '" y="' + (fy + fh * 0.3).toFixed(1) + '" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="700" font-size="' + (fh * 0.62).toFixed(1) + '" fill="' + (ed ? "#1D2840" : c.body) + '">' + (ed ? "20" : "DD") + "</text>";
-    }
     // the fabric's own folds over the print
     s += '<image href="' + src + '" xlink:href="' + src + '" width="' + W + '" height="' + H + '" opacity=".5" style="mix-blend-mode:multiply"/>';
     s += "</g></svg>";

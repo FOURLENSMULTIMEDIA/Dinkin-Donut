@@ -60,7 +60,7 @@
       var row = [["glaze", "DREW", "10", "Brass", "Home"], ["midnight", "ANGEL", "23", "Midnight", "Tournament"], ["court", "ARAYKOH", "4", "Court", "Away"]];
       $("fRow").innerHTML = row.map(function (r) { return "<div>" + Mockup.tee({ way: r[0], side: "back", name: r[1], num: r[2] }) + "<small>" + r[4] + "</small><b>" + r[3] + "</b></div>"; }).join("");
     }
-    if (i === 5) $("fSeven").innerHTML = ["glaze", "court", "midnight", "cream", "cocoa", "sage", "blush"].map(function (w) { return Mockup.tee({ way: w, side: "front" }); }).join("");
+    if (i === 5) $("fSeven").innerHTML = [["varsity", "glaze"], ["blur", "cream"], ["wave", "blush"], ["splash", "court"]].map(function (d) { return Mockup.tee({ design: d[0], way: d[1], side: "front" }); }).join("");
     if (i === 6) $("fPro").innerHTML = window.ClubTee ? ClubTee.render("halftone", { way: "navy", side: "front" }) + ClubTee.render("court", { way: "ivory", side: "back" }) : "";
     if (i === 7) { var nm = "ARAYKOH", f1 = $("fOne"), tg = $("fOneTag");
       var p1 = function (n) { var svg = Mockup.tee({ way: "cream", side: "back", name: n, num: n ? "8" : "" }); f1.innerHTML = svg; var m = svg.match(/DD-[0-9A-F]{4}/); tg.textContent = "1 of 1 · " + (m ? m[0] : "DD-····"); };
