@@ -495,7 +495,7 @@ function renderPay() {
     ${sum("card") ? `<div><span>${DD.icon("card",13)} Card</span><b>${money(sum("card"))}</b></div>` : ""}
     <div class="${due > 0 ? "due" : ""}"><span>Remaining</span><b>${money(due)}</b></div><div><span>Paid up</span><b>${paidN}/${ids.length}</b></div>`;
   if (document.activeElement !== $("feeAll")) $("feeAll").value = S.fee || 0;
-  if (document.activeElement !== $("fawranTo")) $("fawranTo").value = S.fawran || "";
+  if (document.activeElement !== $("fawranTo")) $("fawranTo").value = S.fawran || "+974 3020 3100";
   const who = $("payWho"), keep = who.value;
   who.innerHTML = '<option value="">Choose player…</option>' + rows.sort((a, b) => b[1].bal - a[1].bal || S.players[a[0]].name.localeCompare(S.players[b[0]].name))
     .map(([id, p]) => `<option value="${id}">${DD.esc(S.players[id].name)}${p.bal > 0 ? " · owes " + money(p.bal) : " · paid"}</option>`).join("");

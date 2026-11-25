@@ -7,7 +7,7 @@ function fresh() {
     v: 0, updatedAt: Date.now(), nightTitle: "Open Play Night",
     format: 2, rotation: "winstay", maxWins: 2, match: "smart", requirePin: true, autopilot: true, gameCap: 0, target: 11, gameLimit: "auto", sessionEnd: 1440, autoClose: 3, done: [],
     players: {}, queue: [], bench: [], games: 0, nextId: 1, durSum: 0, durN: 0,
-    fee: 0, pay: {}, fawran: "",
+    fee: 0, pay: {}, fawran: "+974 3020 3100",
     courts: [1, 2, 3].map(id => ({ id, teams: null, start: null, stayers: null, streak: 0 })),
     log: [{ t: Date.now(), txt: "Night created. Paddles up!" }],
   };
@@ -334,6 +334,7 @@ const PUBLIC = new Set(["join", "leave"]);
 // Safety net after every action: one place per player. Someone on a court is never also queued;
 // a player on break stays off the queue (if they're mid-game, they finish it and then rest).
 function tidy(S) {
+  if (!S.fawran) S.fawran = "+974 3020 3100"; // club Fawran number unless the host sets another
   const on = busy(S), seen = new Set(), ok = id => S.players[id];
   S.bench = [...new Set(S.bench)].filter(ok);
   const rest = new Set(S.bench);
