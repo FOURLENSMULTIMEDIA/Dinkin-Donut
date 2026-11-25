@@ -9,12 +9,27 @@
   }
   // Four finishes; the name decides which one you get.
   var FIN = [
-    { key: "navy", label: "Club Navy", bg: "#1D2840", ring: "#222E4A", ink: "#F4EFE3", acc: "#C9A86B", plate: "#C9A86B", plateInk: "#1D2840" },
-    { key: "brass", label: "Brass", bg: "#9C7A45", ring: "#A6844E", ink: "#FBF7EF", acc: "#1D2840", plate: "#1D2840", plateInk: "#F4EFE3" },
-    { key: "oatmeal", label: "Oatmeal", bg: "#EDE4D3", ring: "#F4EDE0", ink: "#1D2840", acc: "#9C7A45", plate: "#1D2840", plateInk: "#F4EFE3" },
-    { key: "camel", label: "Camel", bg: "#B89B72", ring: "#C2A67D", ink: "#1D2840", acc: "#F4EFE3", plate: "#F4EFE3", plateInk: "#1D2840" },
+    { key: "navy", label: "Club Navy", band: "#1D2840", bandInk: "#F4EFE3", acc: "#C9A86B", field: "#F4EFE3", fieldInk: "#1D2840", rib: "#9C7A45", ribDk: "#6E5228", ribInk: "#FBF7EF" },
+    { key: "ivory", label: "Ivory", band: "#F1EADB", bandInk: "#1D2840", acc: "#9C7A45", field: "#1D2840", fieldInk: "#F4EFE3", rib: "#C9A86B", ribDk: "#8E6C3A", ribInk: "#1D2840" },
+    { key: "camel", label: "Camel", band: "#B89B72", bandInk: "#1D2840", acc: "#1D2840", field: "#FBF7EF", fieldInk: "#1D2840", rib: "#1D2840", ribDk: "#0E1424", ribInk: "#F4EFE3" },
+    { key: "brass", label: "Brass", band: "#9C7A45", bandInk: "#FBF7EF", acc: "#F0D9A4", field: "#1D2840", fieldInk: "#F4EFE3", rib: "#F4EFE3", ribDk: "#C9BFA8", ribInk: "#1D2840" },
   ];
   var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
+  var MARK = '<path d="M104 44h20a56 56 0 0 1 0 112h-20zM119 62h5a27 38 0 0 1 0 76h-5z"/><path d="M96 44H76a56 56 0 0 0 0 112h20zM81 62h-5a27 38 0 0 0 0 76h5z"/>';
+
+  // one laurel branch along an arc, leaves alternating in/out
+  function laurel(cx, cy, r, a0, a1, col, flip) {
+    var out = "", n = 9;
+    out += '<path d="M' + (cx + Math.cos(a0) * r).toFixed(1) + " " + (cy + Math.sin(a0) * r).toFixed(1) + " A" + r + " " + r + " 0 0 " + (flip ? 0 : 1) + " " + (cx + Math.cos(a1) * r).toFixed(1) + " " + (cy + Math.sin(a1) * r).toFixed(1) + '" fill="none" stroke="' + col + '" stroke-width="2.2" stroke-linecap="round"/>';
+    for (var i = 1; i < n; i++) {
+      var t = a0 + (a1 - a0) * (i / n), x = cx + Math.cos(t) * r, y = cy + Math.sin(t) * r, deg = t * 180 / Math.PI + (flip ? -90 : 90);
+      var sz = 1 - i / (n + 4);
+      out += '<g transform="translate(' + x.toFixed(1) + " " + y.toFixed(1) + ") rotate(" + deg.toFixed(1) + ')">' +
+        '<ellipse cx="-7" cy="-3" rx="' + (9 * sz + 3).toFixed(1) + '" ry="' + (3.6 * sz + 1.4).toFixed(1) + '" transform="rotate(-38)" fill="' + col + '"/>' +
+        '<ellipse cx="7" cy="-3" rx="' + (9 * sz + 3).toFixed(1) + '" ry="' + (3.6 * sz + 1.4).toFixed(1) + '" transform="rotate(38)" fill="' + col + '"/></g>';
+    }
+    return out;
+  }
 
   function svg(p, logoHref, fontCss) {
     var name = String(p.name || "Dinker").trim(), first = name.split(/\s+/)[0].toUpperCase().slice(0, 12);
@@ -23,32 +38,49 @@
     var no = p.no ? String(p.no).padStart(2, "0") : "WL";
     var s = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500" role="img" aria-label="Founding Dinker sticker number ' + no + ' for ' + esc(name) + '">';
     s += '<defs>' + (fontCss ? '<style>' + fontCss + '</style>' : '') +
-      '<path id="' + id + 't" d="M250 250m-178 0a178 178 0 1 1 356 0"/>' +
-      '<path id="' + id + 'b" d="M250 250m-196 0a196 196 0 0 0 392 0"/>' +
+      '<path id="' + id + 't" d="M250 250m-186 0a186 186 0 1 1 372 0"/>' +
+      '<path id="' + id + 'b" d="M250 250m-202 0a202 202 0 0 0 404 0"/>' +
       '<filter id="' + id + 'sh" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="6" stdDeviation="7" flood-color="#1D2840" flood-opacity=".28"/></filter>' +
-      '<clipPath id="' + id + 'c"><circle cx="250" cy="250" r="222"/></clipPath></defs>';
-    // die-cut white border
-    s += '<circle cx="250" cy="250" r="240" fill="#FFFFFF" filter="url(#' + id + 'sh)"/>';
-    s += '<g clip-path="url(#' + id + 'c)"><circle cx="250" cy="250" r="222" fill="' + f.bg + '"/>';
-    // engraved rings and 48 seat dots, one per founding member: yours is the ball
-    s += '<circle cx="250" cy="250" r="212" fill="none" stroke="' + f.acc + '" stroke-width="1.6" opacity=".85"/><circle cx="250" cy="250" r="160" fill="none" stroke="' + f.acc + '" stroke-width="1.2" opacity=".7"/>';
+      '<radialGradient id="' + id + 'g" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></radialGradient>' +
+      '<radialGradient id="' + id + 'ball" cx="38%" cy="32%" r="72%"><stop offset="0" stop-color="#F2F78A"/><stop offset=".6" stop-color="#D9E33B"/><stop offset="1" stop-color="#8E9A12"/></radialGradient></defs>';
+    // die-cut white border and the club band
+    s += '<circle cx="250" cy="250" r="242" fill="#FFFFFF" filter="url(#' + id + 'sh)"/>';
+    s += '<circle cx="250" cy="250" r="226" fill="' + f.band + '"/>';
+    s += '<circle cx="250" cy="250" r="217" fill="none" stroke="' + f.acc + '" stroke-width="1.6" stroke-dasharray="5 4" opacity=".9"/>';
+    s += '<circle cx="250" cy="250" r="158" fill="none" stroke="' + f.acc + '" stroke-width="2.4"/>';
+    // band type
+    s += '<text font-family="DM Sans, sans-serif" font-weight="700" font-size="25" letter-spacing="9" fill="' + f.bandInk + '"><textPath href="#' + id + 't" xlink:href="#' + id + 't" startOffset="50%" text-anchor="middle">FOUNDING DINKER</textPath></text>';
+    s += '<text font-family="DM Sans, sans-serif" font-weight="700" font-size="13" letter-spacing="6" fill="' + f.acc + '"><textPath href="#' + id + 'b" xlink:href="#' + id + 'b" startOffset="50%" text-anchor="middle">DINK DIFFERENT · DOHA · MMXXVI</textPath></text>';
+    // star separators on the band
+    [[-1, 0], [1, 0]].forEach(function (d) { var x = 250 + d[0] * 192, y = 250; s += '<path transform="translate(' + x + " " + y + ')" d="M0 -7 L2 -2 L7 -2 L3 1.4 L4.6 7 L0 3.6 L-4.6 7 L-3 1.4 L-7 -2 L-2 -2Z" fill="' + f.acc + '"/>'; });
+    // field
+    s += '<circle cx="250" cy="250" r="152" fill="' + f.field + '"/>';
+    // 48 seats: ticks round the field, yours is the ball
     var mine = Math.max(1, Math.min(48, parseInt(p.no, 10) || 0));
     for (var i = 1; i <= 48; i++) {
-      var a = (-90 + (i - 1) * 7.5) * Math.PI / 180, x = 250 + Math.cos(a) * 168, y = 250 + Math.sin(a) * 168, me = p.no && i === mine;
-      s += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (me ? 5.2 : 1.9) + '" fill="' + (me ? "#E3CF7E" : f.acc) + '"' + (me ? ' stroke="' + f.bg + '" stroke-width="1.4"' : ' opacity=".7"') + '/>';
+      var a = (-90 + (i - 1) * 7.5) * Math.PI / 180, me = p.no && i === mine;
+      if (me) s += '<circle cx="' + (250 + Math.cos(a) * 141).toFixed(1) + '" cy="' + (250 + Math.sin(a) * 141).toFixed(1) + '" r="6.4" fill="url(#' + id + 'ball)" stroke="' + f.field + '" stroke-width="1.5"/>';
+      else s += '<line x1="' + (250 + Math.cos(a) * 137).toFixed(1) + '" y1="' + (250 + Math.sin(a) * 137).toFixed(1) + '" x2="' + (250 + Math.cos(a) * 145).toFixed(1) + '" y2="' + (250 + Math.sin(a) * 145).toFixed(1) + '" stroke="' + f.fieldInk + '" stroke-width="1.6" opacity=".45"/>';
     }
-    // inner disc
-    s += '<circle cx="250" cy="250" r="150" fill="' + f.ring + '"/></g>';
-    // curved type
-    s += '<text font-family="Fraunces, Georgia, serif" font-weight="800" font-size="24" letter-spacing="6" fill="' + f.ink + '"><textPath href="#' + id + 't" xlink:href="#' + id + 't" startOffset="50%" text-anchor="middle">FOUNDING DINKER</textPath></text>';
-    s += '<text font-family="DM Sans, sans-serif" font-weight="700" font-size="13" letter-spacing="5" fill="' + f.acc + '"><textPath href="#' + id + 'b" xlink:href="#' + id + 'b" startOffset="50%" text-anchor="middle">DINK DIFFERENT · THE FIRST SERVE</textPath></text>';
-    // the Different D, drawn in the finish's ink
-    s += '<g transform="translate(193 120) scale(.57)"><g fill="' + f.ink + '" fill-rule="evenodd"><path d="M104 44h20a56 56 0 0 1 0 112h-20zM119 62h5a27 38 0 0 1 0 76h-5z"/><path d="M96 44H76a56 56 0 0 0 0 112h20zM81 62h-5a27 38 0 0 0 0 76h5z"/></g><path d="M100 36v128" stroke="' + f.acc + '" stroke-width="3.4" stroke-linecap="round"/><circle cx="134" cy="32" r="9" fill="#E3CF7E"/></g>';
-    // name
-    s += '<text x="250" y="312" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="800" font-size="' + (first.length > 8 ? 34 : 42) + '" fill="' + f.ink + '">' + esc(first) + '</text>';
-    // number plate
-    s += '<g transform="translate(250 352)"><rect x="-62" y="-22" width="124" height="44" rx="22" fill="' + f.plate + '"/>' +
-      '<text y="9" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="700" font-size="26" fill="' + f.plateInk + '">Nº ' + no + '<tspan font-size="14" opacity=".7" dx="4">/48</tspan></text></g>';
+    // laurels
+    s += laurel(250, 262, 112, 2.25, 3.95, f.rib === "#F4EFE3" ? f.acc : f.rib, false);
+    s += laurel(250, 262, 112, 0.89, -0.81, f.rib === "#F4EFE3" ? f.acc : f.rib, true);
+    // the mark
+    s += '<g transform="translate(222 140) scale(.28)" fill="' + f.fieldInk + '" fill-rule="evenodd">' + MARK + '</g>';
+    // the number
+    s += '<text x="250" y="219" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="12" letter-spacing="5" fill="' + f.fieldInk + '" opacity=".75">Nº</text>';
+    s += '<text x="250" y="292" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="' + (no === "WL" ? 66 : 82) + '" letter-spacing="-2" fill="' + f.fieldInk + '">' + no + '</text>';
+    s += '<text x="250" y="311" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="11" letter-spacing="5" fill="' + f.fieldInk + '" opacity=".7">' + (p.no ? "OF 48" : "WAITLIST") + '</text>';
+    // ribbon with the name
+    var fs = first.length > 9 ? 19 : first.length > 6 ? 23 : 27;
+    s += '<g transform="translate(250 352)">' +
+      '<path d="M-150 -6 L-118 -6 L-118 26 L-150 26 L-136 10 Z" fill="' + f.ribDk + '"/><path d="M150 -6 L118 -6 L118 26 L150 26 L136 10 Z" fill="' + f.ribDk + '"/>' +
+      '<path d="M-118 26 L-104 16 L-104 26Z M118 26 L104 16 L104 26Z" fill="#000" opacity=".25"/>' +
+      '<path d="M-118 -20 Q0 -34 118 -20 L118 16 Q0 2 -118 16 Z" fill="' + f.rib + '"/>' +
+      '<path d="M-112 -14 Q0 -27 112 -14" fill="none" stroke="' + f.ribInk + '" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>' +
+      '<text y="7" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="700" font-size="' + fs + '" letter-spacing="2" fill="' + f.ribInk + '">' + esc(first) + '</text></g>';
+    // soft gloss
+    s += '<circle cx="250" cy="250" r="226" fill="url(#' + id + 'g)"/>';
     s += '</svg>';
     return { svg: s, finish: f.label };
   }
