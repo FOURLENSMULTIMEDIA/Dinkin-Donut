@@ -117,6 +117,10 @@
     clubhouse: { label: "Clubhouse", note: "Ivory & navy", body: "#F1EBDD", yoke: "#1D2840", side: "#1D2840", collar: "#1D2840", tipA: "#9C7A45", tipB: "#E2D2A6", pipe: "#9C7A45", ink: "#1D2840", inkOnYoke: "#F4EFE3", zip: "#9C7A45" },
     night:     { label: "Night", note: "Navy & brass", body: "#1D2840", yoke: "#161F33", side: "#161F33", collar: "#F1EBDD", tipA: "#9C7A45", tipB: "#E2D2A6", pipe: "#9C7A45", ink: "#F1EBDD", inkOnYoke: "#F1EBDD", zip: "#E2D2A6" },
     glaze:     { label: "Camel", note: "Camel & navy", body: "#B89B72", yoke: "#1D2840", side: "#1D2840", collar: "#1D2840", tipA: "#E2D2A6", tipB: "#F1EBDD", pipe: "#E2D2A6", ink: "#1D2840", inkOnYoke: "#F1EBDD", zip: "#E2D2A6" },
+    oatmeal:   { label: "Oatmeal", note: "Oatmeal & navy", body: "#E2D6C0", yoke: "#1D2840", side: "#1D2840", collar: "#1D2840", tipA: "#9C7A45", tipB: "#F1EBDD", pipe: "#9C7A45", ink: "#1D2840", inkOnYoke: "#F1EBDD", zip: "#9C7A45" },
+    oxblood:   { label: "Oxblood", note: "Oxblood & sand", body: "#4A1A1E", yoke: "#2E0F12", side: "#2E0F12", collar: "#E6D3A8", tipA: "#C9A86B", tipB: "#E6D3A8", pipe: "#C9A86B", ink: "#F1EBDD", inkOnYoke: "#F1EBDD", zip: "#C9A86B" },
+    pearl:     { label: "Pearl", note: "White & brass", body: "#F7F6F2", yoke: "#9C7A45", side: "#9C7A45", collar: "#F7F6F2", tipA: "#1D2840", tipB: "#9C7A45", pipe: "#9C7A45", ink: "#1D2840", inkOnYoke: "#F7F6F2", zip: "#9C7A45" },
+    stone:     { label: "Stone", note: "Stone & navy", body: "#CFC4AE", yoke: "#1D2840", side: "#1D2840", collar: "#1D2840", tipA: "#7A2A2A", tipB: "#F1EBDD", pipe: "#7A2A2A", ink: "#1D2840", inkOnYoke: "#F1EBDD", zip: "#7A2A2A" },
   };
   var P_BODY = "M160 40C176 50 224 50 240 40L300 56C318 60 330 70 338 84L374 152L332 174L312 142C312 170 314 200 310 240C308 300 314 360 318 404Q262 418 200 420Q138 418 82 404C86 360 92 300 90 240C86 200 88 170 88 142L68 174L26 152L62 84C70 70 82 60 100 56Z";
   function renderPolo(o) {

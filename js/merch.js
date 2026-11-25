@@ -13,7 +13,8 @@ window.JERSEY = {
   sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
   specs: [
     ["Court cut", "Slim athletic fit with a curved shirt-tail hem and side vents."],
-    ["The Heirloom", "An airbrushed sweep of colour from shoulder to hem, shaped by your name. No two are the same."],
+    ["The spray number", "Your number sprayed big across the back, fading into grain. Sublimated, so it never cracks."],
+    ["The rally", "Two balls in motion across the chest, with the crest embroidered sharp on top."],
     ["Performance knit", "Lightweight, quick-dry fabric for Doha nights."],
     ["Full sublimation", "Colours are dyed into the fabric. They won't crack or peel."],
     ["Mesh side panels", "Airflow where you need it during long rallies."],

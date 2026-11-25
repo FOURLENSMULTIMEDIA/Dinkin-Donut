@@ -225,6 +225,7 @@
 </head>
 <body>
 <nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dink Different</a><a class="btn pink sm" href="#build">Build yours</a></div></nav>
+<div class="ticker" aria-label="Club news"><div class="tk" aria-hidden="false"><span>Open Play · Thursdays 8 PM<i></i></span><span>All levels welcome<i></i></span><span>Book on Reclub · code AX3ND<i></i></span><span>Soft hands, good company<i></i></span><span>The Clubhouse Collection · Drop 02<i></i></span><span>Doha, Qatar<i></i></span><span aria-hidden="true" style="display:contents"><span>Open Play · Thursdays 8 PM<i></i></span><span>All levels welcome<i></i></span><span>Book on Reclub · code AX3ND<i></i></span><span>Soft hands, good company<i></i></span><span>The Clubhouse Collection · Drop 02<i></i></span><span>Doha, Qatar<i></i></span></span></div></div>
 
 <main class="wrap">
   <!-- Film -->
@@ -235,8 +236,8 @@
     <div class="sc" data-s="3"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="row3" id="fRow"></div></div>
     <div class="sc" data-s="4"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage push" id="fPolo"></div><div class="tag"><span>Also new</span>The Court Polo.</div></div>
     <div class="sc" data-s="5"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="row7" id="fSeven"></div><div class="tag"><span>Seven colourways</span>One club.</div></div>
-    <div class="sc" data-s="6"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage push" id="fPro"></div><div class="tag"><span>New · pickleball polo</span>The Mabuhay Polo.</div></div>
-    <div class="sc" data-s="7"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage"><div class="flip" id="fOne"></div></div><div class="tag"><span id="fOneTag">1 of 1</span>Your name. Your pattern.</div></div>
+    <div class="sc" data-s="6"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage push" id="fPro"></div><div class="tag"><span>New · Drop 02</span>The Clubhouse Collection.</div></div>
+    <div class="sc" data-s="7"><div class="lights"></div><div class="court"></div><div class="spot"></div><div class="stage"><div class="flip" id="fOne"></div></div><div class="tag"><span id="fOneTag">Your shirt</span>Your name. Your number.</div></div>
     <div class="sc s-pay" data-s="8"><div class="paycard"><div class="pc-top"><b>Fawran</b><span>Pay first</span></div><div class="pc-row"><small>Send to</small>+974 3020 3100</div><div class="pc-row"><small>Amount</small>165 QAR</div><div class="pc-row"><small>Reference</small>DD-1116-4831</div><div class="pc-ok">✓ Paid · order confirmed</div></div><div class="tag"><span>Checkout</span>Pay by Fawran. Pick up on court.</div></div
 >
     <div class="sc end" data-s="9"><div class="cap"><img src="/assets/logo.svg" alt=""><small>Dink Different · Pickleball Club</small>The Club Jersey<br><span class="price">Pre-order · <span id="fPrice"></span></span></div></div>
@@ -247,7 +248,7 @@
   <!-- Builder -->
   <div class="shop-h" id="build">
     <div><div class="eyebrow">Club shop · Drop 01</div><h2>Make it yours.</h2></div>
-    <div class="tabs" role="tablist" aria-label="Product"><button role="tab" aria-selected="true" data-p="jersey">Club Jersey</button><button role="tab" aria-selected="false" data-p="pro">Mabuhay Polo</button><button role="tab" aria-selected="false" data-p="set">Court Set · Women</button><button role="tab" aria-selected="false" data-p="polo">Court Polo</button></div>
+    <div class="tabs" role="tablist" aria-label="Product"><button role="tab" aria-selected="true" data-p="jersey">Club Jersey</button><button role="tab" aria-selected="false" data-p="set">Court Set · Women</button><button role="tab" aria-selected="false" data-p="polo">Court Polo</button></div>
   </div>
 
   <section class="builder">
@@ -343,7 +344,6 @@ const GRAPHIC = { court: "Court Map back print", social: "Courtside Social back 
 const PRODUCTS = {
   set: { ...window.SET, ways: CourtSet.WAYS, draw: o => CourtSet.render(o), defWay: "navy" },
   jersey: { ...window.JERSEY, ways: J.WAYS, draw: o => photo("tee", o, J.WAYS, J.render), defWay: "glaze" },
-  pro: { ...window.PRO, ways: J.PRO_WAYS, draw: o => photo("polo", { ...o, tag: "MABUHAY" }, J.PRO_WAYS, J.renderPro), defWay: "bughaw" },
   polo: { ...window.POLO, ways: J.POLO_WAYS, draw: o => photo("polo", o, J.POLO_WAYS, J.renderPolo), defWay: "clubhouse" },
 };
 // The Clubhouse Collection joins the bag like any other product
@@ -366,7 +366,7 @@ function renderPanel() {
   $("pName").textContent = p.name; $("pPrice").textContent = money(p.price + (o.edition ? ED.extra : 0));
   document.querySelectorAll("[data-ed]").forEach(b => { b.setAttribute("aria-pressed", String(!!o.edition) === String(b.dataset.ed === "1")); if (b.dataset.ed === "1") { b.disabled = edLeft <= 0 && !o.edition; b.textContent = edLeft <= 0 && !o.edition ? "The 20 · sold out" : `The 20 · numbered · +${ED.extra} QAR`; } });
   $("edLeft").textContent = edLeft > 0 ? `${edLeft} of ${ED.cap} left` : "Sold out"; $("leadTime").textContent = p.leadTime;
-  $("pLead").textContent = st.p === "set" ? "Our women’s court set. A fitted polo with an open contrast collar and fine tipping, over a pleated court skirt. Clean, classic, and very Dink Different." : st.p === "pro" ? "A Filipino-inspired pickleball polo with the Heirloom: a sweep of colour poured across the shirt, shaped by your name, with gold-tipped cuffs and a small embroidered crest." : st.p === "jersey" ? "Our pickleball tee with the Heirloom: an airbrushed sweep of colour from shoulder to hem and a pickleball halftone fade. The pour is generated from your name, so no two are alike." : "Built for court, sharp enough for the clubhouse. The Heirloom in quiet colours, fine tipping and a small embroidered crest.";
+  $("pLead").textContent = st.p === "set" ? "Our women’s court set. A fitted polo with an open contrast collar and fine tipping, over a pleated court skirt. Clean, classic, and very Dink Different." : st.p === "pro" ? "Our court polo." : st.p === "jersey" ? "Our pickleball performance tee: two balls in motion across the chest, the crest held sharp, and your number sprayed big on the back, fading into grain like a vintage team print. Name and number free." : "Built for court, sharp enough for the clubhouse. A soft piqué knit, fine tipping on the cuffs and a small embroidered crest.";
   $("eds").closest(".opt").hidden = st.p === "set"; if (st.p === "set") o.edition = false;
   $("ways").innerHTML = Object.entries(p.ways).map(([k, w]) => `<button class="way" type="button" data-way="${k}" aria-pressed="${o.way === k}">${p.draw({ way: k, side: "front" })}<b>${w.label}</b><small>${w.note}</small></button>`).join("");
   $("wayName").textContent = p.ways[o.way].label;
@@ -384,12 +384,12 @@ function renderPanel() {
   $("chart").innerHTML = `<table><caption>Approximate chest width laid flat, in cm. Between sizes? Go one up for a relaxed fit.</caption><tr><th>Size</th>${Object.keys(p.sizeChart).map(k => `<th>${k}</th>`).join("")}</tr><tr><td><b>Chest</b></td>${Object.values(p.sizeChart).map(v => `<td>${v}</td>`).join("")}</tr></table>`;
 }
 function oneOf() { const o = cur(), n = (o.name || "").trim(); const el = $("oneOf");
-  if (o.edition) { el.className = "oneofone gold"; el.innerHTML = `<b>THE 20 · Nº __ / ${ED.cap}</b><span>Only ${ED.cap} will ever be made. A gold core inside your pour, a gold crest ring and a numbered gold hem tag. Your number is reserved the moment you send your order. ${edLeft} left.</span>`; return; }
+  if (o.edition) { el.className = "oneofone gold"; el.innerHTML = `<b>THE 20 · Nº __ / ${ED.cap}</b><span>Only ${ED.cap} will ever be made. A gold number, a gold crest ring and a numbered gold hem tag. Your number is reserved the moment you send your order. ${edLeft} left.</span>`; return; }
   el.className = "oneofone";
   if (st.p === "set") { el.innerHTML = `<b>Court Set</b><span>${n ? `“${n.replace(/[<>&]/g, "")}” is embroidered under the club name on the back.` : "Add a name and we embroider it under the club name on the back."} Classic colours, made to order.</span>`; return; }
-  if (!n || o.print === "plain") { el.innerHTML = "<b>Your pour</b><span>Add a name and your Heirloom is shaped by it: its angle, direction and width. Your shirt code goes on the hem.</span>"; return; }
+  if (!n || o.print === "plain") { el.innerHTML = "<b>Your shirt code</b><span>Every shirt gets its own woven code on the hem, made from your name.</span>"; return; }
   const svg = P().draw({ way: o.way, side: "back", name: n, num: o.num, print: o.print }), code = (svg.match(/DD-[0-9A-F]{4}/) || [""])[0];
-  el.innerHTML = `<b>${code}</b><span>This Heirloom is shaped by “${n.replace(/[<>&]/g, "")}”. No other name pours the same way. Want it numbered and gold? Choose The 20.</span>`; }
+  el.innerHTML = `<b>${code}</b><span>Your woven hem code for “${n.replace(/[<>&]/g, "")}”. Want it numbered, with a gold number? Choose The 20.</span>`; }
 function all(animate) { renderPanel(); draw(animate); oneOf(); }
 
 document.addEventListener("click", e => {
@@ -410,7 +410,7 @@ $("qm").onclick = () => { st.qty = Math.max(1, st.qty - 1); $("qv").textContent 
 $("qp").onclick = () => { st.qty = Math.min(20, st.qty + 1); $("qv").textContent = st.qty; };
 
 // Bag
-let bag = []; try { bag = JSON.parse(localStorage.getItem("dd-bag2")) || []; } catch {}
+let bag = []; try { bag = (JSON.parse(localStorage.getItem("dd-bag2")) || []).filter(l => PRODUCTS[l.p]); } catch {}
 const saveBag = () => { try { localStorage.setItem("dd-bag2", JSON.stringify(bag)); } catch {} };
 function describe(l) {
   if (PRODUCTS[l.p].club) return [PRODUCTS[l.p].ways[l.way].label, "Size " + l.size].join(" · ");

@@ -7,7 +7,9 @@
     pearl: { label: "Pearl & Navy", note: "Reverse", top: "#F5F2EC", collar: "#141C36", skirt: "#141C36", tip: "#141C36", tip2: "#C9A14A", ink: "#141C36" },
     rose: { label: "Blush & Navy", note: "Signature", top: "#E9D6CC", collar: "#1D2840", skirt: "#1D2840", tip: "#1D2840", tip2: "#F4EFE3", ink: "#1D2840" },
     court: { label: "Camel", note: "Clubhouse", top: "#B89B72", collar: "#F5F2EC", skirt: "#F5F2EC", tip: "#1D2840", tip2: "#F5F2EC", ink: "#1D2840" },
-    pour: { label: "Heirloom", note: "Navy · brass pour", top: "#1B2440", collar: "#C9A86B", skirt: "#1B2440", tip: "#C9A86B", tip2: "#EADBB8", ink: "#FFFFFF", pour: "#C9A86B" },
+    linen: { label: "Linen & Navy", note: "Clubhouse", top: "#E3D8C3", collar: "#1D2840", skirt: "#1D2840", tip: "#1D2840", tip2: "#9C7A45", ink: "#1D2840" },
+    oxblood: { label: "Oxblood", note: "Evening", top: "#4A1A1E", collar: "#F1EBDD", skirt: "#F1EBDD", tip: "#C9A86B", tip2: "#F1EBDD", ink: "#F1EBDD" },
+    whites: { label: "Club Whites", note: "Tournament", top: "#F7F6F2", collar: "#F7F6F2", skirt: "#F7F6F2", tip: "#1D2840", tip2: "#9C7A45", ink: "#1D2840" },
   };
   var uid = 0;
   var esc = function (s) { return String(s || "").replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); };
@@ -61,7 +63,7 @@
     } else {
       s += '<path d="M150 66 Q200 58 250 66 L246 82 Q200 74 154 82 Z" fill="' + w.collar + '"/>';
       s += '<text x="200" y="104" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="6.5" letter-spacing="3" fill="' + w.ink + '" opacity=".7">DINK DIFFERENT</text>';
-      if (o.print === "social" && window.ClubTee) s += window.ClubTee.PRINTS.social(200, 146, 232, { body: w.top, ink: w.ink, acc: w.tip2 }, id + "so", ["DINK DIFFERENT · COURTSIDE SOCIAL", "PICKLEBALL CLUB · DOHA", "Soft hands,", "good company."]);
+      if (o.print === "social" && window.ClubTee) s += window.ClubTee.PRINTS.social(200, 166, 210, { body: w.top, ink: w.ink, acc: w.tip2 }, id + "so", ["DINK DIFFERENT · COURTSIDE SOCIAL", "PICKLEBALL CLUB · DOHA", "Soft hands,", "good company."]);
       if (o.name && o.print !== "plain") s += '<text x="200" y="140" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="15" letter-spacing="7" fill="' + w.ink + '">' + esc(String(o.name).toUpperCase().slice(0, 12)) + "</text>";
     }
     s += "</g></svg>";

@@ -224,3 +224,13 @@ html{font-variant-numeric:lining-nums}
 /* Fraunces, soft: rounded ball terminals for a classy bold serif */
 *{font-variation-settings:"SOFT" 100,"WONK" 0}
 em,i{font-variation-settings:"SOFT" 100,"WONK" 1}
+/* ---- Club ticker: a slim band under the menu ---- */
+.ticker{background:#1D2840;color:#F2ECDF;overflow:hidden;border-bottom:1px solid rgba(201,168,107,.35);position:relative;z-index:1}
+.ticker .tk{display:flex;width:max-content;animation:tk 48s linear infinite}
+.ticker span{display:inline-flex;align-items:center;gap:22px;padding:11px 22px 11px 0;font:600 12px/1 Archivo,"DM Sans",sans-serif;letter-spacing:.26em;text-transform:uppercase;white-space:nowrap}
+.ticker span i{width:6px;height:6px;border-radius:50%;background:#C9A86B;display:inline-block}
+.ticker:hover .tk{animation-play-state:paused}
+@keyframes tk{to{transform:translateX(-50%)}}
+/* ---- Printed-paper grain: barely there, makes flat colour feel like paper ---- */
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.045;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' seed='7'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E")}
+@media print{body::after{display:none}}

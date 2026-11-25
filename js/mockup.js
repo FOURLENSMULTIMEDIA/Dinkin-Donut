@@ -1,4 +1,4 @@
-// Photo mockups: real tee and polo photos, dyed to each colourway, with a quiet, premium finish.
+// Photo mockups: real tee and polo photos, dyed to each colourway, with real sportswear details (knit, stripe, tipping, crest).
 // Layers: photo → colour multiplied in → tonal piqué texture → details & print → the photo's folds over everything.
 // Design language: restraint. Small embroidered crest, fine double tipping, tonal texture, a woven hem flag,
 // tracked small-caps name and a refined number on the back, and the Kitchen Line as a single hairline.
@@ -34,6 +34,15 @@
       '<mask id="' + id + 'm" maskUnits="userSpaceOnUse" x="0" y="0" width="' + W + '" height="' + H + '"><image href="' + mask + '" xlink:href="' + mask + '" width="' + W + '" height="' + H + '"/></mask>' +
       // tonal piqué: tiny pickleball holes in a staggered grid, same colour family as the fabric
       '<pattern id="' + id + 'pq" width="26" height="22" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="3.1"/><circle cx="19" cy="17" r="3.1"/></pattern>' +
+      '<pattern id="' + id + 'rib" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="1.6" height="4"/></pattern>' +
+      (kind === "tee" ? '<linearGradient id="' + id + 'nf" gradientUnits="userSpaceOnUse" x1="' + W * 0.28 + '" x2="' + W * 0.62 + '"><stop offset="0" stop-color="#000"/><stop offset="1" stop-color="#fff"/></linearGradient>' +
+        '<mask id="' + id + 'nk" maskUnits="userSpaceOnUse" x="0" y="0" width="' + W + '" height="' + H + '"><rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'nf)"/></mask>' +
+        '<linearGradient id="' + id + 'nh" gradientUnits="userSpaceOnUse" x1="' + W * 0.22 + '" x2="' + W * 0.6 + '"><stop offset="0" stop-color="#000"/><stop offset=".45" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>' +
+        '<mask id="' + id + 'nj" maskUnits="userSpaceOnUse" x="0" y="0" width="' + W + '" height="' + H + '"><rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'nh)"/></mask>' +
+        '<filter id="' + id + 'ns" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feGaussianBlur in="SourceAlpha" stdDeviation="' + (W * 0.012).toFixed(1) + '" result="b"/><feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="4" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0" result="na"/><feComposite in="b" in2="na" operator="arithmetic" k1="0" k2="1.9" k3="1" k4="-1.05" result="m"/><feFlood flood-color="' + c.ink + '"/><feComposite in2="m" operator="in"/></filter>' +
+        '<filter id="' + id + 'mb1" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="' + (W * 0.008).toFixed(1) + " " + (W * 0.034).toFixed(1) + '"/></filter>' +
+        '<filter id="' + id + 'mb2" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur stdDeviation="' + (W * 0.013).toFixed(1) + " " + (W * 0.05).toFixed(1) + '"/></filter>' : "") +
+      '<pattern id="' + id + 'bn" width="34" height="34" patternUnits="userSpaceOnUse"><path d="M17 1L33 17L17 33L1 17Z M17 9L25 17L17 25L9 17Z" fill="none" stroke="#000" stroke-width="2"/></pattern>' +
       '<linearGradient id="' + id + 'hg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#fff"/><stop offset=".1" stop-color="#fff" stop-opacity=".6"/><stop offset=".24" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
       '<mask id="' + id + 'hm" maskUnits="userSpaceOnUse" x="0" y="0" width="' + W + '" height="' + H + '"><rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'hg)"/></mask>' +
       '<filter id="' + id + 'b1" filterUnits="userSpaceOnUse" x="' + -W + '" y="' + -H + '" width="' + 3 * W + '" height="' + 3 * H + '"><feGaussianBlur stdDeviation="' + (W * 0.05).toFixed(1) + '"/></filter>' +
@@ -44,27 +53,16 @@
       "</defs>";
     s += '<g mask="url(#' + id + 'm)" style="isolation:isolate"><rect width="' + W + '" height="' + H + '" fill="#fff"/>';
     s += '<image href="' + src + '" xlink:href="' + src + '" width="' + W + '" height="' + H + '"/>';
-    // THE HEIRLOOM: a sweep of colour poured from one shoulder across the body, generated from the name
-    var R2 = rng("pour|" + (o.name || code) + "|" + o.way), fromLeft = R2() < 0.5, flip = back ? !fromLeft : fromLeft;
-    var x0 = flip ? -0.1 + R2() * 0.12 : 0.98 + R2() * 0.12, x1 = flip ? 0.55 + R2() * 0.45 : 0.45 - R2() * 0.45, bw = 0.2 + R2() * 0.12;
-    var wob = function () { return (R2() - 0.5) * 0.18; };
-    var band = function (k) { // centre line of the pour, offset by k (fraction of band width)
-      var o2 = k * bw, ax = x0 + o2, bx = x1 + o2;
-      return [[ax, -0.06], [ax + (bx - ax) * 0.33 + wob(), 0.3], [ax + (bx - ax) * 0.66 + wob(), 0.66], [bx, 1.08]];
-    };
-    var L = band(-0.5), Rt = band(0.5);
-    var path = "M" + P(L[0][0], L[0][1]) + " C" + P(L[1][0], L[1][1]) + " " + P(L[2][0], L[2][1]) + " " + P(L[3][0], L[3][1]) + " L" + P(Rt[3][0], Rt[3][1]) + " C" + P(Rt[2][0], Rt[2][1]) + " " + P(Rt[1][0], Rt[1][1]) + " " + P(Rt[0][0], Rt[0][1]) + "Z";
-    var core = band(0), corePath = "M" + P(core[0][0], core[0][1]) + " C" + P(core[1][0], core[1][1]) + " " + P(core[2][0], core[2][1]) + " " + P(core[3][0], core[3][1]);
+    // THE KNIT: tonal texture you'd see on real fabric (piqué on polos, a fine rib on the jersey, a banig weave on the Mabuhay)
     s += '<g style="mix-blend-mode:multiply"><rect width="' + W + '" height="' + H + '" fill="' + c.body + '"/>';
-    var clean = o.print === "court"; // the Court Map sits on a clean body, no pour
-    if (!clean) s += '<path d="' + path + '" fill="' + c.sweep + '" filter="url(#' + id + 'b1)" opacity=".95"/>';
-    if (!clean) s += '<path d="' + corePath + '" fill="none" stroke="' + (ed ? "#F6E3A1" : c.glow) + '" stroke-width="' + (W * bw * 0.32).toFixed(1) + '" stroke-linecap="round" filter="url(#' + id + 'b2)" opacity=".85"/>';
-    // liquid flow lines along the pour
-    for (var fl = -2; fl <= 2 && !clean; fl++) { var b3 = band(fl * 0.17); s += '<path d="M' + P(b3[0][0], b3[0][1]) + " C" + P(b3[1][0], b3[1][1]) + " " + P(b3[2][0], b3[2][1]) + " " + P(b3[3][0], b3[3][1]) + '" fill="none" stroke="' + c.glow + '" stroke-width="' + (W * 0.0035).toFixed(1) + '" opacity="' + (0.16 + Math.abs(fl) * 0.03) + '" filter="url(#' + id + 'b0)"/>'; }
-    // pickleball halftone rising from the hem
-    s += '<g fill="' + c.sweep + '" mask="url(#' + id + 'hm)" opacity=".7"><rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'pq)"/></g>';
-    s += '</g>';
-
+    if (kind === "polo") s += '<rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'pq)" opacity=".07"/>';
+    else s += '<rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'rib)" opacity=".06"/>';
+    if (o.tag) s += '<rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'bn)" opacity=".12"/>';
+    s += "</g>";
+    // THE RALLY (Club Jersey front): two balls in motion across the chest, the crest held sharp on top
+    if (kind === "tee" && !back) { var bx2 = W * z.crest[0], by2 = H * z.crest[1];
+      var blob = function (x, y, r, col, f, op) { return '<g transform="rotate(-35 ' + x.toFixed(1) + " " + y.toFixed(1) + ')"><circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r.toFixed(1) + '" fill="' + col + '" opacity="' + op + '" filter="url(#' + id + f + ')"/></g>'; };
+      s += blob(bx2 - W * 0.12, by2 + H * 0.17, W * 0.08, ed ? "#D8A93E" : c.tip2, "mb2", 0.9) + blob(bx2, by2, W * 0.062, c.ink, "mb1", 0.95); }
     // fine double tipping on both cuffs
     var sw = (W * 0.0045).toFixed(1);
     z.cuffs.forEach(function (cf) {
@@ -82,7 +80,9 @@
       var mid = W / 2, name = String(o.name || "").toUpperCase().slice(0, 12), num = String(o.num == null ? "" : o.num).slice(0, 2);
       s += '<text x="' + mid + '" y="' + (H * z.neck).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.013).toFixed(1) + '" fill="' + c.ink + '" opacity=".7" letter-spacing="' + (W * 0.006).toFixed(1) + '">DINK DIFFERENT</text>';
       if (name) s += '<text x="' + mid + '" y="' + (H * z.name).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * (name.length > 8 ? 0.036 : 0.042)).toFixed(1) + '" fill="' + c.ink + '" letter-spacing="' + (W * 0.02).toFixed(1) + '">' + esc(name) + "</text>";
-      if (num) s += '<text x="' + mid + '" y="' + (H * (z.num + z.numH * 0.8)).toFixed(1) + '" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="600" font-size="' + (H * z.numH).toFixed(1) + '" fill="' + c.ink + '" stroke="' + hair + '" stroke-width="' + (W * 0.004).toFixed(1) + '" paint-order="stroke">' + esc(num) + "</text>";
+      if (num && kind === "tee") { var big = function (extra, fill) { return '<text x="' + mid + '" y="' + (H * 0.53).toFixed(1) + '" text-anchor="middle" font-family="Archivo, sans-serif" font-weight="800" font-size="' + (W * (num.length > 1 ? 0.34 : 0.4)).toFixed(1) + '" letter-spacing="' + (-W * 0.015).toFixed(1) + '" fill="' + fill + '" style="font-stretch:125%"' + extra + ">" + esc(num) + "</text>"; };
+        s += big(' mask="url(#' + id + 'nk)"', ed ? gold : c.ink) + '<g mask="url(#' + id + 'nj)">' + big(' filter="url(#' + id + 'ns)"', "#000") + "</g>"; }
+      else if (num) s += '<text x="' + mid + '" y="' + (H * (z.num + z.numH * 0.8)).toFixed(1) + '" text-anchor="middle" font-family="Fraunces, sans-serif" font-weight="600" font-size="' + (H * z.numH).toFixed(1) + '" fill="' + c.ink + '" stroke="' + hair + '" stroke-width="' + (W * 0.004).toFixed(1) + '" paint-order="stroke">' + esc(num) + "</text>";
       if (o.print === "court" && window.ClubTee) s += window.ClubTee.PRINTS.court(mid, H * 0.225, W * 0.82, { body: c.body, ink: c.ink, acc: c.tip2 }, id + "cm");
       else if (!name && !num) s += '<image filter="url(#' + id + 'em)" href="/assets/logo.svg" xlink:href="/assets/logo.svg" x="' + (mid - W * 0.06) + '" y="' + (H * 0.2) + '" width="' + W * 0.12 + '" height="' + W * 0.12 + '"/>';
       // the Kitchen Line: one hairline, and a ball whose spot is set by the player's name
@@ -115,13 +115,13 @@
   }
   var PAL = {
     WAYS: {
-      glaze: { label: "Clubhouse Navy", note: "Navy · brass pour", body: "#1B2440", sweep: "#C9A86B", glow: "#EADBB8", dots: "#EDE4D3", ink: "#F4EFE3", tip: "#F4EFE3", tip2: "#C9A86B" },
-      court: { label: "Oatmeal", note: "Oatmeal · navy pour", body: "#E6DAC4", sweep: "#1D2840", glow: "#8A97B8", dots: "#9C7A45", ink: "#1D2840", tip: "#1D2840", tip2: "#9C7A45" },
-      midnight: { label: "Midnight Ivory", note: "Midnight · ivory pour", body: "#10162A", sweep: "#EDE4D3", glow: "#FFFFFF", dots: "#C9A86B", ink: "#F4EFE3", tip: "#F4EFE3", tip2: "#C9A86B" },
-      cream: { label: "Pearl", note: "Pearl · navy pour", body: "#F6F3EC", sweep: "#1D2840", glow: "#B89B72", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#9C7A45" },
-      cocoa: { label: "Camel", note: "Camel · ivory pour", body: "#B89B72", sweep: "#F4EFE3", glow: "#FFF7E6", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#F4EFE3" },
-      sage: { label: "Stone", note: "Stone · oxblood pour", body: "#CFC2A8", sweep: "#8E2F2F", glow: "#E2B7A6", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#8E2F2F" },
-      blush: { label: "Oxblood", note: "Oxblood · sand pour", body: "#4A1A1E", sweep: "#E6D3A8", glow: "#FFF1D6", dots: "#C9A86B", ink: "#F1EBDD", tip: "#F1EBDD", tip2: "#C9A86B" },
+      glaze: { label: "Clubhouse Navy", note: "Navy · brass", body: "#1B2440", sweep: "#C9A86B", glow: "#EADBB8", dots: "#EDE4D3", ink: "#F4EFE3", tip: "#F4EFE3", tip2: "#C9A86B" },
+      court: { label: "Oatmeal", note: "Oatmeal · navy", body: "#E6DAC4", sweep: "#1D2840", glow: "#8A97B8", dots: "#9C7A45", ink: "#1D2840", tip: "#1D2840", tip2: "#9C7A45" },
+      midnight: { label: "Midnight Ivory", note: "Midnight · ivory", body: "#10162A", sweep: "#EDE4D3", glow: "#FFFFFF", dots: "#C9A86B", ink: "#F4EFE3", tip: "#F4EFE3", tip2: "#C9A86B" },
+      cream: { label: "Pearl", note: "Pearl · navy", body: "#F6F3EC", sweep: "#1D2840", glow: "#B89B72", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#9C7A45" },
+      cocoa: { label: "Camel", note: "Camel · ivory", body: "#B89B72", sweep: "#F4EFE3", glow: "#FFF7E6", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#F4EFE3" },
+      sage: { label: "Stone", note: "Stone · oxblood", body: "#CFC2A8", sweep: "#8E2F2F", glow: "#E2B7A6", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#8E2F2F" },
+      blush: { label: "Oxblood", note: "Oxblood · sand", body: "#4A1A1E", sweep: "#E6D3A8", glow: "#FFF1D6", dots: "#C9A86B", ink: "#F1EBDD", tip: "#F1EBDD", tip2: "#C9A86B" },
     },
     PRO_WAYS: {
       bughaw: { label: "Regatta", note: "Navy · ivory & brass", body: "#16213F", sweep: "#F4EFE3", glow: "#C9A86B", dots: "#C9A86B", ink: "#FFFFFF", tip: "#FFFFFF", tip2: "#C9A86B" },
@@ -133,6 +133,10 @@
       clubhouse: { label: "Clubhouse", note: "Ivory · navy", body: "#F4F2EE", sweep: "#1D2840", glow: "#8A97B8", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#9C7A45" },
       night: { label: "Night", note: "Navy · brass", body: "#141C33", sweep: "#C9A86B", glow: "#EADBB8", dots: "#EDE4D3", ink: "#FFFFFF", tip: "#FFFFFF", tip2: "#C9A86B" },
       glaze: { label: "Camel", note: "Camel · navy", body: "#B89B72", sweep: "#1D2840", glow: "#5B6788", dots: "#1D2840", ink: "#1D2840", tip: "#1D2840", tip2: "#F4EFE3" },
+      oatmeal: { label: "Oatmeal", note: "Oatmeal · navy", body: "#E2D6C0", ink: "#1D2840", tip: "#1D2840", tip2: "#9C7A45" },
+      oxblood: { label: "Oxblood", note: "Oxblood · sand", body: "#4A1A1E", ink: "#F1EBDD", tip: "#E6D3A8", tip2: "#C9A86B" },
+      pearl: { label: "Pearl", note: "White · brass", body: "#F7F6F2", ink: "#1D2840", tip: "#9C7A45", tip2: "#1D2840" },
+      stone: { label: "Stone", note: "Stone · navy", body: "#CFC4AE", ink: "#1D2840", tip: "#1D2840", tip2: "#7A2A2A" },
     },
   };
   function applyPalette() { var J = window.Jersey; if (!J) return; Object.keys(PAL).forEach(function (k) { var m = J[k]; if (!m) return; Object.keys(PAL[k]).forEach(function (w) { if (m[w]) Object.assign(m[w], PAL[k][w]); }); }); }

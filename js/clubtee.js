@@ -259,8 +259,8 @@
     s += '<rect width="' + W + '" height="' + H + '" fill="' + c.body + '" style="mix-blend-mode:multiply"/><rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'k)"/>';
     s += '<g filter="url(#' + id + 'ink)" opacity=".96">' + d[side](W, H, c, id) + "</g>";
     // woven neck label
-    var lw = W * 0.07, lh = H * 0.022, ly = H * (side === "back" ? 0.055 : 0.07);
-    if (side === "back") s += '<rect x="' + (W / 2 - lw / 2) + '" y="' + ly + '" width="' + lw + '" height="' + lh + '" rx="' + lh * 0.15 + '" fill="#1D2840"/>' + txt(W / 2, ly + lh * 0.72, lh * 0.6, "DD · CLUB", { sans: true, ls: lh * 0.08, fill: "#C9A86B" });
+    var lw = W * 0.13, lh = H * 0.022, ly = H * (side === "back" ? 0.055 : 0.07);
+    if (side === "back") s += '<rect x="' + (W / 2 - lw / 2) + '" y="' + ly + '" width="' + lw + '" height="' + lh + '" rx="' + lh * 0.15 + '" fill="#1D2840"/>' + txt(W / 2, ly + lh * 0.7, lh * 0.52, "DINK DIFFERENT", { sans: true, ls: lh * 0.12, fill: "#C9A86B" });
     // the fabric's folds over the print
     s += '<image href="' + src + '" xlink:href="' + src + '" width="' + W + '" height="' + H + '" opacity=".55" style="mix-blend-mode:multiply"/></g></svg>';
     return s;
