@@ -262,6 +262,7 @@
       <p class="lead" id="pLead"></p>
       <div class="opt"><span class="lbl">Colourway <span id="wayName"></span></span><div class="ways" id="ways"></div></div>
       <div class="opt"><span class="lbl">Edition <span id="edLeft" class="edleft"></span></span><div class="seg ed" id="eds"><button type="button" data-ed="0" aria-pressed="true">Standard</button><button type="button" data-ed="1" aria-pressed="false" class="gold">The 20 · numbered</button></div></div>
+      <div class="opt" id="designOpt"><span class="lbl" id="designLbl">Design</span><div class="seg" id="designs" role="group" aria-labelledby="designLbl"></div></div>
       <div class="opt"><span class="lbl" id="printLbl">Back print</span><div class="seg" id="prints" role="group" aria-labelledby="printLbl"></div></div>
       <div class="fields" id="fields">
         <div class="opt"><label for="nm">Name</label><input id="nm" maxlength="12" placeholder="e.g. ANGEL" autocomplete="nickname"></div>
@@ -351,12 +352,12 @@ Object.keys(ClubTee.DESIGNS).forEach(k => { const d = ClubTee.DESIGNS[k];
   PRODUCTS["ct-" + k] = { name: d.name, price: d.price, club: true, fits: CT_FITS, sizes: CT_SIZES, ways: ClubTee.COLOURS, defWay: d.way, draw: o => ClubTee.render(k, o) }; });
 const ED = window.EDITION || { name: "The 20", cap: 20, extra: 60 }; let edLeft = ED.cap;
 const unit = l => PRODUCTS[l.p].price + (l.edition ? ED.extra : 0);
-const st = { p: "jersey", side: "front", qty: 1, jersey: { way: "glaze", print: "full", name: "", num: "", fit: 0, size: "M" }, pro: { way: "bughaw", print: "full", name: "", num: "", fit: 0, size: "M" }, polo: { way: "clubhouse", print: "name", name: "", num: "", fit: 0, size: "M" }, set: { way: "navy", print: "name", name: "", num: "", fit: 0, size: "S" } };
+const st = { p: "jersey", side: "front", qty: 1, jersey: { design: "varsity", way: "glaze", print: "full", name: "", num: "", fit: 0, size: "M" }, pro: { way: "bughaw", print: "full", name: "", num: "", fit: 0, size: "M" }, polo: { way: "clubhouse", print: "name", name: "", num: "", fit: 0, size: "M" }, set: { way: "navy", print: "name", name: "", num: "", fit: 0, size: "S" } };
 const cur = () => st[st.p], P = () => PRODUCTS[st.p];
 
 function draw(animate) {
   const o = cur(), spin = $("spin");
-  const paint = () => { spin.innerHTML = P().draw({ way: o.way, side: st.side, name: o.name, num: o.num, print: o.print, edition: !!o.edition }); };
+  const paint = () => { spin.innerHTML = P().draw({ design: o.design, way: o.way, side: st.side, name: o.name, num: o.num, print: o.print, edition: !!o.edition }); };
   if (animate) { spin.classList.add("out"); setTimeout(() => { paint(); spin.classList.remove("out"); }, 330); } else paint();
   document.querySelectorAll("[data-side]").forEach(b => b.setAttribute("aria-pressed", b.dataset.side === st.side));
 }
@@ -365,10 +366,11 @@ function renderPanel() {
   $("pName").textContent = p.name; $("pPrice").textContent = money(p.price + (o.edition ? ED.extra : 0));
   document.querySelectorAll("[data-ed]").forEach(b => { b.setAttribute("aria-pressed", String(!!o.edition) === String(b.dataset.ed === "1")); if (b.dataset.ed === "1") { b.disabled = edLeft <= 0 && !o.edition; b.textContent = edLeft <= 0 && !o.edition ? "The 20 · sold out" : `The 20 · numbered · +${ED.extra} QAR`; } });
   $("edLeft").textContent = edLeft > 0 ? `${edLeft} of ${ED.cap} left` : "Sold out"; $("leadTime").textContent = p.leadTime;
-  $("pLead").textContent = st.p === "set" ? "Our women’s court set. A fitted polo with an open contrast collar and fine tipping, over a pleated court skirt. Clean, classic, and very Dink Different." : st.p === "pro" ? "Our court polo." : st.p === "jersey" ? "Our dry-fit pickleball tee: moisture-wicking performance mesh, a varsity club lockup across the chest, and your number sprayed big on the back, fading into grain. Name and number free." : "Built for court, sharp enough for the clubhouse. A soft piqué knit, fine tipping on the cuffs and a small embroidered crest.";
+  $("pLead").textContent = st.p === "set" ? "Our women’s court set. A fitted polo with an open contrast collar and fine tipping, over a pleated court skirt. Clean, classic, and very Dink Different." : st.p === "pro" ? "Our court polo." : st.p === "jersey" ? "Our dry-fit pickleball jersey, in seven designs: Varsity, Crew stripes, Court blur, Heat wave, Tour panels, Paddle up or Raglan script. Moisture-wicking performance mesh, fully sublimated, with your number sprayed big on the back. Name and number free." : "Built for court, sharp enough for the clubhouse. A soft piqué knit, fine tipping on the cuffs and a small embroidered crest.";
   $("eds").closest(".opt").hidden = st.p === "set"; if (st.p === "set") o.edition = false;
-  $("ways").innerHTML = Object.entries(p.ways).map(([k, w]) => `<button class="way" type="button" data-way="${k}" aria-pressed="${o.way === k}">${p.draw({ way: k, side: "front" })}<b>${w.label}</b><small>${w.note}</small></button>`).join("");
+  $("ways").innerHTML = Object.entries(p.ways).map(([k, w]) => `<button class="way" type="button" data-way="${k}" aria-pressed="${o.way === k}">${p.draw({ design: o.design, way: k, side: "front" })}<b>${w.label}</b><small>${w.note}</small></button>`).join("");
   $("wayName").textContent = p.ways[o.way].label;
+  $("designOpt").hidden = !p.designs; if (p.designs) $("designs").innerHTML = p.designs.map(([k, l]) => `<button type="button" data-design="${k}" aria-pressed="${o.design === k}">${l}</button>`).join("");
   $("prints").innerHTML = p.prints.map(([k, l]) => `<button type="button" data-print="${k}" aria-pressed="${o.print === k}">${l}</button>`).join("");
   $("printLbl").textContent = (st.p === "jersey" || st.p === "pro") ? "Back print" : "Embroidery";
   $("fits").innerHTML = p.fits.map((f, i) => `<button type="button" data-fit="${i}" aria-pressed="${o.fit === i}">${f}</button>`).join("");
@@ -397,6 +399,7 @@ document.addEventListener("click", e => {
   if (d.p) { st.p = d.p; st.side = "front"; document.querySelectorAll("[data-p]").forEach(b => b.setAttribute("aria-selected", b === t)); all(true); }
   else if (d.side) { if (st.side !== d.side) { st.side = d.side; draw(true); } }
   else if (d.way) { o.way = d.way; all(false); }
+  else if (d.design) { o.design = d.design; if (st.side !== "front") st.side = "front"; all(true); }
   else if (d.print) { o.print = d.print; if (st.side !== "back") { st.side = "back"; renderPanel(); draw(true); } else all(false); }
   else if (d.ed !== undefined) { o.edition = d.ed === "1"; if (o.edition && o.print === "plain") o.print = (P().prints.find(x => x[0] !== "plain") || ["name"])[0]; st.side = "back"; all(true); }
   else if (d.fit !== undefined) { o.fit = +d.fit; renderPanel(); }
@@ -413,7 +416,7 @@ let bag = []; try { bag = (JSON.parse(localStorage.getItem("dd-bag2")) || []).fi
 const saveBag = () => { try { localStorage.setItem("dd-bag2", JSON.stringify(bag)); } catch {} };
 function describe(l) {
   if (PRODUCTS[l.p].club) return [PRODUCTS[l.p].ways[l.way].label, "Size " + l.size].join(" · ");
-  const p = PRODUCTS[l.p], w = p.ways[l.way], bits = [w.label, p.fits[l.fit], "Size " + l.size];
+  const p = PRODUCTS[l.p], w = p.ways[l.way], bits = [p.designs && l.design ? (p.designs.find(d => d[0] === l.design) || ["", ""])[1] + " design" : "", w.label, p.fits[l.fit], "Size " + l.size].filter(Boolean);
   if (l.print === "plain") bits.push((l.p === "jersey" || l.p === "pro") ? "Plain back" : "No name");
   else if (GRAPHIC[l.print]) bits.push(GRAPHIC[l.print] + (l.name ? " · Name: " + l.name : ""));
   else bits.push((l.p === "jersey" || l.p === "pro") && l.print === "full" ? `Name: ${l.name || "-"} · Number: ${l.num || "-"}` : `Name: ${l.name || "-"}`);
@@ -424,13 +427,13 @@ function addLine() {
   if (o.print !== "plain" && !GRAPHIC[o.print] && !o.name.trim()) { $("nm").focus(); $("hint").textContent = "Add a name, or choose " + ((st.p === "jersey" || st.p === "pro") ? "“Plain back”." : "“No name”."); return null; }
   if ((st.p === "jersey" || st.p === "pro") && o.print === "full" && o.num === "") { $("no").focus(); $("hint").textContent = "Add your jersey number, or choose “Name only”."; return null; }
   if (o.edition && !o.name.trim()) { $("nm").focus(); $("hint").textContent = "The 20 needs a name on the back."; return null; }
-  const line = { edition: !!o.edition, p: st.p, way: o.way, print: o.print, name: o.print === "plain" ? "" : o.name.trim().toUpperCase(), num: (st.p === "jersey" || st.p === "pro") && o.print === "full" ? o.num : "", fit: o.fit, size: o.size, qty: o.edition ? 1 : st.qty };
+  const line = { edition: !!o.edition, p: st.p, design: o.design, way: o.way, print: o.print, name: o.print === "plain" ? "" : o.name.trim().toUpperCase(), num: (st.p === "jersey" || st.p === "pro") && o.print === "full" ? o.num : "", fit: o.fit, size: o.size, qty: o.edition ? 1 : st.qty };
   const key = l => JSON.stringify({ ...l, qty: 0 }), ex = bag.find(l => key(l) === key(line));
   ex ? (line.edition ? 0 : ex.qty += line.qty) : bag.push(line); saveBag(); renderBag(); return line;
 }
 function renderBag() {
   $("cnt").textContent = bag.reduce((a, l) => a + l.qty, 0);
-  $("lines").innerHTML = bag.length ? bag.map((l, i) => `<div class="line">${PRODUCTS[l.p].draw({ way: l.way, side: PRODUCTS[l.p].club ? "front" : "back", name: l.name, num: l.num, print: l.print, edition: l.edition, edNo: l.edNo })}<div><b>${esc(PRODUCTS[l.p].name)}</b><br><small>${esc(describe(l))}</small><br><small>${money(PRODUCTS[l.p].price)}</small></div><div class="lq"><button data-q="${i}" data-d="-1" aria-label="One less">–</button><b class="tabnum">${l.qty}</b><button data-q="${i}" data-d="1" aria-label="One more">+</button></div></div>`).join("") : '<p class="empty">Your bag is empty.</p>';
+  $("lines").innerHTML = bag.length ? bag.map((l, i) => `<div class="line">${PRODUCTS[l.p].draw({ design: l.design, way: l.way, side: PRODUCTS[l.p].club ? "front" : "back", name: l.name, num: l.num, print: l.print, edition: l.edition, edNo: l.edNo })}<div><b>${esc(PRODUCTS[l.p].name)}</b><br><small>${esc(describe(l))}</small><br><small>${money(PRODUCTS[l.p].price)}</small></div><div class="lq"><button data-q="${i}" data-d="-1" aria-label="One less">–</button><b class="tabnum">${l.qty}</b><button data-q="${i}" data-d="1" aria-label="One more">+</button></div></div>`).join("") : '<p class="empty">Your bag is empty.</p>';
   $("total").textContent = money(bag.reduce((a, l) => a + l.qty * unit(l), 0));
   $("order").hidden = !bag.length;
 }
@@ -443,7 +446,7 @@ const orderText = (lines, who) => {
   const ref = orderRef(), items = lines.map(l => { const p = PRODUCTS[l.p], w = p.ways[l.way];
     if (p.club) return `${l.qty} × ${p.name} - ${money(l.qty * unit(l))}\n   ${w.label} · Size ${l.size}`;
     const back = GRAPHIC[l.print] ? GRAPHIC[l.print] + (l.name ? ` · Name: ${l.name}` : "") : l.print === "plain" ? ((l.p === "jersey" || l.p === "pro") ? "Plain back" : "No name") : ((l.p === "jersey" || l.p === "pro") && l.print === "full" ? `Back: ${l.name} · No. ${l.num}` : `Name: ${l.name}`);
-    return `${l.qty} × ${p.name}${l.edition ? ` · *THE 20 · Nº ${String(l.edNo || "__").padStart(2, "0")} / ${ED.cap}*` : ""} - ${money(l.qty * unit(l))}\n   ${w.label} · ${p.fits[l.fit]} · Size ${l.size}\n   ${back}`; }).join("\n\n");
+    return `${l.qty} × ${p.name}${l.edition ? ` · *THE 20 · Nº ${String(l.edNo || "__").padStart(2, "0")} / ${ED.cap}*` : ""} - ${money(l.qty * unit(l))}\n   ${p.designs && l.design ? (p.designs.find(d => d[0] === l.design) || ["", ""])[1] + " design · " : ""}${w.label} · ${p.fits[l.fit]} · Size ${l.size}\n   ${back}`; }).join("\n\n");
   return [`*Dink Different · Shop order*`, `Order ref: *${ref}*`, `Name: ${who || "-"}`, "", items, "", `*Total: ${money(bagTotal(lines))}*`, "",
     `Payment: Fawran to ${FAWRAN}`, `Transfer note: ${ref}`, `Receipt: attached below`, "",
     `We start making your order once payment is confirmed. Ready in about 3 weeks, pick-up at open play.`].join("\n");
