@@ -16,6 +16,8 @@ const FILES = [
   ["Guides", "organiser-ids.pdf", "Organiser IDs", "Every committee ID card, ready to print."],
   ["Partners & clients", "partnership-deck.pdf", "Partnership deck", "For sponsors and partners. Fill in the [brackets] first."],
   ["Partners & clients", "events-deck.pdf", "Events deck", "Corporate socials, team cups, parties, clinics."],
+  ["Awards", "certificates.pdf", "Award certificates", "Champions, Finalist, Soft Hands, Spirit of the Kitchen, Most Improved. A4, 300 dpi."],
+  ["Awards", "ceremony-pack.pdf", "Ceremony pack", "Podium cards 1-2-3, the run sheet and the award envelope."],
   ["Tournament", "draw-sheet-A3.pdf", "Draw sheet", "16-player bracket. A3 landscape."],
   ["Tournament", "scorecards-A4-2up.pdf", "Match scorecards", "Two per A4 sheet. Cut on the dashed line."],
   ["Tournament", "court-schedule-A4.pdf", "Court schedule", "Order of play, 4 courts. A4."],
