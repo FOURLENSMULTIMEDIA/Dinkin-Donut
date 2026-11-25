@@ -150,6 +150,9 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
   <section class="panel" id="standings"><h2>Live standings <span class="muted" style="font:500 13px var(--body)">Wins, then win %</span></h2>
     <div class="tablewrap"><table><thead><tr><th>#</th><th>Dinker</th><th class="r">W</th><th class="r">L</th><th class="r">Win %</th><th class="r">+/-</th><th class="r">Streak</th></tr></thead><tbody id="table"></tbody></table></div>
   </section>
+  <section class="panel" id="season"><h2>Season ladder <span class="muted" id="seasonNote" style="font:500 13px var(--body)">3 pts a win · 1 a game · 1 a night</span></h2>
+    <div class="tablewrap"><table><thead><tr><th>#</th><th>Dinker</th><th class="r">Pts</th><th class="r">W–L</th><th class="r">Win %</th><th class="r">Nights</th></tr></thead><tbody id="seasonT"><tr><td colspan="6" class="muted">The ladder starts after the first night closes.</td></tr></tbody></table></div>
+  </section>
   <a class="panel gcpromo" id="gcPromo" href="/loyalty" hidden><img src="/assets/loyalty/card-front.png" alt=""><span><b>Not a Club Card member yet?</b>Sign up free. Six stamps and your seventh session is on the club.</span><span class="btn pink sm">Sign up</span></a>
   <a class="panel" href="/dupr" style="text-decoration:none;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:var(--court);color:#F4EFE3;border:0"><span><b style="font:700 22px var(--display)">Want rated games?</b><br>DUPR sessions are booked on Reclub.</span><span class="btn lime sm">DUPR games →</span></a>
   <section class="panel"><h2>Game log</h2><ul class="log" id="log"></ul></section>
@@ -321,7 +324,18 @@ document.addEventListener("click", async e => {
   if (id === "rejoin") { let pin = ""; try { pin = localStorage.getItem("dd-pin") || ""; } catch {} try { S = await DD.send({ type: "join", name: S.players[meId].name, pin }); render(); } catch (x) { alertBox(x.message); } }
   if (id === "notme") { meId = null; try { localStorage.removeItem(ME_KEY); } catch {} location.reload(); }
 });
+
+// Season ladder: results carried across every night of the season
+(function season() {
+  fetch("/api/queue?season", { cache: "no-store" }).then(r => r.json()).then(j => {
+    const L = j.season; if (!L || !L.rows.length) return;
+    const since = L.since ? new Date(L.since).toLocaleDateString(undefined, { day: "numeric", month: "short" }) : "";
+    $("seasonNote").textContent = L.nights + " night" + (L.nights === 1 ? "" : "s") + (since ? " since " + since : "") + " · 3 pts a win, 1 a game, 1 a night";
+    $("seasonT").innerHTML = L.rows.slice(0, 20).map((r, i) => `<tr><td class="tabnum">${i < 3 ? ["🥇", "🥈", "🥉"][i] : i + 1}</td><td><b>${DD.esc(r.name)}</b></td><td class="r tabnum"><b>${r.pts}</b></td><td class="r tabnum">${r.w}–${r.l}</td><td class="r tabnum">${r.pct}%</td><td class="r tabnum">${r.nights}</td></tr>`).join("");
+  }).catch(() => {});
+})();
 </script>
-<script src="/js/social.js" defer></script>
+<script src="/js/social.js" defer>
+</script>
 </body>
 </html>

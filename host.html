@@ -306,7 +306,7 @@ ol.q .nm{flex:1;font-weight:600;min-width:0;overflow-wrap:anywhere}
       <a class="btn pink sm" href="/studio" target="_blank">Post Studio (Instagram)</a> <a class="btn lime sm" href="/first-serve?host" target="_blank">First Serve list</a> <a class="btn ghost sm" href="/clubs?owner" target="_blank">Courtcall clubs</a>
       <button class="btn ghost sm" id="csv" type="button">Download results (CSV)</button>
       <span id="resetZone"></span>
-      <span id="hallZone"><button class="btn ghost sm" id="hallClear" type="button">Clear the Honours Board</button></span>
+      <span id="hallZone"><button class="btn ghost sm" id="hallClear" type="button">Clear the Honours Board</button></span> <span id="seasonZone"><button class="btn ghost sm" id="seasonNew" type="button">Start a new season</button></span>
       <button class="btn ghost sm" id="logout" type="button">Sign out</button>
     </div>
   </section>
@@ -683,6 +683,10 @@ $("hallZone").addEventListener("click", async e => {
     try { await DD.send({ type: "clearHall" }, PIN); toast("Honours Board cleared"); } catch (x) { toast(x.message, true); }
     z.innerHTML = '<button class="btn ghost sm" id="hallClear" type="button">Clear the Honours Board</button>';
   }
+  const sz = $("seasonZone"), seasonBtn = '<button class="btn ghost sm" id="seasonNew" type="button">Start a new season</button>';
+  if (e.target.id === "seasonNew") sz.innerHTML = '<span class="confirm"><b>Reset the season ladder to zero?</b><button class="btn pink sm" id="seasonYes" type="button">Yes, new season</button><button class="btn ghost sm" id="seasonNo" type="button">Keep</button></span>';
+  if (e.target.id === "seasonNo") sz.innerHTML = seasonBtn;
+  if (e.target.id === "seasonYes") { try { await DD.send({ type: "newSeason" }, PIN); toast("New season started"); } catch (x) { toast(x.message, true); } sz.innerHTML = seasonBtn; }
 });
 const RESET_BTN = '<button class="btn pink sm" id="reset" type="button">End session</button>';
 $("resetZone").innerHTML = RESET_BTN;

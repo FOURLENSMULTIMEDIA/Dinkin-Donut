@@ -74,7 +74,7 @@ ol .rec{margin-left:auto;font:500 1.1vw var(--body);opacity:.8}
 <script>
 const $ = id => document.getElementById(id);
 DD.qr($("qr"), DD.queueUrl()); $("url").textContent = DD.queueUrl().replace(/^https?:\/\//, "");
-setInterval(() => $("clock").textContent = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }), 1000);
+setInterval(() => { const c = $("clock"); if (c) c.textContent = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); }, 1000);
 try { navigator.wakeLock && navigator.wakeLock.request("screen").catch(() => {}); } catch {}
 // Court calls: big banner + spoken announcement whenever a game starts
 let voice = false, started = null;

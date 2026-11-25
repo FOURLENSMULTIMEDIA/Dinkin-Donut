@@ -1,5 +1,5 @@
 const { fresh, apply, PUBLIC, staleReason } = require("./_engine");
-const { load, save, withLock, hasDb, loadHall, addHall, clearHall, runAsClub } = require("./_store");
+const { load, save, withLock, hasDb, loadHall, addHall, clearHall, runAsClub, getDoc, setDoc } = require("./_store");
 const { getClub, access, publicClub, limitsOf } = require("./_clubs");
 const { sendPass, configured } = require("./_wa");
 const { login: ddLogin, isHost: ddHost, clubLogin, isClubHost } = require("./_auth");
@@ -21,6 +21,25 @@ function hallEntry(S) {
     t: Date.now(), title: S.nightTitle, games: S.games, players: Object.values(S.players).filter(p => p.in).length,
     top: played.slice(0, 3).map(p => ({ name: p.name, w: p.w, l: p.l, diff: p.pf - p.pa, level: p.level || null })),
   };
+}
+
+// Season ladder: every closed night adds each player's results to a running table, keyed by name.
+const seasonKey = n => String(n || "").trim().toLowerCase().replace(/\s+/g, " ");
+async function addSeason(S) {
+  const played = Object.values(S.players || {}).filter(p => p.w + p.l > 0);
+  if (!played.length) return;
+  const T = await getDoc("season", { since: Date.now(), nights: 0, rows: {} });
+  T.nights++;
+  played.forEach(p => { const k = seasonKey(p.name); if (!k) return; const r = T.rows[k] || (T.rows[k] = { name: p.name, w: 0, l: 0, pf: 0, pa: 0, nights: 0, best: 0 });
+    r.name = p.name; r.w += p.w; r.l += p.l; r.pf += p.pf || 0; r.pa += p.pa || 0; r.nights++; r.best = Math.max(r.best, p.w); if (p.level) r.level = p.level; r.last = Date.now(); });
+  await setDoc("season", T);
+}
+function ladder(T) {
+  const rows = Object.values((T && T.rows) || {}).map(r => { const g = r.w + r.l; return { name: r.name, w: r.w, l: r.l, g, pct: g ? Math.round(100 * r.w / g) : 0, diff: r.pf - r.pa, nights: r.nights, best: r.best, level: r.level || null,
+    // Ladder points: 3 per win, 1 per game played, 1 per night attended. Rewards winning and turning up.
+    pts: r.w * 3 + g + r.nights }; });
+  rows.sort((a, b) => b.pts - a.pts || b.pct - a.pct || b.diff - a.diff || a.name.localeCompare(b.name));
+  return { since: (T && T.since) || null, nights: (T && T.nights) || 0, rows: rows.slice(0, 100) };
 }
 
 const crypto = require("crypto");
@@ -47,7 +66,7 @@ async function handle(req, res, club) {
     return withLock(async () => {
       const S = (await load()) || fresh(), why = staleReason(S);
       if (!why) return S;
-      const e = hallEntry(S); if (e) await addHall(e);
+      const e = hallEntry(S); if (e) await addHall(e); await addSeason(S);
       const games = S.games || 0, title = S.nightTitle || "";
       const { state } = apply(S, { type: "reset" });
       state.autoClosed = { at: Date.now(), why, games, title, last: S.updatedAt };
@@ -58,6 +77,7 @@ async function handle(req, res, club) {
     if (req.method === "GET") {
       if (req.query && req.query.check !== undefined) return res.status(200).json({ ok: hostOk(req) });
       if (req.query && req.query.hall !== undefined) return res.status(200).json({ hall: await loadHall() });
+      if (req.query && req.query.season !== undefined) return res.status(200).json({ season: ladder(await getDoc("season", null)) });
       const S = await sleepCheck();
       if (club && !S.__cc) S.courts = S.courts.slice(0, limitsOf(club).courts);
       const host = hostOk(req);
@@ -71,6 +91,10 @@ async function handle(req, res, club) {
       if (!hostOk(req)) return res.status(401).json({ error: "Your host session has ended. Please sign in again.", signin: true });
       await clearHall(); return res.status(200).json({ ok: true, hall: [] });
     }
+    if (a.type === "newSeason") {
+      if (!hostOk(req)) return res.status(401).json({ error: "Your host session has ended. Please sign in again.", signin: true });
+      await setDoc("season", { since: Date.now(), nights: 0, rows: {} }); return res.status(200).json({ ok: true, season: ladder(null) });
+    }
     const isHost = hostOk(req);
     if (!PUBLIC.has(a.type) && !isHost) {
       return res.status(401).json({ error: "Your host session has ended. Please sign in again.", signin: true });
@@ -79,7 +103,7 @@ async function handle(req, res, club) {
     const out = await withLock(async () => {
       const S = (await load()) || fresh();
       if (a.type === "dismissAuto") { delete S.autoClosed; await save(S); return { state: S, result: {} }; }
-      if (a.type === "reset" && a.publish !== false) { const e = hallEntry(S); if (e) await addHall(e); }
+      if (a.type === "reset" && a.publish !== false) { const e = hallEntry(S); if (e) await addHall(e); await addSeason(S); }
       if (club && !S.__cc) { const L = limitsOf(club); S.courts = S.courts.slice(0, L.courts); S.__cc = 1; }
       const { state, result } = apply(S, a);
       if (club) {
