@@ -9,7 +9,7 @@ window.JERSEY = {
   leadTime: "Made to order. Ready in about 3 weeks.",
   fits: ["Men’s fit", "Women’s fit"],
   // Kit designs (front graphic + sublimated body)
-  designs: [["varsity", "Varsity"], ["crew", "Crew stripes"], ["blur", "Court blur"], ["wave", "Heat wave"], ["tour", "Tour panels"], ["splash", "Paddle up"], ["raglan", "Raglan script"]],
+  designs: [["varsity", "Varsity"], ["blur", "Court blur"], ["wave", "Heat wave"], ["splash", "Paddle up"]],
   // Back print options
   prints: [["full", "Name + number"], ["name", "Name only"], ["plain", "Plain back"]],
   sizes: ["XS", "S", "M", "L", "XL", "2XL", "3XL"],
