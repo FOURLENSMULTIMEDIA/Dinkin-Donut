@@ -158,7 +158,7 @@
     "Your name (for pick-up)": "اسمك (للاستلام)", "I’ve sent the Fawran payment": "أرسلت الدفعة عبر فوران", "Send order and receipt on WhatsApp": "أرسل الطلب والإيصال عبر واتساب",
     "Goes to +974 3076 3431. No reply? Try": "يُرسل إلى ‎+974 3076 3431. لا رد؟ جرّب", "Copy your order and show it at the check-in table.": "انسخ طلبك واعرضه عند طاولة التسجيل.", "Copy order": "نسخ الطلب",
     // homepage leftovers
-    "The Invitational.": "البطولة.", "✓ Joined": "✓ انضممت", "Team TBA": "الفريق يُعلن لاحقًا", "Night created. Paddles up!": "بدأت الأمسية. المضارب للأعلى!",
+    "The Invitational.": "البطولة.", "Courts are open": "الملاعب متاحة", "Live courts · Dink different": "ملاعب مباشرة · Dink different", "✓ Joined": "✓ انضممت", "Team TBA": "الفريق يُعلن لاحقًا", "Night created. Paddles up!": "بدأت الأمسية. المضارب للأعلى!",
   };
   // Live text with numbers or names in it
   var PAT = [
@@ -194,7 +194,7 @@
   }
   function walk(root) {
     if (lang !== "ar" || !root) return;
-    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: function (n) { var p = n.parentElement; return !p || /^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || p.closest("[data-no-tr],svg") ? 2 : 1; } }), n, list = [];
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: function (n) { var p = n.parentElement; return !p || /^(SCRIPT|STYLE|TEXTAREA)$/.test(p.tagName) || p.closest("[data-no-tr],svg.mock,svg.jersey,svg.set,svg[class*=mock]") ? 2 : 1; } }), n, list = [];
     while ((n = w.nextNode())) list.push(n);
     list.forEach(function (n) { var cur = n.nodeValue, base = orig.has(n) ? orig.get(n) : cur; if (orig.has(n) && cur !== orig.get(n).__ar) base = cur;
       var out = tr(base); if (out !== null && out !== cur) { orig.set(n, Object.assign(new String(base), { __ar: out })); n.nodeValue = out; } });
