@@ -37,7 +37,7 @@
   function scene(i) {
     cur = i; clear();
     scenes.forEach(function (s, k) { s.classList.toggle("on", k === i); });
-    if (i === 0) later(function () { type($("t0"), "Courts are lit.", 75); }, 350);
+    if (i === 0) later(function () { type($("t0"), window.DDLang ? DDLang.t("Courts are lit.") : "Courts are lit.", 75); }, 350);
     if (i === 2) {
       var f = $("fJ"); f.style.transform = "perspective(900px) rotateY(0)";
       f.innerHTML = Mockup.tee({ way: "midnight", side: "front" });
@@ -87,7 +87,7 @@
   // Paused mid-shot: show the finished frame of that shot, never a half-turned or empty stage.
   function settle(i) {
     if (i === 2) { var f = $("fJ"); f.style.transform = "none"; f.innerHTML = Mockup.tee({ way: "midnight", side: "back", name: "ANGEL", num: "7" }); $("fName").textContent = "Your name. Your number."; }
-    if (i === 0) $("t0").textContent = "Courts are lit.";
+    if (i === 0) $("t0").textContent = window.DDLang ? DDLang.t("Courts are lit.") : "Courts are lit.";
   }
   function pause() { playing = false; cancelAnimationFrame(raf); clear(); settle(cur); paint(); music.pause(); }
   function paint() { $("fToggle").innerHTML = playing ? ICON.pause : ICON.play; $("fToggle").setAttribute("aria-label", playing ? "Pause" : "Play"); $("fSound").innerHTML = (muted ? ICON.off : ICON.on) + (muted ? " Sound off" : " Sound on"); }

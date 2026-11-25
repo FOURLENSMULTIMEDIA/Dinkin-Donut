@@ -37,7 +37,7 @@
   document.head.appendChild(css);
   var el = document.createElement("div"); el.id = "intro"; el.setAttribute("aria-hidden", "true");
   var word = function (w, d, em) { return w.split("").map(function (ch, i) { return '<span style="animation-delay:' + (d + i * 0.04).toFixed(3) + 's">' + ch + "</span>"; }).join(""); };
-  el.innerHTML = '<div class="stage"><img class="crest" src="/assets/logo.svg" alt=""><div class="rule">Est. MMXXVI</div><div class="name">' + word("Dink", 1.2) + "&nbsp;<em>" + word("Different", 1.4) + '</em></div><div class="tag">A pickleball club, the old-fashioned way.</div></div>';
+  el.innerHTML = '<div class="stage"><img class="crest" src="/assets/logo.svg" alt=""><div class="rule">Est. MMXXVI</div><div class="name" dir="ltr" data-no-tr>' + word("Dink", 1.2) + "&nbsp;<em>" + word("Different", 1.4) + '</em></div><div class="tag">A pickleball club, the old-fashioned way.</div></div>';
   var html = document.documentElement; html.style.overflow = "hidden";
   function done() { if (!el.isConnected) return; el.classList.add("gone"); setTimeout(function () { el.remove(); html.style.overflow = ""; }, 820); }
   function mount() { document.body.appendChild(el); setTimeout(done, 3200); el.addEventListener("click", done); }

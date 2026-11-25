@@ -28,6 +28,7 @@
 .me h1{font-size:clamp(30px,6vw,46px)}
 .me h1 span{font-style:italic;font-weight:700;color:#C9A86B}
 .me form{display:flex;gap:10px;flex-wrap:wrap}
+.me,.me>*,.cols,.cols>*,.me fieldset,.me label{min-width:0}.me fieldset{min-inline-size:0}
 .me input{flex:1 1 200px;font-size:18px}
 .levels{border:0;padding:0;margin:4px 0 0;display:flex;gap:8px;flex-wrap:wrap;width:100%}
 .levels legend{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--dough)}.levels legend span{font-weight:500;opacity:.8}
@@ -106,6 +107,7 @@ tr.you td{background:color-mix(in srgb,var(--ball) 45%,transparent)}
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Dink Different">
 <script src="/js/pwa.js" defer></script>
+<script src="/js/i18n.js"></script>
 </head>
 <body>
 <nav class="nav"><div class="wrap"><a class="brand" href="/"><img src="/assets/logo.svg" alt="">Dink Different</a><span class="chip" style="margin-left:auto" data-conn="on"><span class="live-dot"></span>Live</span></div></nav>

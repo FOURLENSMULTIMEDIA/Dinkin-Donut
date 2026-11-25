@@ -234,3 +234,5 @@ em,i{font-variation-settings:"SOFT" 100,"WONK" 1}
 /* ---- Printed-paper grain: barely there, makes flat colour feel like paper ---- */
 body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.045;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' seed='7'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E")}
 @media print{body::after{display:none}}
+/* Smallest phones: keep the menu bar inside the screen */
+@media (max-width:360px){.nav .wrap{gap:6px}.nav .btn-join{padding:9px 12px;font-size:13px;gap:6px}.nav .btn-join .jb{display:none}.brand img{width:32px;height:32px}}
