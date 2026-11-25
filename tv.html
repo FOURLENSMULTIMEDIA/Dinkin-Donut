@@ -63,7 +63,7 @@ ol .rec{margin-left:auto;font:500 1.1vw var(--body);opacity:.8}
   <div class="courts" id="courts"></div>
   <div class="side">
     <div class="box"><h3>Up next</h3><div id="tvNext"></div><ol id="queue"></ol></div>
-    <div class="box"><h3>Top Dinkers tonight</h3><ol id="top"></ol></div>
+    <div class="box"><h3 id="topH">Top Dinkers tonight</h3><ol id="top"></ol><ol id="ladder" hidden></ol></div>
     <div class="qr"><div id="qr"></div><p style="margin:0"><b>Scan to join the queue</b><span id="url"></span></p></div>
   </div>
 </div>
@@ -121,7 +121,19 @@ DD.live(S => {
   $("queue").innerHTML = S.queue.slice(0, 10).map((id, i) => `<li class="${i < need ? "next" : ""}"><span class="n">${i + 1}</span>${DD.esc(S.players[id].name)}</li>`).join("") || "<li>Nobody waiting. Scan and play!</li>";
   $("top").innerHTML = DD.ranked(S).filter(p => p.w + p.l).slice(0, 5).map((p, i) => `<li><span class="n">${i + 1}</span>${DD.esc(p.name)}<span class="rec">${p.w}W ${p.l}L</span></li>`).join("") || "<li>First result coming soon</li>";
 }, 3000);
+
+// Season ladder: alternates with tonight's top five every 15 seconds once the season has results
+let LADDER = null, showLadder = false;
+function loadLadder() { fetch("/api/queue?season", { cache: "no-store" }).then(r => r.json()).then(j => { LADDER = j.season && j.season.rows.length ? j.season : null; paintLadder(); }).catch(() => {}); }
+function paintLadder() {
+  const on = showLadder && LADDER, h = document.getElementById("topH"), lt = document.getElementById("ladder"), tt = document.getElementById("top"); if (!h) return;
+  h.textContent = on ? "Season ladder · " + LADDER.nights + " night" + (LADDER.nights === 1 ? "" : "s") : "Top Dinkers tonight";
+  lt.hidden = !on; tt.hidden = !!on;
+  if (on) lt.innerHTML = LADDER.rows.slice(0, 5).map((r, i) => `<li><span class="n">${i + 1}</span>${DD.esc(r.name)}<span class="rec">${r.pts} pts · ${r.w}W ${r.l}L</span></li>`).join("");
+}
+loadLadder(); setInterval(loadLadder, 60000); setInterval(() => { showLadder = !showLadder; paintLadder(); }, 15000);
 </script>
-<script src="/js/social.js" defer></script>
+<script src="/js/social.js" defer>
+</script>
 </body>
 </html>

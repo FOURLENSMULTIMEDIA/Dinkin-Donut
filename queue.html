@@ -271,7 +271,16 @@ function renderMe() {
   }
   if (lastPhase && phase !== lastPhase && (phase.startsWith("court") || phase === "next")) { sprinkles(); buzz(); notify(phase === "next" ? "You’re up next" : "You’re on " + (court ? "Court " + court.id : "court"), phase === "next" ? "Get your paddle ready: you’re on the next open court." : "Head to the court now and tap “I’m on court”."); }
   lastPhase = phase;
-  box.innerHTML = html + myNight(me);
+  box.innerHTML = html + myNight(me) + mySeason(me);
+}
+// "Your season": this player's line on the season ladder
+function mySeason(me) {
+  const L = window.SEASON; if (!L || !L.rows.length) return "";
+  const key = n => String(n || "").trim().toLowerCase().replace(/\s+/g, " "), i = L.rows.findIndex(r => key(r.name) === key(me.name)); if (i < 0) return "";
+  const r = L.rows[i];
+  return `<div class="mynight"><div class="mn-h"><span>Your season</span><span class="tabnum">#${i + 1} of ${L.rows.length}</span></div>
+    <div class="mn-s"><div><b>${r.pts}</b><small>points</small></div><div><b>${r.w}–${r.l}</b><small>W–L</small></div><div><b>${r.pct}%</b><small>win rate</small></div><div><b>${r.nights}</b><small>night${r.nights === 1 ? "" : "s"}</small></div></div>
+    ${i > 0 ? `<p>${L.rows[i - 1].pts - r.pts + 1} point${L.rows[i - 1].pts - r.pts + 1 === 1 ? "" : "s"} to pass <b>${DD.esc(L.rows[i - 1].name)}</b></p>` : `<p><b>Top of the ladder.</b> Defend it.</p>`}</div>`;
 }
 // "Your night": a running scorecard, like a member's card at the clubhouse
 function myNight(me) {
@@ -344,6 +353,7 @@ document.addEventListener("click", async e => {
     const L = j.season; if (!L || !L.rows.length) return;
     const since = L.since ? new Date(L.since).toLocaleDateString(undefined, { day: "numeric", month: "short" }) : "";
     $("seasonNote").textContent = L.nights + " night" + (L.nights === 1 ? "" : "s") + (since ? " since " + since : "") + " · 3 pts a win, 1 a game, 1 a night";
+    window.SEASON = L; if (S && meId) renderMe();
     $("seasonT").innerHTML = L.rows.slice(0, 20).map((r, i) => `<tr><td class="tabnum">${i < 3 ? ["🥇", "🥈", "🥉"][i] : i + 1}</td><td><b>${DD.esc(r.name)}</b></td><td class="r tabnum"><b>${r.pts}</b></td><td class="r tabnum">${r.w}–${r.l}</td><td class="r tabnum">${r.pct}%</td><td class="r tabnum">${r.nights}</td></tr>`).join("");
   }).catch(() => {});
 })();
