@@ -57,7 +57,7 @@
       s += '<path d="M150 66 Q166 62 178 68 L200 136 L190 140 Q160 112 136 92 Q140 74 150 66 Z M250 66 Q234 62 222 68 L200 136 L210 140 Q240 112 264 92 Q260 74 250 66 Z" fill="url(#' + id + 'v)" opacity=".6"/>';
       s += '<path d="M140 90 Q162 110 190 138 M260 90 Q238 110 210 138" fill="none" stroke="' + w.tip2 + '" stroke-width="1.4" opacity=".8"/>';
       // small embroidered crest
-      s += '<image filter="url(#' + id + 'em)" href="/assets/logo.svg" x="236" y="140" width="24" height="24"/>';
+      s += window.Mockup && Mockup.crest ? '<g filter="url(#' + id + 'em)">' + Mockup.crest(250, 156, 21, w.ink === "#F5F2EC" || w.ink === "#F1EBDD" || w.ink === "#FFFFFF" ? w.ink : w.ink, w.tip2, id + "cr") + "</g>" : '<image filter="url(#' + id + 'em)" href="/assets/logo.svg" x="236" y="140" width="24" height="24"/>';
       // skirt crest, low on the hem (like the reference)
       s += '<image filter="url(#' + id + 'em)" href="/assets/logo.svg" x="282" y="420" width="16" height="16" opacity=".95"/>';
     } else {

@@ -22,6 +22,25 @@
     return { body: body, ink: ink, tip: tip, tip2: tip2, sweep: w.sweep || tip2, glow: w.glow || tip, dots: w.dots || w.sweep || tip2, light: lum(body) > 0.55 };
   }
 
+  var MPATH = '<path d="M104 44h20a56 56 0 0 1 0 112h-20zM119 62h5a27 38 0 0 1 0 76h-5z"/><path d="M96 44H76a56 56 0 0 0 0 112h20zM81 62h-5a27 38 0 0 0 0 76h5z"/>';
+  // Embroidered laurel crest: two laurel branches around the Different D, "PICKLEBALL CLUB" arched over, "EST 2026" under.
+  function crest(cx, cy, r, ink, acc, uid) { var s = '<g transform="translate(' + cx.toFixed(1) + " " + cy.toFixed(1) + ')">', leaves = "";
+    [-1, 1].forEach(function (d) { for (var i = 0; i < 8; i++) { var th = (104 + i * 16) * Math.PI / 180, R = r * 0.9, x = Math.cos(th) * R * d, y = Math.sin(th) * R, ang = (th * 180 / Math.PI + 90) * d + (d > 0 ? 180 : 0) + 25 * d;
+      leaves += '<ellipse cx="' + x.toFixed(2) + '" cy="' + y.toFixed(2) + '" rx="' + (r * 0.15).toFixed(2) + '" ry="' + (r * 0.06).toFixed(2) + '" transform="rotate(' + ang.toFixed(1) + " " + x.toFixed(2) + " " + y.toFixed(2) + ')"/>'; } });
+    s += '<g fill="' + acc + '">' + leaves + "</g>";
+    s += '<g transform="scale(' + (r * 0.0052).toFixed(4) + ') translate(-100 -100)" fill="' + ink + '" fill-rule="evenodd">' + MPATH + '</g><path d="M0 ' + (-r * 0.34).toFixed(1) + "V" + (r * 0.34).toFixed(1) + '" stroke="' + acc + '" stroke-width="' + (r * 0.035).toFixed(2) + '"/>';
+    s += '<path id="' + uid + 'ca" d="M' + (-r * 0.7).toFixed(1) + " 0A" + (r * 0.7).toFixed(1) + " " + (r * 0.7).toFixed(1) + " 0 0 1 " + (r * 0.7).toFixed(1) + ' 0" fill="none"/><text font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (r * 0.17).toFixed(1) + '" letter-spacing="' + (r * 0.035).toFixed(1) + '" fill="' + ink + '"><textPath href="#' + uid + 'ca" xlink:href="#' + uid + 'ca" startOffset="50%" text-anchor="middle">PICKLEBALL CLUB</textPath></text>';
+    s += '<text y="' + (r * 1.12).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (r * 0.13).toFixed(1) + '" letter-spacing="' + (r * 0.03).toFixed(1) + '" fill="' + ink + '">EST · 2026</text>';
+    return s + "</g>"; }
+  // Varsity chest lockup for the Club Jersey (old club-whites spirit): small caps over a big script, a swash tail, a ball, crossed paddles.
+  function lockup(W, H, ink, acc, ballCol) { var cx = W * 0.5, y = H * 0.3, sz = W * 0.105, s = "";
+    s += '<text x="' + cx + '" y="' + (y - sz * 0.95).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.017).toFixed(1) + '" letter-spacing="' + (W * 0.008).toFixed(1) + '" fill="' + ink + '">PICKLEBALL CLUB</text>';
+    s += '<text x="' + cx + '" y="' + y.toFixed(1) + '" text-anchor="middle" font-family="Fraunces, serif" font-style="italic" font-weight="700" font-size="' + sz.toFixed(1) + '" fill="' + ink + '" style="font-variation-settings:\'SOFT\' 100,\'WONK\' 1">Dink Different</text>';
+    s += '<path d="M' + (cx - W * 0.25).toFixed(1) + " " + (y + sz * 0.2).toFixed(1) + "C" + (cx - W * 0.05).toFixed(1) + " " + (y + sz * 0.42).toFixed(1) + " " + (cx + W * 0.15).toFixed(1) + " " + (y + sz * 0.38).toFixed(1) + " " + (cx + W * 0.26).toFixed(1) + " " + (y + sz * 0.1).toFixed(1) + '" fill="none" stroke="' + acc + '" stroke-width="' + (W * 0.007).toFixed(1) + '" stroke-linecap="round"/>';
+    var bx = cx + W * 0.325, by = y - sz * 0.32, br = W * 0.016; s += '<circle cx="' + bx.toFixed(1) + '" cy="' + by.toFixed(1) + '" r="' + br.toFixed(1) + '" fill="' + ballCol + '"/>' + [[-.4, -.3], [.35, -.35], [0, .2], [-.3, .45], [.45, .3]].map(function (q) { return '<circle cx="' + (bx + q[0] * br).toFixed(1) + '" cy="' + (by + q[1] * br).toFixed(1) + '" r="' + (br * 0.12).toFixed(2) + '" fill="' + ink + '" opacity=".45"/>'; }).join("");
+    s += '<text x="' + cx + '" y="' + (y + sz * 0.78).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.0125).toFixed(1) + '" letter-spacing="' + (W * 0.006).toFixed(1) + '" fill="' + ink + '">ESTABLISHED 2026 · DOHA</text>';
+    [-1, 1].forEach(function (d) { s += '<g transform="translate(' + cx + " " + (y + sz * 1.18).toFixed(1) + ") rotate(" + d * 36 + ')" fill="' + acc + '"><rect x="' + (-W * 0.011).toFixed(1) + '" y="' + (-W * 0.046).toFixed(1) + '" width="' + (W * 0.022).toFixed(1) + '" height="' + (W * 0.029).toFixed(1) + '" rx="' + (W * 0.01).toFixed(1) + '"/><rect x="' + (-W * 0.0028).toFixed(1) + '" y="' + (-W * 0.019).toFixed(1) + '" width="' + (W * 0.0056).toFixed(1) + '" height="' + (W * 0.036).toFixed(1) + '"/></g>'; });
+    return s; }
   function render(kind, o, ways) {
     o = o || {};
     var back = o.side === "back", key = kind + "-" + (back ? "back" : "front"), size = IMG[key], W = size[0], H = size[1];
@@ -59,10 +78,6 @@
     else s += '<rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'rib)" opacity=".06"/>';
     if (o.tag) s += '<rect width="' + W + '" height="' + H + '" fill="url(#' + id + 'bn)" opacity=".12"/>';
     s += "</g>";
-    // THE RALLY (Club Jersey front): two balls in motion across the chest, the crest held sharp on top
-    if (kind === "tee" && !back) { var bx2 = W * z.crest[0], by2 = H * z.crest[1];
-      var blob = function (x, y, r, col, f, op) { return '<g transform="rotate(-35 ' + x.toFixed(1) + " " + y.toFixed(1) + ')"><circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + r.toFixed(1) + '" fill="' + col + '" opacity="' + op + '" filter="url(#' + id + f + ')"/></g>'; };
-      s += blob(bx2 - W * 0.12, by2 + H * 0.17, W * 0.08, ed ? "#D8A93E" : c.tip2, "mb2", 0.9) + blob(bx2, by2, W * 0.062, c.ink, "mb1", 0.95); }
     // fine double tipping on both cuffs
     var sw = (W * 0.0045).toFixed(1);
     z.cuffs.forEach(function (cf) {
@@ -71,10 +86,10 @@
     });
 
     if (!back) {
-      // small embroidered crest (gold ring for The 20)
+      // chest art: the varsity lockup on the Club Jersey, an embroidered laurel crest on polos
       var cx = W * z.crest[0], cy = H * z.crest[1], cw = W * z.crest[2];
-      if (ed) s += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + (cw * 0.62).toFixed(1) + '" fill="none" stroke="' + gold + '" stroke-width="' + (W * 0.004).toFixed(1) + '"/>';
-      s += '<image filter="url(#' + id + 'em)" href="/assets/logo.svg" xlink:href="/assets/logo.svg" x="' + (cx - cw / 2).toFixed(1) + '" y="' + (cy - cw / 2).toFixed(1) + '" width="' + cw.toFixed(1) + '" height="' + cw.toFixed(1) + '"/>';
+      if (kind === "tee") s += '<g filter="url(#' + id + 'em)">' + lockup(W, H, c.ink, ed ? "#D8A93E" : c.tip2, ed ? "#F6E3A1" : "#E3CF7E") + "</g>";
+      else s += '<g filter="url(#' + id + 'em)">' + crest(cx, cy, cw * 0.78, c.ink, ed ? "#D8A93E" : c.tip2, id) + "</g>";
       if (o.tag) s += '<text x="' + cx.toFixed(1) + '" y="' + (cy + cw * 0.85).toFixed(1) + '" text-anchor="middle" font-family="DM Sans, sans-serif" font-weight="700" font-size="' + (W * 0.012).toFixed(1) + '" fill="' + c.ink + '" opacity=".75" letter-spacing="' + (W * 0.004).toFixed(1) + '">' + esc(o.tag) + "</text>";
     } else {
       var mid = W / 2, name = String(o.name || "").toUpperCase().slice(0, 12), num = String(o.num == null ? "" : o.num).slice(0, 2);
@@ -141,5 +156,5 @@
   };
   function applyPalette() { var J = window.Jersey; if (!J) return; Object.keys(PAL).forEach(function (k) { var m = J[k]; if (!m) return; Object.keys(PAL[k]).forEach(function (w) { if (m[w]) Object.assign(m[w], PAL[k][w]); }); }); }
   applyPalette();
-  window.Mockup = { render: render, tee: via("tee", "WAYS", "render"), pro: via("polo", "PRO_WAYS", "renderPro", { tag: "MABUHAY" }), polo: via("polo", "POLO_WAYS", "renderPolo") };
+  window.Mockup = { crest: crest, render: render, tee: via("tee", "WAYS", "render"), pro: via("polo", "PRO_WAYS", "renderPro", { tag: "MABUHAY" }), polo: via("polo", "POLO_WAYS", "renderPolo") };
 })();
