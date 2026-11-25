@@ -59,6 +59,7 @@ label.done input{width:18px;height:18px;accent-color:#C9A86B}
 </style>
 </head>
 <body>
+<script src="/js/transitions.js"></script>
 <main class="wrap">
   <div class="top"><a href="/" aria-label="Dink Different home"><img src="/assets/brand/mark-ivory.svg" alt=""></a><a class="btn ghost" href="/organisers">Clubhouse</a></div>
   <div class="k" style="margin-top:26px">Dink Different · Social team</div>
@@ -74,11 +75,15 @@ label.done input{width:18px;height:18px;accent-color:#C9A86B}
     <button class="chip" data-f="Reel" aria-pressed="false">Reels &amp; animated</button>
     <button class="chip" data-f="todo" aria-pressed="false">Not posted</button>
     <button class="chip" id="today" type="button">Jump to today</button>
+    <a class="chip" href="#bankSec" style="text-decoration:none">Any-day bank</a>
     <input id="q" type="search" placeholder="Search captions, series, IDs…" aria-label="Search">
   </div>
 
   <div id="list"></div>
 
+  <section class="week" id="bankSec"><h2><small>Any day</small>The bank</h2><p class="sub">Evergreen posts for quiet days or extra slots. Post in any order; tick them as you go.</p>
+    <div class="bar" style="position:static;margin:8px 0 14px;border:0;padding:0;background:none" id="bankBar"><button class="chip" data-b="all" aria-pressed="true">All</button><button class="chip" data-b="Players" aria-pressed="false">For players</button><button class="chip" data-b="Partners" aria-pressed="false">For partners</button></div>
+    <div id="bank"></div></section>
   <section class="week" id="holdSec"><h2><small>Launch week</small>Hold until launch</h2><p class="sub">Finished posters that mention nights, times or prices. Post them once the venue and nights are confirmed.</p><div class="hold" id="hold"></div></section>
   <p class="note" style="margin-top:40px">Ticks are saved on this device. This page is private to the team: it isn’t in search results or the site menu. Please keep the link inside the committee.</p>
 </main>
@@ -122,24 +127,40 @@ label.done input{width:18px;height:18px;accent-color:#C9A86B}
         }).join("") + "</section>";
     }).join("");
   }
+  var bf = "all";
+  function card(r, u) {
+    return '<article class="post' + (done[u] ? " done" : "") + '"><img class="thumb" loading="lazy" src="' + esc(r.thumb) + '" alt="">' +
+      '<div><div class="meta"><span class="tag">' + esc(r.aud) + '</span><span>' + esc(r.kind) + '</span><span>' + esc(r.id) + '</span></div>' +
+      '<h3>' + esc(r.title) + '</h3><div class="series">' + esc(r.series) + '</div>' +
+      '<div class="cap"><div>' + esc(r.en) + '<button class="cp" data-l="Copy English" data-t="en">Copy English</button></div><div class="ar" lang="ar">' + esc(r.ar) + '<button class="cp" data-l="نسخ" data-t="ar">نسخ</button></div>' +
+      (r.tags ? '<div class="tags">' + esc(r.tags) + '<button class="cp" data-l="Copy hashtags" data-t="tags">Copy hashtags</button></div>' : "") + '</div>' +
+      '<div class="acts"><a class="btn" href="' + esc(r.link) + '" download>Download 4K</a><button class="btn ghost cp2" data-u="' + esc(u) + '">Copy caption + hashtags</button>' +
+      '<label class="done"><input type="checkbox" data-u="' + esc(u) + '"' + (done[u] ? " checked" : "") + '> Posted</label></div></div></article>';
+  }
+  function renderBank() {
+    var b = (D.bank || []).filter(function (r) { return bf === "all" || r.aud === bf; }).filter(function (r) { if (!q) return true; return (r.id + " " + r.title + " " + r.series + " " + r.en + " " + r.ar).toLowerCase().indexOf(q) >= 0; });
+    $("bank").innerHTML = b.length ? b.map(function (r) { return card(r, "bank|" + r.id); }).join("") : '<p class="empty">Nothing matches.</p>';
+  }
+  function findRow(u) { if (u.indexOf("bank|") === 0) { var id = u.slice(5); return (D.bank || []).find(function (x) { return x.id === id; }); } return D.rows.find(function (x) { return uid(x) === u; }); }
   function stats() {
     var feed = D.rows.filter(function (r) { return r.kind === "Feed"; }).length, n = Object.keys(done).length;
-    $("stats").innerHTML = '<div class="stat"><b>' + D.rows.length + '</b><span>items planned</span></div><div class="stat"><b>' + feed + '</b><span>feed posts</span></div><div class="stat"><b>' + n + '</b><span>ticked as posted</span></div><div class="stat"><b>' + D.hold.length + '</b><span>held for launch</span></div>';
+    $("stats").innerHTML = '<div class="stat"><b>' + D.rows.length + '</b><span>items planned</span></div><div class="stat"><b>' + feed + '</b><span>feed posts</span></div><div class="stat"><b>' + n + '</b><span>ticked as posted</span></div><div class="stat"><b>' + (D.bank || []).length + '</b><span>any-day bank</span></div><div class="stat"><b>' + D.hold.length + '</b><span>held for launch</span></div>';
   }
   document.addEventListener("click", function (e) {
-    var b = e.target.closest(".cp"); if (b) { var art = b.closest("article"), u = art.querySelector("[data-u]").dataset.u, r = D.rows.find(function (x) { return uid(x) === u; }); copy(b, r[b.dataset.t]); return; }
-    var c = e.target.closest(".cp2"); if (c) { var r2 = D.rows.find(function (x) { return uid(x) === c.dataset.u; }); c.dataset.l = "Copy caption + hashtags"; copy(c, r2.en + "\n\n" + r2.ar + (r2.tags ? "\n\n" + r2.tags : "")); return; }
+    var b = e.target.closest(".cp"); if (b) { var art = b.closest("article"), u = art.querySelector("[data-u]").dataset.u, r = findRow(u); copy(b, r[b.dataset.t]); return; }
+    var c = e.target.closest(".cp2"); if (c) { var r2 = findRow(c.dataset.u); c.dataset.l = "Copy caption + hashtags"; copy(c, r2.en + "\n\n" + r2.ar + (r2.tags ? "\n\n" + r2.tags : "")); return; }
+    var bb = e.target.closest(".chip[data-b]"); if (bb) { bf = bb.dataset.b; document.querySelectorAll(".chip[data-b]").forEach(function (x) { x.setAttribute("aria-pressed", x === bb); }); renderBank(); return; }
     var f = e.target.closest(".chip[data-f]"); if (f) { filter = f.dataset.f; document.querySelectorAll(".chip[data-f]").forEach(function (x) { x.setAttribute("aria-pressed", x === f); }); render(); }
   });
   document.addEventListener("change", function (e) { var i = e.target; if (i.matches("input[data-u]")) { if (i.checked) done[i.dataset.u] = 1; else delete done[i.dataset.u]; try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (x) {} i.closest("article").classList.toggle("done", i.checked); stats(); } });
-  $("q").addEventListener("input", function () { q = this.value.trim().toLowerCase(); render(); });
+  $("q").addEventListener("input", function () { q = this.value.trim().toLowerCase(); render(); renderBank(); });
   $("today").addEventListener("click", function () {
     var arts = [].slice.call(document.querySelectorAll("article[data-date]")), t = arts.find(function (a) { return a.dataset.date >= todayISO; }) || arts[arts.length - 1];
     if (t) t.scrollIntoView({ behavior: "smooth", block: "center" });
   });
   fetch("/assets/social/calendar.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (j) {
     D = j; $("stamp").textContent = "Last updated " + j.updated + " (Doha) · " + fmt(j.rows[0].date) + " – " + fmt(j.rows[j.rows.length - 1].date);
-    stats(); render();
+    stats(); render(); renderBank();
     $("hold").innerHTML = j.hold.map(function (h) { return '<a href="' + esc(h.link) + '" download><img loading="lazy" src="' + esc(h.thumb) + '" alt=""><span><b>' + esc(h.id) + "</b> · " + esc(h.title) + '<br><span style="color:rgba(244,239,227,.55)">' + esc(h.why) + "</span></span></a>"; }).join("");
   }).catch(function () { $("stamp").textContent = "Couldn’t load the calendar. Check the connection and refresh."; });
 })();
