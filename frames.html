@@ -86,6 +86,12 @@ select option{color:#111}
     story: { name: "Story · 9:16", d: "An arched photo with your title, for stories.", pano: 0, min: 1, max: 1, def: 1, story: 1 },
     motion: { name: "In Motion · 1:1", d: "Your photo streaked with motion blur, toned navy, the club mark sharp in the middle.", pano: 0, min: 1, max: 1, def: 1 },
     motionstory: { name: "In Motion · Story", d: "The motion look at 9:16, with your title under the mark.", pano: 0, min: 1, max: 1, def: 1, story: 1 },
+    explained: { name: "Explained · 1:1", d: "Big condensed yellow headline over your photo, toned sky blue. Great for tips.", pano: 0, min: 1, max: 1, def: 1 },
+    explainedstory: { name: "Explained · Story", d: "The Explained look at 9:16 for stories.", pano: 0, min: 1, max: 1, def: 1, story: 1 },
+    gameday: { name: "Gameday · 1:1", d: "Your photo in motion, toned green, the title in an outlined badge.", pano: 0, min: 1, max: 1, def: 1 },
+    grand: { name: "Grand · 1:1", d: "A huge script over your photo and a cream event band along the bottom.", pano: 0, min: 1, max: 1, def: 1 },
+    season: { name: "New Season · 1:1", d: "Your photo in a circle, the title curved around it and a red patch.", pano: 0, min: 1, max: 1, def: 1 },
+    stillness: { name: "Stillness · 1:1", d: "A dark, tilted headline across your photo with painted court lines.", pano: 0, min: 1, max: 1, def: 1 },
   };
   var st = { t: "trail", n: 4, theme: "navy", photos: [] };
   var $ = function (id) { return document.getElementById(id); };
@@ -138,6 +144,20 @@ select option{color:#111}
   }
   function trajectory(x, pts, theme) { x.save(); x.strokeStyle = theme === "beige" ? BR2 : BR; x.lineWidth = 3; x.lineCap = "round"; x.setLineDash([4, 13]); x.beginPath(); x.moveTo(pts[0][0], pts[0][1]);
     for (var i = 1; i < pts.length; i++) { var p = pts[i - 1], q = pts[i], mx = (p[0] + q[0]) / 2; x.bezierCurveTo(mx, p[1] - 150, mx, q[1] - 150, q[0], q[1]); } x.stroke(); x.restore(); var e = pts[pts.length - 1]; ball(x, e[0], e[1], 20); }
+  // ---------------- poster helpers (from the club's sport posters) ----------------
+  var LIME = "#E2E070";
+  function cond(x, s, X, Y, size, col, o) { o = o || {}; x.save(); x.fillStyle = col; x.textAlign = o.a || "center"; x.textBaseline = "alphabetic";
+    x.font = (o.wide ? "" : "extra-condensed ") + (o.w || 900) + " " + size + "px Archivo"; try { if ("fontStretch" in x) x.fontStretch = o.wide ? "normal" : "extra-condensed"; } catch (e) {}
+    if (o.ls) { try { x.letterSpacing = o.ls + "px"; } catch (e) {} } x.fillText(String(s).toUpperCase(), X, Y); x.restore(); }
+  function blurred(x, im, W, H, spread, ang) { if (!im) { placeholder(x, 0, 0, W, H); return; } var n2 = 36; x.save(); try { x.filter = "blur(1.5px)"; } catch (e) {}
+    for (var k2 = 0; k2 < n2; k2++) { var t2 = (k2 / (n2 - 1) - 0.5) * spread; x.globalAlpha = 1 / (k2 + 1); x.save(); x.translate(t2, t2 * ang); cover(x, im, -spread, -spread, W + 2 * spread, H + 2 * spread); x.restore(); } x.restore(); }
+  function tone(x, W, H, col, a) { x.save(); x.globalCompositeOperation = "color"; x.globalAlpha = a; x.fillStyle = col; x.fillRect(0, 0, W, H); x.restore(); }
+  function grain(x, W, H, a) { x.save(); x.globalCompositeOperation = "overlay"; x.globalAlpha = a || 0.8; x.fillStyle = x.createPattern(grainTile, "repeat"); x.fillRect(0, 0, W, H); x.restore(); }
+  function arcText(x, str, cx, cy, r, start, size, col, font, inside) { x.save(); x.fillStyle = col; x.font = font.replace("SZ", size); x.textAlign = "center"; x.textBaseline = "middle";
+    var chars = str.split(""), widths = chars.map(function (ch) { return x.measureText(ch).width; }), total = widths.reduce(function (a, b) { return a + b; }, 0), ang = start - (inside ? -1 : 1) * total / r / 2;
+    chars.forEach(function (ch, i) { var w = widths[i], a = ang + (inside ? -1 : 1) * w / r / 2; x.save(); x.translate(cx + Math.cos(a) * r, cy + Math.sin(a) * r); x.rotate(a + (inside ? -Math.PI / 2 : Math.PI / 2)); x.fillText(ch, 0, 0); x.restore(); ang += (inside ? -1 : 1) * w / r; }); x.restore(); }
+  function words2(t) { var w = (t || "").trim().replace(/[.]$/, "").split(/\s+/); if (w.length < 2) return [w[0] || "", ""]; var h = Math.ceil(w.length / 2); return [w.slice(0, h).join(" "), w.slice(h).join(" ")]; }
+  function fitSize(x, str, maxW, size, font) { x.save(); x.font = font.replace("SZ", size); try { if ("fontStretch" in x) x.fontStretch = "extra-condensed"; } catch (e) {} var w = x.measureText(String(str).toUpperCase()).width; x.restore(); return w > maxW ? size * maxW / w : size; }
   // ---------------- the layouts ----------------
   function draw(c, W, H) {
     var x = c.getContext("2d"), n = st.n, th = st.theme, P = st.photos, ink = th === "beige" ? NV : IV, acc = th === "beige" ? BR2 : BR, lights = []; for (var i = 0; i < n; i++) lights.push(i * 1080 + 540);
@@ -186,6 +206,47 @@ select option{color:#111}
         else cover(x, ph(f - (n > 1 ? 1 : 0)), fx, fy, fw, fh);
         text(x, String(f + 1).padStart(2, "0") + "A", fx, fy + fh + 50, { s: 22, sans: 1, c: "#E3CF7E", a: "left", ls: 3 }); text(x, "DINK DIFFERENT · " + String(f + 1).padStart(3, "0"), fx + fw, fy + fh + 50, { s: 15, sans: 1, c: "rgba(244,239,227,.55)", a: "right", ls: 4 }); }
       text(x, ($("kicker").value || "").toUpperCase(), 70, 120, { s: 17, sans: 1, c: BR, a: "left", ls: 7 }); text(x, "PROOF SHEET · PLAY WELL", W - 70, 120, { s: 15, sans: 1, c: "rgba(201,168,107,.7)", a: "right", ls: 6 });
+    } else if (st.t === "explained" || st.t === "explainedstory") {
+      var im = ph(0), story = st.t === "explainedstory"; cover(x, im, 0, 0, W, H); if (!im) placeholder(x, 0, 0, W, H);
+      tone(x, W, H, "#3B6FA0", 0.7); var gS = x.createLinearGradient(0, 0, 0, H); gS.addColorStop(0, "rgba(40,80,125,.75)"); gS.addColorStop(.55, "rgba(40,80,125,.15)"); gS.addColorStop(1, "rgba(20,35,60,.65)"); x.fillStyle = gS; x.fillRect(0, 0, W, H);
+      var ln = words2($("title").value || "The Dink"), y0 = story ? 380 : 150, sz = story ? 300 : 230;
+      cond(x, "Explained:", W / 2, y0, 34, LIME, { wide: 1, w: 800, ls: 1 });
+      var f1 = fitSize(x, ln[0], W - 120, sz, "extra-condensed 900 SZpx Archivo"), f2 = fitSize(x, ln[1], W - 120, sz, "extra-condensed 900 SZpx Archivo"), fz = Math.min(f1, f2 || f1);
+      cond(x, ln[0], W / 2, y0 + 30 + fz * 0.84, fz, LIME); if (ln[1]) cond(x, ln[1], W / 2, y0 + 30 + fz * 1.68, fz, LIME);
+      x.save(); x.fillStyle = LIME; x.textAlign = "center"; x.font = "italic 700 " + (story ? 34 : 28) + "px Archivo"; x.fillText(($("kicker").value || "").trim(), W / 2, H - (story ? 260 : 130)); x.restore();
+      mark(x, W / 2 - 110, H - (story ? 190 : 72), 34, IV, 1); text(x, "DINK DIFFERENT", W / 2 + 18, H - (story ? 183 : 65), { s: 18, sans: 1, c: IV, ls: 4 }); grain(x, W, H, 0.5);
+    } else if (st.t === "gameday") {
+      blurred(x, ph(0), W, H, W * 0.2, -0.3); tone(x, W, H, "#2B4A3A", 0.75); x.fillStyle = "rgba(18,30,24,.35)"; x.fillRect(0, 0, W, H);
+      var t3 = ($("title").value || "Gameday").trim().replace(/[.]$/, ""), fz3 = fitSize(x, t3, W - 300, 130, "extra-condensed 900 SZpx Archivo"), tw3;
+      x.save(); x.font = "extra-condensed 900 " + fz3 + "px Archivo"; try { if ("fontStretch" in x) x.fontStretch = "extra-condensed"; } catch (e) {} tw3 = x.measureText(t3.toUpperCase()).width; x.restore();
+      var bw3 = Math.min(W - 120, tw3 + 140), bh3 = fz3 * 1.2; x.save(); x.strokeStyle = IV; x.lineWidth = 6; rr(x, W / 2 - bw3 / 2, H / 2 - bh3 / 2 - 20, bw3, bh3, bh3 / 2); x.stroke(); x.restore();
+      cond(x, t3, W / 2, H / 2 - 20 + fz3 * 0.32, fz3, IV);
+      text(x, ($("kicker").value || "").toUpperCase(), W / 2, H / 2 + bh3 / 2 + 50, { s: 18, sans: 1, c: IV, ls: 7 }); mark(x, W / 2, H - 110, 60, IV, 1); grain(x, W, H, 0.7);
+    } else if (st.t === "grand") {
+      cover(x, ph(0), 0, 0, W, H - 180); if (!ph(0)) placeholder(x, 0, 0, W, H - 180); tone(x, W, H - 180, "#8A5A3A", 0.35); x.fillStyle = "rgba(40,20,10,.18)"; x.fillRect(0, 0, W, H - 180);
+      var tw = words2($("title").value || "Grand Pickleball"), first = (tw[0] || "Grand"), rest = tw[1] || "Pickleball";
+      x.save(); x.globalAlpha = 0.92; x.fillStyle = "#EFE6CF"; x.textAlign = "left"; var fs = 380; x.font = "italic 600 " + fs + "px Fraunces"; while (x.measureText(first).width > W * 1.05 && fs > 120) { fs -= 10; x.font = "italic 600 " + fs + "px Fraunces"; } x.fillText(first, -20, fs * 0.82); x.restore();
+      x.save(); x.fillStyle = "#F7F2E6"; x.textAlign = "right"; x.font = "300 100px Archivo"; x.fillText(rest.toUpperCase(), W - 50, fs * 0.82 + 110); x.restore();
+      x.fillStyle = "#ECE4CB"; x.fillRect(0, H - 180, W, 180); x.save(); x.fillStyle = "#2B2016"; x.textAlign = "left"; x.font = "extra-condensed 400 80px Archivo"; try { if ("fontStretch" in x) x.fontStretch = "condensed"; } catch (e) {} x.fillText("DINK DIFFERENT CLUB", 50, H - 88); x.restore();
+      var kp = ($("kicker").value || "").split("·").map(function (p) { return p.trim(); }).filter(Boolean); while (kp.length < 3) kp.push(kp.length === 1 ? "8:00 P.M." : "DOHA, QATAR");
+      [["left", 50], ["center", W / 2], ["right", W - 50]].forEach(function (q, i) { x.save(); x.fillStyle = "#2B2016"; x.textAlign = q[0]; x.font = "600 18px Archivo"; x.fillText(kp[i].toUpperCase(), q[1], H - 40); x.restore(); }); grain(x, W, H, 0.6);
+    } else if (st.t === "season") {
+      blurred(x, ph(0), W, H, W * 0.06, 0.2); tone(x, W, H, "#2F5F92", 0.6); x.fillStyle = "rgba(20,40,70,.25)"; x.fillRect(0, 0, W, H);
+      x.save(); shadow(x, 40, 20, .4); x.beginPath(); x.arc(W / 2, H / 2, 240, 0, 7); x.fillStyle = "#000"; x.fill(); noShadow(x); x.clip(); cover(x, ph(0), W / 2 - 240, H / 2 - 240, 480, 480); x.restore();
+      x.save(); x.strokeStyle = IV; x.lineWidth = 3; x.beginPath(); x.arc(W / 2, H / 2, 252, 0, 7); x.stroke(); x.restore();
+      arcText(x, ($("title").value || "Dink Different Club Tournament").trim(), W / 2, H / 2, 320, -Math.PI / 2, 52, IV, "500 SZpx Fraunces", false);
+      arcText(x, ($("kicker").value || "Open · all levels").toUpperCase(), W / 2, H / 2, 330, Math.PI / 2, 22, IV, "700 SZpx Archivo", true);
+      x.save(); x.translate(W / 2, H / 2 + 40); x.rotate(-0.17); x.fillStyle = "#9E2B2F"; x.fillRect(-170, -70, 340, 140); x.restore();
+      x.save(); x.translate(W / 2, H / 2 + 40); x.rotate(-0.17); cond(x, "New", 0, -5, 76, "#F7F2E6"); cond(x, "Season", 0, 60, 76, "#F7F2E6"); x.restore();
+      text(x, "DINK DIFFERENT", 70, 70, { s: 14, sans: 1, c: IV, ls: 5, a: "left" }); text(x, "@DINKDIFFERENTQA", W - 70, H - 60, { s: 14, sans: 1, c: IV, ls: 5, a: "right" }); grain(x, W, H, 0.6);
+    } else if (st.t === "stillness") {
+      cover(x, ph(0), 0, 0, W, H); if (!ph(0)) placeholder(x, 0, 0, W, H); tone(x, W, H, "#1D2840", 0.55); x.fillStyle = "rgba(10,14,28,.45)"; x.fillRect(0, 0, W, H);
+      x.save(); x.strokeStyle = "rgba(237,231,185,.85)"; x.lineWidth = 6; x.beginPath(); x.moveTo(-40, 980); x.lineTo(W + 40, 520); x.moveTo(330, H + 40); x.lineTo(250, 620); x.stroke(); x.restore();
+      var ls = words2($("title").value || "Stillness before the serve"); x.save(); x.translate(110, 560); x.rotate(-24 * Math.PI / 180);
+      var fz5 = Math.min(fitSize(x, ls[0], 900, 130, "extra-condensed 900 SZpx Archivo"), ls[1] ? fitSize(x, ls[1], 900, 130, "extra-condensed 900 SZpx Archivo") : 999);
+      cond(x, ls[0], 0, 0, fz5, "#EDE7B9", { a: "left" }); if (ls[1]) cond(x, ls[1], 0, fz5 * 0.88, fz5, "#EDE7B9", { a: "left" }); x.restore();
+      x.save(); x.fillStyle = "#EDE7B9"; x.textAlign = "left"; x.font = "600 26px Fraunces"; x.fillText("The quiet before the point.", 620, 830); x.font = "500 16px 'DM Sans'"; x.fillText(($("kicker").value || "").trim(), 620, 862); x.restore();
+      text(x, "POSTER · DINK DIFFERENT", 64, 70, { s: 12, sans: 1, c: "rgba(237,231,185,.8)", ls: 5, a: "left" }); grain(x, W, H, 0.7);
     } else if (st.t === "motion" || st.t === "motionstory") {
       // motion blur: the photo drawn many times along a diagonal at low opacity, then toned to the club palette
       var im = ph(0); x.fillStyle = "#141B2E"; x.fillRect(0, 0, W, H);
@@ -219,6 +280,11 @@ select option{color:#111}
     if (k === "contact") { x.fillStyle = "#0B0F1A"; x.fillRect(0, 14, W, 80); x.fillStyle = "rgba(244,239,227,.8)"; for (var j = 0; j < 4; j++) x.fillRect(14 + j * 82, 28, 70, 52); }
     if (k === "single") { x.fillRect(110, 10, 120, 74); x.strokeRect(104, 4, 132, 86); }
     if (k === "story") { arch(x, 140, 6, 60, 96); x.fill(); }
+    if (k === "explained" || k === "explainedstory") { x.fillStyle = "#4A7DAF"; x.fillRect(0, 0, W, H); cond(x, "Explained", W / 2, 66, 54, LIME); }
+    if (k === "gameday") { x.fillStyle = "#2B4A3A"; x.fillRect(0, 0, W, H); x.strokeStyle = IV; x.lineWidth = 2; rr(x, W / 2 - 90, 34, 180, 42, 21); x.stroke(); cond(x, "Gameday", W / 2, 66, 32, IV); }
+    if (k === "grand") { x.fillStyle = "#9A7A5E"; x.fillRect(0, 0, W, H); x.fillStyle = "#ECE4CB"; x.fillRect(0, 80, W, 28); x.fillStyle = "#EFE6CF"; x.font = "italic 600 58px Fraunces"; x.textAlign = "left"; x.fillText("Grand", 14, 60); }
+    if (k === "season") { x.fillStyle = "#3D6E9E"; x.fillRect(0, 0, W, H); x.beginPath(); x.arc(W / 2, H / 2, 36, 0, 7); x.fillStyle = "#D6D55A"; x.fill(); x.fillStyle = "#9E2B2F"; x.fillRect(W / 2 - 26, H / 2 - 8, 52, 16); }
+    if (k === "stillness") { x.fillStyle = "#1A2238"; x.fillRect(0, 0, W, H); x.save(); x.translate(40, 90); x.rotate(-0.3); cond(x, "Stillness", 0, 0, 50, "#EDE7B9", { a: "left" }); x.restore(); }
     if (k === "motion" || k === "motionstory") { var gg = x.createLinearGradient(0, 0, W, 0); gg.addColorStop(0, "rgba(244,239,227,.05)"); gg.addColorStop(.5, "rgba(244,239,227,.5)"); gg.addColorStop(1, "rgba(244,239,227,.05)"); x.fillStyle = gg; for (var r3 = 0; r3 < 6; r3++) x.fillRect(0, 12 + r3 * 15, W, 6); mark(x, W / 2, H / 2, 54, IV, 1); } }
   // ---------------- render & export ----------------
   var canvases = [];
@@ -235,7 +301,7 @@ select option{color:#111}
   $("save").onclick = function () { blobs().then(function (bs) { bs.forEach(function (b, i) { var a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "dink-different-" + st.t + "-" + String(i + 1).padStart(2, "0") + ".jpg"; document.body.appendChild(a); setTimeout(function () { a.click(); a.remove(); }, i * 350); }); }); };
   if (navigator.canShare) { $("share").hidden = false; $("share").onclick = function () { blobs().then(function (bs) { var files = bs.map(function (b, i) { return new File([b], "dink-different-" + String(i + 1).padStart(2, "0") + ".jpg", { type: "image/jpeg" }); }); if (navigator.canShare({ files: files })) navigator.share({ files: files }).catch(function () {}); else $("save").click(); }); }; }
   counts();
-  (document.fonts && document.fonts.load ? Promise.all([document.fonts.load("800 40px Fraunces"), document.fonts.load("italic 700 40px Fraunces"), document.fonts.load("700 20px 'DM Sans'")]) : Promise.resolve()).then(render, render);
+  (document.fonts && document.fonts.load ? Promise.all([document.fonts.load("800 40px Fraunces"), document.fonts.load("900 40px Archivo"), document.fonts.load("italic 700 40px Fraunces"), document.fonts.load("700 20px 'DM Sans'")]) : Promise.resolve()).then(render, render);
 })();
 </script>
 </body>
