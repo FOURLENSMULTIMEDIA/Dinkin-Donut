@@ -110,14 +110,14 @@ function sig() {
   var keepLocal = !!window._keepLocal, NAVY = "#1D2840", IV = "#F4EFE3", BR = "#C9A86B", MUTE = "#C9CDD8", SERIF = "Georgia,'Times New Roman',serif", SANS = "Arial,Helvetica,sans-serif";
   var a = function (href, txt, col) { return '<a href="' + href + '" style="color:' + (col || IV) + ';text-decoration:none">' + txt + "</a>"; };
   var contacts = [ph ? a("https://wa.me/" + tel, ph) : "", em ? a("mailto:" + em, em) : ""].filter(Boolean).join('<span style="color:' + BR + '">&nbsp;&nbsp;·&nbsp;&nbsp;</span>');
-  var web = a("https://instagram.com/dinkdifferentqa", "@dinkdifferentqa") + '<span style="color:' + BR + '">&nbsp;&nbsp;·&nbsp;&nbsp;</span>' + a(SITE, "dinkindonut.asia");
+  var web = a("https://instagram.com/dinkdifferent.qa", "@dinkdifferent.qa") + '<span style="color:' + BR + '">&nbsp;&nbsp;·&nbsp;&nbsp;</span>' + a(SITE, "dinkindonut.asia");
   var rule = function (w) { return '<table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center"><tr><td width="' + w + '" height="1" bgcolor="' + BR + '" style="font-size:0;line-height:0;background:' + BR + '">&nbsp;</td></tr></table>'; };
   if (style === "banner") {
     var hosted = !photoImg && bannerFile() && !keepLocal ? IMG + "/assets/email/banner-" + bannerFile() + ".png" : (window._bannerURL || "");
     var img = '<img src="' + (hosted || bannerCanvas().toDataURL("image/png")) + '" width="600" alt="' + n + ' · Dink Different" style="display:block;width:600px;max-width:100%;height:auto;border:0;border-radius:6px">';
     return '<table cellpadding="0" cellspacing="0" border="0" role="presentation" align="center" width="600" style="width:600px;max-width:100%;margin:16px auto 0;border-collapse:collapse">' +
       '<tr><td><a href="' + SITE + '" style="text-decoration:none">' + img + "</a></td></tr>" +
-      '<tr><td align="center" style="padding:10px 0 0;font-family:' + SANS + ';font-size:12px;line-height:18px;color:' + NAVY + '">' + (ph ? a("https://wa.me/" + tel, "WhatsApp " + ph, NAVY) + "&nbsp;&nbsp;·&nbsp;&nbsp;" : "") + a("https://instagram.com/dinkdifferentqa", "@dinkdifferentqa", NAVY) + "&nbsp;&nbsp;·&nbsp;&nbsp;" + a(RECLUB, "Reclub code AX3ND", "#9C7A45") + "</td></tr></table>";
+      '<tr><td align="center" style="padding:10px 0 0;font-family:' + SANS + ';font-size:12px;line-height:18px;color:' + NAVY + '">' + (ph ? a("https://wa.me/" + tel, "WhatsApp " + ph, NAVY) + "&nbsp;&nbsp;·&nbsp;&nbsp;" : "") + a("https://instagram.com/dinkdifferent.qa", "@dinkdifferent.qa", NAVY) + "&nbsp;&nbsp;·&nbsp;&nbsp;" + a(RECLUB, "Reclub code AX3ND", "#9C7A45") + "</td></tr></table>";
   }
   if (style === "classic") {
     return '<table cellpadding="0" cellspacing="0" border="0" role="presentation" width="520" bgcolor="' + NAVY + '" style="width:520px;max-width:100%;background:' + NAVY + ';border-collapse:separate;border:1px solid ' + BR + ';border-radius:6px;margin:16px 0 0">' +

@@ -27,7 +27,7 @@ function createClubCardForm() {
     .setConfirmationMessage(
       "Welcome to the club.\n\n" +
       "Collect your Club Card at the check-in table next session and show it each time you play.\n" +
-      "Questions? WhatsApp +974 3076 3431 or DM @dinkdifferentqa.\n\nPlay well. Dink different."
+      "Questions? WhatsApp +974 3076 3431 or DM @dinkdifferent.qa.\n\nPlay well. Dink different."
     )
     .setProgressBar(true)
     .setAllowResponseEdits(true)
@@ -172,7 +172,7 @@ function rebrandExistingForm() {
     .setConfirmationMessage(
       "Welcome to the club.\n\n" +
       "Collect your Club Card at the check-in table next session and show it each time you play.\n" +
-      "Questions? WhatsApp +974 3076 3431 or DM @dinkdifferentqa.\n\nPlay well. Dink different."
+      "Questions? WhatsApp +974 3076 3431 or DM @dinkdifferent.qa.\n\nPlay well. Dink different."
     );
   // Swap the old card picture for the new Club Card
   form.getItems(FormApp.ItemType.IMAGE).forEach(function (it) { form.deleteItem(it); });

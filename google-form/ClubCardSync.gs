@@ -18,7 +18,7 @@ const CONFIRMATION =
   "You can collect your card in person at any Dink Different session. " +
   "Just give your name at the check-in table.\n\n" +
   "One stamp per paid session, open play or DUPR. Six stamps and your seventh session is on us.\n\n" +
-  "Questions? WhatsApp +974 3076 3431 or DM @dinkdifferentqa.\n\nDink different.";
+  "Questions? WhatsApp +974 3076 3431 or DM @dinkdifferent.qa.\n\nDink different.";
 
 function setup() {
   const form = FormApp.openById(FORM_ID);

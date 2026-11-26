@@ -6,7 +6,7 @@ window.CLUB = {
   mapUrl: "",                          // Google Maps link once the venue is locked
   nightDay: "Open play nights",        // e.g. "Every Thursday"
   hours: "8:00 PM – 12:00 AM",
-  instagram: "https://www.instagram.com/dinkdifferentqa/",
+  instagram: "https://www.instagram.com/dinkdifferent.qa/",
   whatsapp: "",                        // e.g. "https://chat.whatsapp.com/xxxx"
   email: "",                           // e.g. "hello@dinkindonut.qa"
   whatsappNumber: "97430763431",       // main number for merch orders (digits only)
